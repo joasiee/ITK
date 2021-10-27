@@ -37,6 +37,7 @@ CMakeLists.txt.user*
 
 # Visual Studio
 .vs
+.vscode/
 
 # Mac System File
 .DS_Store

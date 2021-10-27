@@ -1,0 +1,7 @@
+set(DOCUMENTATION "GOMEA utils")
+
+itk_module(ITKGOMEA
+  ENABLE_SHARED
+  DESCRIPTION
+    "${DOCUMENTATION}"
+)

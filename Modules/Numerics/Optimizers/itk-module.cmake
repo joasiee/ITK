@@ -7,6 +7,7 @@ itk_module(ITKOptimizers
   ENABLE_SHARED
   DEPENDS
     ITKStatistics
+    ITKGOMEA
   TEST_DEPENDS
     ITKTransform
     ITKTestKernel
