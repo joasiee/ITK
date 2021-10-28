@@ -34,7 +34,7 @@ main(int, char *[])
   OptimizerType::Pointer optimizer = OptimizerType::New();
 
   // Set properties pertinent to convergence
-  optimizer->SetFosElementSize(1);
+  optimizer->SetFosElementSize(-2);
 
   // Instantiate the cost function
   // The cost function is a 2D paraboloid in the x-y plane

@@ -30,24 +30,36 @@ GOMEAOptimizer::GOMEAOptimizer()
 void
 GOMEAOptimizer::PrintSelf(std::ostream & os, Indent indent) const
 {
-  Indent indent1 = indent.GetNextIndent();
-  Indent indent2 = indent1.GetNextIndent();
-
   os << indent << this->GetNameOfClass() << ":" << std::endl;
+  this->PrintSettings(os, indent.GetNextIndent());
+  this->PrintProgress(os, indent.GetNextIndent());
+}
 
-  os << indent1 << "Settings: " << std::endl;
-  os << indent2 << "FOS set size: " << m_FosElementSize << std::endl;
-  os << indent2 << "Tau: " << m_Tau << std::endl;
-  os << indent2 << "Number of populations: " << m_MaxNumberOfPopulations << std::endl;
-  os << indent2 << "Population size: " << m_BasePopulationSize << std::endl << std::endl;
+void
+GOMEAOptimizer::PrintSettings(std::ostream & os, Indent indent) const
+{
+  Indent indent1 = indent.GetNextIndent();
+  os << indent << "Settings: " << std::endl;
+  os << indent1 << "FOS set size: " << m_FosElementSize << std::endl;
+  os << indent1 << "Tau: " << m_Tau << std::endl;
+  os << indent1 << "Number of populations: " << m_MaxNumberOfPopulations << std::endl;
+  os << indent1 << "Population size: " << m_BasePopulationSize << std::endl;
+}
 
-  os << indent1 << "Progress: " << std::endl;
-  os << indent2 << "NunberOfIterations: " << m_CurrentIteration << std::endl;
-  os << indent2 << "NunberOfEvaluations: " << m_NumberOfEvaluations << std::endl;
-  os << indent2 << "CurrentIteration: " << m_CurrentIteration << std::endl;
-  os << indent2 << "Parameters: " << this->GetCurrentPosition() << std::endl;
-  os << indent2 << "Value: " << m_CurrentValue << std::endl;
-  os << indent2 << "StopCondition: " << this->GetStopConditionDescription() << std::endl;
+void
+GOMEAOptimizer::PrintProgress(std::ostream & os, Indent indent, bool concise) const
+{
+  Indent indent1 = indent.GetNextIndent();
+  os << indent << "Progress: " << std::endl;
+  os << indent1 << "NunberOfIterations: " << m_CurrentIteration << std::endl;
+  os << indent1 << "NunberOfEvaluations: " << m_NumberOfEvaluations << std::endl;
+  os << indent1 << "MovingImageBufferMisses: " << m_MovingImageBufferMisses << std::endl;
+  os << indent1 << "CurrentIteration: " << m_CurrentIteration << std::endl;
+  os << indent1 << "Value: " << m_CurrentValue << std::endl;
+  if (!concise) {
+    os << indent1 << "Parameters: " << this->GetCurrentPosition() << std::endl;
+    os << indent1 << "StopCondition: " << this->GetStopConditionDescription() << std::endl;
+  }
 }
 
 void
@@ -264,13 +276,11 @@ GOMEAOptimizer::checkOptions(void)
     exit(0);
   }
 
-  if ((!learn_linkage_tree && FOS_element_size > 1 &&
-       (unsigned)FOS_element_size != this->GetCostFunction()->GetNumberOfParameters()))
+  if (FOS_element_size > 1 && (unsigned) FOS_element_size > this->GetCostFunction()->GetNumberOfParameters())
   {
     printf("\n");
-    printf("Error: invalid FOS element size (read %d). Must be %d, or %d.",
+    printf("Error: invalid FOS element size (read %d). Must be <= %d.",
            FOS_element_size,
-           1,
            this->GetCostFunction()->GetNumberOfParameters());
     printf("\n\n");
 
@@ -1169,7 +1179,15 @@ GOMEAOptimizer::evaluateCompletePopulation(int population_index)
 void
 GOMEAOptimizer::costFunctionEvaluation(ParametersType * parameters, MeasureType * obj_val)
 {
-  *obj_val = this->GetValue(*parameters);
+  try {
+    *obj_val = this->GetValue(*parameters);
+  }
+  catch (ExceptionObject & err)
+  {
+    ++m_MovingImageBufferMisses;
+    *obj_val = std::numeric_limits<MeasureType>::max();
+  }
+  
   if (*obj_val < m_CurrentValue)
   {
     m_CurrentValue = *obj_val;
@@ -1888,13 +1906,14 @@ GOMEAOptimizer::runAllPopulations()
 {
   while (!this->checkTerminationCondition())
   {
+    this->PrintProgress(std::cout, *itk::Indent::New(), true);
     if (number_of_populations < m_MaxNumberOfPopulations)
     {
       this->initializeNewPopulation();
     }
 
     this->generationalStepAllPopulations();
-    m_CurrentIteration++;
+    m_CurrentIteration++; 
   }
 }
 

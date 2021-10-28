@@ -113,6 +113,12 @@ public:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
+  void
+  PrintSettings(std::ostream & os, Indent indent) const;
+
+  void
+  PrintProgress(std::ostream & os, Indent indent, bool concise=false) const;
+
 protected:
   GOMEAOptimizer();
   ~GOMEAOptimizer() override = default;
@@ -272,8 +278,8 @@ private:
   double m_DistributionMultiplierDecrease{ 0.9 };
   double m_StDevThreshold{ 1.0 };
   double m_FitnessVarianceTolerance{ 0.0 };
-  double m_LowerUserRange{ -100 };
-  double m_UpperUserRange{ 100 };
+  double m_LowerUserRange{ -1 };
+  double m_UpperUserRange{ 1 };
   double distribution_multiplier_increase;
   double eta_ams{ 1.0 };
   double eta_cov{ 1.0 };
@@ -290,6 +296,7 @@ private:
   int m_MaxNumberOfEvaluations{ 1000000 };
   int m_MaxNoImprovementStretch{ 0 };
   int m_FosElementSize{ -1 };
+  int m_MovingImageBufferMisses{ 0 };
   int number_of_subgenerations_per_population_factor{ 8 };
   int number_of_populations{ 0 };
 

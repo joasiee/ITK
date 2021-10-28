@@ -1,0 +1,4 @@
+project(GlobalRegistrationTwoImagesBSpline)
+
+add_executable(GlobalRegistrationTwoImagesBSpline code.cxx)
+target_link_libraries(GlobalRegistrationTwoImagesBSpline ${ITK_LIBRARIES})
