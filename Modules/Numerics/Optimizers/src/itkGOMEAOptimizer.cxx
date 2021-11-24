@@ -1187,6 +1187,10 @@ GOMEAOptimizer::costFunctionEvaluation(ParametersType * parameters, MeasureType 
     ++m_MovingImageBufferMisses;
     *obj_val = std::numeric_limits<MeasureType>::max();
   }
+
+  std::vector<int> test;
+  test.push_back(1);
+  this->GetValue(*parameters, test);
   
   if (*obj_val < m_CurrentValue)
   {

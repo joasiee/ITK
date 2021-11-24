@@ -22,6 +22,10 @@
 #include "itkNumericTraits.h"
 #include "ITKOptimizersExport.h"
 
+itkDeclareExceptionMacro(MissingPartialEvaluationsImplementation,
+                         ExceptionObject,
+                         "No implementation for partial evaluations found for this cost function.");
+
 namespace itk
 {
 /** \class SingleValuedCostFunction
@@ -62,6 +66,11 @@ public:
    * to the specified parameters.    */
   virtual MeasureType
   GetValue(const ParametersType & parameters) const = 0;
+
+  /** This method returns the value of the cost function when it is evaluated partially
+   * when only*/
+  virtual MeasureType
+  GetValue(const ParametersType & parameters, const std::vector<int> & indices) const;
 
   /** This method returns the derivative of the cost function corresponding
    * to the specified parameters.   */

@@ -76,6 +76,9 @@ public:
   MeasureType
   GetValue(const ParametersType & parameters) const;
 
+  MeasureType
+  GetValue(const ParametersType & parameters, const std::vector<int> & indices) const;
+
 protected:
   SingleValuedNonLinearOptimizer();
   ~SingleValuedNonLinearOptimizer() override = default;

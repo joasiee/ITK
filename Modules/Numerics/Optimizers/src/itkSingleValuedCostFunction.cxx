@@ -28,5 +28,12 @@ SingleValuedCostFunction::GetValueAndDerivative(const ParametersType & parameter
   this->GetDerivative(parameters, derivative);
 }
 
+SingleValuedCostFunction::MeasureType
+SingleValuedCostFunction::GetValue(const ParametersType & parameters, const std::vector<int> & indices) const
+{
+  std::cout << "HEE" << std::endl;
+  itkExceptionMacro("Missing partial evaluations implementation");
+}
+
 SingleValuedCostFunction::~SingleValuedCostFunction() = default;
 } // namespace itk
