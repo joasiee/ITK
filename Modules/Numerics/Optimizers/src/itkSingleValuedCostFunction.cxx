@@ -29,9 +29,8 @@ SingleValuedCostFunction::GetValueAndDerivative(const ParametersType & parameter
 }
 
 SingleValuedCostFunction::MeasureType
-SingleValuedCostFunction::GetValue(const ParametersType & parameters, const std::vector<int> & indices) const
+SingleValuedCostFunction::GetValue(const ParametersType & parameters, int * touched_indices, int num_indices) const
 {
-  std::cout << "HEE" << std::endl;
   itkExceptionMacro("Missing partial evaluations implementation");
 }
 

@@ -70,7 +70,7 @@ public:
   /** This method returns the value of the cost function when it is evaluated partially
    * when only*/
   virtual MeasureType
-  GetValue(const ParametersType & parameters, const std::vector<int> & indices) const;
+  GetValue(const ParametersType & parameters, int * touched_indices, int num_indices) const;
 
   /** This method returns the derivative of the cost function corresponding
    * to the specified parameters.   */

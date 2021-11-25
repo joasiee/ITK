@@ -76,7 +76,7 @@ SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters) cons
  * Get the cost function value at the given parameters
  */
 SingleValuedNonLinearOptimizer::MeasureType
-SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters, const std::vector<int> & indices) const
+SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters, int * touched_indices, int num_indices) const
 {
   itkDebugMacro("Computing CostFunction value at " << parameters);
 
@@ -88,7 +88,7 @@ SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters, cons
     throw ex;
   }
 
-  return this->GetCostFunction()->GetValue(parameters, indices);
+  return this->GetCostFunction()->GetValue(parameters, touched_indices, num_indices);
 }
 
 void

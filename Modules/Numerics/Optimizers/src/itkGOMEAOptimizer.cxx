@@ -1188,9 +1188,9 @@ GOMEAOptimizer::costFunctionEvaluation(ParametersType * parameters, MeasureType 
     *obj_val = std::numeric_limits<MeasureType>::max();
   }
 
-  std::vector<int> test;
-  test.push_back(1);
-  this->GetValue(*parameters, test);
+  int * test;
+  int test2{0};
+  this->GetValue(*parameters, test, test2);
   
   if (*obj_val < m_CurrentValue)
   {
