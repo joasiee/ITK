@@ -325,5 +325,31 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::Transform
   return outputPoint;
 }
 
+template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+void
+BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::GetRegionsForFOS(
+  const int *                   indices,
+  const int                     length,
+  std::vector<ImageRegionFOS> & regions) const
+{
+  ImagePointer coefficientImage = this->m_CoefficientImages[0];
+  auto regionSize = coefficientImage->GetLargestPossibleRegion().GetSize();
+  const int                    num_points = this->GetNumberOfParameters() / SpaceDimension;
+  std::vector<bool> pointAdded(num_points, false);
+
+  for (unsigned int i = 0; i < length; ++i)
+  {
+    int            cpoint = (indices[i] % num_points);
+    ImageIndexType p = coefficientImage->ComputeIndex(cpoint);
+    ImageIndexType lower, upper;
+    for (unsigned int d = 0; d < SpaceDimension; ++d)
+    {
+      lower[d] = std::max(p[d] - 2, 1);
+      upper[d] = std::min(p[d] + 2, regionSize[d] - 2);
+    }
+    
+  }
+}
+
 } // namespace itk
 #endif
