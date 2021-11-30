@@ -1391,6 +1391,20 @@ ImageToImageMetric<TFixedImage, TMovingImage>::SynchronizeTransforms() const
     this->m_ThreaderTransform[threadId]->SetParameters(this->m_Transform->GetParameters());
   }
 }
+
+template <typename TFixedImage, typename TMovingImage>
+void
+ImageToImageMetric<TFixedImage, TMovingImage>::InitPartialEvaluations(int ** sets,
+                                                                      int *  set_length,
+                                                                      int    length)
+{
+  for (int i = 0; i < length; ++i)
+  {
+    std::vector<FixedImageRegionType> regions;
+    this->m_Transform->GetRegionsForFOS(sets[i], set_length[i], regions);
+    this->m_BSplineFOSRegions.push_back(regions);
+  }
+}
 } // end namespace itk
 
 #endif

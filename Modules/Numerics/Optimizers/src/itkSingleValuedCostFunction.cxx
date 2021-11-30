@@ -29,9 +29,15 @@ SingleValuedCostFunction::GetValueAndDerivative(const ParametersType & parameter
 }
 
 SingleValuedCostFunction::MeasureType
-SingleValuedCostFunction::GetValue(const ParametersType & parameters, int * touched_indices, int num_indices) const
+SingleValuedCostFunction::GetValue(const ParametersType & parameters, const int fosIndex) const
 {
-  itkExceptionMacro("Missing partial evaluations implementation");
+  throw MissingPartialEvaluationsImplementation();
+}
+
+void
+SingleValuedCostFunction::InitPartialEvaluations(int ** sets, int * set_length, int length)
+{
+  throw MissingPartialEvaluationsImplementation();
 }
 
 SingleValuedCostFunction::~SingleValuedCostFunction() = default;

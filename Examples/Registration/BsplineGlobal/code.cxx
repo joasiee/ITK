@@ -187,9 +187,7 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
 
   // GOMEA
   optimizer->SetMaximumNumberOfIterations(10);
-  optimizer->SetFosElementSize(25);
-  optimizer->SetLowerUserRange(-100.0);
-  optimizer->SetUpperUserRange(100.0);
+  optimizer->SetPartialEvaluations(true);
 
   std::cout << std::endl << "Starting Registration" << std::endl;
 

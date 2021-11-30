@@ -88,6 +88,11 @@ public:
   using InputPointType = Point<TParametersValueType, Self::SpaceDimension>;
   using OutputPointType = Point<TParametersValueType, Self::SpaceDimension>;
 
+  using typename Superclass::ImageRegionFOS;
+
+  void
+  GetRegionsForFOS(const int * indices, const int length, std::vector<ImageRegionFOS> & regions) const override;
+
   /** This method sets the parameters of the transform.
    * For a BSpline deformation transform, the parameters are the BSpline
    * coefficients on a sparse grid.
@@ -176,6 +181,7 @@ public:
   /** Parameters as SpaceDimension number of images. */
   using ParametersValueType = typename ParametersType::ValueType;
   using ImageType = Image<ParametersValueType, Self::SpaceDimension>;
+  using ImageIndexType = typename ImageType::IndexType;
   using ImagePointer = typename ImageType::Pointer;
   using CoefficientImageArray = FixedArray<ImagePointer, NDimensions>;
 

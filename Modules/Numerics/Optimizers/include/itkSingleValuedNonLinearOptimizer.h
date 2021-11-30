@@ -77,7 +77,7 @@ public:
   GetValue(const ParametersType & parameters) const;
 
   MeasureType
-  GetValue(const ParametersType & parameters, int * touched_indices, int num_indices) const;
+  GetValue(const ParametersType & parameters, const int fosIndex) const;
 
 protected:
   SingleValuedNonLinearOptimizer();

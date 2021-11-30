@@ -29,8 +29,6 @@
 #include "itkSingleValuedNonLinearOptimizer.h"
 #include "gomea/Tools.h"
 #include "gomea/FOS.h"
-#include "vnl/vnl_matrix.h"
-
 
 namespace itk
 {
@@ -76,11 +74,6 @@ public:
   itkGetConstMacro(MaximumNumberOfIterations, int);
   itkSetClampMacro(MaximumNumberOfIterations, int, 1, NumericTraits<int>::max());
 
-  itkGetConstMacro(LowerUserRange, double);
-  itkGetConstMacro(UpperUserRange, double);
-  itkSetMacro(LowerUserRange, double);
-  itkSetMacro(UpperUserRange, double);
-
   itkGetConstMacro(DistributionMultiplierDecrease, double);
   itkSetMacro(DistributionMultiplierDecrease, double);
 
@@ -108,6 +101,9 @@ public:
   itkGetConstMacro(FosElementSize, int);
   itkSetMacro(FosElementSize, int);
 
+  itkGetConstMacro(PartialEvaluations, bool);
+  itkSetMacro(PartialEvaluations, bool);
+
   const std::string
   GetStopConditionDescription() const override;
 
@@ -118,16 +114,20 @@ public:
   PrintSettings(std::ostream & os, Indent indent) const;
 
   void
-  PrintProgress(std::ostream & os, Indent indent, bool concise=false) const;
+  PrintProgress(std::ostream & os, Indent indent, bool concise = false) const;
 
 protected:
   GOMEAOptimizer();
   ~GOMEAOptimizer() override = default;
 
+  void
+  ezilaitini(void);
+
   int               m_NumberOfEvaluations{ 0 };
   int               m_CurrentIteration{ 0 };
   StopConditionType m_StopCondition{ Unknown };
   MeasureType       m_CurrentValue{ NumericTraits<MeasureType>::max() };
+  unsigned int      m_NrOfParameters;
 
 private:
   void
@@ -142,8 +142,6 @@ private:
   checkOptions(void);
   void
   initialize(void);
-  void
-  initializeParameterRangeBounds(void);
   void
   initializeMemory(void);
   void
@@ -213,7 +211,7 @@ private:
   void
   evaluateCompletePopulation(int population_index);
   void
-  costFunctionEvaluation(ParametersType * parameters, MeasureType * obj_val);
+  costFunctionEvaluation(ParametersType * parameters, MeasureType * obj_val, int index=0);
   void
   applyDistributionMultipliersToAllPopulations(void);
   void
@@ -238,8 +236,6 @@ private:
   generationalImprovementForOnePopulationForFOSElement(int population_index, int FOS_index, double * st_dev_ratio);
   double
   getStDevRatioForFOSElement(int population_index, double * parameters, int FOS_index);
-  void
-  ezilaitini(void);
   void
   ezilaitiniMemory(void);
   void
@@ -266,8 +262,6 @@ private:
   template <typename T>
   using Vector2D = std::vector<std::vector<T>>;
 
-  ParametersType           lower_init_ranges;
-  ParametersType           upper_init_ranges;
   Vector1D<ParametersType> mean_vectors;
   Vector1D<ParametersType> mean_shift_vector;
   Vector2D<MeasureType>    objective_values;
@@ -279,8 +273,6 @@ private:
   double m_DistributionMultiplierDecrease{ 0.9 };
   double m_StDevThreshold{ 1.0 };
   double m_FitnessVarianceTolerance{ 0.0 };
-  double m_LowerUserRange{ -1 };
-  double m_UpperUserRange{ 1 };
   double distribution_multiplier_increase;
   double eta_ams{ 1.0 };
   double eta_cov{ 1.0 };
@@ -300,6 +292,8 @@ private:
   int m_MovingImageBufferMisses{ 0 };
   int number_of_subgenerations_per_population_factor{ 8 };
   int number_of_populations{ 0 };
+
+  bool m_PartialEvaluations {false};
 
   short * populations_terminated;
   int *   selection_sizes;

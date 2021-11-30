@@ -321,6 +321,10 @@ public:
   itkGetConstReferenceMacro(UseCachingOfBSplineWeights, bool);
   itkBooleanMacro(UseCachingOfBSplineWeights);
 
+  /** Partial evaluations stuff when b splines are used */
+  void
+  InitPartialEvaluations(int ** sets, int * set_length, int length) override;
+
   using MultiThreaderType = MultiThreaderBase;
   /** Get the Threader. */
   itkGetModifiableObjectMacro(Threader, MultiThreaderType);
@@ -639,6 +643,7 @@ protected:
 
 private:
   FixedImageRegionType m_FixedImageRegion;
+  std::vector<std::vector<FixedImageRegionType>> m_BSplineFOSRegions;
 };
 } // end namespace itk
 

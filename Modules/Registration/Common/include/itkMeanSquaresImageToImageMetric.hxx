@@ -138,6 +138,13 @@ MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const Paramet
 }
 
 template <typename TFixedImage, typename TMovingImage>
+typename MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters, int index) const
+{
+  return NumericTraits<MeasureType>::Zero;
+}
+
+template <typename TFixedImage, typename TMovingImage>
 inline bool
 MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeThreadProcessSample(
   ThreadIdType                 threadId,

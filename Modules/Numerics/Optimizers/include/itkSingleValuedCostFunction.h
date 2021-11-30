@@ -24,7 +24,7 @@
 
 itkDeclareExceptionMacro(MissingPartialEvaluationsImplementation,
                          ExceptionObject,
-                         "No implementation for partial evaluations found for this cost function.");
+                         "Missing partial evaluations implementation");
 
 namespace itk
 {
@@ -67,10 +67,12 @@ public:
   virtual MeasureType
   GetValue(const ParametersType & parameters) const = 0;
 
-  /** This method returns the value of the cost function when it is evaluated partially
-   * when only*/
+  /** This method returns the value of the cost function when it is evaluated partially. */
   virtual MeasureType
-  GetValue(const ParametersType & parameters, int * touched_indices, int num_indices) const;
+  GetValue(const ParametersType & parameters, const int fosIndex) const;
+
+  virtual void
+  InitPartialEvaluations(int ** sets, int * set_length, int length);
 
   /** This method returns the derivative of the cost function corresponding
    * to the specified parameters.   */
