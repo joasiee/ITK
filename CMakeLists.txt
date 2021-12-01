@@ -577,6 +577,7 @@ if(NOT ITK_USE_SYSTEM_FFTW)
   set(FFTW_INCLUDE_PATH "\${ITK_INSTALL_PREFIX}/include/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}/Algorithms")
 endif()
 configure_file(CMake/ITKConfig.cmake.in CMakeFiles/ITKConfig.cmake @ONLY)
+add_definitions(-DCMAKE_EXPORT_COMPILE_COMMANDS=ON)
 
 #-----------------------------------------------------------------------------
 install(FILES ${ITK_BINARY_DIR}/CMakeFiles/ITKConfig.cmake

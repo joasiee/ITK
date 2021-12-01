@@ -68,7 +68,6 @@ public:
   itkGetConstMacro(CurrentIteration, int);
   itkGetConstMacro(NumberOfEvaluations, int);
   itkGetConstMacro(CurrentValue, MeasureType);
-  itkGetConstReferenceMacro(CurrentPosition, ParametersType);
   itkGetConstReferenceMacro(StopCondition, StopConditionType);
 
   itkGetConstMacro(MaximumNumberOfIterations, int);
@@ -85,6 +84,9 @@ public:
 
   itkGetConstMacro(FitnessVarianceTolerance, double);
   itkSetMacro(FitnessVarianceTolerance, double);
+
+  itkGetConstMacro(ImageDimension, int);
+  itkSetMacro(ImageDimension, int);
 
   itkGetConstMacro(BasePopulationSize, int);
   itkSetMacro(BasePopulationSize, int);
@@ -124,10 +126,12 @@ protected:
   ezilaitini(void);
 
   int               m_NumberOfEvaluations{ 0 };
+  unsigned long     m_NumberOfSubfunctionEvaluations{ 0L };
   int               m_CurrentIteration{ 0 };
   StopConditionType m_StopCondition{ Unknown };
   MeasureType       m_CurrentValue{ NumericTraits<MeasureType>::max() };
   unsigned int      m_NrOfParameters;
+  int               m_ImageDimension;
 
 private:
   void
@@ -211,7 +215,13 @@ private:
   void
   evaluateCompletePopulation(int population_index);
   void
-  costFunctionEvaluation(ParametersType * parameters, MeasureType * obj_val, int index=0);
+  costFunctionEvaluation(ParametersType * parameters, MeasureType * obj_val);
+  void
+  costFunctionEvaluation(ParametersType * parameters,
+                         MeasureType *    obj_val,
+                         MeasureType      obj_val_previous,
+                         MeasureType      obj_val_previous_partial,
+                         int              setIndex);
   void
   applyDistributionMultipliersToAllPopulations(void);
   void
@@ -293,7 +303,7 @@ private:
   int number_of_subgenerations_per_population_factor{ 8 };
   int number_of_populations{ 0 };
 
-  bool m_PartialEvaluations {false};
+  bool m_PartialEvaluations{ false };
 
   short * populations_terminated;
   int *   selection_sizes;

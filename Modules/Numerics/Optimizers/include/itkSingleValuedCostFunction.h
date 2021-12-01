@@ -49,6 +49,8 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(SingleValuedCostFunction, CostFunction);
 
+  itkGetConstReferenceMacro(SubfunctionEvaluations, unsigned long);
+
   /**  MeasureType type alias.
    *  It defines a type used to return the cost function value. */
   using MeasureType = double;
@@ -87,6 +89,8 @@ public:
 protected:
   SingleValuedCostFunction() = default;
   ~SingleValuedCostFunction() override;
+
+  mutable unsigned long m_SubfunctionEvaluations{0L};
 };
 } // end namespace itk
 

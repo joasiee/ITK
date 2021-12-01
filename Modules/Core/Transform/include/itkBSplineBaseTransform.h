@@ -19,9 +19,11 @@
 #define itkBSplineBaseTransform_h
 
 #include <iostream>
+#include <algorithm>
 #include "itkTransform.h"
 #include "itkImage.h"
 #include "itkBSplineInterpolationWeightFunction.h"
+
 
 namespace itk
 {

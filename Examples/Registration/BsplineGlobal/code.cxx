@@ -152,7 +152,7 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
     fixedPhysicalDimensions[i] =
       fixedImage->GetSpacing()[i] * static_cast<double>(fixedImage->GetLargestPossibleRegion().GetSize()[i] - 1);
   }
-  unsigned int numberOfGridNodesInOneDimension = 5;
+  unsigned int numberOfGridNodesInOneDimension = 11;
   meshSize.Fill(numberOfGridNodesInOneDimension - SplineOrder);
   transform->SetTransformDomainOrigin(fixedImage->GetOrigin());
   transform->SetTransformDomainPhysicalDimensions(fixedPhysicalDimensions);
@@ -186,8 +186,11 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
   // optimizer->SetMaximumNumberOfFunctionEvaluations(1000);
 
   // GOMEA
-  optimizer->SetMaximumNumberOfIterations(10);
+  optimizer->SetMaximumNumberOfIterations(3);
+  optimizer->SetBasePopulationSize(20);
   optimizer->SetPartialEvaluations(true);
+  optimizer->SetFosElementSize(-6);
+  optimizer->SetImageDimension(ImageDimension);
 
   std::cout << std::endl << "Starting Registration" << std::endl;
 

@@ -429,6 +429,8 @@ protected:
 
   /** Boolean to indicate if the transform is BSpline deformable. */
   bool m_TransformIsBSpline{ false };
+  
+  std::vector<std::vector<FixedImageRegionType>> m_BSplineFOSRegions;
 
   /** The number of BSpline transform weights is the number of
    * of parameter in the support region (per dimension ). */
@@ -643,7 +645,6 @@ protected:
 
 private:
   FixedImageRegionType m_FixedImageRegion;
-  std::vector<std::vector<FixedImageRegionType>> m_BSplineFOSRegions;
 };
 } // end namespace itk
 

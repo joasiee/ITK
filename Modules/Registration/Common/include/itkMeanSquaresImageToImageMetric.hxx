@@ -133,15 +133,46 @@ MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const Paramet
     mse += m_PerThread[t].m_MSE;
   }
   mse /= this->m_NumberOfPixelsCounted;
+  this->m_SubfunctionEvaluations += this->m_NumberOfPixelsCounted;
 
   return mse;
 }
 
 template <typename TFixedImage, typename TMovingImage>
 typename MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
-MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters, int index) const
+MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters,
+                                                                   int                    index) const
 {
-  return NumericTraits<MeasureType>::Zero;
+  itkDebugMacro("GetValue( " << parameters << " ) ");
+
+  if (!this->m_FixedImage)
+    itkExceptionMacro(<< "Fixed image has not been assigned");
+
+  this->m_Transform->SetParameters(parameters);
+  double       mse = 0.0;
+  unsigned int pixelsCounted = 0;
+
+  for (auto const & region : this->m_BSplineFOSRegions[index])
+  {
+    ImageRegionConstIteratorWithIndex<FixedImageType> imageIterator(this->m_FixedImage, region);
+    while (!imageIterator.IsAtEnd())
+    {
+      unsigned int         offset = this->m_FixedImage->ComputeOffset(imageIterator.GetIndex());
+      double               movingImageValue = 0.0;
+      MovingImagePointType mappedPoint;
+      bool                 sampleOk = true;
+      this->TransformPoint(offset, mappedPoint, sampleOk, movingImageValue, 0);
+      double diff = movingImageValue - this->m_FixedImageSamples[offset].value;
+      mse += diff * diff;
+
+      ++pixelsCounted;
+      ++imageIterator;
+    }
+  }
+  mse /= this->m_NumberOfFixedImageSamples;
+  this->m_SubfunctionEvaluations += pixelsCounted;
+
+  return mse;
 }
 
 template <typename TFixedImage, typename TMovingImage>

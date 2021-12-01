@@ -92,6 +92,7 @@ extern int number_of_parameters,
   learn_linkage_tree,  /* Whether the FOS is learned at the start of each generation. */
   static_linkage_tree, /* Whether the FOS is fixed throughout optimization. */
   random_linkage_tree, /* Whether the fixed linkage tree is learned based on a random distance measure. */
+  bspline_custom_tree,
   FOS_element_size;    /* If positive, the size of blocks of consecutive variables in the FOS. If negative, determines
                           specific kind of linkage tree FOS. */
 extern double ***MI_matrices, **S_matrix, *S_vector; /* Avoids quadratic memory requirements when a linkage tree is
