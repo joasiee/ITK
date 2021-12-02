@@ -20,6 +20,7 @@
 #include "itkTimeProbesCollectorBase.h"
 #include "itkSpatialObjectToImageFilter.h"
 #include "itkEllipseSpatialObject.h"
+#include "itkBoxSpatialObject.h"
 
 #if ITK_VERSION_MAJOR < 4
 #  include "itkBSplineDeformableTransform.h"
@@ -37,13 +38,15 @@
 #  include "QuickView.h"
 #endif
 
-constexpr unsigned int ImageDimension = 2;
+constexpr unsigned int ImageDimension = 3;
+constexpr unsigned int ImageSize = 30;
+constexpr unsigned int ObjectSize = 10;
 using PixelType = float;
 
 using ImageType = itk::Image<PixelType, ImageDimension>;
 
 static void
-CreateEllipseImage(ImageType::Pointer image);
+CreateBoxImage(ImageType::Pointer image);
 static void
 CreateCircleImage(ImageType::Pointer image);
 
@@ -55,18 +58,16 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
   constexpr unsigned int SplineOrder = 3;
   using CoordinateRepType = double;
 
-#if ITK_VERSION_MAJOR < 4
-  using TransformType = itk::BSplineDeformableTransform<CoordinateRepType, SpaceDimension, SplineOrder>;
-#else
-  using TransformType = itk::BSplineTransform<CoordinateRepType, SpaceDimension, SplineOrder>;
-#endif
+  using TransformType =
+    itk::BSplineTransform<CoordinateRepType, SpaceDimension, SplineOrder>;
   // using OptimizerType = itk::LBFGSOptimizer;
   using OptimizerType = itk::GOMEAOptimizer;
 
 
   using MetricType = itk::MeanSquaresImageToImageMetric<ImageType, ImageType>;
 
-  using InterpolatorType = itk::LinearInterpolateImageFunction<ImageType, double>;
+  using InterpolatorType =
+    itk::LinearInterpolateImageFunction<ImageType, double>;
 
   using RegistrationType = itk::ImageRegistrationMethod<ImageType, ImageType>;
 
@@ -92,7 +93,23 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
   CreateCircleImage(fixedImage);
 
   ImageType::Pointer movingImage = ImageType::New();
-  CreateEllipseImage(movingImage);
+  CreateBoxImage(movingImage);
+
+  // using WriterType = itk::ImageFileWriter<ImageType>;
+  // WriterType::Pointer writer = WriterType::New();
+  // writer->SetFileName("fixed.vtk");
+  // writer->SetInput(fixedImage);
+
+  // try
+  // {
+  //   writer->Update();
+  // }
+  // catch (itk::ExceptionObject & error)
+  // {
+  //   std::cerr << "Error: " << error << std::endl;
+  //   return EXIT_FAILURE;
+  // }
+  // return EXIT_SUCCESS;
 
   // Setup the registration
   registration->SetFixedImage(fixedImage);
@@ -101,64 +118,29 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
   ImageType::RegionType fixedRegion = fixedImage->GetBufferedRegion();
   registration->SetFixedImageRegion(fixedRegion);
 
-  //  Here we define the parameters of the BSplineDeformableTransform grid.  We
-  //  arbitrarily decide to use a grid with $5 \times 5$ nodes within the image.
-  //  The reader should note that the BSpline computation requires a
+  //  Here we define the parameters of the BSplineDeformableTransform grid. We
+  //  arbitrarily decide to use a grid with $5 \times 5$ nodes within the
+  //  image. The reader should note that the BSpline computation requires a
   //  finite support region ( 1 grid node at the lower borders and 2
   //  grid nodes at upper borders). Therefore in this example, we set
   //  the grid size to be $8 \times 8$ and place the grid origin such that
   //  grid node (1,1) coincides with the first pixel in the fixed image.
 
-#if ITK_VERSION_MAJOR < 4
-  using RegionType = TransformType::RegionType;
-  RegionType           bsplineRegion;
-  RegionType::SizeType gridSizeOnImage;
-  RegionType::SizeType gridBorderSize;
-  RegionType::SizeType totalGridSize;
-
-  gridSizeOnImage.Fill(5);
-  gridBorderSize.Fill(3); // Border for spline order = 3 ( 1 lower, 2 upper )
-  totalGridSize = gridSizeOnImage + gridBorderSize;
-
-  bsplineRegion.SetSize(totalGridSize);
-
-  using SpacingType = TransformType::SpacingType;
-  SpacingType spacing = fixedImage->GetSpacing();
-
-  using OriginType = TransformType::OriginType;
-  OriginType origin = fixedImage->GetOrigin();
-
-  ImageType::SizeType fixedImageSize = fixedRegion.GetSize();
-
-  for (unsigned int r = 0; r < ImageDimension; r++)
-  {
-    spacing[r] *= static_cast<double>(fixedImageSize[r] - 1) / static_cast<double>(gridSizeOnImage[r] - 1);
-  }
-
-  ImageType::DirectionType gridDirection = fixedImage->GetDirection();
-  SpacingType              gridOriginOffset = gridDirection * spacing;
-
-  OriginType gridOrigin = origin - gridOriginOffset;
-
-  transform->SetGridSpacing(spacing);
-  transform->SetGridOrigin(gridOrigin);
-  transform->SetGridRegion(bsplineRegion);
-  transform->SetGridDirection(gridDirection);
-#else
   TransformType::PhysicalDimensionsType fixedPhysicalDimensions;
   TransformType::MeshSizeType           meshSize;
   for (unsigned int i = 0; i < ImageDimension; i++)
   {
     fixedPhysicalDimensions[i] =
-      fixedImage->GetSpacing()[i] * static_cast<double>(fixedImage->GetLargestPossibleRegion().GetSize()[i] - 1);
+      fixedImage->GetSpacing()[i] *
+      static_cast<double>(
+        fixedImage->GetLargestPossibleRegion().GetSize()[i] - 1);
   }
-  unsigned int numberOfGridNodesInOneDimension = 11;
+  unsigned int numberOfGridNodesInOneDimension = 7;
   meshSize.Fill(numberOfGridNodesInOneDimension - SplineOrder);
   transform->SetTransformDomainOrigin(fixedImage->GetOrigin());
   transform->SetTransformDomainPhysicalDimensions(fixedPhysicalDimensions);
   transform->SetTransformDomainMeshSize(meshSize);
   transform->SetTransformDomainDirection(fixedImage->GetDirection());
-#endif
 
   using ParametersType = TransformType::ParametersType;
 
@@ -186,11 +168,12 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
   // optimizer->SetMaximumNumberOfFunctionEvaluations(1000);
 
   // GOMEA
-  optimizer->SetMaximumNumberOfIterations(3);
+  optimizer->SetMaximumNumberOfIterations(10);
   optimizer->SetBasePopulationSize(20);
-  optimizer->SetPartialEvaluations(true);
+  optimizer->SetPartialEvaluations(false);
   optimizer->SetFosElementSize(-6);
   optimizer->SetImageDimension(ImageDimension);
+  optimizer->SetWriteOutput(true);
 
   std::cout << std::endl << "Starting Registration" << std::endl;
 
@@ -206,49 +189,62 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
     return EXIT_FAILURE;
   }
 
-  OptimizerType::ParametersType finalParameters = registration->GetLastTransformParameters();
-  transform->SetParameters(finalParameters);
+  // OptimizerType::ParametersType finalParameters =
+  //   registration->GetLastTransformParameters();
+  // transform->SetParameters(finalParameters);
 
-  using ResampleFilterType = itk::ResampleImageFilter<ImageType, ImageType>;
+  // using ResampleFilterType = itk::ResampleImageFilter<ImageType, ImageType>;
 
-  ResampleFilterType::Pointer resample = ResampleFilterType::New();
+  // ResampleFilterType::Pointer resample = ResampleFilterType::New();
 
-  resample->SetTransform(transform);
-  resample->SetInput(movingImage);
+  // resample->SetTransform(transform);
+  // resample->SetInput(movingImage);
 
-  resample->SetSize(fixedImage->GetLargestPossibleRegion().GetSize());
-  resample->SetOutputOrigin(fixedImage->GetOrigin());
-  resample->SetOutputSpacing(fixedImage->GetSpacing());
-  resample->SetOutputDirection(fixedImage->GetDirection());
-  resample->SetDefaultPixelValue(100);
+  // resample->SetSize(fixedImage->GetLargestPossibleRegion().GetSize());
+  // resample->SetOutputOrigin(fixedImage->GetOrigin());
+  // resample->SetOutputSpacing(fixedImage->GetSpacing());
+  // resample->SetOutputDirection(fixedImage->GetDirection());
+  // resample->SetDefaultPixelValue(100);
 
-  using OutputPixelType = unsigned char;
+  // using WriterType = itk::ImageFileWriter<ImageType>;
+  // WriterType::Pointer writer = WriterType::New();
+  // writer->SetFileName("test.vtk");
+  // writer->SetInput(resample->GetOutput());
 
-  using OutputImageType = itk::Image<OutputPixelType, ImageDimension>;
+  // try
+  // {
+  //   writer->Update();
+  // }
+  // catch (itk::ExceptionObject & error)
+  // {
+  //   std::cerr << "Error: " << error << std::endl;
+  //   return EXIT_FAILURE;
+  // }
 
-  using CastFilterType = itk::CastImageFilter<ImageType, OutputImageType>;
+  // using OutputPixelType = unsigned char;
+  // using OutputImageType = itk::Image<OutputPixelType, ImageDimension>;
+  // using CastFilterType = itk::CastImageFilter<ImageType, OutputImageType>;
+  // using OutputWriterType = itk::ImageFileWriter<OutputImageType>;
 
-  using OutputWriterType = itk::ImageFileWriter<OutputImageType>;
-
-  OutputWriterType::Pointer writer = OutputWriterType::New();
-  CastFilterType::Pointer   caster = CastFilterType::New();
+  // OutputWriterType::Pointer writer = OutputWriterType::New();
+  // CastFilterType::Pointer   caster = CastFilterType::New();
 
 
-  writer->SetFileName("output.png");
+  // writer->SetFileName("output.vtk");
 
-  caster->SetInput(resample->GetOutput());
-  writer->SetInput(caster->GetOutput());
+  // caster->SetInput(resample->GetOutput());
+  // writer->SetInput(caster->GetOutput());
 
-  try
-  {
-    writer->Update();
-  }
-  catch (itk::ExceptionObject & err)
-  {
-    std::cerr << "ExceptionObject caught !" << std::endl;
-    std::cerr << err << std::endl;
-    return EXIT_FAILURE;
-  }
+  // try
+  // {
+  //   writer->Update();
+  // }
+  // catch (itk::ExceptionObject & err)
+  // {
+  //   std::cerr << "ExceptionObject caught !" << std::endl;
+  //   std::cerr << err << std::endl;
+  //   return EXIT_FAILURE;
+  // }
 
 #ifdef ENABLE_QUICKVIEW
   QuickView viewer;
@@ -263,17 +259,18 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
 }
 
 void
-CreateEllipseImage(ImageType::Pointer image)
+CreateCircleImage(ImageType::Pointer image)
 {
   using EllipseType = itk::EllipseSpatialObject<ImageDimension>;
 
-  using SpatialObjectToImageFilterType = itk::SpatialObjectToImageFilter<EllipseType, ImageType>;
+  using SpatialObjectToImageFilterType =
+    itk::SpatialObjectToImageFilter<EllipseType, ImageType>;
 
-  SpatialObjectToImageFilterType::Pointer imageFilter = SpatialObjectToImageFilterType::New();
+  SpatialObjectToImageFilterType::Pointer imageFilter =
+    SpatialObjectToImageFilterType::New();
 
   ImageType::SizeType size;
-  size[0] = 100;
-  size[1] = 100;
+  size.Fill(ImageSize);
 
   imageFilter->SetSize(size);
 
@@ -283,8 +280,7 @@ CreateEllipseImage(ImageType::Pointer image)
 
   EllipseType::Pointer   ellipse = EllipseType::New();
   EllipseType::ArrayType radiusArray;
-  radiusArray[0] = 10;
-  radiusArray[1] = 20;
+  radiusArray.Fill(ObjectSize);
   ellipse->SetRadiusInObjectSpace(radiusArray);
 
   using TransformType = EllipseType::TransformType;
@@ -292,8 +288,7 @@ CreateEllipseImage(ImageType::Pointer image)
   transform->SetIdentity();
 
   TransformType::OutputVectorType translation;
-  translation[0] = 65;
-  translation[1] = 45;
+  translation.Fill(ImageSize / 2);
   transform->Translate(translation, false);
 
   ellipse->SetObjectToParentTransform(transform);
@@ -311,17 +306,18 @@ CreateEllipseImage(ImageType::Pointer image)
 }
 
 void
-CreateCircleImage(ImageType::Pointer image)
+CreateBoxImage(ImageType::Pointer image)
 {
-  using EllipseType = itk::EllipseSpatialObject<ImageDimension>;
+  using BoxType = itk::BoxSpatialObject<ImageDimension>;
 
-  using SpatialObjectToImageFilterType = itk::SpatialObjectToImageFilter<EllipseType, ImageType>;
+  using SpatialObjectToImageFilterType =
+    itk::SpatialObjectToImageFilter<BoxType, ImageType>;
 
-  SpatialObjectToImageFilterType::Pointer imageFilter = SpatialObjectToImageFilterType::New();
+  SpatialObjectToImageFilterType::Pointer imageFilter =
+    SpatialObjectToImageFilterType::New();
 
   ImageType::SizeType size;
-  size[0] = 100;
-  size[1] = 100;
+  size.Fill(ImageSize);
 
   imageFilter->SetSize(size);
 
@@ -329,27 +325,26 @@ CreateCircleImage(ImageType::Pointer image)
   spacing.Fill(1);
   imageFilter->SetSpacing(spacing);
 
-  EllipseType::Pointer   ellipse = EllipseType::New();
-  EllipseType::ArrayType radiusArray;
-  radiusArray[0] = 10;
-  radiusArray[1] = 10;
-  ellipse->SetRadiusInObjectSpace(radiusArray);
+  BoxType::Pointer  box = BoxType::New();
+  BoxType::SizeType sizeArray;
+  sizeArray.Fill(2*ObjectSize);
+  box->SetSizeInObjectSpace(sizeArray);
+  box->Update();
 
-  using TransformType = EllipseType::TransformType;
+  using TransformType = BoxType::TransformType;
   TransformType::Pointer transform = TransformType::New();
   transform->SetIdentity();
 
   TransformType::OutputVectorType translation;
-  translation[0] = 50;
-  translation[1] = 50;
+  translation.Fill((ImageSize / 2) - (ObjectSize));
   transform->Translate(translation, false);
 
-  ellipse->SetObjectToParentTransform(transform);
+  box->SetObjectToParentTransform(transform);
 
-  imageFilter->SetInput(ellipse);
+  imageFilter->SetInput(box);
 
-  ellipse->SetDefaultInsideValue(255);
-  ellipse->SetDefaultOutsideValue(0);
+  box->SetDefaultInsideValue(255);
+  box->SetDefaultOutsideValue(0);
   imageFilter->SetUseObjectValue(true);
   imageFilter->SetOutsideValue(0);
 

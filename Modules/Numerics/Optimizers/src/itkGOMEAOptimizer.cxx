@@ -64,6 +64,12 @@ GOMEAOptimizer::PrintProgress(std::ostream & os, Indent indent, bool concise) co
 }
 
 void
+GOMEAOptimizer::IterationWriteOutput()
+{
+  outFile << m_CurrentIteration << " " << m_NumberOfEvaluations << " " << m_NumberOfSubfunctionEvaluations << " " << m_CurrentValue << std::endl;
+}
+
+void
 GOMEAOptimizer::StartOptimization()
 {
   itkDebugMacro("StartOptimization");
@@ -142,6 +148,9 @@ GOMEAOptimizer::initialize(void)
   if (m_FosElementSize == 1)
     use_univariate_FOS = 1;
   GOMEA::FOS_element_size = m_FosElementSize;
+
+  if (m_WriteOutput)
+    outFile.open("out.txt");
 
   // finish initialization
   this->checkOptions();
@@ -432,7 +441,7 @@ GOMEAOptimizer::initializeFOS(int population_index)
       new_FOS->sets[i] = (int *)Malloc(m_ImageDimension * sizeof(int));
       new_FOS->set_length[i] = m_ImageDimension;
     }
-    for (i = 0; (unsigned) i < m_NrOfParameters; i++)
+    for (i = 0; (unsigned)i < m_NrOfParameters; i++)
     {
       new_FOS->sets[i % new_FOS->length][i / new_FOS->length] = i;
     }
@@ -1856,6 +1865,9 @@ GOMEAOptimizer::ezilaitiniMemory(void)
   objective_values_selections.clear();
   populations.clear();
   selections.clear();
+
+  if (m_WriteOutput)
+    outFile.close();
 }
 
 /**
@@ -1986,8 +1998,9 @@ GOMEAOptimizer::runAllPopulations()
     }
 
     this->generationalStepAllPopulations();
-    this->m_NumberOfSubfunctionEvaluations += this->m_CostFunction->GetSubfunctionEvaluations();
+    this->m_NumberOfSubfunctionEvaluations = this->m_CostFunction->GetSubfunctionEvaluations();
     m_CurrentIteration++;
+    this->IterationWriteOutput();
     this->InvokeEvent(IterationEvent());
     this->PrintProgress(std::cout, *itk::Indent::New(), true);
   }
