@@ -1212,7 +1212,7 @@ GOMEAOptimizer::costFunctionEvaluation(ParametersType * parameters, MeasureType 
 {
   try
   {
-    *obj_val = this->GetValue(*parameters);
+    *obj_val = m_PartialEvaluations ? this->GetValueFull(*parameters) : this->GetValue(*parameters);
   }
   catch (ExceptionObject & err)
   {

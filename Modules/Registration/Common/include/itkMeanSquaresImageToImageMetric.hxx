@@ -96,51 +96,51 @@ MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueThreadProcessS
   return true;
 }
 
-// template <typename TFixedImage, typename TMovingImage>
-// typename MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
-// MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters) const
-// {
-//   itkDebugMacro("GetValue( " << parameters << " ) ");
-
-//   if (!this->m_FixedImage)
-//   {
-//     itkExceptionMacro(<< "Fixed image has not been assigned");
-//   }
-
-//   for (unsigned int i = 0; i < this->m_NumberOfWorkUnits; ++i)
-//   {
-//     m_PerThread[i].m_MSE = NumericTraits<MeasureType>::ZeroValue();
-//   }
-
-//   // Set up the parameters in the transform
-//   this->m_Transform->SetParameters(parameters);
-
-//   // MUST BE CALLED TO INITIATE PROCESSING
-//   this->GetValueMultiThreadedInitiate();
-
-//   itkDebugMacro("Ratio of voxels mapping into moving image buffer: " << this->m_NumberOfPixelsCounted << " / "
-//                                                                      << this->m_NumberOfFixedImageSamples << std::endl);
-
-//   if (this->m_NumberOfPixelsCounted < this->m_NumberOfFixedImageSamples / 4)
-//   {
-//     itkExceptionMacro("Too many samples map outside moving image buffer: "
-//                       << this->m_NumberOfPixelsCounted << " / " << this->m_NumberOfFixedImageSamples << std::endl);
-//   }
-
-//   double mse = m_PerThread[0].m_MSE;
-//   for (unsigned int t = 1; t < this->m_NumberOfWorkUnits; t++)
-//   {
-//     mse += m_PerThread[t].m_MSE;
-//   }
-//   mse /= this->m_NumberOfPixelsCounted;
-//   this->m_SubfunctionEvaluations += this->m_NumberOfPixelsCounted;
-
-//   return mse;
-// }
-
 template <typename TFixedImage, typename TMovingImage>
 typename MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
 MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters) const
+{
+  itkDebugMacro("GetValue( " << parameters << " ) ");
+
+  if (!this->m_FixedImage)
+  {
+    itkExceptionMacro(<< "Fixed image has not been assigned");
+  }
+
+  for (unsigned int i = 0; i < this->m_NumberOfWorkUnits; ++i)
+  {
+    m_PerThread[i].m_MSE = NumericTraits<MeasureType>::ZeroValue();
+  }
+
+  // Set up the parameters in the transform
+  this->m_Transform->SetParameters(parameters);
+
+  // MUST BE CALLED TO INITIATE PROCESSING
+  this->GetValueMultiThreadedInitiate();
+
+  itkDebugMacro("Ratio of voxels mapping into moving image buffer: " << this->m_NumberOfPixelsCounted << " / "
+                                                                     << this->m_NumberOfFixedImageSamples << std::endl);
+
+  if (this->m_NumberOfPixelsCounted < this->m_NumberOfFixedImageSamples / 4)
+  {
+    itkExceptionMacro("Too many samples map outside moving image buffer: "
+                      << this->m_NumberOfPixelsCounted << " / " << this->m_NumberOfFixedImageSamples << std::endl);
+  }
+
+  double mse = m_PerThread[0].m_MSE;
+  for (unsigned int t = 1; t < this->m_NumberOfWorkUnits; t++)
+  {
+    mse += m_PerThread[t].m_MSE;
+  }
+  mse /= this->m_NumberOfPixelsCounted;
+  this->m_SubfunctionEvaluations += this->m_NumberOfPixelsCounted;
+
+  return mse;
+}
+
+template <typename TFixedImage, typename TMovingImage>
+typename MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+MeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueFull(const ParametersType & parameters) const
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
 

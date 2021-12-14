@@ -77,6 +77,9 @@ public:
   GetValue(const ParametersType & parameters) const;
 
   MeasureType
+  GetValueFull(const ParametersType & parameters) const;
+
+  MeasureType
   GetValue(const ParametersType & parameters, const int fosIndex) const;
 
 protected:

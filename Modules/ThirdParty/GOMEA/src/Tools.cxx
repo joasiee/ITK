@@ -1147,11 +1147,6 @@ initializeRandomNumberGenerator(void)
   }
 
   random_seed = random_seed_changing;
-
-  FILE * file;
-  file = fopen("random_seed.dat", "w");
-  fprintf(file, "%ld\n", random_seed);
-  fclose(file);
 }
 
 /**

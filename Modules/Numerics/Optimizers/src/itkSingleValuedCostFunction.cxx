@@ -34,6 +34,12 @@ SingleValuedCostFunction::GetValue(const ParametersType & parameters, const int 
   throw MissingPartialEvaluationsImplementation();
 }
 
+SingleValuedCostFunction::MeasureType
+SingleValuedCostFunction::GetValueFull(const ParametersType & parameters) const
+{
+  throw MissingPartialEvaluationsImplementation();
+}
+
 void
 SingleValuedCostFunction::InitPartialEvaluations(int ** sets, int * set_length, int length)
 {

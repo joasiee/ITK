@@ -93,6 +93,9 @@ public:
   GetValue(const ParametersType & parameters) const override;
 
   MeasureType
+  GetValueFull(const ParametersType & parameters) const override;
+
+  MeasureType
   GetValue(const ParametersType & parameters, int index) const override;
 
   /** Get the derivatives of the match measure. */

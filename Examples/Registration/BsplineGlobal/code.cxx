@@ -28,6 +28,7 @@
 #  include "itkBSplineTransform.h"
 #endif
 #include "itkLBFGSOptimizer.h"
+#include "itkGradientDescentOptimizer.h"
 #include "itkGOMEAOptimizer.h"
 #include "itkImageFileWriter.h"
 #include "itkResampleImageFilter.h"
@@ -38,8 +39,8 @@
 #  include "QuickView.h"
 #endif
 
-constexpr unsigned int ImageDimension = 3;
-constexpr unsigned int ImageSize = 30;
+constexpr unsigned int ImageDimension = 2;
+constexpr unsigned int ImageSize = 40;
 constexpr unsigned int ObjectSize = 10;
 using PixelType = float;
 
@@ -97,7 +98,7 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
 
   // using WriterType = itk::ImageFileWriter<ImageType>;
   // WriterType::Pointer writer = WriterType::New();
-  // writer->SetFileName("fixed.vtk");
+  // writer->SetFileName("fixed.png");
   // writer->SetInput(fixedImage);
 
   // try
@@ -161,19 +162,19 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
   std::cout << transform->GetParameters() << std::endl;
 
   //  Next we set the parameters of the LBFGS Optimizer.
-  // optimizer->SetGradientConvergenceTolerance(0.05);
+  // optimizer->SetGradientConvergenceTolerance(0.1);
   // optimizer->SetLineSearchAccuracy(0.9);
-  // optimizer->SetDefaultStepLength(.5);
+  // optimizer->SetDefaultStepLength(0.75);
   // optimizer->TraceOn();
   // optimizer->SetMaximumNumberOfFunctionEvaluations(1000);
 
   // GOMEA
-  optimizer->SetMaximumNumberOfIterations(10);
-  optimizer->SetBasePopulationSize(20);
-  optimizer->SetPartialEvaluations(false);
-  optimizer->SetFosElementSize(-6);
-  optimizer->SetImageDimension(ImageDimension);
-  optimizer->SetWriteOutput(true);
+  optimizer->SetMaximumNumberOfIterations(3);
+  optimizer->SetBasePopulationSize(50);
+  // optimizer->SetPartialEvaluations(false);
+  // optimizer->SetFosElementSize(-6);
+  // optimizer->SetImageDimension(ImageDimension);
+  // optimizer->SetWriteOutput(true);
 
   std::cout << std::endl << "Starting Registration" << std::endl;
 
@@ -193,7 +194,8 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
   //   registration->GetLastTransformParameters();
   // transform->SetParameters(finalParameters);
 
-  // using ResampleFilterType = itk::ResampleImageFilter<ImageType, ImageType>;
+  // using ResampleFilterType = itk::ResampleImageFilter<ImageType,
+  // ImageType>;
 
   // ResampleFilterType::Pointer resample = ResampleFilterType::New();
 
@@ -208,7 +210,7 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
 
   // using WriterType = itk::ImageFileWriter<ImageType>;
   // WriterType::Pointer writer = WriterType::New();
-  // writer->SetFileName("test.vtk");
+  // writer->SetFileName("output.png");
   // writer->SetInput(resample->GetOutput());
 
   // try
@@ -327,7 +329,7 @@ CreateBoxImage(ImageType::Pointer image)
 
   BoxType::Pointer  box = BoxType::New();
   BoxType::SizeType sizeArray;
-  sizeArray.Fill(2*ObjectSize);
+  sizeArray.Fill(2 * ObjectSize - 1);
   box->SetSizeInObjectSpace(sizeArray);
   box->Update();
 
@@ -336,7 +338,7 @@ CreateBoxImage(ImageType::Pointer image)
   transform->SetIdentity();
 
   TransformType::OutputVectorType translation;
-  translation.Fill((ImageSize / 2) - (ObjectSize));
+  translation.Fill((ImageSize / 2) - ObjectSize);
   transform->Translate(translation, false);
 
   box->SetObjectToParentTransform(transform);
