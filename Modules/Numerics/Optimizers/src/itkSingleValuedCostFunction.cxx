@@ -31,19 +31,19 @@ SingleValuedCostFunction::GetValueAndDerivative(const ParametersType & parameter
 SingleValuedCostFunction::MeasureType
 SingleValuedCostFunction::GetValue(const ParametersType & parameters, const int fosIndex) const
 {
-  throw MissingPartialEvaluationsImplementation();
+  itkSpecializedExceptionMacro(MissingPartialEvaluationsImplementation);
 }
 
 SingleValuedCostFunction::MeasureType
 SingleValuedCostFunction::GetValueFull(const ParametersType & parameters) const
 {
-  throw MissingPartialEvaluationsImplementation();
+  itkSpecializedExceptionMacro(MissingPartialEvaluationsImplementation);
 }
 
 void
 SingleValuedCostFunction::InitPartialEvaluations(int ** sets, int * set_length, int length)
 {
-  throw MissingPartialEvaluationsImplementation();
+  itkSpecializedExceptionMacro(MissingPartialEvaluationsImplementation);
 }
 
 SingleValuedCostFunction::~SingleValuedCostFunction() = default;
