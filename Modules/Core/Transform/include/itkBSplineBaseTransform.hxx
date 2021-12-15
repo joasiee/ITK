@@ -325,5 +325,61 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::Transform
   return outputPoint;
 }
 
+template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+void
+BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::GetRegionsForFOS(
+  const int *                   indices,
+  const int                     length,
+  std::vector<ImageRegionFOS> & regions) const
+{
+  ImagePointer      coefficientImage = this->m_CoefficientImages[0];
+  auto              regionSize = coefficientImage->GetLargestPossibleRegion().GetSize();
+  const int         num_points = this->GetNumberOfParameters() / SpaceDimension;
+  std::vector<bool> pointAdded(num_points, false);
+
+  for (int i = 0; i < length; ++i)
+  {
+    int            cpoint = (indices[i] % num_points);
+    ImageIndexType p = coefficientImage->ComputeIndex(cpoint);
+
+    ImageIndexType lower, upper;
+    RegionType     hypercube;
+    for (unsigned int d = 0; d < SpaceDimension; ++d)
+    {
+      lower[d] = std::max(static_cast<int>(p[d] - 3), 0);
+      upper[d] = std::min(static_cast<int>(p[d] + 1), static_cast<int>(regionSize[d] - 3));
+      hypercube.SetSize(d, upper[d] - lower[d]);
+    }
+    hypercube.SetIndex(lower);
+    ImageRegionConstIteratorWithIndex<ImageType> imageIterator(coefficientImage, hypercube);
+
+    while (!imageIterator.IsAtEnd())
+    {
+      const int offset = coefficientImage->ComputeOffset(imageIterator.GetIndex());
+      if (!pointAdded[offset])
+      {
+        pointAdded[offset] = true;
+        IndexType      imageIndex;
+        ImageRegionFOS fosRegion;
+        for (unsigned int d = 0; d < SpaceDimension; ++d)
+        {
+          double spacing = coefficientImage->GetSpacing()[d];
+          imageIndex[d] = ceil(imageIterator.GetIndex()[d] * spacing);
+          int sizing = ceil((imageIterator.GetIndex()[d] + 1) * spacing);
+
+          // edge case when outer control points are reached, no longer have to exclude pixels of next region.
+          if (imageIterator.GetIndex()[d] == static_cast<int>(regionSize[d] - 4))
+            sizing += 1;
+
+          fosRegion.SetSize(d, sizing - imageIndex[d]);
+        }
+        fosRegion.SetIndex(imageIndex);
+        regions.push_back(fosRegion);
+      }
+      ++imageIterator;
+    }
+  }
+}
+
 } // namespace itk
 #endif
