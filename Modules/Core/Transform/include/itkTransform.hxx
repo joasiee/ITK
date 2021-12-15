@@ -557,11 +557,11 @@ void
 Transform<TParametersValueType, NInputDimensions, NOutputDimensions>::GetRegionsForFOS(
   const int *                 indices,
   const int                   length,
-  std::vector<ImageRegionFOS>& regions) const
+  ImageRegionFOS & region) const
 {
   (void)indices;
   (void)length;
-  (void)regions;
+  (void)region;
   itkExceptionMacro("GetRegionsForFOS not implemented for transformation class.")
 }
 

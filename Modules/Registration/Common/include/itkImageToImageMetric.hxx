@@ -1400,9 +1400,9 @@ ImageToImageMetric<TFixedImage, TMovingImage>::InitPartialEvaluations(int ** set
 {
   for (int i = 0; i < length; ++i)
   {
-    std::vector<FixedImageRegionType> regions;
-    this->m_Transform->GetRegionsForFOS(sets[i], set_length[i], regions);
-    this->m_BSplineFOSRegions.push_back(regions);
+    FixedImageRegionType region;
+    this->m_Transform->GetRegionsForFOS(sets[i], set_length[i], region);
+    this->m_BSplineFOSRegions.push_back(region);
   }
 }
 } // end namespace itk
