@@ -1394,16 +1394,10 @@ ImageToImageMetric<TFixedImage, TMovingImage>::SynchronizeTransforms() const
 
 template <typename TFixedImage, typename TMovingImage>
 void
-ImageToImageMetric<TFixedImage, TMovingImage>::InitPartialEvaluations(int ** sets,
-                                                                      int *  set_length,
-                                                                      int    length)
+ImageToImageMetric<TFixedImage, TMovingImage>::InitPartialEvaluations(int ** sets, int * set_length, int length)
 {
-  for (int i = 0; i < length; ++i)
-  {
-    std::vector<FixedImageRegionType> regions;
-    this->m_Transform->GetRegionsForFOS(sets[i], set_length[i], regions);
-    this->m_BSplineFOSRegions.push_back(regions);
-  }
+  this->m_Transform->GetRegionsForFOS(
+    sets, set_length, length, this->m_BSplineFOSRegions, this->m_BSplinePointsRegions);
 }
 } // end namespace itk
 

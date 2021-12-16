@@ -176,7 +176,11 @@ public:
   using ImageRegionFOS = ImageRegion<InputSpaceDimension>;
 
   virtual void
-  GetRegionsForFOS(const int * indices, const int length, std::vector<ImageRegionFOS>& regions) const;
+  GetRegionsForFOS(int **                    sets,
+                   int *                     set_length,
+                   int                       length,
+                   std::vector<ImageRegionFOS> &   regions,
+                   std::vector<std::vector<int>> & points) const;
 
   /**  Method to transform a point.
    * \warning This method must be thread-safe. See, e.g., its use

@@ -328,55 +328,79 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::Transform
 template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::GetRegionsForFOS(
-  const int *                   indices,
-  const int                     length,
-  std::vector<ImageRegionFOS> & regions) const
+  int **                          sets,
+  int *                           set_length,
+  int                             length,
+  std::vector<ImageRegionFOS> &   regions,
+  std::vector<std::vector<int>> & points) const
 {
-  ImagePointer      coefficientImage = this->m_CoefficientImages[0];
-  auto              regionSize = coefficientImage->GetLargestPossibleRegion().GetSize();
-  const int         num_points = this->GetNumberOfParameters() / SpaceDimension;
-  std::vector<bool> pointAdded(num_points, false);
+  unsigned int i, j, d;
+  ImagePointer coefficientImage = this->m_CoefficientImages[0];
+  const int    num_points = this->GetNumberOfParameters() / SpaceDimension;
+  RegionType         coeffRegion = coefficientImage->GetLargestPossibleRegion();
+  RegionType coeffRegionCropped = coeffRegion;
 
-  for (int i = 0; i < length; ++i)
+  for (d = 0; d < SpaceDimension; ++d)
   {
-    int            cpoint = (indices[i] % num_points);
-    ImageIndexType p = coefficientImage->ComputeIndex(cpoint);
+    coeffRegionCropped.SetSize(d, coeffRegion.GetSize(d) - 3);
+  }
+  regions.resize(coeffRegionCropped.GetNumberOfPixels());
+  points.resize(num_points);
 
-    ImageIndexType lower, upper;
-    RegionType     hypercube;
-    for (unsigned int d = 0; d < SpaceDimension; ++d)
+  ImageRegionConstIteratorWithIndex<ImageType> coeffImageIterator(coefficientImage, coeffRegionCropped);
+  i = 0;
+  while (!coeffImageIterator.IsAtEnd())
+  {
+    IndexType    imageIndex;
+    for (d = 0; d < SpaceDimension; ++d)
     {
-      lower[d] = std::max(static_cast<int>(p[d] - 3), 0);
-      upper[d] = std::min(static_cast<int>(p[d] + 1), static_cast<int>(regionSize[d] - 3));
-      hypercube.SetSize(d, upper[d] - lower[d]);
+      double spacing = coefficientImage->GetSpacing()[d];
+      imageIndex[d] = ceil(coeffImageIterator.GetIndex()[d] * spacing);
+      int sizing = ceil((coeffImageIterator.GetIndex()[d] + 1) * spacing);
+
+      // edge case when outer control points are reached, no longer have to exclude pixels of next region.
+      if (coeffImageIterator.GetIndex()[d] == static_cast<int>(coeffRegion.GetSize(d) - 4))
+        sizing += 1;
+
+      regions[i].SetSize(d, sizing - imageIndex[d]);
     }
-    hypercube.SetIndex(lower);
-    ImageRegionConstIteratorWithIndex<ImageType> imageIterator(coefficientImage, hypercube);
+    regions[i].SetIndex(imageIndex);
+    ++coeffImageIterator;
+    ++i;
+  }
 
-    while (!imageIterator.IsAtEnd())
+  std::vector<bool> pointAdded(num_points, false);
+  for (j = 0; j < (unsigned) length; ++j)
+  {
+    for (i = 0; i < (unsigned) set_length[j]; ++i)
     {
-      const int offset = coefficientImage->ComputeOffset(imageIterator.GetIndex());
-      if (!pointAdded[offset])
+      int            cpoint = (sets[j][i] % num_points);
+      if (pointAdded[cpoint])
+        continue;
+      pointAdded[cpoint] = true;
+
+      ImageIndexType p = coefficientImage->ComputeIndex(cpoint);
+
+      ImageIndexType lower, upper;
+      RegionType     hypercube;
+      for (d = 0; d < SpaceDimension; ++d)
       {
-        pointAdded[offset] = true;
-        IndexType      imageIndex;
-        ImageRegionFOS fosRegion;
-        for (unsigned int d = 0; d < SpaceDimension; ++d)
-        {
-          double spacing = coefficientImage->GetSpacing()[d];
-          imageIndex[d] = ceil(imageIterator.GetIndex()[d] * spacing);
-          int sizing = ceil((imageIterator.GetIndex()[d] + 1) * spacing);
-
-          // edge case when outer control points are reached, no longer have to exclude pixels of next region.
-          if (imageIterator.GetIndex()[d] == static_cast<int>(regionSize[d] - 4))
-            sizing += 1;
-
-          fosRegion.SetSize(d, sizing - imageIndex[d]);
-        }
-        fosRegion.SetIndex(imageIndex);
-        regions.push_back(fosRegion);
+        lower[d] = std::max(static_cast<int>(p[d] - 3), 0);
+        upper[d] = std::min(static_cast<int>(p[d] + 1), static_cast<int>(coeffRegion.GetSize(d) - 3));
+        hypercube.SetSize(d, upper[d] - lower[d]);
       }
-      ++imageIterator;
+      hypercube.SetIndex(lower);
+      ImageRegionConstIteratorWithIndex<ImageType> imageIterator(coefficientImage, hypercube);
+
+      while (!imageIterator.IsAtEnd())
+      {
+        unsigned int offset = coefficientImage->ComputeOffset(imageIterator.GetIndex());
+        int delta = imageIterator.GetIndex()[1] * 3;
+        delta += SpaceDimension == 3 ? imageIterator.GetIndex()[2] * (coeffRegion.GetSize(0) * 3 + coeffRegion.GetSize(1) * 3 - 9) : 0;
+        offset -= delta;
+        points[cpoint].push_back(offset);
+        ++imageIterator;
+      }
     }
   }
 }

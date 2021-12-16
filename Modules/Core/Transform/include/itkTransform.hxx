@@ -555,13 +555,17 @@ Transform<TParametersValueType, NInputDimensions, NOutputDimensions>::CopyInFixe
 template <typename TParametersValueType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 Transform<TParametersValueType, NInputDimensions, NOutputDimensions>::GetRegionsForFOS(
-  const int *                 indices,
-  const int                   length,
-  std::vector<ImageRegionFOS>& regions) const
+  int **                    sets,
+  int *                     set_length,
+  int                       length,
+  std::vector<ImageRegionFOS> &   regions,
+  std::vector<std::vector<int>> & points) const
 {
-  (void)indices;
+  (void)sets;
+  (void)set_length;
   (void)length;
   (void)regions;
+  (void)points;
   itkExceptionMacro("GetRegionsForFOS not implemented for transformation class.")
 }
 

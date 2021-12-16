@@ -39,7 +39,7 @@
 #  include "QuickView.h"
 #endif
 
-constexpr unsigned int ImageDimension = 2;
+constexpr unsigned int ImageDimension = 3;
 constexpr unsigned int ImageSize = 40;
 constexpr unsigned int ObjectSize = 10;
 using PixelType = float;
@@ -136,7 +136,7 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
       static_cast<double>(
         fixedImage->GetLargestPossibleRegion().GetSize()[i] - 1);
   }
-  unsigned int numberOfGridNodesInOneDimension = 7;
+  unsigned int numberOfGridNodesInOneDimension = 5;
   meshSize.Fill(numberOfGridNodesInOneDimension - SplineOrder);
   transform->SetTransformDomainOrigin(fixedImage->GetOrigin());
   transform->SetTransformDomainPhysicalDimensions(fixedPhysicalDimensions);
@@ -171,9 +171,9 @@ main(int itkNotUsed(argc), char * itkNotUsed(argv)[])
   // GOMEA
   optimizer->SetMaximumNumberOfIterations(3);
   optimizer->SetBasePopulationSize(50);
-  // optimizer->SetPartialEvaluations(false);
-  // optimizer->SetFosElementSize(-6);
-  // optimizer->SetImageDimension(ImageDimension);
+  optimizer->SetPartialEvaluations(true);
+  optimizer->SetFosElementSize(-6);
+  optimizer->SetImageDimension(ImageDimension);
   // optimizer->SetWriteOutput(true);
 
   std::cout << std::endl << "Starting Registration" << std::endl;

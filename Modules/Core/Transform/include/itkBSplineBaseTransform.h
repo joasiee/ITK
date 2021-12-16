@@ -93,7 +93,11 @@ public:
   using typename Superclass::ImageRegionFOS;
 
   void
-  GetRegionsForFOS(const int * indices, const int length, std::vector<ImageRegionFOS> & regions) const override;
+  GetRegionsForFOS(int **                  sets,
+                   int *                   set_length,
+                   int                     length,
+                   std::vector<ImageRegionFOS> & regions,
+                   std::vector<std::vector<int>> & points) const override;
 
   /** This method sets the parameters of the transform.
    * For a BSpline deformation transform, the parameters are the BSpline
