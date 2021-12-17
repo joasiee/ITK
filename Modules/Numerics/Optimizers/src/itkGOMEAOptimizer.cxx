@@ -1246,10 +1246,6 @@ GOMEAOptimizer::costFunctionEvaluation(ParametersType * parameters,
   {
     *obj_val = obj_val_previous - obj_val_previous_partial + this->GetValue(*parameters, setIndex);
   }
-  catch (MissingPartialEvaluationsImplementation & err)
-  {
-    throw err;
-  }
   catch (ExceptionObject & err)
   {
     ++m_MovingImageBufferMisses;

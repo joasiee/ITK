@@ -22,10 +22,6 @@
 #include "itkNumericTraits.h"
 #include "ITKOptimizersExport.h"
 
-itkDeclareExceptionMacro(MissingPartialEvaluationsImplementation,
-                         ExceptionObject,
-                         "Missing partial evaluations implementation");
-
 namespace itk
 {
 /** \class SingleValuedCostFunction
