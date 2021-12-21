@@ -131,7 +131,6 @@ protected:
   ezilaitini(void);
 
   int               m_NumberOfEvaluations{ 0 };
-  unsigned long     m_NumberOfSubfunctionEvaluations{ 0L };
   int               m_CurrentIteration{ 0 };
   StopConditionType m_StopCondition{ Unknown };
   MeasureType       m_CurrentValue{ NumericTraits<MeasureType>::max() };

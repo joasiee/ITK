@@ -53,7 +53,6 @@ GOMEAOptimizer::PrintProgress(std::ostream & os, Indent indent, bool concise) co
   os << indent << "Progress: " << std::endl;
   os << indent1 << "NumberOfIterations: " << m_CurrentIteration << std::endl;
   os << indent1 << "NumberOfEvaluations: " << m_NumberOfEvaluations << std::endl;
-  os << indent1 << "NumberOfSubfunctionEvaluations: " << m_NumberOfSubfunctionEvaluations << std::endl;
   os << indent1 << "MovingImageBufferMisses: " << m_MovingImageBufferMisses << std::endl;
   os << indent1 << "Value: " << m_CurrentValue << std::endl;
   if (!concise)
@@ -66,7 +65,7 @@ GOMEAOptimizer::PrintProgress(std::ostream & os, Indent indent, bool concise) co
 void
 GOMEAOptimizer::IterationWriteOutput()
 {
-  outFile << m_CurrentIteration << " " << m_NumberOfEvaluations << " " << m_NumberOfSubfunctionEvaluations << " " << m_CurrentValue << std::endl;
+  outFile << m_CurrentIteration << " " << m_NumberOfEvaluations << " " << m_CurrentValue << std::endl;
 }
 
 void
@@ -1994,7 +1993,6 @@ GOMEAOptimizer::runAllPopulations()
     }
 
     this->generationalStepAllPopulations();
-    this->m_NumberOfSubfunctionEvaluations = this->m_CostFunction->GetSubfunctionEvaluations();
     m_CurrentIteration++;
     this->IterationWriteOutput();
     this->InvokeEvent(IterationEvent());
