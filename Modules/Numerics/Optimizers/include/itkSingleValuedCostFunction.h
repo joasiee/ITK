@@ -67,10 +67,6 @@ public:
   virtual MeasureType
   GetValue(const ParametersType & parameters, const int fosIndex) const;
 
-  /** This method returns the value of the cost function when it is evaluated fully using all subfunctions. */
-  virtual MeasureType
-  GetValueFull(const ParametersType & parameters) const;
-
   virtual void
   InitPartialEvaluations(int ** sets, int * set_length, int length);
 
