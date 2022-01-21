@@ -221,11 +221,11 @@ private:
   void
   costFunctionEvaluation(ParametersType * parameters, MeasureType * obj_val);
   void
-  costFunctionEvaluation(ParametersType * parameters,
-                         MeasureType *    obj_val,
-                         MeasureType      obj_val_previous,
-                         MeasureType      obj_val_previous_partial,
-                         int              setIndex);
+  costFunctionEvaluation(int           population_index,
+                         int           individual_index,
+                         int           fos_index,
+                         MeasureType * obj_val,
+                         MeasureType * obj_val_partial);
   void
   applyDistributionMultipliersToAllPopulations(void);
   void
@@ -302,10 +302,9 @@ private:
   int m_MaxNumberOfPopulations{ 1 };
   int m_BasePopulationSize{ 0 };
   int m_MaximumNumberOfIterations{ 100 };
-  int m_MaxNumberOfEvaluations{ 1000000 };
+  int m_MaxNumberOfEvaluations{ 0 };
   int m_MaxNoImprovementStretch{ 0 };
   int m_FosElementSize{ -1 };
-  int m_MovingImageBufferMisses{ 0 };
   int number_of_subgenerations_per_population_factor{ 8 };
   int number_of_populations{ 0 };
 

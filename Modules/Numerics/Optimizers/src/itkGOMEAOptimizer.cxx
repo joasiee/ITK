@@ -53,7 +53,6 @@ GOMEAOptimizer::PrintProgress(std::ostream & os, Indent indent, bool concise) co
   os << indent << "Progress: " << std::endl;
   os << indent1 << "NumberOfIterations: " << m_CurrentIteration << std::endl;
   os << indent1 << "NumberOfEvaluations: " << m_NumberOfEvaluations << std::endl;
-  os << indent1 << "MovingImageBufferMisses: " << m_MovingImageBufferMisses << std::endl;
   os << indent1 << "Value: " << m_CurrentValue << std::endl;
   if (!concise)
   {
@@ -504,7 +503,9 @@ GOMEAOptimizer::initializePopulationAndFitnessValues(int population_index)
   {
     individual_NIS[population_index][j] = 0;
     for (k = 0; (unsigned)k < m_NrOfParameters; k++)
-      populations[population_index][j][k] = m_CurrentPosition[k] + random1DNormalUnit();
+    {
+      populations[population_index][j][k] = m_CurrentPosition[k] + (j > 0) * random1DNormalUnit();
+    }
 
     this->costFunctionEvaluation(&populations[population_index][j], &objective_values[population_index][j]);
   }
@@ -1209,15 +1210,7 @@ GOMEAOptimizer::evaluateCompletePopulation(int population_index)
 void
 GOMEAOptimizer::costFunctionEvaluation(ParametersType * parameters, MeasureType * obj_val)
 {
-  try
-  {
-    *obj_val = m_PartialEvaluations ? this->GetValueFull(*parameters) : this->GetValue(*parameters);
-  }
-  catch (ExceptionObject & err)
-  {
-    ++m_MovingImageBufferMisses;
-    *obj_val = std::numeric_limits<MeasureType>::max();
-  }
+  *obj_val = this->GetValue(*parameters);
 
   if (*obj_val < m_CurrentValue)
   {
@@ -1229,32 +1222,28 @@ GOMEAOptimizer::costFunctionEvaluation(ParametersType * parameters, MeasureType 
 }
 
 void
-GOMEAOptimizer::costFunctionEvaluation(ParametersType * parameters,
-                                       MeasureType *    obj_val,
-                                       MeasureType      obj_val_previous,
-                                       MeasureType      obj_val_previous_partial,
-                                       int              setIndex)
+GOMEAOptimizer::costFunctionEvaluation(int           population_index,
+                                       int           individual_index,
+                                       int           fos_index,
+                                       MeasureType * obj_val,
+                                       MeasureType * obj_val_partial)
 {
   if (!(this->m_PartialEvaluations))
   {
-    this->costFunctionEvaluation(parameters, obj_val);
+    this->costFunctionEvaluation(&populations[population_index][individual_index], obj_val);
     return;
   }
 
-  try
-  {
-    *obj_val = obj_val_previous - obj_val_previous_partial + this->GetValue(*parameters, setIndex);
-  }
-  catch (ExceptionObject & err)
-  {
-    ++m_MovingImageBufferMisses;
-    *obj_val = std::numeric_limits<MeasureType>::max();
-  }
+  MeasureType obj_val_new = this->GetValue(populations[population_index][individual_index], fos_index);
+  *obj_val = objective_values[population_index][individual_index] - *obj_val_partial + obj_val_new;
+  // MeasureType obj_val_full = this->GetValue(populations[population_index][individual_index]);
+  // if (abs(obj_val_full - *obj_val) > 1e-3)
+  //   std::cout << "WTF" << std::endl;
 
   if (*obj_val < m_CurrentValue)
   {
     m_CurrentValue = *obj_val;
-    this->SetCurrentPosition(*parameters);
+    this->SetCurrentPosition(populations[population_index][individual_index]);
   }
   this->Modified();
 }
@@ -1473,7 +1462,7 @@ GOMEAOptimizer::generateNewSolutionFromFOSElement(int   population_index,
                                                   short apply_AMS)
 {
   int     j, m, im, *indices, num_indices, *touched_indices, num_touched_indices;
-  double *result, *individual_backup, obj_val, obj_val_partial_previous, delta_AMS, shrink_factor;
+  double *result, *individual_backup, obj_val, obj_val_partial, delta_AMS, shrink_factor;
   short   improvement, any_improvement, out_of_range;
 
   delta_AMS = 2.0;
@@ -1484,7 +1473,8 @@ GOMEAOptimizer::generateNewSolutionFromFOSElement(int   population_index,
   num_touched_indices = num_indices;
   touched_indices = indices;
   individual_backup = (double *)Malloc(num_touched_indices * sizeof(double));
-  obj_val_partial_previous =
+
+  obj_val_partial =
     m_PartialEvaluations ? this->GetValue(populations[population_index][individual_index], FOS_index) : 0.0;
 
   for (j = 0; j < num_touched_indices; j++)
@@ -1520,11 +1510,7 @@ GOMEAOptimizer::generateNewSolutionFromFOSElement(int   population_index,
     }
   }
 
-  this->costFunctionEvaluation(&populations[population_index][individual_index],
-                               &obj_val,
-                               objective_values[population_index][individual_index],
-                               obj_val_partial_previous,
-                               FOS_index);
+  this->costFunctionEvaluation(population_index, individual_index, FOS_index, &obj_val, &obj_val_partial);
   improvement = obj_val < objective_values[population_index][individual_index];
   if (improvement)
   {
@@ -1553,7 +1539,7 @@ GOMEAOptimizer::applyAMS(int population_index, int individual_index)
   short          out_of_range, improvement;
   double         shrink_factor, delta_AMS, obj_val;
   ParametersType solution_AMS;
-  int            m;
+  int            m, k;
 
   delta_AMS = 2;
   out_of_range = 1;
@@ -1590,7 +1576,7 @@ void
 GOMEAOptimizer::applyForcedImprovements(int population_index, int individual_index, int donor_index)
 {
   int     i, io, j, *order, *touched_indices, num_touched_indices;
-  double *FI_backup, obj_val, obj_val_partial_previous, alpha;
+  double *FI_backup, obj_val, obj_val_partial, alpha;
   short   improvement;
 
   improvement = 0;
@@ -1603,8 +1589,7 @@ GOMEAOptimizer::applyForcedImprovements(int population_index, int individual_ind
     for (io = 0; io < linkage_model[population_index]->length; io++)
     {
       i = order[io];
-      obj_val_partial_previous =
-        m_PartialEvaluations ? this->GetValue(populations[population_index][individual_index], i) : 0.0;
+      obj_val_partial = m_PartialEvaluations ? this->GetValue(populations[population_index][individual_index], i) : 0.0;
       touched_indices = linkage_model[population_index]->sets[i];
       num_touched_indices = linkage_model[population_index]->set_length[i];
       FI_backup = (double *)Malloc(num_touched_indices * sizeof(double));
@@ -1615,11 +1600,7 @@ GOMEAOptimizer::applyForcedImprovements(int population_index, int individual_ind
           alpha * populations[population_index][individual_index][touched_indices[j]] +
           (1 - alpha) * populations[population_index][donor_index][touched_indices[j]];
       }
-      this->costFunctionEvaluation(&populations[population_index][individual_index],
-                                   &obj_val,
-                                   objective_values[population_index][individual_index],
-                                   obj_val_partial_previous,
-                                   i);
+      this->costFunctionEvaluation(population_index, individual_index, i, &obj_val, &obj_val_partial);
       improvement = obj_val < objective_values[population_index][individual_index];
       // printf("alpha=%.1e\tf=%.30e\n",alpha,obj_val);
 
@@ -1993,10 +1974,11 @@ GOMEAOptimizer::runAllPopulations()
     }
 
     this->generationalStepAllPopulations();
+    this->GetValue(this->GetCurrentPosition()); // needed for correct multi metric iteration output
     m_CurrentIteration++;
     this->IterationWriteOutput();
     this->InvokeEvent(IterationEvent());
-    this->PrintProgress(std::cout, *itk::Indent::New(), true);
+    // this->PrintProgress(std::cout, *itk::Indent::New(), true);
   }
 }
 
