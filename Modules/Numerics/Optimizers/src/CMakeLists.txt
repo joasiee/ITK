@@ -1,5 +1,4 @@
 set(ITKOptimizers_SRCS
-  itkGOMEAOptimizer.cxx
   itkNonLinearOptimizer.cxx
   itkMultipleValuedCostFunction.cxx
   itkSingleValuedCostFunction.cxx
