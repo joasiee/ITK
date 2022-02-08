@@ -552,23 +552,6 @@ Transform<TParametersValueType, NInputDimensions, NOutputDimensions>::CopyInFixe
   this->SetFixedParameters(this->m_FixedParameters);
 }
 
-template <typename TParametersValueType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-void
-Transform<TParametersValueType, NInputDimensions, NOutputDimensions>::GetRegionsForFOS(
-  int **                    sets,
-  int *                     set_length,
-  int                       length,
-  std::vector<ImageRegionFOS> &   regions,
-  std::vector<std::vector<int>> & points) const
-{
-  (void)sets;
-  (void)set_length;
-  (void)length;
-  (void)regions;
-  (void)points;
-  itkExceptionMacro("GetRegionsForFOS not implemented for transformation class.")
-}
-
 } // end namespace itk
 
 #endif

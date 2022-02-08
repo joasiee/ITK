@@ -1391,14 +1391,6 @@ ImageToImageMetric<TFixedImage, TMovingImage>::SynchronizeTransforms() const
     this->m_ThreaderTransform[threadId]->SetParameters(this->m_Transform->GetParameters());
   }
 }
-
-template <typename TFixedImage, typename TMovingImage>
-void
-ImageToImageMetric<TFixedImage, TMovingImage>::InitPartialEvaluations(int ** sets, int * set_length, int length)
-{
-  this->m_Transform->GetRegionsForFOS(
-    sets, set_length, length, this->m_BSplineFOSRegions, this->m_BSplinePointsRegions);
-}
 } // end namespace itk
 
 #endif
