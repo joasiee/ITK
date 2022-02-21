@@ -35,10 +35,6 @@ CMakeLists.txt.user*
 # Clion editor internal project information
 .idea
 
-# Visual Studio
-.vs
-.vscode/
-
 # Mac System File
 .DS_Store
 

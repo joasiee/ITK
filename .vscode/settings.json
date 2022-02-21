@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "iosfwd": "cpp"
+    },
+    "cmake.configureArgs": [
+        "-C${workspaceFolder}/CMakeDefaultCache.txt"
+    ]
+}
