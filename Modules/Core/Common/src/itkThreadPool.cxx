@@ -100,7 +100,7 @@ ThreadPool::ThreadPool()
 {
   m_PimplGlobals->m_ThreadPoolInstance = this;        // threads need this
   m_PimplGlobals->m_ThreadPoolInstance->UnRegister(); // Remove extra reference
-  ThreadIdType threadCount = MultiThreaderBase::GetGlobalDefaultNumberOfThreads();
+  ThreadIdType threadCount = MultiThreaderBase::GetGlobalMaximumNumberOfThreads();
   m_Threads.reserve(threadCount);
   for (unsigned int i = 0; i < threadCount; ++i)
   {
