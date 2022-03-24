@@ -161,7 +161,14 @@ public:
   OutputType
   EvaluateAtContinuousIndex(const ContinuousIndexType & index) const override
   {
-    return this->EvaluateAtContinuousIndex(index, 0);
+    // Don't know thread information, make evaluateIndex, weights on the stack.
+    // Slower, but safer.
+    vnl_matrix<long>   evaluateIndex(ImageDimension, (m_SplineOrder + 1));
+    vnl_matrix<double> weights(ImageDimension, (m_SplineOrder + 1));
+
+    // Pass evaluateIndex, weights by reference. They're only good as long
+    // as this method is in scope.
+    return this->EvaluateAtContinuousIndexInternal(index, evaluateIndex, weights);
   }
 
   virtual OutputType
