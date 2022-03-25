@@ -49,7 +49,7 @@ namespace
 {
 template <typename TImage>
 typename TImage::Pointer
-CreateImage(const unsigned sizeX, const unsigned sizeY)
+CreateImage(const unsigned int sizeX, const unsigned int sizeY)
 {
   const auto                      image = TImage::New();
   const typename TImage::SizeType imageSize = { { sizeX, sizeY } };
@@ -82,16 +82,16 @@ static_assert(IsIteratorTypeTheSameAsConstIteratorType<const itk::Image<int>>() 
 // Creates a test image, filled with a sequence of natural numbers, 1, 2, 3, ..., N.
 template <typename TImage>
 typename TImage::Pointer
-CreateImageFilledWithSequenceOfNaturalNumbers(const unsigned sizeX, const unsigned sizeY)
+CreateImageFilledWithSequenceOfNaturalNumbers(const unsigned int sizeX, const unsigned int sizeY)
 {
   using PixelType = typename TImage::PixelType;
   const auto image = CreateImage<TImage>(sizeX, sizeY);
 
-  const unsigned numberOfPixels = sizeX * sizeY;
+  const unsigned int numberOfPixels = sizeX * sizeY;
 
   PixelType * const bufferPointer = image->GetBufferPointer();
 
-  for (unsigned i = 0; i < numberOfPixels; ++i)
+  for (unsigned int i = 0; i < numberOfPixels; ++i)
   {
     bufferPointer[i] = static_cast<typename TImage::PixelType>(i + 1);
   }
@@ -99,18 +99,18 @@ CreateImageFilledWithSequenceOfNaturalNumbers(const unsigned sizeX, const unsign
 }
 
 
-template <typename TPixel, unsigned VImageDimension>
+template <typename TPixel, unsigned int VImageDimension>
 void
-SetVectorLengthIfImageIsVectorImage(itk::VectorImage<TPixel, VImageDimension> & image, const unsigned vectorLength)
+SetVectorLengthIfImageIsVectorImage(itk::VectorImage<TPixel, VImageDimension> & image, const unsigned int vectorLength)
 {
   image.SetVectorLength(vectorLength);
 }
 
 
-template <typename TPixel, unsigned VImageDimension>
+template <typename TPixel, unsigned int VImageDimension>
 void
 SetVectorLengthIfImageIsVectorImage(itk::Image<TPixel, VImageDimension> & itkNotUsed(image),
-                                    const unsigned                        itkNotUsed(vectorLength))
+                                    const unsigned int                    itkNotUsed(vectorLength))
 {
   // Do not set the VectorLength. The specified image is not a VectorImage.
 }
@@ -365,7 +365,7 @@ TEST(ShapedImageNeighborhoodRange, IteratorsCanBePassedToStdReverseCopy)
     itk::GenerateRectangularImageNeighborhoodOffsets(radius);
   itk::ShapedImageNeighborhoodRange<ImageType> range{ *image, location, offsets };
 
-  const unsigned numberOfNeighborhoodPixels = 3;
+  const unsigned int numberOfNeighborhoodPixels = 3;
 
   const std::vector<PixelType> stdVector(range.begin(), range.end());
   std::vector<PixelType>       reversedStdVector1(numberOfNeighborhoodPixels);
@@ -502,13 +502,13 @@ TEST(ShapedImageNeighborhoodRange, DistanceBetweenIteratorsCanBeObtainedBySubtra
 
   itk::ShapedImageNeighborhoodRange<ImageType>::iterator it1 = range.begin();
 
-  const std::size_t numberOfNeighborhoodPixels = range.size();
+  const size_t numberOfNeighborhoodPixels = range.size();
 
-  for (std::size_t i1 = 0; i1 < numberOfNeighborhoodPixels; ++i1, ++it1)
+  for (size_t i1 = 0; i1 < numberOfNeighborhoodPixels; ++i1, ++it1)
   {
     itk::ShapedImageNeighborhoodRange<ImageType>::iterator it2 = it1;
 
-    for (std::size_t i2 = 0; i2 < numberOfNeighborhoodPixels; ++i2, ++it2)
+    for (size_t i2 = 0; i2 < numberOfNeighborhoodPixels; ++i2, ++it2)
     {
       EXPECT_EQ(it2 - it1, std::distance(it1, it2));
     }
@@ -727,19 +727,7 @@ TEST(ShapedImageNeighborhoodRange, IteratorsCanBePassedToStdNthElement)
 
 TEST(ShapedImageNeighborhoodRange, IteratorIsDefaultConstructible)
 {
-  using RangeType = itk::ShapedImageNeighborhoodRange<itk::Image<int>>;
-
-  RangeType::iterator defaultConstructedIterator;
-
-  // Test that a default-constructed iterator behaves according to C++ proposal
-  // N3644, "Null Forward Iterators" by Alan Talbot, which is accepted with
-  // C++14: "value-initialized iterators may be compared and shall compare
-  // equal to other value-initialized iterators of the same type."
-  // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3644.pdf
-
-  EXPECT_TRUE(defaultConstructedIterator == defaultConstructedIterator);
-  EXPECT_FALSE(defaultConstructedIterator != defaultConstructedIterator);
-  EXPECT_EQ(defaultConstructedIterator, RangeType::iterator{});
+  RangeGTestUtilities::ExpectIteratorIsDefaultConstructible<itk::ShapedImageNeighborhoodRange<itk::Image<int>>>();
 }
 
 
@@ -892,11 +880,11 @@ TEST(ShapedImageNeighborhoodRange, SupportsSubscript)
     itk::GenerateRectangularImageNeighborhoodOffsets(radius);
   RangeType range{ *image, location, offsets };
 
-  const std::size_t numberOfNeighbors = range.size();
+  const size_t numberOfNeighbors = range.size();
 
   RangeType::iterator it = range.begin();
 
-  for (std::size_t i = 0; i < numberOfNeighbors; ++i)
+  for (size_t i = 0; i < numberOfNeighbors; ++i)
   {
     RangeType::iterator::reference neighbor = range[i];
     EXPECT_EQ(neighbor, *it);
@@ -923,7 +911,7 @@ TEST(ShapedImageNeighborhoodRange, ProvidesReverseIterators)
     itk::GenerateRectangularImageNeighborhoodOffsets(radius);
   RangeType range{ *image, location, offsets };
 
-  const unsigned numberOfNeighborhoodPixels = 3;
+  const unsigned int numberOfNeighborhoodPixels = 3;
 
   const std::vector<PixelType> stdVector(range.begin(), range.end());
   std::vector<PixelType>       reversedStdVector1(numberOfNeighborhoodPixels);

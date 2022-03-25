@@ -173,7 +173,7 @@ ImageToImageMetricv4TestTestArray(const TVector & v1, const TVector & v2)
   for (unsigned int i = 0; i < v1.Size(); ++i)
   {
     const double epsilon = 1e-10;
-    if (std::fabs(v1[i] - v2[i]) > epsilon)
+    if (itk::Math::abs(v1[i] - v2[i]) > epsilon)
       pass = false;
   }
   return pass;
@@ -386,7 +386,7 @@ ImageToImageMetricv4TestRunSingleTest(const ImageToImageMetricv4TestMetricPointe
   {
     // Verify results
     const double epsilon = 1e-10;
-    if (std::fabs(truthValue - valueReturn2) > epsilon)
+    if (itk::Math::abs(truthValue - valueReturn2) > epsilon)
     {
       std::cerr << "-FAILED- truthValue does not equal value: " << std::endl
                 << "truthValue: " << truthValue << std::endl
@@ -471,6 +471,8 @@ itkImageToImageMetricv4Test(int, char ** const)
 
   // The simplistic test metric
   ImageToImageMetricv4TestMetricPointer metric = ImageToImageMetricv4TestMetricType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(metric, ImageToImageMetricv4TestMetric, ImageToImageMetricv4);
 
   // Assign images and transforms.
   // By not setting a virtual domain image or virtual domain settings,
@@ -578,8 +580,12 @@ itkImageToImageMetricv4Test(int, char ** const)
   fixedTransform->SetIdentity();
   metric->SetFixedTransform(fixedTransform);
 
-  metric->SetUseFixedImageGradientFilter(true);
-  metric->SetUseMovingImageGradientFilter(true);
+  bool useFixedImageGradientFilter = true;
+  ITK_TEST_SET_GET_BOOLEAN(metric, UseFixedImageGradientFilter, useFixedImageGradientFilter);
+
+  bool useMovingImageGradientFilter = true;
+  ITK_TEST_SET_GET_BOOLEAN(metric, UseMovingImageGradientFilter, useMovingImageGradientFilter);
+
   // Tell the metric to compute image gradients for both fixed and moving.
   metric->SetGradientSource(itk::ObjectToObjectMetricBaseTemplateEnums::GradientSource::GRADIENT_SOURCE_BOTH);
 
@@ -592,9 +598,9 @@ itkImageToImageMetricv4Test(int, char ** const)
     return EXIT_FAILURE;
   }
 
-  // Test that using a displacemet field that does not match the virtual
+  // Test that using a displacement field that does not match the virtual
   // domain space will throw an exception.
-  field->SetSpacing(fixedImage->GetSpacing() * -1.0);
+  field->SetSpacing(fixedImage->GetSpacing() * 2.0);
   std::cout << "Testing with displacement field in different space than "
             << "fixed image:" << std::endl;
   ITK_TRY_EXPECT_EXCEPTION(metric->Initialize());
@@ -608,8 +614,12 @@ itkImageToImageMetricv4Test(int, char ** const)
   metric->SetMovingTransform(movingTransform);
   metric->SetFixedTransform(fixedTransform);
   metric->SetGradientSource(itk::ObjectToObjectMetricBaseTemplateEnums::GradientSource::GRADIENT_SOURCE_BOTH);
-  metric->SetUseFixedImageGradientFilter(false);
-  metric->SetUseMovingImageGradientFilter(false);
+
+  useFixedImageGradientFilter = false;
+  ITK_TEST_SET_GET_BOOLEAN(metric, UseFixedImageGradientFilter, useFixedImageGradientFilter);
+
+  useMovingImageGradientFilter = false;
+  ITK_TEST_SET_GET_BOOLEAN(metric, UseMovingImageGradientFilter, useMovingImageGradientFilter);
 
   // create a point set, size of image for basic testing
   using PointSetType = ImageToImageMetricv4TestMetricType::FixedSampledPointSetType;
@@ -646,9 +656,6 @@ itkImageToImageMetricv4Test(int, char ** const)
   metric->SetUseFloatingPointCorrection(false);
   metric->SetFloatingPointCorrectionResolution(1);
 
-  // exercise PrintSelf
-  std::cout << std::endl << "PrintSelf: " << std::endl;
-  metric->Print(std::cout);
 
   itk::Object::SetGlobalWarningDisplay(origGlobalWarningValue);
 

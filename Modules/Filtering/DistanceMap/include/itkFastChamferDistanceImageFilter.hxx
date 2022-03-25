@@ -20,7 +20,6 @@
 
 #include <iostream>
 
-#include "itkFastChamferDistanceImageFilter.h"
 #include "itkNeighborhoodIterator.h"
 #include "itkImageRegionIterator.h"
 
@@ -212,7 +211,7 @@ FastChamferDistanceImageFilter<TInputImage, TOutputImage>::GenerateDataND()
     // Update the narrow band
     if (m_NarrowBand.IsNotNull())
     {
-      if (std::fabs((float)center_value) <= m_NarrowBand->GetTotalRadius())
+      if (itk::Math::abs((float)center_value) <= m_NarrowBand->GetTotalRadius())
       {
         node.m_Index = it.GetIndex();
         // Check node state.
@@ -221,7 +220,7 @@ FastChamferDistanceImageFilter<TInputImage, TOutputImage>::GenerateDataND()
         {
           node.m_NodeState += SIGN_MASK;
         }
-        if (std::fabs((float)center_value) < m_NarrowBand->GetInnerRadius())
+        if (itk::Math::abs((float)center_value) < m_NarrowBand->GetInnerRadius())
         {
           node.m_NodeState += INNER_MASK;
         }

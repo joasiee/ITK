@@ -17,72 +17,11 @@
  *=========================================================================*/
 #ifndef itkForwardFFTImageFilter_hxx
 #define itkForwardFFTImageFilter_hxx
+
 #include "itkMetaDataObject.h"
-
-#include "itkVnlForwardFFTImageFilter.h"
-
-#if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
-#  include "itkFFTWForwardFFTImageFilter.h"
-#endif
 
 namespace itk
 {
-
-template <typename TSelfPointer, typename TInputImage, typename TOutputImage, typename TPixel>
-struct DispatchFFTW_Forward_New
-{
-  static TSelfPointer
-  Apply()
-  {
-    return VnlForwardFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
-  }
-};
-
-#ifdef ITK_USE_FFTWD
-template <typename TSelfPointer, typename TInputImage, typename TOutputImage>
-struct DispatchFFTW_Forward_New<TSelfPointer, TInputImage, TOutputImage, double>
-{
-  static TSelfPointer
-  Apply()
-  {
-    return FFTWForwardFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
-  }
-};
-#endif
-
-#ifdef ITK_USE_FFTWF
-template <typename TSelfPointer, typename TInputImage, typename TOutputImage>
-struct DispatchFFTW_Forward_New<TSelfPointer, TInputImage, TOutputImage, float>
-{
-  static TSelfPointer
-  Apply()
-  {
-    return FFTWForwardFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
-  }
-};
-#endif
-
-template <typename TInputImage, typename TOutputImage>
-auto
-ForwardFFTImageFilter<TInputImage, TOutputImage>::New() -> Pointer
-{
-  Pointer smartPtr = ::itk::ObjectFactory<Self>::Create();
-
-  if (smartPtr.IsNull())
-  {
-    smartPtr =
-      DispatchFFTW_Forward_New<Pointer, TInputImage, TOutputImage, typename NumericTraits<OutputPixelType>::ValueType>::
-        Apply();
-  }
-  else
-  {
-    // Correct extra reference count from ::itk::ObjectFactory<Self>::Create()
-    smartPtr->UnRegister();
-  }
-
-  return smartPtr;
-}
-
 template <typename TInputImage, typename TOutputImage>
 void
 ForwardFFTImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRegion()

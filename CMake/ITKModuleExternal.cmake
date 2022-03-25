@@ -7,6 +7,13 @@ endif()
 if(NOT ITK_VERSION VERSION_GREATER "5.1")
   message(FATAL_ERROR "Requires ITK 5.1 or later to work.")
 endif()
+if(MSVC AND ${CMAKE_MINIMUM_REQUIRED_VERSION} LESS 3.16.3)
+  message(STATUS "cmake_minimum_required of ${CMAKE_MINIMUM_REQUIRED_VERSION} is not enough.")
+  message(WARNING "cmake_minimum_required must be at least 3.16.3")
+  message(STATUS "This is needed to allow proper setting of CMAKE_MSVC_RUNTIME_LIBRARY.")
+  message(STATUS "Do not be surprised if you run into link errors of the style:
+  error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MTd_Static' doesn't match value 'MDd_Dynamic' in module.obj")
+endif()
 if(NOT EXISTS ${ITK_CMAKE_DIR}/ITKModuleMacros.cmake)
   message(FATAL_ERROR "Modules can only be built against an ITK build tree; they cannot be built against an ITK install tree.")
 endif()
@@ -63,6 +70,9 @@ if(ITK_WRAPPING)
     set(ITK_WRAP_PYTHON_ROOT_BINARY_DIR "${WRAPPER_LIBRARY_OUTPUT_DIR}/Generators/Python" CACHE INTERNAL "python binary dir")
     # create the directory to avoid loosing case on windows
     file(MAKE_DIRECTORY ${ITK_WRAP_PYTHON_ROOT_BINARY_DIR})
+
+    set(ITK_STUB_DIR "${ITK_WRAP_PYTHON_ROOT_BINARY_DIR}/itk-stubs")
+    file(MAKE_DIRECTORY ${ITK_STUB_DIR})
 
     set(ITK_PYTHON_PACKAGE_DIR "${ITK_WRAP_PYTHON_ROOT_BINARY_DIR}/itk")
     # create the directory to avoid loosing case on windows
@@ -135,6 +145,15 @@ option(BUILD_SHARED_LIBS "Build ITK with shared libraries." ${ITK_BUILD_SHARED})
 if(NOT CMAKE_POSITION_INDEPENDENT_CODE)
   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
+if(MSVC)
+  if(ITK_MSVC_STATIC_CRT)
+    message(STATUS "ITK is setting ${PROJECT_NAME}'s MSVC_RUNTIME_LIBRARY to static")
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  else()
+    message(STATUS "ITK is setting ${PROJECT_NAME}'s MSVC_RUNTIME_LIBRARY to dynamic")
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+  endif()
+endif()
 
 # Add the ITK_MODULES_DIR to the CMAKE_MODULE_PATH and then use the binary
 # directory for the project to write out new ones to.
@@ -174,26 +193,11 @@ endif()
 if(ITK_WRAPPING)
   CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_PYTHON "Build Python support." ${ITK_WRAP_PYTHON}
                        "ITK_WRAP_PYTHON" OFF)
-  CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_JAVA "Build Java support." ${ITK_WRAP_JAVA}
-                       "ITK_WRAP_JAVA" OFF)
-  CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_RUBY "Build Ruby support." ${ITK_WRAP_RUBY}
-                       "ITK_WRAP_RUBY" OFF)
-  CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_PERL "Build Perl support." ${ITK_WRAP_PERL}
-                       "ITK_WRAP_PERL" OFF)
-  CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_TCL "Build Tcl support." ${ITK_WRAP_TCL}
-                       "ITK_WRAP_TCL" OFF)
-  CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_EXPLICIT "Build Explicit support." OFF
-                       "ITK_WRAP_EXPLICIT" OFF)
   CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_DOC "Build Doxygen support." OFF
                        "ITK_WRAP_DOC" OFF)
   set(${itk-module}_WRAP_CASTXML ${ITK_WRAPPING})
   set(${itk-module}_WRAP_SWIGINTERFACE ${ITK_WRAPPING})
   if( (${itk-module}_WRAP_PYTHON OR
-       ${itk-module}_WRAP_JAVA OR
-       ${itk-module}_WRAP_RUBY OR
-       ${itk-module}_WRAP_PERL OR
-       ${itk-module}_WRAP_TCL OR
-       ${itk-module}_WRAP_EXPLICIT OR
        ${itk-module}_WRAP_DOC
       )
     AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/wrapping/CMakeLists.txt"

@@ -18,7 +18,6 @@
 #ifndef itkShapeLabelMapFilter_hxx
 #define itkShapeLabelMapFilter_hxx
 
-#include "itkShapeLabelMapFilter.h"
 #include "itkProgressReporter.h"
 #include "itkConstNeighborhoodIterator.h"
 #include "itkConstShapedNeighborhoodIterator.h"
@@ -264,7 +263,7 @@ ShapeLabelMapFilter<TImage, TLabelImage>::ThreadedProcessLabelObject(LabelObject
       output->TransformIndexToPhysicalPoint(idx, physicalPosition);
 
       const typename ImageType::DirectionType & direction = output->GetDirection();
-      VectorType                                scale(output->GetSpacing()[0]);
+      auto                                      scale = MakeFilled<VectorType>(output->GetSpacing()[0]);
       for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         scale[i] *= direction(i, 0);
@@ -513,9 +512,7 @@ ShapeLabelMapFilter<TImage, TLabelImage>::ComputePerimeter(LabelObjectType * lab
     lIdx[i] = boundingBox.GetIndex()[i + 1];
     lSize[i] = boundingBox.GetSize()[i + 1];
   }
-  typename LineImageType::RegionType lRegion;
-  lRegion.SetIndex(lIdx);
-  lRegion.SetSize(lSize);
+  const typename LineImageType::RegionType lRegion(lIdx, lSize);
   // enlarge the region a bit to avoid boundary problems
   typename LineImageType::RegionType elRegion(lRegion);
   lSize.Fill(1);
@@ -883,7 +880,7 @@ ShapeLabelMapFilter<TImage, TLabelImage>::ComputeOrientedBoundingBox(LabelObject
   Vector<double, ImageDimension> rsize;
   for (unsigned int i = 0; i < ImageDimension; ++i)
   {
-    rsize[i] = std::abs(maximumPrincipalAxis[i] - minimumPrincipalAxis[i]);
+    rsize[i] = itk::Math::abs(maximumPrincipalAxis[i] - minimumPrincipalAxis[i]);
   }
 
 

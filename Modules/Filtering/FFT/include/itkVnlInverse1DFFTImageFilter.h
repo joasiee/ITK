@@ -21,6 +21,8 @@
 #include "itkInverse1DFFTImageFilter.h"
 #include <complex>
 
+#include "itkFFTImageFilterFactory.h"
+
 namespace itk
 {
 
@@ -29,7 +31,8 @@ namespace itk
  * \brief Perform the FFT along one dimension of an image using Vnl as a
  * backend.
  *
- * \ingroup Ultrasound
+ * \ingroup ITKFFT
+ * \ingroup FourierTransform
  */
 template <typename TInputImage,
           typename TOutputImage =
@@ -61,6 +64,19 @@ protected:
 
   VnlInverse1DFFTImageFilter() = default;
   ~VnlInverse1DFFTImageFilter() override = default;
+};
+
+
+// Describe whether input/output are real- or complex-valued
+// for factory registration
+template <>
+struct FFTImageFilterTraits<VnlInverse1DFFTImageFilter>
+{
+  template <typename TUnderlying>
+  using InputPixelType = std::complex<TUnderlying>;
+  template <typename TUnderlying>
+  using OutputPixelType = TUnderlying;
+  using FilterDimensions = std::integer_sequence<unsigned int, 4, 3, 2, 1>;
 };
 
 } // end namespace itk

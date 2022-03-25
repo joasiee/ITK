@@ -19,7 +19,6 @@
 #define itkFFTWForwardFFTImageFilter_hxx
 
 #include "itkHalfToFullHermitianImageFilter.h"
-#include "itkFFTWForwardFFTImageFilter.h"
 #include "itkIndent.h"
 #include "itkMetaDataObject.h"
 #include "itkProgressReporter.h"
@@ -73,7 +72,7 @@ FFTWForwardFFTImageFilter<TInputImage, TOutputImage>::GenerateData()
   unsigned int totalInputSize = 1;
   unsigned int totalOutputSize = 1;
 
-  for (unsigned i = 0; i < ImageDimension; ++i)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     totalInputSize *= inputSize[i];
     totalOutputSize *= outputSize[i];

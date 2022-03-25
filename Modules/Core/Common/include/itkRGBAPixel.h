@@ -76,16 +76,9 @@ public:
   using ComponentType = TComponent;
   using LuminanceType = typename NumericTraits<ComponentType>::RealType;
 
-  /** Default constructors */
+  /** Default-constructor.
+   * \note The other five "special member functions" are defaulted implicitly, following the C++ "Rule of Zero". */
   RGBAPixel() { this->Fill(0); }
-  RGBAPixel(const RGBAPixel &) = default;
-  RGBAPixel &
-  operator=(const RGBAPixel &) = default;
-  RGBAPixel(RGBAPixel &&) = default;
-  RGBAPixel &
-  operator=(RGBAPixel &&) = default;
-  ~RGBAPixel() = default;
-
   /** Pass-through constructor for the Array base class. */
   template <typename TRGBAPixelValueType>
   RGBAPixel(const RGBAPixel<TRGBAPixelValueType> & r)
@@ -94,7 +87,16 @@ public:
   RGBAPixel(const ComponentType r[4])
     : BaseArray(r)
   {}
+
+#if defined(ITK_LEGACY_REMOVE)
+  /** Prevents copy-initialization from `nullptr`, as well as from `0` (NULL). */
+  RGBAPixel(std::nullptr_t) = delete;
+
+  /** Explicit constructor */
+  explicit RGBAPixel(const ComponentType & r) { this->Fill(r); }
+#else
   RGBAPixel(const ComponentType & r) { this->Fill(r); }
+#endif
 
   /** Pass-through assignment operator for the Array base class. */
   RGBAPixel &

@@ -22,6 +22,8 @@
 #include "itkFFTWCommonExtended.h"
 #include "itkImageRegionSplitterDirection.h"
 
+#include "itkFFTImageFilterFactory.h"
+
 #include <vector>
 
 namespace itk
@@ -29,7 +31,8 @@ namespace itk
 /** \class FFTWInverse1DFFTImageFilter
  * \brief only do FFT along one dimension using FFTW as a backend.
  *
- * \ingroup Ultrasound
+ * \ingroup ITKFFT
+ * \ingroup FourierTransform
  */
 
 template <typename TInputImage,
@@ -89,11 +92,24 @@ private:
   void
   DestroyPlans();
 
-  bool                  m_PlanComputed;
+  bool                  m_PlanComputed{ false };
   PlanArrayType         m_PlanArray;
-  unsigned int          m_LastImageSize;
+  unsigned int          m_LastImageSize{ 0 };
   PlanBufferPointerType m_InputBufferArray;
   PlanBufferPointerType m_OutputBufferArray;
+};
+
+
+// Describe whether input/output are real- or complex-valued
+// for factory registration
+template <>
+struct FFTImageFilterTraits<FFTWInverse1DFFTImageFilter>
+{
+  template <typename TUnderlying>
+  using InputPixelType = std::complex<TUnderlying>;
+  template <typename TUnderlying>
+  using OutputPixelType = TUnderlying;
+  using FilterDimensions = std::integer_sequence<unsigned int, 4, 3, 2, 1>;
 };
 
 } // namespace itk

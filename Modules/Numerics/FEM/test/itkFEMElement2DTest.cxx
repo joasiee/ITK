@@ -259,7 +259,7 @@ itkFEMElement2DTest(int argc, char * argv[])
       }
     }
   }
-  catch (::itk::ExceptionObject & err)
+  catch (itk::ExceptionObject & err)
   {
     std::cerr << "ITK exception detected: " << err;
     std::cout << "Test FAILED" << std::endl;
@@ -357,7 +357,7 @@ CheckDisplacements1(Solver2DType * S, int s, double * expectedResults, double to
   {
     double result = S->GetSolution(i);
     // std::cout  << result << " " << expectedResults[i] << " " << tolerance << std::endl;
-    if (std::fabs(expectedResults[i] - result) > tolerance)
+    if (itk::Math::abs(expectedResults[i] - result) > tolerance)
     {
       std::cout << "ERROR: Solver " << s << " Index " << i << ". Expected " << expectedResults[i] << " Solution "
                 << result << std::endl;

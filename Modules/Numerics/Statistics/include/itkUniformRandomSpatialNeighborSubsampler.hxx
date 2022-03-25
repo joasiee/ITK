@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkUniformRandomSpatialNeighborSubsampler_hxx
 #define itkUniformRandomSpatialNeighborSubsampler_hxx
-#include "itkUniformRandomSpatialNeighborSubsampler.h"
 #include <set>
 
 namespace itk
@@ -125,7 +124,7 @@ UniformRandomSpatialNeighborSubsampler<TSample, TRegion>::Search(const InstanceI
 
   unsigned int pointsFound = 0;
 
-  ::std::set<InstanceIdentifier>       usedIds;
+  std::set<InstanceIdentifier>         usedIds;
   typename RegionType::OffsetValueType offset;
 
   // The trouble with decoupling the region from the sample is that

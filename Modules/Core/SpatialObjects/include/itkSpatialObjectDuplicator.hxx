@@ -18,7 +18,6 @@
 #ifndef itkSpatialObjectDuplicator_hxx
 #define itkSpatialObjectDuplicator_hxx
 
-#include "itkSpatialObjectDuplicator.h"
 
 namespace itk
 {
@@ -59,7 +58,6 @@ SpatialObjectDuplicator<TInputSpatialObject>::Update()
   if (!m_Input)
   {
     itkExceptionMacro(<< "Input SpatialObject has not been connected");
-    return;
   }
 
   // Update only if the input SpatialObject has been modified

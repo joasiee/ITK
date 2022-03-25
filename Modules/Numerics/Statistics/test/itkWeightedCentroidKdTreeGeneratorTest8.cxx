@@ -96,7 +96,7 @@ itkWeightedCentroidKdTreeGeneratorTest8(int argc, char * argv[])
   auto                           distanceMetric = DistanceMetricType::New();
   bool                           testFailed = false;
   DistanceMetricType::OriginType origin;
-  ::itk::NumericTraits<DistanceMetricType::OriginType>::SetLength(origin, measurementVectorSize);
+  itk::NumericTraits<DistanceMetricType::OriginType>::SetLength(origin, measurementVectorSize);
 
   for (unsigned int k = 0; k < sample->Size(); ++k)
   {
@@ -176,7 +176,7 @@ itkWeightedCentroidKdTreeGeneratorTest8(int argc, char * argv[])
       }
     }
 
-    if (std::fabs(min_dist - result_dist) > itk::Math::eps)
+    if (itk::Math::abs(min_dist - result_dist) > itk::Math::eps)
     {
       std::cerr << "Problem found " << std::endl;
       std::cerr << "Query point " << queryPoint << std::endl;

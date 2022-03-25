@@ -18,7 +18,6 @@
 #ifndef itkFFTWHalfHermitianToRealInverseFFTImageFilter_hxx
 #define itkFFTWHalfHermitianToRealInverseFFTImageFilter_hxx
 
-#include "itkFFTWHalfHermitianToRealInverseFFTImageFilter.h"
 #include "itkImageRegionIterator.h"
 #include "itkProgressReporter.h"
 #include "itkMultiThreaderBase.h"
@@ -66,7 +65,7 @@ FFTWHalfHermitianToRealInverseFFTImageFilter<TInputImage, TOutputImage>::BeforeT
   unsigned int totalOutputSize = 1;
   unsigned int totalInputSize = 1;
 
-  for (unsigned i = 0; i < ImageDimension; ++i)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     totalOutputSize *= outputSize[i];
     totalInputSize *= inputSize[i];

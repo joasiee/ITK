@@ -18,7 +18,6 @@
 #ifndef itkWindowedSincInterpolateImageFunction_hxx
 #define itkWindowedSincInterpolateImageFunction_hxx
 
-#include "itkWindowedSincInterpolateImageFunction.h"
 
 #include "itkMath.h"
 
@@ -195,7 +194,7 @@ typename WindowedSincInterpolateImageFunction<TInputImage, VRadius, TWindowFunct
 
   // Compute the integer index based on the continuous one by
   // 'flooring' the index
-  for (unsigned dim = 0; dim < ImageDimension; ++dim)
+  for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     baseIndex[dim] = Math::Floor<IndexValueType>(index[dim]);
     distance[dim] = index[dim] - static_cast<double>(baseIndex[dim]);
@@ -232,7 +231,7 @@ typename WindowedSincInterpolateImageFunction<TInputImage, VRadius, TWindowFunct
       {
         // Increment the offset, taking it through the range
         // (dist + rad - 1, ..., dist - rad), i.e. all x
-        // such that std::abs(x) <= rad
+        // such that itk::Math::abs(x) <= rad
         x -= 1.0;
 
         // Compute the weight for this m

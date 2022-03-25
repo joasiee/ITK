@@ -18,7 +18,6 @@
 #ifndef itkTriangleMeshToBinaryImageFilter_hxx
 #define itkTriangleMeshToBinaryImageFilter_hxx
 
-#include "itkTriangleMeshToBinaryImageFilter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkNumericTraits.h"
 #include <cstdlib>
@@ -157,10 +156,7 @@ TriangleMeshToBinaryImageFilter<TInputMesh, TOutputImage>::GenerateData()
       itkExceptionMacro(<< "Must Set Image Size");
     }
 
-    typename OutputImageType::RegionType region;
-
-    region.SetSize(m_Size);
-    region.SetIndex(m_Index);
+    const typename OutputImageType::RegionType region(m_Index, m_Size);
 
     OutputImage->SetLargestPossibleRegion(region); //
     OutputImage->SetBufferedRegion(region);        // set the region
@@ -186,46 +182,6 @@ TriangleMeshToBinaryImageFilter<TInputMesh, TOutputImage>::GenerateData()
 
   RasterizeTriangles();
 
-  using myIteratorType = itk::ImageRegionIteratorWithIndex<OutputImageType>;
-
-  myIteratorType it(OutputImage, OutputImage->GetLargestPossibleRegion());
-
-  int DataIndex = 0;
-  int StencilId = 0;
-  it.GoToBegin();
-
-  size_t n = m_StencilIndex.size();
-  if (n == 0)
-  {
-    itkWarningMacro(<< "No Image Indices Found.");
-  }
-  else
-  {
-    int StencilMin = m_StencilIndex[0];
-    int StencilMax = m_StencilIndex[n - 1];
-
-    while (!it.IsAtEnd())
-    {
-      if (DataIndex >= StencilMin && DataIndex <= StencilMax)
-      {
-        if (DataIndex == m_StencilIndex[StencilId])
-        {
-          it.Set(m_InsideValue);
-          StencilId++;
-        }
-        else
-        {
-          it.Set(m_OutsideValue);
-        }
-      }
-      else
-      {
-        it.Set(m_OutsideValue);
-      }
-      DataIndex++;
-      ++it;
-    }
-  }
   itkDebugMacro(<< "TriangleMeshToBinaryImageFilter::Update() finished");
 } // end update function
 
@@ -400,14 +356,14 @@ TriangleMeshToBinaryImageFilter<TInputMesh, TOutputImage>::RasterizeTriangles()
   auto                    NewPointSet = PointSetType::New();
   PointSetType::PointType newpoint;
 
-  // the index value type must match the point value type
-  ContinuousIndex<PointType::ValueType, 3> ind;
-  unsigned int                             pointId = 0;
+  unsigned int pointId = 0;
 
   while (points != myPoints->End())
   {
     PointType p = points.Value();
-    OutputImage->TransformPhysicalPointToContinuousIndex(p, ind);
+    // the index value type must match the point value type
+    const ContinuousIndex<PointType::ValueType, 3> ind =
+      OutputImage->template TransformPhysicalPointToContinuousIndex<PointType::ValueType>(p);
     NewPoints->InsertElement(pointId++, ind);
 
     ++points;
@@ -460,8 +416,9 @@ TriangleMeshToBinaryImageFilter<TInputMesh, TOutputImage>::RasterizeTriangles()
     ++cellIt;
   }
 
-  // create the equivalent of vtkStencilData from our zymatrix
-  m_StencilIndex.clear(); // prevent corruption of the filter in later updates
+  OutputImagePointer outputImage = this->GetOutput();
+  outputImage->FillBuffer(m_OutsideValue);
+
   for (int z = extent[4]; z <= extent[5]; ++z)
   {
     for (int y = extent[2]; y <= extent[3]; ++y)
@@ -498,7 +455,7 @@ TriangleMeshToBinaryImageFilter<TInputMesh, TOutputImage>::RasterizeTriangles()
         int     sign = p1D.m_Sign;
 
         // check absolute distance from lastx to x
-        if (std::abs(x - lastx) > m_Tolerance)
+        if (itk::Math::abs(x - lastx) > m_Tolerance)
         {
           signproduct = sign * lastSign;
           if (signproduct < 0)
@@ -530,9 +487,14 @@ TriangleMeshToBinaryImageFilter<TInputMesh, TOutputImage>::RasterizeTriangles()
 
         if (x2 >= x1)
         {
+          IndexType ind;
+          ind[1] = y;
+          ind[2] = z;
           for (int idX = x1; idX <= x2; ++idX)
           {
-            m_StencilIndex.push_back(idX + y * m_Size[0] + z * m_Size[0] * m_Size[1]);
+            // TODO: check whether replacing this for loop by ImageScanlineIterator is faster
+            ind[0] = idX;
+            outputImage->SetPixel(ind, m_InsideValue);
           }
         }
         // next x1 value must be at least x2+1

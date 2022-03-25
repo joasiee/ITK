@@ -18,67 +18,14 @@
 #ifndef itkComplexToComplex1DFFTImageFilter_hxx
 #define itkComplexToComplex1DFFTImageFilter_hxx
 
-#include "itkComplexToComplex1DFFTImageFilter.h"
-
-#include "itkVnlComplexToComplex1DFFTImageFilter.h"
-
-#if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
-#  include "itkFFTWComplexToComplex1DFFTImageFilter.h"
-#endif
 
 #include "itkMetaDataDictionary.h"
 #include "itkMetaDataObject.h"
 
 namespace itk
 {
-
 template <typename TInputImage, typename TOutputImage>
-typename ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::Pointer
-ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::New()
-{
-  Pointer smartPtr = ObjectFactory<Self>::Create();
-
-  if (smartPtr.IsNotNull())
-  {
-    // Decrement ITK SmartPointer produced from object factory
-    smartPtr->UnRegister();
-  }
-
-#ifdef ITK_USE_FFTWD
-  if (smartPtr.IsNull())
-  {
-    if (typeid(typename TInputImage::PixelType::value_type) == typeid(double))
-    {
-      smartPtr =
-        dynamic_cast<Self *>(FFTWComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer());
-    }
-  }
-#endif
-#ifdef ITK_USE_FFTWF
-  if (smartPtr.IsNull())
-  {
-    if (typeid(typename TInputImage::PixelType::value_type) == typeid(float))
-    {
-      smartPtr =
-        dynamic_cast<Self *>(FFTWComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer());
-    }
-  }
-#endif
-
-  if (smartPtr.IsNull())
-  {
-    smartPtr = VnlComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
-  }
-
-  return smartPtr;
-}
-
-
-template <typename TInputImage, typename TOutputImage>
-ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::ComplexToComplex1DFFTImageFilter()
-  : m_Direction(0)
-  , m_TransformDirection(DIRECT)
-{}
+ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::ComplexToComplex1DFFTImageFilter() = default;
 
 
 template <typename TInputImage, typename TOutputImage>
@@ -114,9 +61,8 @@ ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::GenerateInputReques
   const typename InputImageType::IndexType & inputLargeIndex = inputPtr->GetLargestPossibleRegion().GetIndex();
   inputRequestedRegionStartIndex[direction] = inputLargeIndex[direction];
 
-  typename InputImageType::RegionType inputRequestedRegion;
-  inputRequestedRegion.SetSize(inputRequestedRegionSize);
-  inputRequestedRegion.SetIndex(inputRequestedRegionStartIndex);
+  const typename InputImageType::RegionType inputRequestedRegion(inputRequestedRegionStartIndex,
+                                                                 inputRequestedRegionSize);
 
   inputPtr->SetRequestedRegion(inputRequestedRegion);
 }
@@ -142,9 +88,7 @@ ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>::EnlargeOutputReques
   enlargedSize[this->m_Direction] = outputLargeSize[this->m_Direction];
   enlargedIndex[this->m_Direction] = outputLargeIndex[this->m_Direction];
 
-  typename OutputImageType::RegionType enlargedRegion;
-  enlargedRegion.SetSize(enlargedSize);
-  enlargedRegion.SetIndex(enlargedIndex);
+  const typename OutputImageType::RegionType enlargedRegion(enlargedIndex, enlargedSize);
   outputPtr->SetRequestedRegion(enlargedRegion);
 }
 

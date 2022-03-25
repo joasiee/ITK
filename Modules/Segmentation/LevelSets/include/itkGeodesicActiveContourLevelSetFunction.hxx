@@ -18,7 +18,6 @@
 #ifndef itkGeodesicActiveContourLevelSetFunction_hxx
 #define itkGeodesicActiveContourLevelSetFunction_hxx
 
-#include "itkGeodesicActiveContourLevelSetFunction.h"
 #include "itkImageRegionIterator.h"
 #include "itkGradientRecursiveGaussianImageFilter.h"
 #include "itkGradientImageFilter.h"
@@ -47,7 +46,7 @@ GeodesicActiveContourLevelSetFunction<TImageType, TFeatureImageType>::CalculateA
 
   typename VectorImageType::Pointer gradientImage;
 
-  if (Math::NotAlmostEquals(m_DerivativeSigma, NumericTraits<float>::ZeroValue()))
+  if (Math::NotAlmostEquals(m_DerivativeSigma, 0.0f))
   {
     using DerivativeFilterType = GradientRecursiveGaussianImageFilter<FeatureImageType, VectorImageType>;
 

@@ -19,14 +19,15 @@
 #include <fstream>
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
+#include "itkTestingMacros.h"
 
 
 int
-itkSymmetricSecondRankTensorImageReadTest(int ac, char * av[])
+itkSymmetricSecondRankTensorImageReadTest(int argc, char * argv[])
 {
-  if (ac < 1)
+  if (argc < 1)
   {
-    std::cerr << "Usage: " << av[0] << " Input\n";
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " Input\n";
     return EXIT_FAILURE;
   }
 
@@ -84,8 +85,8 @@ itkSymmetricSecondRankTensorImageReadTest(int ac, char * av[])
 
   try
   {
-    itk::WriteImage(matrixImage, av[1]);
-    const TensorImageType::ConstPointer tensorImage = itk::ReadImage<TensorImageType>(av[1]);
+    itk::WriteImage(matrixImage, argv[1]);
+    const TensorImageType::ConstPointer tensorImage = itk::ReadImage<TensorImageType>(argv[1]);
 
     // Compare the read values to the original values
     const float tolerance = 1e-5;
@@ -105,7 +106,7 @@ itkSymmetricSecondRankTensorImageReadTest(int ac, char * av[])
       {
         for (unsigned int j = 0; j < 3; ++j)
         {
-          if (std::abs(matrixPixel[i][j] - tensorPixel(i, j)) > tolerance)
+          if (itk::Math::abs(matrixPixel[i][j] - tensorPixel(i, j)) > tolerance)
           {
             std::cerr << "Tensor read does not match expected values " << std::endl;
             std::cerr << "Index " << tItr.GetIndex() << std::endl;

@@ -17,6 +17,7 @@
 # ==========================================================================*/
 import types
 from itk.support import base
+from itkConfig import DefaultFactoryLoading as _DefaultFactoryLoading
 
 # Needed to avoid problem with aliasing of itk.set (itkTemplate)
 # inside the itk namespace.  We need to explictly specify the
@@ -44,7 +45,7 @@ def _ThreadingRLock(*args, **kwargs):
         pass
 
 
-class ITKLazyLoadLock(object):
+class ITKLazyLoadLock:
     """Need to use a recursive lock for thread ownership
     within the given thread you can acquire a RLock as often as you like.
     Other threads need to wait until this thread releases the resource again.
@@ -104,9 +105,9 @@ class LazyITKModule(types.ModuleType):
         types.ModuleType.__init__(self, name)
         for k, v in lazy_attributes.items():
             base.itk_base_global_lazy_attributes.setdefault(k, _builtin_set()).update(v)
-        self.__belong_lazy_attributes = dict(
-            (k, v[0]) for k, v in lazy_attributes.items() if len(v) > 0
-        )
+        self.__belong_lazy_attributes = {
+            k: v[0] for k, v in lazy_attributes.items() if len(v) > 0
+        }
         for k in lazy_attributes:
             setattr(self, k, not_loaded)  # use default known value
         # For PEP 366
@@ -139,6 +140,8 @@ class LazyITKModule(types.ModuleType):
                     for k, v in namespace.items():
                         setattr(self, k, v)
                     value = namespace[attr]
+                    if _DefaultFactoryLoading:
+                        base.load_module_needed_factories(module)
                 else:  # one of the other threads that had been blocking
                     # waiting for first thread to complete. Now the
                     # attribute is REQUIRED to be available
@@ -156,7 +159,6 @@ class LazyITKModule(types.ModuleType):
     def __getstate__(self):
         state = self.__dict__.copy()
         lazy_modules = list()
-        # import ipdb; ipdb.set_trace()
         for key in self.itk_base_global_lazy_attributes:
             if isinstance(state[key], LazyITKModule):
                 lazy_modules.append((key, state[key].itk_base_global_lazy_attributes))
@@ -177,3 +179,4 @@ class LazyITKModule(types.ModuleType):
             base.itk_load_swig_module(module, namespace)
             for k, v in namespace.items():
                 setattr(self, k, v)
+            base.load_module_needed_factories(module)

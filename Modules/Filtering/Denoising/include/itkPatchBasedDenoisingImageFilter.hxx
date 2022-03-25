@@ -18,7 +18,6 @@
 #ifndef itkPatchBasedDenoisingImageFilter_hxx
 #define itkPatchBasedDenoisingImageFilter_hxx
 
-#include "itkPatchBasedDenoisingImageFilter.h"
 #include "itkNthElementImageAdaptor.h"
 #include "itkMinimumMaximumImageFilter.h"
 #include "itkResampleImageFilter.h"
@@ -45,8 +44,8 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::PatchBasedDenoisingIm
   , // to avoid divide by zero
   m_SigmaUpdateDecimationFactor(
     static_cast<unsigned int>(Math::Round<double>(1.0 / m_KernelBandwidthFractionPixelsForEstimation)))
-  , m_NoiseSigma(0.0)
-  , m_NoiseSigmaSquared(0.0)
+  , m_NoiseSigma()
+  , m_NoiseSigmaSquared()
   , m_SearchSpaceList(ListAdaptorType::New())
 {
   // By default, turn off automatic kernel bandwidth sigma estimation
@@ -892,10 +891,10 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::Compute3x3EigenAnalys
   RealTensorValueT phi;
   double           acos_arg = (s / n) * 1 / sqrtn;
   // When floating point exceptions are enabled, std::acos generates
-  // NaNs (domain errors) if std::abs(acos_arg) > 1.0
+  // NaNs (domain errors) if itk::Math::abs(acos_arg) > 1.0
   // We treat those out of domain arguments as 1.0 (the max allowed value
   // of the std::acos domain), in such case phi = acos(1.0) = acos(-1.0) = 0.0
-  if (std::abs(acos_arg) <= 1.0)
+  if (itk::Math::abs(acos_arg) <= 1.0)
   {
     phi = std::acos(acos_arg) / 3;
   }

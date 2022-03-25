@@ -18,7 +18,6 @@
 #ifndef itkVTKPolyDataWriter_hxx
 #define itkVTKPolyDataWriter_hxx
 
-#include "itkVTKPolyDataWriter.h"
 #include "itkCellInterface.h"
 
 #include <fstream>
@@ -72,7 +71,6 @@ VTKPolyDataWriter<TInputMesh>::GenerateData()
   if (this->m_FileName.empty())
   {
     itkExceptionMacro("No FileName");
-    return;
   }
 
   //
@@ -85,7 +83,6 @@ VTKPolyDataWriter<TInputMesh>::GenerateData()
     itkExceptionMacro("Unable to open file\n"
                       "outputFilename= "
                       << this->m_FileName);
-    return;
   }
 
   outputFile.imbue(std::locale::classic());

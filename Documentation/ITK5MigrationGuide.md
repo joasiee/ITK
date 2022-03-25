@@ -154,24 +154,24 @@ how to remove dependence on barrier by using ParallelizeImageRegion.
 ```cpp
 ThreadedGenerateData()
 {
-  //code1 (parallel)
+  // code1 (parallel)
   myBarrier->Wait();
-  if (threadId==0)
-    {
-    //code2 single-threaded
-    }
-  //code3 (parallel)
+  if (threadId == 0)
+  {
+    // code2 single-threaded
+  }
+  // code3 (parallel)
 }
 ```
 
 after refactoring to not use barrier:
 ```cpp
-GenerateData() //Not Threaded
+GenerateData() // Not Threaded
 {
   this->AllocateOutputs();
   this->BeforeThreadedGenerateData();
   ParallelizeImageRegion(code1 as lambda)
-  //code2 single-threaded
+  // code2 single-threaded
   ParallelizeImageRegion(code3 as lambda)
   this->AfterThreadedGenerateData();
 }
@@ -212,7 +212,7 @@ An external module example that demonstrates this can be found in
 [this commit](https://github.com/InsightSoftwareConsortium/ITKBoneMorphometry/pull/32/commits/a8014c186ac53837362a0cb9db46ae224b8e9584).
 
 Before, using `itk::Array`:
-```C++
+```cpp
 // Members:
 Array<SizeValueType> m_NumVoxelsInsideMask;
 BeforeThreadedGenerateData()
@@ -222,8 +222,7 @@ BeforeThreadedGenerateData()
   m_NumVoxelsInsideMask.Fill(0);
 }
 
-ThreadedGenerateData(const RegionType & outputRegionForThread,
-                     ThreadIdType threadId)
+ThreadedGenerateData(const RegionType & outputRegionForThread, ThreadIdType threadId)
 {
   // Do algorithm per threadId
   // Store the results per thread at the end
@@ -233,17 +232,16 @@ ThreadedGenerateData(const RegionType & outputRegionForThread,
 AfterThreadedGenerateData()
 {
   // Retrieve and sum all the results per thread.
-  ThreadIdType numberOfThreads = this->GetNumberOfThreads();
+  ThreadIdType  numberOfThreads = this->GetNumberOfThreads();
   SizeValueType numVoxelsInsideMask = 0;
-  for (unsigned int i = 0; i < numberOfThreads; ++i )
-    {
+  for (unsigned int i = 0; i < numberOfThreads; ++i)
+  {
     numVoxelsInsideMask += m_NumVoxelsInsideMask[i];
-    }
+  }
 }
-
 ```
 After, using `std::atomic`:
-```C++
+```cpp
 // Members:
 std::atomic<SizeValueType> m_NumVoxelsInsideMask;
 BeforeThreadedGenerateData()
@@ -296,7 +294,7 @@ an external module that transitioned to the new threading model can be found in
 The variables `ITK_MAX_THREADS` and `ITK_DEFAULT_THREAD_ID` are now in the `itk::` namespace.
 Backwards compatibility is currently supported by exposing these to the global namespace
 with
-```C++
+```cpp
   using itk::ITK_MAX_THREADS;
   using itk::ITK_DEFAULT_THREAD_ID;
 ```
@@ -318,7 +316,7 @@ point-based SpatialObjects, it is the inherent space in which the Point coordina
 extracted from an Image, the parameters/coordinates of the SpatialObject are the space as the physical space of the source Image.   Any
 children of a SpatialObject are defined within the ObjectSpace of that parent SpatialObject.
 
-* ObjectToParent transform is the transform applied to move a SpatialObject within it's parent object's ObjectSpace.   An ObjectToParent
+* ObjectToParent transform is the transform applied to move a SpatialObject within its parent object's ObjectSpace.   An ObjectToParent
 transform is an invertible affine transform.  It is used to, for example, align a SpatialObject with a parent image (e.g., if an object
 is extracted from one ImageSpatialObject but then aligned to and made a child of another ImageSpatialObject as is needed for atlas-based
 image segmentation or for image-to-image registration).    If an object does not have a parent, then its ObjectToParent transform
@@ -448,6 +446,20 @@ With ITK 5.3, the `GetNumberOfWeights()` member functions of `itk::BSplineBaseTr
 are replaced by static constexpr data members named `NumberOfWeights`, and the `GetSupportSize()` member function of
 `itk::BSplineInterpolationWeightFunction` is replaced by a static constexpr data member named `SupportSize`.
 
+With ITK 5.3, SpatialOrientation was updated to a strongly typed enumeration (see below for details).
+The namespece itself is only available in legacy mode. Some classes were renamed:
+* `itk::SpatialOrientation::CoordinateTerms` became `itk::SpatialOrientationEnums::CoordinateTerms`.
+* `itk::SpatialOrientation::CoordinateMajornessTerms` became `itk::SpatialOrientationEnums::CoordinateMajornessTerms`.
+* `itk::SpatialOrientation::ValidCoordinateOrientationFlags` became `itk::SpatialOrientationEnums::ValidCoordinateOrientations`.
+
+Enumeration member names (`ITK_COORDINATE_UNKNOWN`, `ITK_COORDINATE_Right`, `ITK_COORDINATE_PrimaryMinor`, `ITK_COORDINATE_ORIENTATION_RIP` etc) are unchanged.
+
+Implicit conversion of a single scalar value to a container (which would _fill_ the container by the
+scalar value) is discouraged. With ITK 5.3, when having `ITK_LEGACY_REMOVE=ON`, the constructors of
+`Point`, `RGBPixel`, `RGBAPixel`, and `Vector` that accept a single scalar value as argument are
+declared `explicit`. ITK 5.3 has included a preferable alternative to these constructors:
+`itk::MakeFilled<ContainerType>(value)`.
+
 Consolidated Vector Filter
 --------------------------
 
@@ -500,7 +512,7 @@ scoping, provide clean, readable code, facilitate wrapping in languages such
 as Python, and enable printing enum values to `std::ostream` with
 `operator<<`, and support templates, enums that we previously declared as:
 
-```
+```cpp
 // itkClassName.h
 namespace itk
 {
@@ -508,21 +520,20 @@ namespace itk
 class ClassName
 {
 public:
-
   enum Choices
   {
-     One,
-     Two,
-     Three
+    One,
+    Two,
+    Three
   };
 };
 
-}
+} // namespace itk
 ```
 
 are now declared as:
 
-```
+```cpp
 // itkClassName.h
 namespace itk
 {
@@ -530,7 +541,7 @@ namespace itk
 class ClassNameEnums
 {
 public:
-  enum class Choices: uint8_t
+  enum class Choices : uint8_t
   {
     One,
     Two,
@@ -543,7 +554,6 @@ operator<<(std::ostream & out, const ClassNameEnums::Choices value);
 class ClassName
 {
 public:
-
   using ChoicesEnum = ClassNameEnums::Choices;
 #if !defined(ITK_LEGACY_REMOVE)
   using Choices = ChoicesEnum;
@@ -553,7 +563,7 @@ public:
 #endif
 };
 
-}
+} // namespace itk
 
 // itkClassName.cxx
 namespace itk

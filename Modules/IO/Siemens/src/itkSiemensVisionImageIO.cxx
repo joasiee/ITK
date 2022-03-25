@@ -220,72 +220,81 @@ SiemensVisionImageIO::ReadHeader(const char * FileNameToRead)
                        text_angle_len.end()); // Remove all whitespace
   if (strcmp(tmpStr, "Cor") == 0)
   {
-    if (text_angle_len.empty() || std::fabs(std::stod(text_angle_len)) <= 45.0)
+    if (text_angle_len.empty() || itk::Math::abs(std::stod(text_angle_len)) <= 45.0)
     {
       // hdr->imagePlane = itk::IOCommon::ITK_ANALYZE_ORIENTATION_IRP_CORONAL;
-      hdr->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RSP;
+      hdr->coordinateOrientation =
+        itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RSP;
     }
     else
     {
       if (strcmp(tmpStr2, "Sag") == 0)
       {
         // hdr->imagePlane =
-        // itk::SpatialOrientation::ITK_ANALYZE_ORIENTATION_IRP_SAGITTAL;
-        hdr->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_AIR;
+        // itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_ANALYZE_ORIENTATION_IRP_SAGITTAL;
+        hdr->coordinateOrientation =
+          itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_AIR;
       }
       else
       {
         // hdr->imagePlane =
-        // itk::SpatialOrientation::ITK_ANALYZE_ORIENTATION_IRP_TRANSVERSE;
-        hdr->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RAI;
+        // itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_ANALYZE_ORIENTATION_IRP_TRANSVERSE;
+        hdr->coordinateOrientation =
+          itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RAI;
       }
     }
   }
   else if (strcmp(tmpStr, "Sag") == 0)
   {
-    if (text_angle_len.empty() || std::fabs(std::stod(text_angle_len)) <= 45.0)
+    if (text_angle_len.empty() || itk::Math::abs(std::stod(text_angle_len)) <= 45.0)
     {
       // hdr->imagePlane =
-      // itk::SpatialOrientation::ITK_ANALYZE_ORIENTATION_IRP_SAGITTAL;
-      hdr->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_AIR;
+      // itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_ANALYZE_ORIENTATION_IRP_SAGITTAL;
+      hdr->coordinateOrientation =
+        itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_AIR;
     }
     else
     {
       if (strcmp(tmpStr2, "Cor") == 0)
       {
         // hdr->imagePlane =
-        // itk::SpatialOrientation::ITK_ANALYZE_ORIENTATION_IRP_CORONAL;
-        hdr->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RSP;
+        // itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_ANALYZE_ORIENTATION_IRP_CORONAL;
+        hdr->coordinateOrientation =
+          itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RSP;
       }
       else
       {
         // hdr->imagePlane =
-        // itk::SpatialOrientation::ITK_ANALYZE_ORIENTATION_IRP_TRANSVERSE;
-        hdr->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RAI;
+        // itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_ANALYZE_ORIENTATION_IRP_TRANSVERSE;
+        hdr->coordinateOrientation =
+          itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RAI;
       }
     }
   }
   else
   {
-    if (text_angle_len.empty() || std::fabs(std::stod(text_angle_len)) <= 45.0)
+    if (text_angle_len.empty() || itk::Math::abs(std::stod(text_angle_len)) <= 45.0)
     {
       // hdr->imagePlane =
-      // itk::SpatialOrientation::ITK_ANALYZE_ORIENTATION_IRP_TRANSVERSE;
-      hdr->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RAI;
+      // itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_ANALYZE_ORIENTATION_IRP_TRANSVERSE;
+      hdr->coordinateOrientation =
+        itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RAI;
     }
     else
     {
       if (strcmp(tmpStr2, "Cor") == 0)
       {
         // hdr->imagePlane =
-        // itk::SpatialOrientation::ITK_ANALYZE_ORIENTATION_IRP_CORONAL;
-        hdr->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RSP;
+        // itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_ANALYZE_ORIENTATION_IRP_CORONAL;
+        hdr->coordinateOrientation =
+          itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RSP;
       }
       else
       {
         // hdr->imagePlane =
-        // itk::SpatialOrientation::ITK_ANALYZE_ORIENTATION_IRP_SAGITTAL;
-        hdr->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_AIR;
+        // itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_ANALYZE_ORIENTATION_IRP_SAGITTAL;
+        hdr->coordinateOrientation =
+          itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_AIR;
       }
     }
   }

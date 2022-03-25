@@ -21,6 +21,7 @@
 #include <complex>
 
 #include "itkImageToImageFilter.h"
+#include "itkMacro.h"
 
 namespace itk
 {
@@ -28,8 +29,15 @@ namespace itk
  * \brief Perform the Fast Fourier Transform, in the forward direction, with
  * real inputs, but only along one dimension.
  *
+ * Forward1DFFTImageFilter implements methods for generating output information
+ * and relies on the ITK object factory to select a viable backend to generate data.
+ * Forward1DFFTImageFilter does not itself implement FFT.
+ *
+ * \sa itkVnlForward1DFFTImageFilter
+ * \sa itkFFTWForward1DFFTImageFilter
+ *
+ * \ingroup ITKFFT
  * \ingroup FourierTransform
- * \ingroup Ultrasound
  */
 template <typename TInputImage,
           typename TOutputImage = Image<std::complex<typename TInputImage::PixelType>, TInputImage::ImageDimension>>
@@ -58,8 +66,7 @@ public:
    *
    * Default implementation is VnlFFT1D.
    */
-  static Pointer
-  New();
+  itkFactoryOnlyNewMacro(Self);
 
   /** Get the direction in which the filter is to be applied. */
   itkGetConstMacro(Direction, unsigned int);
@@ -89,20 +96,16 @@ protected:
 private:
   /** Direction in which the filter is to be applied
    * this should be in the range [0,ImageDimension-1]. */
-  unsigned int m_Direction;
+  unsigned int m_Direction{ 0 };
 };
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#  ifndef itkVnlForward1DFFTImageFilter_h
-#    ifndef itkVnlForward1DFFTImageFilter_hxx
-#      ifndef itkFFTWForward1DFFTImageFilter_h
-#        ifndef itkFFTWForward1DFFTImageFilter_hxx
-#          include "itkForward1DFFTImageFilter.hxx"
-#        endif
-#      endif
-#    endif
-#  endif
+#  include "itkForward1DFFTImageFilter.hxx"
+#endif
+
+#ifdef ITK_FFTIMAGEFILTERINIT_FACTORY_REGISTER_MANAGER
+#  include "itkFFTImageFilterInitFactoryRegisterManager.h"
 #endif
 
 #endif // itkForward1DFFTImageFilter_h

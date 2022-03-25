@@ -18,10 +18,17 @@
 
 #include "itkContourMeanDistanceImageFilter.h"
 #include "itkSimpleFilterWatcher.h"
+#include "itkTestingMacros.h"
 
 int
-itkContourMeanDistanceImageFilterTest(int, char *[])
+itkContourMeanDistanceImageFilterTest(int argc, char * argv[])
 {
+  if (argc != 2)
+  {
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " useImageSpacing" << std::endl;
+    return EXIT_FAILURE;
+  }
 
   using Pixel1Type = unsigned int;
   using Pixel2Type = float;
@@ -84,13 +91,16 @@ itkContourMeanDistanceImageFilterTest(int, char *[])
   // compute the directed Mean distance h(image1,image2)
   {
     using FilterType = itk::ContourMeanDistanceImageFilter<Image1Type, Image2Type>;
-    auto                     filter = FilterType::New();
+    auto filter = FilterType::New();
+
+    ITK_EXERCISE_BASIC_OBJECT_METHODS(filter, ContourMeanDistanceImageFilter, ImageToImageFilter);
+
+
     itk::SimpleFilterWatcher watcher(filter, "filter");
 
     filter->SetInput1(image1);
     filter->SetInput2(image2);
     filter->Update();
-    filter->Print(std::cout);
 
 
     // check results
@@ -136,7 +146,11 @@ itkContourMeanDistanceImageFilterTest(int, char *[])
   // compute the directed Mean distance h(image2,image1) with different pixel sizes
   {
     using FilterType = itk::ContourMeanDistanceImageFilter<Image2Type, Image1Type>;
-    auto                    filter = FilterType::New();
+    auto filter = FilterType::New();
+
+    auto useImageSpacing = static_cast<bool>(std::stoi(argv[1]));
+    ITK_TEST_SET_GET_BOOLEAN(filter, UseImageSpacing, useImageSpacing);
+
     Image1Type::SpacingType spacing1 = image1->GetSpacing();
     spacing1[0] = spacing1[0] / 2;
     spacing1[1] = spacing1[1] / 2;
@@ -151,7 +165,6 @@ itkContourMeanDistanceImageFilterTest(int, char *[])
 
     filter->SetInput1(image2);
     filter->SetInput2(image1);
-    filter->SetUseImageSpacing(true);
     filter->Update();
 
     // check results

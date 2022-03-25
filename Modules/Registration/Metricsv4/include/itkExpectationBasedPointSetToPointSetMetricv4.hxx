@@ -18,7 +18,6 @@
 #ifndef itkExpectationBasedPointSetToPointSetMetricv4_hxx
 #define itkExpectationBasedPointSetToPointSetMetricv4_hxx
 
-#include "itkExpectationBasedPointSetToPointSetMetricv4.h"
 #include "itkArray.h"
 #include "itkCompensatedSummation.h"
 
@@ -102,7 +101,7 @@ ExpectationBasedPointSetToPointSetMetricv4<TFixedPointSet, TMovingPointSet, TInt
   }
 
   measure = measureSum.GetSum();
-  if (std::fabs(measure) <= NumericTraits<MeasureType>::epsilon())
+  if (itk::Math::abs(measure) <= NumericTraits<MeasureType>::epsilon())
   {
     return;
   }

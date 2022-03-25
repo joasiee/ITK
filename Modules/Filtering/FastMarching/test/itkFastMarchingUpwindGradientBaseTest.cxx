@@ -22,6 +22,7 @@
 #include "itkTextOutput.h"
 #include "itkSimpleFilterWatcher.h"
 #include "itkMath.h"
+#include "itkTestingMacros.h"
 
 // namespace{
 //// The following class is used to support callbacks
@@ -45,13 +46,17 @@ itkFastMarchingUpwindGradientBaseTest(int, char *[])
 
   // create a fastmarching object
   using PixelType = float;
-  constexpr unsigned Dimension = 2;
+  constexpr unsigned int Dimension = 2;
 
   using FloatImageType = itk::Image<PixelType, Dimension>;
 
   using CriterionType = itk::FastMarchingReachedTargetNodesStoppingCriterion<FloatImageType, FloatImageType>;
 
   auto criterion = CriterionType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(
+    criterion, FastMarchingReachedTargetNodesStoppingCriterion, FastMarchingStoppingCriterionBase);
+
 
   using FloatFMType = itk::FastMarchingUpwindGradientImageFilterBase<FloatImageType, FloatImageType>;
 
@@ -202,8 +207,17 @@ itkFastMarchingUpwindGradientBaseTest(int, char *[])
   }
   criterion->SetTargetNodes(TargetNodes);
 
+  auto targetOffset = itk::NumericTraits<typename CriterionType::OutputPixelType>::ZeroValue();
+  criterion->SetTargetOffset(targetOffset);
+  ITK_TEST_SET_GET_VALUE(targetOffset, criterion->GetTargetOffset());
+
   // Stop the algorithm when ONE of the targets has been reached.
-  criterion->SetTargetCondition(CriterionType::TargetConditionEnum::OneTarget);
+  auto targetCondition = CriterionType::TargetConditionEnum::OneTarget;
+  criterion->SetTargetCondition(targetCondition);
+  ITK_TEST_SET_GET_VALUE(targetCondition, criterion->GetTargetCondition());
+
+
+  std::cout << "Criterion description: " << criterion->GetDescription() << std::endl;
 
   marcher->SetStoppingCriterion(criterion);
 

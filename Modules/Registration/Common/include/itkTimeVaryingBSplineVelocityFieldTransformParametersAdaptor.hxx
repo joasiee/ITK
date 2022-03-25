@@ -18,7 +18,6 @@
 #ifndef itkTimeVaryingBSplineVelocityFieldTransformParametersAdaptor_hxx
 #define itkTimeVaryingBSplineVelocityFieldTransformParametersAdaptor_hxx
 
-#include "itkTimeVaryingBSplineVelocityFieldTransformParametersAdaptor.h"
 
 #include "itkBSplineDecompositionImageFilter.h"
 #include "itkBSplineResampleImageFunction.h"
@@ -268,7 +267,7 @@ TimeVaryingBSplineVelocityFieldTransformParametersAdaptor<TTransform>::AdaptTran
   using UpsampleFilterType = ResampleImageFilter<ComponentImageType, ComponentImageType, ParametersValueType>;
   using DecompositionFilterType = BSplineDecompositionImageFilter<ComponentImageType, ComponentImageType>;
 
-  VectorType zeroVector(0.0);
+  constexpr VectorType zeroVector{};
 
   TimeVaryingVelocityFieldControlPointLatticePointer requiredLattice =
     TimeVaryingVelocityFieldControlPointLatticeType::New();

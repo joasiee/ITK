@@ -18,7 +18,7 @@
 
 #include "itkFreeSurferAsciiMeshIO.h"
 
-#include <itksys/SystemTools.hxx>
+#include "itksys/SystemTools.hxx"
 
 namespace itk
 {
@@ -307,13 +307,13 @@ FreeSurferAsciiMeshIO ::WritePoints(void * buffer)
     }
     case IOComponentEnum::FLOAT:
     {
-      WritePoints(static_cast<float *>(buffer), outputFile, itk::NumericTraits<float>::ZeroValue());
+      WritePoints(static_cast<float *>(buffer), outputFile, 0.0f);
 
       break;
     }
     case IOComponentEnum::DOUBLE:
     {
-      WritePoints(static_cast<double *>(buffer), outputFile, itk::NumericTraits<double>::ZeroValue());
+      WritePoints(static_cast<double *>(buffer), outputFile, 0.0);
 
       break;
     }

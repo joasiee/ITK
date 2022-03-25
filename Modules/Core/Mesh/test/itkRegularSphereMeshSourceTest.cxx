@@ -17,6 +17,7 @@
  *=========================================================================*/
 
 #include "itkRegularSphereMeshSource.h"
+#include "itkTestingMacros.h"
 
 #include <iostream>
 
@@ -29,6 +30,9 @@ itkRegularSphereMeshSourceTest(int, char *[])
   using SphereMeshSourceType = itk::RegularSphereMeshSource<MeshType>;
 
   auto mySphereMeshSource = SphereMeshSourceType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(mySphereMeshSource, RegularSphereMeshSource, MeshSource);
+
 
   using PointType = SphereMeshSourceType::PointType;
   using VectorType = SphereMeshSourceType::VectorType;
@@ -43,22 +47,19 @@ itkRegularSphereMeshSourceTest(int, char *[])
   scale.Fill(radius);
 
   mySphereMeshSource->SetCenter(center);
-  mySphereMeshSource->SetResolution(1);
+  ITK_TEST_SET_GET_VALUE(center, mySphereMeshSource->GetCenter());
+
+  unsigned int resolution = 1;
+  mySphereMeshSource->SetResolution(resolution);
+  ITK_TEST_SET_GET_VALUE(resolution, mySphereMeshSource->GetResolution());
+
   mySphereMeshSource->SetScale(scale);
+  ITK_TEST_SET_GET_VALUE(scale, mySphereMeshSource->GetScale());
 
   mySphereMeshSource->Modified();
 
-  try
-  {
-    mySphereMeshSource->Update();
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    std::cerr << "Error during Update() " << std::endl;
-    std::cerr << excp << std::endl;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(mySphereMeshSource->Update());
 
-  std::cout << "mySphereMeshSource: " << mySphereMeshSource;
 
   MeshType::Pointer myMesh = mySphereMeshSource->GetOutput();
 
@@ -66,8 +67,6 @@ itkRegularSphereMeshSourceTest(int, char *[])
   pt.Fill(0);
 
   bool testPassed = true;
-
-  std::cout << "Testing itk::RegularSphereMeshSource " << std::endl;
 
   for (unsigned int i = 0; i < myMesh->GetNumberOfPoints(); ++i)
   {
@@ -89,7 +88,7 @@ itkRegularSphereMeshSourceTest(int, char *[])
 
   CellsContainerPointer cells = myMesh->GetCells();
 
-  unsigned faceId = 0;
+  unsigned int faceId = 0;
 
   MeshType::CellsContainerIterator cellsItr = cells->Begin();
 

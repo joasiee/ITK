@@ -19,27 +19,26 @@
 #define itkFixedCenterOfRotationAffineTransform_hxx
 
 #include "itkNumericTraits.h"
-#include "itkFixedCenterOfRotationAffineTransform.h"
 #include "itkAffineTransform.h"
 #include "vnl/algo/vnl_matrix_inverse.h"
 
 namespace itk
 {
 /** Constructor with default arguments */
-template <typename TParametersValueType, unsigned int NDimensions>
-FixedCenterOfRotationAffineTransform<TParametersValueType, NDimensions>::FixedCenterOfRotationAffineTransform()
+template <typename TParametersValueType, unsigned int VDimension>
+FixedCenterOfRotationAffineTransform<TParametersValueType, VDimension>::FixedCenterOfRotationAffineTransform()
   : Superclass(ParametersDimension)
 {}
 
-template <typename TParametersValueType, unsigned int NDimensions>
-FixedCenterOfRotationAffineTransform<TParametersValueType, NDimensions>::FixedCenterOfRotationAffineTransform(
+template <typename TParametersValueType, unsigned int VDimension>
+FixedCenterOfRotationAffineTransform<TParametersValueType, VDimension>::FixedCenterOfRotationAffineTransform(
   unsigned int outputSpaceDims,
   unsigned int paramsDims)
   : Superclass(outputSpaceDims, paramsDims)
 {}
 
-template <typename TParametersValueType, unsigned int NDimensions>
-FixedCenterOfRotationAffineTransform<TParametersValueType, NDimensions>::FixedCenterOfRotationAffineTransform(
+template <typename TParametersValueType, unsigned int VDimension>
+FixedCenterOfRotationAffineTransform<TParametersValueType, VDimension>::FixedCenterOfRotationAffineTransform(
   const MatrixType &       matrix,
   const OutputVectorType & offset)
   : Superclass(matrix, offset)

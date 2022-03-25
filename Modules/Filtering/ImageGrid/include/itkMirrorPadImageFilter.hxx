@@ -18,7 +18,6 @@
 #ifndef itkMirrorPadImageFilter_hxx
 #define itkMirrorPadImageFilter_hxx
 
-#include "itkMirrorPadImageFilter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkImageRegionConstIterator.h"
 #include "itkObjectFactory.h"
@@ -215,7 +214,7 @@ MirrorPadImageFilter<TInputImage, TOutputImage>::ConvertOutputIndexToInputIndex(
     // 18-connected voxels and second 6-connected layer having distance 2 etc.
     for (dimCtr = 0; dimCtr < ImageDimension; ++dimCtr)
     {
-      distanceFromEdge += (std::abs(outputIndex[dimCtr] - inputIndex[dimCtr]) + 1) / 2;
+      distanceFromEdge += (itk::Math::abs(outputIndex[dimCtr] - inputIndex[dimCtr]) + 1) / 2;
     }
     // TODO: see if precomputed pow look-up table will speed this up
     outDecayFactor = std::pow(this->m_DecayBase, distanceFromEdge);
@@ -617,9 +616,7 @@ MirrorPadImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRegion()
     inputRequestedRegionSize[dimCtr] = maxIndex[dimCtr] - minIndex[dimCtr];
   }
 
-  typename TInputImage::RegionType inputRequestedRegion;
-  inputRequestedRegion.SetSize(inputRequestedRegionSize);
-  inputRequestedRegion.SetIndex(inputRequestedRegionStartIndex);
+  const typename TInputImage::RegionType inputRequestedRegion(inputRequestedRegionStartIndex, inputRequestedRegionSize);
 
   inputPtr->SetRequestedRegion(inputRequestedRegion);
 }

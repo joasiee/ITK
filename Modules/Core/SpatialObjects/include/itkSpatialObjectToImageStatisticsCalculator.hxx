@@ -18,7 +18,6 @@
 #ifndef itkSpatialObjectToImageStatisticsCalculator_hxx
 #define itkSpatialObjectToImageStatisticsCalculator_hxx
 
-#include "itkSpatialObjectToImageStatisticsCalculator.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 
 #include "itkMeanSampleFilter.h"
@@ -187,9 +186,7 @@ SpatialObjectToImageStatisticsCalculator<TInputImage, TInputSpatialObject, TSamp
       }
     }
 
-    RegionType region;
-    region.SetIndex(indMin);
-    region.SetSize(size);
+    const RegionType region(indMin, size);
 
     using IteratorType = ImageRegionConstIteratorWithIndex<ImageType>;
     IteratorType it = IteratorType(m_Image, region);

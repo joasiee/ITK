@@ -140,32 +140,32 @@ protected:
   IncrementIndex(ParametersType & newPosition);
 
 protected:
-  MeasureType m_CurrentValue;
+  MeasureType m_CurrentValue{ 0 };
 
-  StepsType m_NumberOfSteps;
+  StepsType m_NumberOfSteps{};
 
-  SizeValueType m_CurrentIteration;
+  SizeValueType m_CurrentIteration{ 0 };
 
-  bool m_Stop;
+  bool m_Stop{ false };
 
-  unsigned int m_CurrentParameter;
+  unsigned int m_CurrentParameter{ 0 };
 
-  double m_StepLength;
+  double m_StepLength{ 1.0 };
 
-  ParametersType m_CurrentIndex;
+  ParametersType m_CurrentIndex{};
 
-  SizeValueType m_MaximumNumberOfIterations;
+  SizeValueType m_MaximumNumberOfIterations{ 1 };
 
-  MeasureType m_MaximumMetricValue;
+  MeasureType m_MaximumMetricValue{ itk::NumericTraits<MeasureType>::max() };
 
-  MeasureType m_MinimumMetricValue;
+  MeasureType m_MinimumMetricValue{ itk::NumericTraits<MeasureType>::Zero };
 
-  ParametersType m_MinimumMetricValuePosition;
+  ParametersType m_MinimumMetricValuePosition{};
 
-  ParametersType m_MaximumMetricValuePosition;
+  ParametersType m_MaximumMetricValuePosition{};
 
 private:
-  std::ostringstream m_StopConditionDescription;
+  std::ostringstream m_StopConditionDescription{};
 };
 } // end namespace itk
 

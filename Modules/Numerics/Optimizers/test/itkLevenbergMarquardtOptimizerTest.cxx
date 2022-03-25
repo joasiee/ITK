@@ -82,7 +82,7 @@ public:
     m_TheoreticalData.SetSize(RangeDimension);
 
     // Compute points of the function over a square region
-    unsigned valueindex = 0;
+    unsigned int valueindex = 0;
     for (int y = -YRange; y <= YRange; ++y)
     {
       const auto yd = (double)y;
@@ -110,7 +110,7 @@ public:
     std::cout << c << ")  " << std::endl;
 
     // Compute points of the function over a square region
-    unsigned valueindex = 0;
+    unsigned int valueindex = 0;
     for (int y = -YRange; y <= YRange; ++y)
     {
       const auto yd = (double)y;
@@ -141,7 +141,7 @@ public:
     std::cout << c << ") " << std::endl;
 
     // Compute points of the function over a square region
-    unsigned valueindex = 0;
+    unsigned int valueindex = 0;
     for (int y = -YRange; y <= YRange; ++y)
     {
       const auto yd = (double)y;
@@ -235,7 +235,7 @@ itkRunLevenbergMarquardOptimization(bool   useGradient,
 
   using vnlOptimizerType = OptimizerType::InternalOptimizerType;
 
-  // Declaration of a itkOptimizer
+  // Declaration of an itkOptimizer
   auto optimizer = OptimizerType::New();
 
   // Declaration of the CostFunction adaptor
@@ -383,7 +383,7 @@ itkRunLevenbergMarquardOptimization(bool   useGradient,
   OptimizerType::MeasureType finalValue = optimizer->GetValue();
 
   // We compare only the first value for this test
-  if (std::fabs(finalValue[0] - 0.0) > 0.01)
+  if (itk::Math::abs(finalValue[0] - 0.0) > 0.01)
   {
     std::cout << "[FAILURE]" << std::endl;
     return EXIT_FAILURE;

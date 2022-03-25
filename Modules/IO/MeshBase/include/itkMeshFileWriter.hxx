@@ -22,7 +22,6 @@
 #include "itkDataObject.h"
 #include "itkMeshConvertPixelTraits.h"
 #include "itkMeshIOFactory.h"
-#include "itkMeshFileWriter.h"
 #include "itkObjectFactoryBase.h"
 
 #include "vnl/vnl_vector.h"
@@ -189,7 +188,7 @@ MeshFileWriter<TInputMesh>::Write()
     m_MeshIO->SetNumberOfPointPixels(input->GetPointData()->Size());
     // m_MeshIO->SetNumberOfPointPixelComponents(MeshConvertPixelTraits<typename
     // TInputMesh::PixelType>::GetNumberOfComponents());
-    m_MeshIO->SetPixelType(input->GetPointData()->ElementAt(0), true);
+    m_MeshIO->SetPixelType(input->GetPointData()->Begin().Value(), true);
   }
 
   // Whether write cell data
@@ -199,7 +198,7 @@ MeshFileWriter<TInputMesh>::Write()
     m_MeshIO->SetNumberOfCellPixels(input->GetCellData()->Size());
     // m_MeshIO->SetNumberOfCellPixelComponents(MeshConvertPixelTraits<typename
     // TInputMesh::CellPixelType>::GetNumberOfComponents());
-    m_MeshIO->SetPixelType(input->GetCellData()->ElementAt(0), false);
+    m_MeshIO->SetPixelType(input->GetCellData()->Begin().Value(), false);
   }
 
   this->InvokeEvent(StartEvent());
@@ -280,7 +279,7 @@ MeshFileWriter<TInputMesh>::WritePointData()
   {
     const SizeValueType numberOfComponents =
       input->GetPointData()->Size() * MeshConvertPixelTraits<typename TInputMesh::PixelType>::GetNumberOfComponents(
-                                        input->GetPointData()->ElementAt(0));
+                                        input->GetPointData()->Begin().Value());
 
     using ValueType = typename itk::NumericTraits<typename TInputMesh::PixelType>::ValueType;
     auto * buffer = new ValueType[numberOfComponents];
@@ -302,7 +301,7 @@ MeshFileWriter<TInputMesh>::WriteCellData()
   {
     const SizeValueType numberOfComponents =
       input->GetCellData()->Size() * MeshConvertPixelTraits<typename TInputMesh::CellPixelType>::GetNumberOfComponents(
-                                       input->GetCellData()->ElementAt(0));
+                                       input->GetCellData()->Begin().Value());
 
     using ValueType = typename itk::NumericTraits<typename TInputMesh::CellPixelType>::ValueType;
     auto * buffer = new ValueType[numberOfComponents];
@@ -414,7 +413,7 @@ MeshFileWriter<TInputMesh>::CopyPointDataToBuffer(Output * data)
   // Should define NumericTraitsArrayPixel
 
   unsigned int numberOfComponents =
-    MeshConvertPixelTraits<typename TInputMesh::PixelType>::GetNumberOfComponents(pointData->ElementAt(0));
+    MeshConvertPixelTraits<typename TInputMesh::PixelType>::GetNumberOfComponents(pointData->Begin().Value());
 
   SizeValueType                                          index = 0;
   typename TInputMesh::PointDataContainer::ConstIterator pter = pointData->Begin();
@@ -443,7 +442,7 @@ MeshFileWriter<TInputMesh>::CopyCellDataToBuffer(Output * data)
   // Should define NumericTraitsArrayPixel
 
   unsigned int numberOfComponents =
-    MeshConvertPixelTraits<typename TInputMesh::CellPixelType>::GetNumberOfComponents(cellData->ElementAt(0));
+    MeshConvertPixelTraits<typename TInputMesh::CellPixelType>::GetNumberOfComponents(cellData->Begin().Value());
   SizeValueType                                         index = 0;
   typename TInputMesh::CellDataContainer::ConstIterator cter = cellData->Begin();
   while (cter != cellData->End())

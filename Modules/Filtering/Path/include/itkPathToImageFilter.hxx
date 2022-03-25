@@ -18,7 +18,6 @@
 #ifndef itkPathToImageFilter_hxx
 #define itkPathToImageFilter_hxx
 
-#include "itkPathToImageFilter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkPathIterator.h"
 #include "itkNumericTraits.h"
@@ -211,8 +210,6 @@ PathToImageFilter<TInputPath, TOutputImage>::GenerateData()
     origin[i] = 0;
   }
 
-  typename OutputImageType::IndexType index;
-  index.Fill(0);
   typename OutputImageType::RegionType region;
 
   // If the size of the output has been explicitly specified, the filter
@@ -239,7 +236,7 @@ PathToImageFilter<TInputPath, TOutputImage>::GenerateData()
     itkExceptionMacro(<< "Currently, the user MUST specify an image size");
     // region.SetSize( size );
   }
-  region.SetIndex(index);
+  region.SetIndex({ { 0 } });
 
   OutputImage->SetLargestPossibleRegion(region); //
   OutputImage->SetBufferedRegion(region);        // set the region

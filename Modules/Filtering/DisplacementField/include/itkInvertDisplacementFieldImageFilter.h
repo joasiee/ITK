@@ -51,6 +51,9 @@ public:
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
+  /** Run-time type information (and related methods). */
+  itkTypeMacro(InvertDisplacementFieldImageFilter, ImageToImageFilter);
+
   /** Extract dimension from input image. */
   static constexpr unsigned int ImageDimension = TInputImage::ImageDimension;
 
@@ -136,6 +139,7 @@ public:
   /* Should we force the boundary to have zero displacement? */
   itkSetMacro(EnforceBoundaryCondition, bool);
   itkGetMacro(EnforceBoundaryCondition, bool);
+  itkBooleanMacro(EnforceBoundaryCondition);
 
 protected:
   /** Constructor */

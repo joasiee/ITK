@@ -272,7 +272,7 @@ public:
     operator()(unsigned int newSize, unsigned int oldSize, TValue2 * oldBuffer, TValue2 * newBuffer) const
     {
       itkAssertInDebugAndIgnoreInReleaseMacro(newBuffer);
-      const std::size_t nb = std::min(newSize, oldSize);
+      const size_t nb = std::min(newSize, oldSize);
       itkAssertInDebugAndIgnoreInReleaseMacro(nb == 0 || (nb > 0 && oldBuffer != nullptr));
       std::copy_n(oldBuffer, nb, newBuffer);
     }
@@ -497,7 +497,7 @@ public:
   Self &
   operator=(VariableLengthVectorExpression<TExpr1, TExpr2, TBinaryOp> const & rhs);
 
-  /** Set the all the elements of the array to the specified value.
+  /** Set all the elements of the array to the specified value.
    * \pre This function may be called on empty vectors, it's a no-op.
    */
   void
@@ -1152,7 +1152,7 @@ struct CanBeMultiplied
             mpl::And<mpl::IsNumber<TExpr1>, mpl::IsArray<TExpr2>>>
 {};
 
-/** Tells whether objects from two types can be multiplied.
+/** Tells whether objects from two types can be divided.
  * The operation is authorized if and only if:
  * - the first operand is an array while the second is a number.
  * \note As this traits is dedicated to help overload `operator/()`, it

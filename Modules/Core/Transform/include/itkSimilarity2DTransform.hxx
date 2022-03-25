@@ -18,7 +18,6 @@
 #ifndef itkSimilarity2DTransform_hxx
 #define itkSimilarity2DTransform_hxx
 
-#include "itkSimilarity2DTransform.h"
 #include "itkMath.h"
 
 namespace itk
@@ -248,7 +247,7 @@ Similarity2DTransform<TParametersValueType>::GetInverse(Self * inverse) const
     return false;
   }
   inverse->SetCenter(this->GetCenter()); // inverse have the same center
-  inverse->SetScale(NumericTraits<double>::OneValue() / this->GetScale());
+  inverse->SetScale(1.0 / this->GetScale());
   inverse->SetAngle(-this->GetAngle());
   inverse->SetTranslation(-(this->GetInverseMatrix() * this->GetTranslation()));
 

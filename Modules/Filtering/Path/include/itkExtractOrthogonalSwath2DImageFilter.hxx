@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkExtractOrthogonalSwath2DImageFilter_hxx
 #define itkExtractOrthogonalSwath2DImageFilter_hxx
-#include "itkExtractOrthogonalSwath2DImageFilter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkLinearInterpolateImageFunction.h"
 #include "itkProgressReporter.h"
@@ -137,12 +136,7 @@ ExtractOrthogonalSwath2DImageFilter<TImage>::GenerateOutputInformation()
 {
   ImagePointer outputPtr = this->GetOutput(0);
 
-  ImageRegionType outputRegion;
-  ImageIndexType  index;
-
-  index.Fill(0);
-  outputRegion.SetSize(this->m_Size);
-  outputRegion.SetIndex(index);
+  const ImageRegionType outputRegion(this->m_Size);
   outputPtr->SetLargestPossibleRegion(outputRegion);
   outputPtr->SetSpacing(this->m_Spacing);
   outputPtr->SetOrigin(this->m_Origin);

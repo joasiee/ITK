@@ -18,7 +18,6 @@
 #ifndef itkTimeVaryingBSplineVelocityFieldImageRegistrationMethod_hxx
 #define itkTimeVaryingBSplineVelocityFieldImageRegistrationMethod_hxx
 
-#include "itkTimeVaryingBSplineVelocityFieldImageRegistrationMethod.h"
 
 #include "itkConstNeighborhoodIterator.h"
 #include "itkContinuousIndex.h"
@@ -128,7 +127,7 @@ TimeVaryingBSplineVelocityFieldImageRegistrationMethod<TFixedImage,
     }
   }
 
-  const DisplacementVectorType zeroVector(0.0);
+  constexpr DisplacementVectorType zeroVector{};
 
   auto identityField = DisplacementFieldType::New();
   identityField->CopyInformation(virtualDomainImage);
@@ -531,7 +530,7 @@ TimeVaryingBSplineVelocityFieldImageRegistrationMethod<
         typename DisplacementFieldType::IndexType index = ItF.GetIndex();
 
         bool isOnBoundary = false;
-        for (unsigned d = 0; d < ImageDimension; ++d)
+        for (unsigned int d = 0; d < ImageDimension; ++d)
         {
           if (index[d] == fixedDomainIndex[d] ||
               index[d] == fixedDomainIndex[d] + static_cast<int>(fixedDomainSize[d]) - 1)

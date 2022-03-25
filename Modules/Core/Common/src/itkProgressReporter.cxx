@@ -16,6 +16,7 @@
  *
  *=========================================================================*/
 #include "itkProgressReporter.h"
+#include "itkMultiThreaderBase.h"
 
 namespace itk
 {
@@ -47,6 +48,9 @@ ProgressReporter::ProgressReporter(ProcessObject * filter,
   {
     // Set the progress to initial progress.  The filter is just starting.
     m_Filter->UpdateProgress(m_InitialProgress);
+
+    // this class will report progress, avoid double reporting
+    m_Filter->GetMultiThreader()->SetUpdateProgress(false);
   }
 
   m_PixelsBeforeUpdate = m_PixelsPerUpdate;
@@ -58,9 +62,21 @@ ProgressReporter::~ProgressReporter()
   // Only thread 0 should update progress.
   if (m_ThreadId == 0 && m_Filter)
   {
-    // Set the progress to the end of its current range.  The filter has
-    // finished.
-    m_Filter->UpdateProgress(m_InitialProgress + m_ProgressWeight);
+    // Set the progress to the end of its current range.
+    // Make sure it increases the progress, in case multiple reporters
+    // were used inside filter's GenerateData().
+    float newProgress = m_InitialProgress + m_ProgressWeight;
+    float oldProgress = m_Filter->GetProgress();
+    if (newProgress > oldProgress)
+    {
+      m_Filter->UpdateProgress(m_InitialProgress + m_ProgressWeight);
+    }
+  }
+
+  if (m_Filter)
+  {
+    // reset the original state of ThreaderUpdateProgress
+    m_Filter->GetMultiThreader()->SetUpdateProgress(m_Filter->GetThreaderUpdateProgress());
   }
 }
 } // end namespace itk

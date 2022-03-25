@@ -19,7 +19,6 @@
 #ifndef itkFancyString_hxx
 #define itkFancyString_hxx
 
-#include "itkFancyString.h"
 #include "itkStringTools.h"
 
 namespace itk
@@ -82,7 +81,7 @@ FancyString::FromData(const std::vector<T> & inputData)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// helper functions for converting a string to/from a itk::Array
+// helper functions for converting a string to/from an itk::Array
 /////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -175,7 +174,7 @@ operator<<(FancyString & s, const std::vector<T> & data)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// helper functions for converting a string to/from a itk::Array
+// helper functions for converting a string to/from an itk::Array
 /////////////////////////////////////////////////////////////////////////////
 
 /**

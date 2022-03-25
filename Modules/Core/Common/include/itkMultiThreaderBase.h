@@ -35,6 +35,7 @@
 #include "itkImageRegion.h"
 #include "itkImageIORegion.h"
 #include "itkSingletonMacro.h"
+#include <atomic>
 #include <functional>
 #include <thread>
 #include "itkProgressReporter.h"
@@ -242,7 +243,7 @@ ITK_GCC_PRAGMA_DIAG(ignored "-Wattributes")
 INTEL_PRAGMA_WARN_PUSH
 INTEL_SUPPRESS_warning_1292
 CLANG_PRAGMA_PUSH
-CLANG_SUPPRESS_Wc__14_extensions
+CLANG_SUPPRESS_Wcpp14_extensions
   // clang-format on
 #  ifdef ITK_LEGACY_SILENT
     struct ThreadInfoStruct
@@ -476,10 +477,15 @@ protected:
   void * m_SingleData{ nullptr };
 
 private:
+  static void
+  SetGlobalDefaultThreaderPrivate(ThreaderEnum threaderType);
+  static ThreaderEnum
+  GetGlobalDefaultThreaderPrivate();
+
   /** Only used to synchronize the global variable across static libraries.*/
   itkGetGlobalDeclarationMacro(MultiThreaderBaseGlobals, PimplGlobals);
 
-  bool m_UpdateProgress{ true };
+  std::atomic<bool> m_UpdateProgress{ true };
 
   static MultiThreaderBaseGlobals * m_PimplGlobals;
   /** Friends of Multithreader.

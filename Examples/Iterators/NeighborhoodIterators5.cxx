@@ -75,7 +75,7 @@ main(int argc, char ** argv)
   using NeighborhoodIteratorType = itk::ConstNeighborhoodIterator<ImageType>;
   using IteratorType = itk::ImageRegionIterator<ImageType>;
 
-  ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   reader->SetFileName(argv[1]);
   try
   {
@@ -88,7 +88,7 @@ main(int argc, char ** argv)
     return EXIT_FAILURE;
   }
 
-  ImageType::Pointer output = ImageType::New();
+  auto output = ImageType::New();
   output->SetRegions(reader->GetOutput()->GetRequestedRegion());
   output->Allocate();
 
@@ -115,7 +115,7 @@ main(int argc, char ** argv)
   // Software Guide : BeginCodeSnippet
   itk::GaussianOperator<PixelType, 2> gaussianOperator;
   gaussianOperator.SetDirection(0);
-  gaussianOperator.SetVariance(::std::stod(argv[3]) * ::std::stod(argv[3]));
+  gaussianOperator.SetVariance(std::stod(argv[3]) * std::stod(argv[3]));
   gaussianOperator.CreateDirectional();
   // Software Guide : EndCodeSnippet
 
@@ -192,13 +192,13 @@ main(int argc, char ** argv)
   using RescaleFilterType =
     itk::RescaleIntensityImageFilter<ImageType, WriteImageType>;
 
-  RescaleFilterType::Pointer rescaler = RescaleFilterType::New();
+  auto rescaler = RescaleFilterType::New();
 
   rescaler->SetOutputMinimum(0);
   rescaler->SetOutputMaximum(255);
   rescaler->SetInput(output);
 
-  WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   writer->SetFileName(argv[2]);
   writer->SetInput(rescaler->GetOutput());
   try

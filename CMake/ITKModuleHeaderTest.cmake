@@ -36,8 +36,7 @@ macro( itk_module_headertest _name )
     # effected.
     set( _include ${${_name}_SOURCE_DIR}/include )
     file( GLOB _h_files ${_include}/*.h )
-    file( GLOB _hxx_files ${_include}/*.hxx )
-    set( _header_files ${_h_files} ${_hxx_files} )
+    set( _header_files ${_h_files} )
     list( LENGTH _h_files _num_headers )
     set( _outputs ${${_name}_BINARY_DIR}/test/${_name}HeaderTest1.cxx )
     set( _test_num 1 )
@@ -85,7 +84,7 @@ macro( itk_module_headertest _name )
         ${_test_num}
         )
       add_executable( ${_test_name} ${_header_test_src} )
-      target_link_libraries( ${_test_name} ${${_name}_LIBRARIES} itksys )
+      target_link_libraries( ${_test_name} PUBLIC ${${_name}_LIBRARIES} itksys )
 
       add_dependencies(${_name}-all ${_test_name})
       math( EXPR _test_num "${_test_num} + 1" )

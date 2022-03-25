@@ -18,7 +18,6 @@
 #ifndef itkPointSetToImageFilter_hxx
 #define itkPointSetToImageFilter_hxx
 
-#include "itkPointSetToImageFilter.h"
 
 #include "itkBoundingBox.h"
 #include "itkImageRegionIteratorWithIndex.h"
@@ -131,7 +130,7 @@ PointSetToImageFilter<TInputPointSet, TOutputImage>::GenerateData()
   for (i = 0; i < InputPointSetDimension; ++i)
   {
     size[i] = static_cast<SizeValueType>(bb->GetBounds()[2 * i + 1] - bb->GetBounds()[2 * i]);
-    origin[i] = 0; // bb->GetBounds()[2*i];
+    origin[i] = bb->GetBounds()[2 * i];
   }
 
   typename OutputImageType::RegionType region;

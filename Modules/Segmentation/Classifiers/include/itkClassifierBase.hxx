@@ -18,7 +18,6 @@
 #ifndef itkClassifierBase_hxx
 #define itkClassifierBase_hxx
 
-#include "itkClassifierBase.h"
 #include "itkCommand.h"
 
 namespace itk
@@ -55,19 +54,16 @@ ClassifierBase<TDataContainer>::Update()
   if (m_NumberOfClasses == 0)
   {
     itkExceptionMacro("Zero class");
-    return;
   }
 
   if (m_MembershipFunctions.empty())
   {
     itkExceptionMacro("No membership function");
-    return;
   }
 
   if (m_NumberOfClasses != m_MembershipFunctions.size())
   {
     itkExceptionMacro("The number of classes and the number of membership mismatch.");
-    return;
   }
 
   this->GenerateData();

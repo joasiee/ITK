@@ -18,6 +18,7 @@
 #ifndef itkParallelSparseFieldLevelSetImageFilter_h
 #define itkParallelSparseFieldLevelSetImageFilter_h
 
+#include "itkBooleanStdVector.h"
 #include "itkFiniteDifferenceImageFilter.h"
 #include "itkSparseFieldLayer.h"
 #include "itkObjectStore.h"
@@ -712,7 +713,7 @@ protected:
 
   /** Thread-specific data */
   std::vector<TimeStepType> m_TimeStepList;
-  std::vector<bool>         m_ValidTimeStepList;
+  BooleanStdVectorType      m_ValidTimeStepList;
   TimeStepType              m_TimeStep;
 
   /** The number of work units to use. */

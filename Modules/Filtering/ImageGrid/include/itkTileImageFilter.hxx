@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkTileImageFilter_hxx
 #define itkTileImageFilter_hxx
-#include "itkTileImageFilter.h"
 
 #include "itkMacro.h"
 #include "itkImageRegionIteratorWithIndex.h"
@@ -173,7 +172,7 @@ TileImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
   SpacePrecisionType spacing[OutputImageDimension];
   SpacePrecisionType origin[OutputImageDimension];
 
-  for (unsigned i = 0; i < OutputImageDimension; ++i)
+  for (unsigned int i = 0; i < OutputImageDimension; ++i)
   {
     if (i < InputImageDimension)
     {
@@ -201,8 +200,6 @@ TileImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
   // be large enough to accommodate left-over images.
   OutputSizeType outputSize;
   outputSize.Fill(1);
-  OutputIndexType outputIndex;
-  outputIndex.Fill(0);
 
   if (m_Layout[OutputImageDimension - 1] == 0)
   {
@@ -222,8 +219,6 @@ TileImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
 
   OutputSizeType tileSize;
   tileSize.Fill(1);
-  OutputIndexType tileIndex;
-  tileIndex.Fill(0);
 
   for (unsigned int i = 0; i < OutputImageDimension; ++i)
   {
@@ -233,7 +228,7 @@ TileImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
   // Determine the size of the output. Each "row" size is determined
   // and the maximum size for each "row" will be the size for that
   // dimension.
-  RegionType tileRegion(tileIndex, tileSize);
+  RegionType tileRegion(tileSize);
   m_TileImage->SetRegions(tileRegion);
   m_TileImage->Allocate();
 
@@ -350,10 +345,7 @@ TileImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
     ++it;
   }
 
-  typename TOutputImage::RegionType outputLargestPossibleRegion;
-
-  outputLargestPossibleRegion.SetSize(outputSize);
-  outputLargestPossibleRegion.SetIndex(outputIndex);
+  const typename TOutputImage::RegionType outputLargestPossibleRegion(outputSize);
   outputPtr->SetLargestPossibleRegion(outputLargestPossibleRegion);
 
   // Support VectorImages by setting number of components on output.

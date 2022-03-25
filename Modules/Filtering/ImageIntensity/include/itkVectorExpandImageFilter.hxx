@@ -18,7 +18,6 @@
 #ifndef itkVectorExpandImageFilter_hxx
 #define itkVectorExpandImageFilter_hxx
 
-#include "itkVectorExpandImageFilter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkObjectFactory.h"
 #include "itkNumericTraits.h"
@@ -270,9 +269,7 @@ VectorExpandImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
   outputPtr->SetSpacing(outputSpacing);
   outputPtr->SetOrigin(outputOrigin);
 
-  typename TOutputImage::RegionType outputLargestPossibleRegion;
-  outputLargestPossibleRegion.SetSize(outputSize);
-  outputLargestPossibleRegion.SetIndex(outputStartIndex);
+  const typename TOutputImage::RegionType outputLargestPossibleRegion(outputStartIndex, outputSize);
 
   outputPtr->SetLargestPossibleRegion(outputLargestPossibleRegion);
 }

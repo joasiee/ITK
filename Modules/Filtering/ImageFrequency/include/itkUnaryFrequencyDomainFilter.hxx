@@ -18,10 +18,9 @@
 #ifndef itkUnaryFrequencyDomainFilter_hxx
 #define itkUnaryFrequencyDomainFilter_hxx
 
-#include <itkUnaryFrequencyDomainFilter.h>
 
-#include <itkMath.h>
-#include <itkImageAlgorithm.h>
+#include "itkMath.h"
+#include "itkImageAlgorithm.h"
 
 namespace itk
 {

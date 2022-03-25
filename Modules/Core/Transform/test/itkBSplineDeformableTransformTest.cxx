@@ -31,6 +31,7 @@
 #include "itkVersorRigid3DTransform.h"
 
 #include "itkTextOutput.h"
+#include "itkTestingMacros.h"
 
 /**
  * This module test the functionality of the BSplineDeformableTransform class.
@@ -79,10 +80,23 @@ itkBSplineDeformableTransformTest1()
    */
   auto transform = TransformType::New();
 
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(transform, BSplineDeformableTransform, BSplineBaseTransform);
+
   transform->SetGridSpacing(spacing);
+  ITK_TEST_SET_GET_VALUE(spacing, transform->GetGridSpacing());
+
   transform->SetGridOrigin(origin);
+  ITK_TEST_SET_GET_VALUE(origin, transform->GetGridOrigin());
+
   transform->SetGridRegion(region);
-  transform->Print(std::cout);
+  ITK_TEST_SET_GET_VALUE(region, transform->GetGridRegion());
+
+  using DirectionType = TransformType::DirectionType;
+  DirectionType direction = transform->GetCoefficientImages()[0]->GetDirection();
+  transform->SetGridDirection(direction);
+  ITK_TEST_SET_GET_VALUE(direction, transform->GetGridDirection());
+
+  std::cout << transform->GetValidRegion() << std::endl;
 
   /**
    * Allocate memory for the parameters
@@ -138,7 +152,7 @@ itkBSplineDeformableTransformTest1()
   // optional: set bulk transform parameters
 
   transform->SetBulkTransform(bulkTransform);
-  std::cout << "BulkTransform: " << transform->GetBulkTransform() << std::endl;
+  ITK_TEST_SET_GET_VALUE(bulkTransform, transform->GetBulkTransform());
 
   /**
    * Transform some points
@@ -382,14 +396,6 @@ itkBSplineDeformableTransformTest1()
     }
   }
 
-  /**
-   * Exercise other methods
-   */
-  std::cout << transform->GetGridRegion() << std::endl;
-  std::cout << transform->GetGridSpacing() << std::endl;
-  std::cout << transform->GetGridOrigin() << std::endl;
-  std::cout << transform->GetValidRegion() << std::endl;
-
   using EvenOrderTransformType = itk::BSplineDeformableTransform<CoordinateRepType, SpaceDimension, 2>;
   auto evenOrderTransform = EvenOrderTransformType::New();
   if (evenOrderTransform.IsNull())
@@ -426,7 +432,7 @@ itkBSplineDeformableTransformTest1()
     std::cout << "numberOfParameters =  " << numberOfParameters2 << std::endl;
     for (unsigned int i = 0; i < numberOfParameters2; ++i)
     {
-      if (std::fabs(parameters2[i]) > 1e-10)
+      if (itk::Math::abs(parameters2[i]) > 1e-10)
       {
         std::cerr << "SetIdentity failed, parameters are not null "
                   << "after invoking SetIdentity() " << std::endl;

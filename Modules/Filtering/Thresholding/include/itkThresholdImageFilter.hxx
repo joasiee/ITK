@@ -28,7 +28,6 @@
 #ifndef itkThresholdImageFilter_hxx
 #define itkThresholdImageFilter_hxx
 
-#include "itkThresholdImageFilter.h"
 #include "itkImageScanlineIterator.h"
 #include "itkNumericTraits.h"
 #include "itkObjectFactory.h"
@@ -81,7 +80,6 @@ ThresholdImageFilter<TImage>::ThresholdOutside(const PixelType & lower, const Pi
   if (lower > upper)
   {
     itkExceptionMacro(<< "Lower threshold cannot be greater than upper threshold.");
-    return;
   }
 
   if (Math::NotExactlyEquals(m_Lower, lower) || Math::NotExactlyEquals(m_Upper, upper))

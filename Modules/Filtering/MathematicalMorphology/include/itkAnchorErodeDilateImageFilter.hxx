@@ -18,8 +18,6 @@
 #ifndef itkAnchorErodeDilateImageFilter_hxx
 #define itkAnchorErodeDilateImageFilter_hxx
 
-#include "itkAnchorErodeDilateImageFilter.h"
-
 
 #include "itkAnchorUtilities.h"
 namespace itk
@@ -40,7 +38,6 @@ AnchorErodeDilateImageFilter<TImage, TKernel, TFunction1>::DynamicThreadedGenera
   if (!this->GetKernel().GetDecomposable())
   {
     itkExceptionMacro("Anchor morphology only works with decomposable structuring elements");
-    return;
   }
   // TFunction1 will be < for erosions
   // TFunction2 will be <=
@@ -69,7 +66,7 @@ AnchorErodeDilateImageFilter<TImage, TKernel, TFunction1>::DynamicThreadedGenera
   InputImageRegionType OReg = outputRegionForThread;
   // maximum buffer length is sum of dimensions
   unsigned int bufflength = 0;
-  for (unsigned i = 0; i < TImage::ImageDimension; ++i)
+  for (unsigned int i = 0; i < TImage::ImageDimension; ++i)
   {
     bufflength += IReg.GetSize()[i];
   }
@@ -84,7 +81,7 @@ AnchorErodeDilateImageFilter<TImage, TKernel, TFunction1>::DynamicThreadedGenera
   typename KernelType::DecompType decomposition = this->GetKernel().GetLines();
   BresType                        BresLine;
 
-  for (unsigned i = 0; i < decomposition.size(); ++i)
+  for (unsigned int i = 0; i < decomposition.size(); ++i)
   {
     typename KernelType::LType     ThisLine = decomposition[i];
     typename BresType::OffsetArray TheseOffsets = BresLine.BuildLine(ThisLine, bufflength);

@@ -67,6 +67,12 @@ public:
   /**  */
   itkSetMacro(Progressive, bool);
   itkGetConstMacro(Progressive, bool);
+  itkBooleanMacro(Progressive);
+
+  /** Convert to RGB if out_color_space is CMYK, default is true */
+  itkSetMacro(CMYKtoRGB, bool);
+  itkGetConstMacro(CMYKtoRGB, bool);
+  itkBooleanMacro(CMYKtoRGB);
 
   /*-------- This part of the interface deals with reading data. ------ */
 
@@ -111,10 +117,13 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   void
-  WriteSlice(std::string & fileName, const void * buffer);
+  WriteSlice(std::string & fileName, const void * const buffer);
 
-  /** Default = true*/
-  bool m_Progressive;
+  bool m_Progressive{ true };
+
+  bool m_CMYKtoRGB{ true };
+
+  bool m_IsCMYK{ false };
 };
 } // end namespace itk
 

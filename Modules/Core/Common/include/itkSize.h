@@ -20,6 +20,7 @@
 
 #include "itkIntTypes.h"
 #include "itkMacro.h"
+#include "itkMakeFilled.h"
 #include <algorithm>   // For copy_n.
 #include <type_traits> // For is_integral.
 #include <memory>
@@ -76,7 +77,7 @@ public:
 
   /** Compatible Size and value type alias */
   using SizeType = Size<VDimension>;
-  using SizeValueType = ::itk::SizeValueType;
+  using SizeValueType = itk::SizeValueType;
 
   /** Dimension constant */
   static constexpr unsigned int Dimension = VDimension;
@@ -232,13 +233,13 @@ public:
    * so that the Size class can be treated as a container
    * class in a way that is similar to the std::array.
    */
-  using value_type = ::itk::SizeValueType;
+  using value_type = itk::SizeValueType;
   using reference = value_type &;
   using const_reference = const value_type &;
   using iterator = value_type *;
   using const_iterator = const value_type *;
   using size_type = unsigned int;
-  using difference_type = std::ptrdiff_t;
+  using difference_type = ptrdiff_t;
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
@@ -258,28 +259,40 @@ public:
     std::swap(m_InternalArray, other.m_InternalArray);
   }
 
-  iterator
+  constexpr const_iterator
+  cbegin() const
+  {
+    return &m_InternalArray[0];
+  }
+
+  constexpr iterator
   begin()
   {
-    return iterator(&m_InternalArray[0]);
+    return &m_InternalArray[0];
   }
 
-  const_iterator
+  constexpr const_iterator
   begin() const
   {
-    return const_iterator(&m_InternalArray[0]);
+    return &m_InternalArray[0];
   }
 
-  iterator
+  constexpr const_iterator
+  cend() const
+  {
+    return &m_InternalArray[VDimension];
+  }
+
+  constexpr iterator
   end()
   {
-    return iterator(&m_InternalArray[VDimension]);
+    return &m_InternalArray[VDimension];
   }
 
-  const_iterator
+  constexpr const_iterator
   end() const
   {
-    return const_iterator(&m_InternalArray[VDimension]);
+    return &m_InternalArray[VDimension];
   }
 
   reverse_iterator
@@ -394,12 +407,7 @@ public:
   static constexpr Self
   Filled(const SizeValueType value)
   {
-    Self result{};
-    for (SizeValueType & sizeValue : result.m_InternalArray)
-    {
-      sizeValue = value;
-    }
-    return result;
+    return MakeFilled<Self>(value);
   }
 
 }; //------------ End struct Size

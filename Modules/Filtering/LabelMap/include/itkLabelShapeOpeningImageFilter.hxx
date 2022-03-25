@@ -18,7 +18,6 @@
 #ifndef itkLabelShapeOpeningImageFilter_hxx
 #define itkLabelShapeOpeningImageFilter_hxx
 
-#include "itkLabelShapeOpeningImageFilter.h"
 #include "itkProgressAccumulator.h"
 
 namespace itk
@@ -27,7 +26,7 @@ template <typename TInputImage>
 LabelShapeOpeningImageFilter<TInputImage>::LabelShapeOpeningImageFilter()
 {
   m_BackgroundValue = NumericTraits<OutputImagePixelType>::NonpositiveMin();
-  m_Lambda = NumericTraits<double>::ZeroValue();
+  m_Lambda = 0.0;
   m_ReverseOrdering = false;
   m_Attribute = LabelObjectType::NUMBER_OF_PIXELS;
 }

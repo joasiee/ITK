@@ -18,7 +18,6 @@
 #ifndef itkNarrowBandImageFilterBase_hxx
 #define itkNarrowBandImageFilterBase_hxx
 
-#include "itkNarrowBandImageFilterBase.h"
 #include "itkShiftScaleImageFilter.h"
 
 namespace itk
@@ -87,7 +86,7 @@ NarrowBandImageFilterBase<TInputImage, TOutputImage>::GenerateData()
 
   TimeStepType              timeStep;
   std::vector<TimeStepType> timeStepList(numberOfWorkUnits, NumericTraits<TimeStepType>::ZeroValue());
-  std::vector<bool>         validTimeStepList(numberOfWorkUnits, true);
+  BooleanStdVectorType      validTimeStepList(numberOfWorkUnits, true);
 
   // Implement iterative loop in thread function
   // ThreadedApplyUpdate and ThreadedCalculateChanged

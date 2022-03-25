@@ -74,7 +74,7 @@ main(int argc, char * argv[])
   using ImageType = itk::Image<PixelType, Dimension>;
 
   using ReaderType = itk::ImageFileReader<ImageType>;
-  ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   reader->SetFileName(inputImageFileName);
   // Software Guide : EndCodeSnippet
 
@@ -90,7 +90,7 @@ main(int argc, char * argv[])
   // Software Guide : BeginCodeSnippet
   using KMeansFilterType = itk::ScalarImageKmeansImageFilter<ImageType>;
 
-  KMeansFilterType::Pointer kmeansFilter = KMeansFilterType::New();
+  auto kmeansFilter = KMeansFilterType::New();
 
   kmeansFilter->SetInput(reader->GetOutput());
 
@@ -146,7 +146,7 @@ main(int argc, char * argv[])
 
 
   // Software Guide : BeginCodeSnippet
-  for (unsigned k = 0; k < numberOfInitialClasses; ++k)
+  for (unsigned int k = 0; k < numberOfInitialClasses; ++k)
   {
     const double userProvidedInitialMean = std::stod(argv[k + argoffset]);
     kmeansFilter->AddClassWithInitialMean(userProvidedInitialMean);
@@ -173,7 +173,7 @@ main(int argc, char * argv[])
 
   using WriterType = itk::ImageFileWriter<OutputImageType>;
 
-  WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
 
   writer->SetInput(kmeansFilter->GetOutput());
 

@@ -28,7 +28,6 @@
 #ifndef itkInterpolateImagePointsFilter_hxx
 #define itkInterpolateImagePointsFilter_hxx
 
-#include "itkInterpolateImagePointsFilter.h"
 #include "itkTotalProgressReporter.h"
 
 namespace itk
@@ -165,9 +164,7 @@ InterpolateImagePointsFilter<TInputImage, TOutputImage, TCoordType, Interpolator
 
   outputPtr->SetSpacing(outputSpacing);
 
-  typename TOutputImage::RegionType outputLargestPossibleRegion;
-  outputLargestPossibleRegion.SetSize(outputSize);
-  outputLargestPossibleRegion.SetIndex(outputStartIndex);
+  const typename TOutputImage::RegionType outputLargestPossibleRegion(outputStartIndex, outputSize);
 
   outputPtr->SetLargestPossibleRegion(outputLargestPossibleRegion);
 }

@@ -64,8 +64,15 @@ PrintImg(ImageType::Pointer img)
 }
 
 int
-itkOrientImageFilterTest(int, char *[])
+itkOrientImageFilterTest(int argc, char * argv[])
 {
+  if (argc != 2)
+  {
+    std::cerr << "Missing Parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " useImageDirection" << std::endl;
+    return EXIT_FAILURE;
+  }
+
   itk::MultiThreaderBase::SetGlobalMaximumNumberOfThreads(1);
   ImageType::Pointer randImage = CreateRandomImage();
   std::cerr << "Original" << std::endl;
@@ -75,11 +82,17 @@ itkOrientImageFilterTest(int, char *[])
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(orienter, OrientImageFilter, ImageToImageFilter);
 
-  orienter->SetGivenCoordinateOrientation(itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RIP);
+
+  auto useImageDirection = static_cast<bool>(std::stoi(argv[1]));
+  ITK_TEST_SET_GET_BOOLEAN(orienter, UseImageDirection, useImageDirection);
+
+  orienter->SetGivenCoordinateOrientation(
+    itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RIP);
   orienter->SetInput(randImage);
 
   // Try permuting axes
-  orienter->SetDesiredCoordinateOrientation(itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_IRP);
+  orienter->SetDesiredCoordinateOrientation(
+    itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_IRP);
   orienter->Update();
   ImageType::Pointer IRP = orienter->GetOutput();
   std::cerr << "IRP" << std::endl;
@@ -104,7 +117,7 @@ itkOrientImageFilterTest(int, char *[])
         ImageType::PixelType orig = randImage->GetPixel(originalIndex);
         ImageType::PixelType xfrm = IRP->GetPixel(transformedIndex);
         if (orig != xfrm)
-          return -1;
+          return EXIT_FAILURE;
       }
     }
   }
@@ -112,8 +125,10 @@ itkOrientImageFilterTest(int, char *[])
   // Go to LIP to check flipping an axis
   orienter = itk::OrientImageFilter<ImageType, ImageType>::New();
   orienter->SetInput(randImage);
-  orienter->SetGivenCoordinateOrientation(itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RIP);
-  orienter->SetDesiredCoordinateOrientation(itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_LIP);
+  orienter->SetGivenCoordinateOrientation(
+    itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RIP);
+  orienter->SetDesiredCoordinateOrientation(
+    itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_LIP);
   orienter->Update();
   ImageType::Pointer LIP = orienter->GetOutput();
   std::cerr << "LIP" << std::endl;
@@ -135,7 +150,7 @@ itkOrientImageFilterTest(int, char *[])
         ImageType::PixelType orig = randImage->GetPixel(originalIndex);
         ImageType::PixelType xfrm = LIP->GetPixel(transformedIndex);
         if (orig != xfrm)
-          return -1;
+          return EXIT_FAILURE;
       }
     }
   }

@@ -18,7 +18,6 @@
 #ifndef itkImageDuplicator_hxx
 #define itkImageDuplicator_hxx
 
-#include "itkImageDuplicator.h"
 #include "itkImageAlgorithm.h"
 
 namespace itk
@@ -40,7 +39,6 @@ ImageDuplicator<TInputImage>::Update()
   if (!m_InputImage)
   {
     itkExceptionMacro(<< "Input image has not been connected");
-    return;
   }
 
   // Update only if the input image has been modified

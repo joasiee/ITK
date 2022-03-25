@@ -19,6 +19,7 @@
 #define itkComplexToComplexFFTImageFilter_h
 
 #include "itkImageToImageFilter.h"
+#include "itkMacro.h"
 #include "ITKFFTExport.h"
 #include <complex>
 
@@ -72,16 +73,16 @@ extern ITKFFT_EXPORT std::ostream &
  * \sa ForwardFFTImageFilter
  * \ingroup ITKFFT
  */
-template <typename TImage>
-class ITK_TEMPLATE_EXPORT ComplexToComplexFFTImageFilter : public ImageToImageFilter<TImage, TImage>
+template <typename TInputImage, typename TOutputImage = TInputImage>
+class ITK_TEMPLATE_EXPORT ComplexToComplexFFTImageFilter : public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ComplexToComplexFFTImageFilter);
 
   /** Input and output image types. */
-  using ImageType = TImage;
-  using InputImageType = TImage;
-  using OutputImageType = TImage;
+  using ImageType = TInputImage;
+  using InputImageType = TInputImage;
+  using OutputImageType = TOutputImage;
 
   /** Standard class type aliases. */
   using Self = ComplexToComplexFFTImageFilter;
@@ -97,10 +98,9 @@ public:
   /** Customized object creation methods that support configuration-based
    * selection of FFT implementation.
    *
-   * Default implementation is FFTW.
+   * Default implementation is VnlFFT.
    */
-  static Pointer
-  New();
+  itkFactoryOnlyNewMacro(Self);
 
   using TransformDirectionEnum = ComplexToComplexFFTImageFilterEnums::TransformDirection;
 #if !defined(ITK_LEGACY_REMOVE)
@@ -132,6 +132,10 @@ private:
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #  include "itkComplexToComplexFFTImageFilter.hxx"
+#endif
+
+#ifdef ITK_FFTIMAGEFILTERINIT_FACTORY_REGISTER_MANAGER
+#  include "itkFFTImageFilterInitFactoryRegisterManager.h"
 #endif
 
 #endif

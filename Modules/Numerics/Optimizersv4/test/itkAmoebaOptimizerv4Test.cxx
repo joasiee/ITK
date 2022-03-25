@@ -17,6 +17,7 @@
  *=========================================================================*/
 
 #include "itkAmoebaOptimizerv4.h"
+#include "itkTestingMacros.h"
 #include "vnl/vnl_vector_fixed.h"
 #include "vnl/vnl_vector.h"
 #include "vnl/vnl_matrix.h"
@@ -29,7 +30,7 @@
  *  1/2 x^T A x - b^T x
  *
  *  Where A is represented as an itkMatrix and
- *  b is represented as a itkVector
+ *  b is represented as an itkVector
  *
  *  The system in this example is:
  *
@@ -336,17 +337,30 @@ AmoebaTest1()
 
   using OptimizerType = itk::AmoebaOptimizerv4;
 
-  // Declaration of a itkOptimizer
+  // Declaration of an itkOptimizer
   auto itkOptimizer = OptimizerType::New();
 
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(itkOptimizer, AmoebaOptimizerv4, SingleValuedNonLinearVnlOptimizerv4);
+
+
   // set optimizer parameters
-  itkOptimizer->SetNumberOfIterations(10);
+  itk::SizeValueType numberOfIterations = 10;
+  itkOptimizer->SetNumberOfIterations(numberOfIterations);
+  ITK_TEST_SET_GET_VALUE(numberOfIterations, itkOptimizer->GetNumberOfIterations());
 
-  double xTolerance = 0.01;
+  auto automaticInitialSimplex = true;
+  ITK_TEST_SET_GET_BOOLEAN(itkOptimizer, AutomaticInitialSimplex, automaticInitialSimplex);
+
+  auto optimizeWithRestarts = false;
+  ITK_TEST_SET_GET_BOOLEAN(itkOptimizer, OptimizeWithRestarts, optimizeWithRestarts);
+
+  double xTolerance = -0.01;
   itkOptimizer->SetParametersConvergenceTolerance(xTolerance);
+  ITK_TEST_SET_GET_VALUE(xTolerance, itkOptimizer->GetParametersConvergenceTolerance());
 
-  double fTolerance = 0.001;
+  double fTolerance = -0.001;
   itkOptimizer->SetFunctionConvergenceTolerance(fTolerance);
+  ITK_TEST_SET_GET_VALUE(fTolerance, itkOptimizer->GetFunctionConvergenceTolerance());
 
   auto metric = itkAmoebaOptimizerv4TestMetric1::New();
   itkOptimizer->SetMetric(metric);
@@ -361,6 +375,19 @@ AmoebaTest1()
   // parameters.
   std::cout << "Set metric parameters." << std::endl;
   metric->SetParameters(initialValue);
+
+  // Test exceptions
+  ITK_TRY_EXPECT_EXCEPTION(itkOptimizer->StartOptimization());
+
+  xTolerance = 0.01;
+  itkOptimizer->SetParametersConvergenceTolerance(xTolerance);
+  ITK_TEST_SET_GET_VALUE(xTolerance, itkOptimizer->GetParametersConvergenceTolerance());
+
+  ITK_TRY_EXPECT_EXCEPTION(itkOptimizer->StartOptimization());
+
+  fTolerance = 0.001;
+  itkOptimizer->SetFunctionConvergenceTolerance(fTolerance);
+  ITK_TEST_SET_GET_VALUE(fTolerance, itkOptimizer->GetFunctionConvergenceTolerance());
 
   try
   {
@@ -417,7 +444,7 @@ AmoebaTest1()
   // Get the final value of the optimizer
   std::cout << "Testing optimizers GetValue() : ";
   OptimizerType::MeasureType finalValue = itkOptimizer->GetValue();
-  if (std::fabs(finalValue + 9.99998) > 0.01)
+  if (itk::Math::abs(finalValue + 9.99998) > 0.01)
   {
     std::cerr << "failed\n";
     std::cerr << "[TEST 1 FAILURE]\n";
@@ -457,6 +484,7 @@ AmoebaTest2()
   OptimizerType::ParametersType initialSimplexDelta(1);
   initialSimplexDelta[0] = 10;
   itkOptimizer->SetInitialSimplexDelta(initialSimplexDelta);
+  ITK_TEST_SET_GET_VALUE(initialSimplexDelta, itkOptimizer->GetInitialSimplexDelta());
 
   OptimizerType::ParametersType initialParameters(1), finalParameters;
   // starting position
@@ -486,6 +514,8 @@ AmoebaTest2()
     return EXIT_FAILURE;
   }
 
+  std::cout << "StopConditionDescription: " << itkOptimizer->GetStopConditionDescription() << std::endl;
+
   // we should have converged to the local minimum, -2
   finalParameters = itkOptimizer->GetCurrentPosition();
   double knownParameters = -2.0;
@@ -493,7 +523,7 @@ AmoebaTest2()
   std::cout << "Known parameters   = " << knownParameters << "   ";
   std::cout << "Estimated parameters = " << finalParameters << std::endl;
   std::cout << "Converged to local minimum." << std::endl;
-  if (fabs(finalParameters[0] - knownParameters) > xTolerance)
+  if (itk::Math::abs(finalParameters[0] - knownParameters) > xTolerance)
   {
     std::cerr << "[TEST 2 FAILURE]\n";
     return EXIT_FAILURE;
@@ -526,7 +556,7 @@ AmoebaTest2()
   std::cout << "Estimated parameters = " << finalParameters << std::endl;
   std::cout << "Converged to global minimum." << std::endl;
 
-  if (fabs(finalParameters[0] - knownParameters) > xTolerance)
+  if (itk::Math::abs(finalParameters[0] - knownParameters) > xTolerance)
   {
     std::cerr << "[TEST 2 FAILURE]\n";
     return EXIT_FAILURE;

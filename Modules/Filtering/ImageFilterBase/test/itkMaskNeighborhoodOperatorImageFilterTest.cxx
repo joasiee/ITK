@@ -25,12 +25,12 @@
 #include "itkTestingMacros.h"
 
 int
-itkMaskNeighborhoodOperatorImageFilterTest(int ac, char * av[])
+itkMaskNeighborhoodOperatorImageFilterTest(int argc, char * argv[])
 {
-  if (ac < 3)
+  if (argc < 3)
   {
-    std::cerr << "Usage: " << av[0] << " InputImage OutputImage\n";
-    return -1;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " InputImage OutputImage\n";
+    return EXIT_FAILURE;
   }
 
   constexpr unsigned int Dimension = 2;
@@ -41,7 +41,7 @@ itkMaskNeighborhoodOperatorImageFilterTest(int ac, char * av[])
   using OutputImageType = itk::Image<OutputPixelType, Dimension>;
 
   itk::ImageFileReader<InputImageType>::Pointer input = itk::ImageFileReader<InputImageType>::New();
-  input->SetFileName(av[1]);
+  input->SetFileName(argv[1]);
   input->Update();
 
   // create a mask the size of the input file
@@ -106,7 +106,13 @@ itkMaskNeighborhoodOperatorImageFilterTest(int ac, char * av[])
   filter1->SetInput(input->GetOutput());
   filter1->SetMaskImage(mask1);
   filter1->SetOperator(sobelHorizontal);
-  filter1->UseDefaultValueOff();
+
+  auto defaultValue = itk::NumericTraits<typename FilterType::OutputPixelType>::ZeroValue();
+  filter1->SetDefaultValue(defaultValue);
+  ITK_TEST_SET_GET_VALUE(defaultValue, filter1->GetDefaultValue());
+
+  bool useDefaultValue = false;
+  ITK_TEST_SET_GET_BOOLEAN(filter1, UseDefaultValue, useDefaultValue);
 
   auto filter2 = FilterType::New();
 
@@ -115,7 +121,11 @@ itkMaskNeighborhoodOperatorImageFilterTest(int ac, char * av[])
   filter2->SetInput(filter1->GetOutput());
   filter2->SetMaskImage(mask2);
   filter2->SetOperator(sobelVertical);
-  filter2->UseDefaultValueOff();
+
+  filter2->SetDefaultValue(defaultValue);
+  ITK_TEST_SET_GET_VALUE(defaultValue, filter2->GetDefaultValue());
+
+  ITK_TEST_SET_GET_BOOLEAN(filter2, UseDefaultValue, useDefaultValue);
 
   using RescaleFilterType = itk::RescaleIntensityImageFilter<InputImageType, OutputImageType>;
   auto rescaler = RescaleFilterType::New();
@@ -126,22 +136,9 @@ itkMaskNeighborhoodOperatorImageFilterTest(int ac, char * av[])
   // Generate test image
   itk::ImageFileWriter<OutputImageType>::Pointer writer = itk::ImageFileWriter<OutputImageType>::New();
   writer->SetInput(rescaler->GetOutput());
-  writer->SetFileName(av[2]);
+  writer->SetFileName(argv[2]);
 
-  try
-  {
-    writer->Update();
-  }
-  catch (const itk::ExceptionObject & e)
-  {
-    std::cerr << "Exception detected: " << e.GetDescription();
-    return -1;
-  }
-  catch (...)
-  {
-    std::cerr << "Some other exception occurred" << std::endl;
-    return -2;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(writer->Update());
 
   return EXIT_SUCCESS;
 }

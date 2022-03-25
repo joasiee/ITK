@@ -80,7 +80,7 @@ itkQuadEdgeMeshScalarDataVTKPolyDataWriterTest1(int argc, char * argv[])
 
   CellsContainerPointer cells = myMesh->GetCells();
 
-  unsigned faceId = 0;
+  unsigned int faceId = 0;
 
   for (MeshType::CellsContainerIterator cells_it = cells->Begin(); cells_it != cells->End(); ++cells_it, faceId++)
   {
@@ -96,6 +96,17 @@ itkQuadEdgeMeshScalarDataVTKPolyDataWriterTest1(int argc, char * argv[])
   using WriterType = itk::QuadEdgeMeshScalarDataVTKPolyDataWriter<MeshType>;
 
   auto writer = WriterType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(writer, QuadEdgeMeshScalarDataVTKPolyDataWriter, VTKPolyDataWriter);
+
+
+  std::string cellDataName = "SphereCellData";
+  writer->SetCellDataName(cellDataName);
+  ITK_TEST_SET_GET_VALUE(cellDataName, writer->GetCellDataName());
+
+  std::string pointDataName = "SpherePointData";
+  writer->SetPointDataName(pointDataName);
+  ITK_TEST_SET_GET_VALUE(pointDataName, writer->GetPointDataName());
 
   writer->SetInput(mySphereMeshSource->GetOutput());
   writer->SetFileName(argv[1]);

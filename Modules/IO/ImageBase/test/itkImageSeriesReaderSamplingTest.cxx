@@ -17,14 +17,15 @@
  *=========================================================================*/
 
 #include "itkImageSeriesReader.h"
+#include "itkTestingMacros.h"
 
 int
-itkImageSeriesReaderSamplingTest(int ac, char * av[])
+itkImageSeriesReaderSamplingTest(int argc, char * argv[])
 {
 
-  if (ac < 3)
+  if (argc < 3)
   {
-    std::cerr << "usage: itkIOTests itkImageSeriesReaderSamplingTest inputFileName(s)" << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " inputFileName(s) " << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -33,10 +34,10 @@ itkImageSeriesReaderSamplingTest(int ac, char * av[])
   using Reader3DType = itk::ImageSeriesReader<Image3DType>;
 
   Reader3DType::FileNamesContainer fnames;
-  for (int i = 1; i < ac; ++i)
+  for (int i = 1; i < argc; ++i)
   {
-    std::cout << av[i] << std::endl;
-    fnames.push_back(av[i]);
+    std::cout << argv[i] << std::endl;
+    fnames.push_back(argv[i]);
   }
 
   std::cout << "testing reading a series of 2D images to 3D with extra slices" << std::endl;

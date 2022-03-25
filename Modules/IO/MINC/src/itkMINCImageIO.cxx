@@ -24,7 +24,7 @@
 #include "itkArray.h"
 #include "itkPrintHelper.h"
 
-#include <itk_minc2.h>
+#include "itk_minc2.h"
 
 
 namespace itk
@@ -652,7 +652,7 @@ MINCImageIO::ReadImageInformation()
   this->SetNumberOfComponents(numberOfComponents);
   this->ComputeStrides();
 
-  // create metadata object to store usefull additional information
+  // create metadata object to store useful additional information
   MetaDataDictionary & thisDic = GetMetaDataDictionary();
   thisDic.Clear();
 

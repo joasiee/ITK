@@ -44,9 +44,9 @@ namespace itk
  *         Brain Imaging Center, Montreal Neurological Institute, McGill University, Montreal Canada 2012
  * \ingroup ITKIOTransformMINC
  */
-template <typename TParametersValueType = double, unsigned int NInputDimensions = 3, unsigned int NOutputDimensions = 3>
+template <typename TParametersValueType = double, unsigned int VInputDimension = 3, unsigned int VOutputDimension = 3>
 class ITK_TEMPLATE_EXPORT MINCTransformAdapter
-  : public Transform<TParametersValueType, NInputDimensions, NOutputDimensions>
+  : public Transform<TParametersValueType, VInputDimension, VOutputDimension>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(MINCTransformAdapter);
@@ -54,7 +54,7 @@ public:
   /** Standard class type aliases. */
   using Self = MINCTransformAdapter;
 
-  using Superclass = Transform<TParametersValueType, NInputDimensions, NOutputDimensions>;
+  using Superclass = Transform<TParametersValueType, VInputDimension, VOutputDimension>;
 
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
@@ -68,8 +68,8 @@ public:
   itkTypeMacro(MINCTransformAdapter, Transform);
 
   /** Dimension of the domain space. */
-  static constexpr unsigned int InputSpaceDimension = NInputDimensions;
-  static constexpr unsigned int OutputSpaceDimension = NOutputDimensions;
+  static constexpr unsigned int InputSpaceDimension = VInputDimension;
+  static constexpr unsigned int OutputSpaceDimension = VOutputDimension;
 
   /** Type of the input parameters. */
   using ScalarType = double;
@@ -96,12 +96,12 @@ public:
   using OutputCovariantVectorType = CovariantVector<TParametersValueType, Self::OutputSpaceDimension>;
 
   /** Standard coordinate point type for this class */
-  using InputPointType = Point<TParametersValueType, NInputDimensions>;
-  using OutputPointType = Point<TParametersValueType, NInputDimensions>;
+  using InputPointType = Point<TParametersValueType, VInputDimension>;
+  using OutputPointType = Point<TParametersValueType, VInputDimension>;
 
   /** Standard vnl_vector type for this class. */
-  using InputVnlVectorType = vnl_vector_fixed<TParametersValueType, NInputDimensions>;
-  using OutputVnlVectorType = vnl_vector_fixed<TParametersValueType, NOutputDimensions>;
+  using InputVnlVectorType = vnl_vector_fixed<TParametersValueType, VInputDimension>;
+  using OutputVnlVectorType = vnl_vector_fixed<TParametersValueType, VOutputDimension>;
 
   /**  Method to transform a point. */
   OutputPointType
@@ -153,18 +153,16 @@ public:
 
   /**  Method to transform a vector. */
   OutputVectorType
-  TransformVector(const InputVectorType & vector, const InputPointType &) const override
+  TransformVector(const InputVectorType &, const InputPointType &) const override
   {
     itkExceptionMacro(<< "Not Implemented");
-    return vector;
   }
 
   /**  Method to transform a vector. */
   OutputVnlVectorType
-  TransformVector(const InputVnlVectorType & vector, const InputPointType &) const override
+  TransformVector(const InputVnlVectorType &, const InputPointType &) const override
   {
     itkExceptionMacro(<< "Not Implemented");
-    return vector;
   }
 
   /**  Method to transform a vector. */
@@ -190,18 +188,16 @@ public:
 
   /**  Method to transform a vector. */
   OutputVectorPixelType
-  TransformVector(const InputVectorPixelType & vector, const InputPointType &) const override
+  TransformVector(const InputVectorPixelType &, const InputPointType &) const override
   {
     itkExceptionMacro(<< "Not Implemented");
-    return vector;
   }
 
   /**  Method to transform a CovariantVector. */
   OutputCovariantVectorType
-  TransformCovariantVector(const InputCovariantVectorType & vector, const InputPointType &) const override
+  TransformCovariantVector(const InputCovariantVectorType &, const InputPointType &) const override
   {
     itkExceptionMacro(<< "Not Implemented");
-    return vector;
   }
 
   /**  Method to transform a CovariantVector. */
@@ -220,10 +216,9 @@ public:
 
   /**  Method to transform a CovariantVector. */
   OutputVectorPixelType
-  TransformCovariantVector(const InputVectorPixelType & vector, const InputPointType &) const override
+  TransformCovariantVector(const InputVectorPixelType &, const InputPointType &) const override
   {
     itkExceptionMacro(<< "Not Implemented");
-    return vector;
   }
 
   /** Set the transformation to an Identity
@@ -251,7 +246,6 @@ public:
   {
     // this transform is defined by XFM file
     itkExceptionMacro(<< "Not Defined");
-    return 0;
   }
 
   /** Set the Transformation Parameters
@@ -266,7 +260,6 @@ public:
   GetParameters() const override
   {
     itkExceptionMacro(<< "Not Implemented");
-    return m_Parameters;
   }
 
   void
@@ -293,9 +286,8 @@ public:
 
 protected:
   MINCTransformAdapter()
-    : Transform<TParametersValueType, NInputDimensions, NOutputDimensions>(0)
   {
-    if (NInputDimensions != 3 || NOutputDimensions != 3)
+    if (VInputDimension != 3 || VOutputDimension != 3)
       itkExceptionMacro(<< "Sorry, only 3D to 3d minc xfm transform is currently implemented");
   }
 

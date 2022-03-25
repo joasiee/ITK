@@ -18,6 +18,7 @@
 #ifndef itkDenseFiniteDifferenceImageFilter_h
 #define itkDenseFiniteDifferenceImageFilter_h
 
+#include "itkBooleanStdVector.h"
 #include "itkFiniteDifferenceImageFilter.h"
 #include "itkMultiThreaderBase.h"
 
@@ -172,7 +173,8 @@ private:
     DenseFiniteDifferenceImageFilter * Filter;
     TimeStepType                       TimeStep;
     std::vector<TimeStepType>          TimeStepList;
-    std::vector<bool>                  ValidTimeStepList;
+
+    BooleanStdVectorType ValidTimeStepList;
   };
 
   /** This callback method uses ImageSource::SplitRequestedRegion to acquire an

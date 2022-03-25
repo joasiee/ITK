@@ -85,7 +85,7 @@ public:
 #ifdef ITK_USE_CONCEPT_CHECKING
   // Begin concept checking
 //  itkConceptMacro(SameDimensionOrMinusOne,
-//    (Concept::SameDimensionOrMinusOne<NDimensions, 3>));
+//    (Concept::SameDimensionOrMinusOne<VDimension, 3>));
 // End concept checking
 #endif
 

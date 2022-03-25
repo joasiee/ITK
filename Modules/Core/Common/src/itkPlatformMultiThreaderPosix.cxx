@@ -31,11 +31,6 @@
 #include "itksys/SystemTools.hxx"
 #include <unistd.h>
 
-#ifdef __APPLE__
-#  include <sys/types.h>
-#  include <sys/sysctl.h>
-#endif
-
 namespace itk
 {
 extern "C"
@@ -60,7 +55,6 @@ PlatformMultiThreader::MultipleMethodExecute()
     if (m_MultipleMethod[thread_loop] == (ThreadFunctionType) nullptr)
     {
       itkExceptionMacro(<< "No multiple method set for: " << thread_loop);
-      return;
     }
   }
 

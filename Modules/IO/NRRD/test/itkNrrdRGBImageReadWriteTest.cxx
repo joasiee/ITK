@@ -19,6 +19,7 @@
 #include <fstream>
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
+#include "itkTestingMacros.h"
 
 //
 // This test needs to use more than one file format,
@@ -26,11 +27,11 @@
 //
 
 int
-itkNrrdRGBImageReadWriteTest(int ac, char * av[])
+itkNrrdRGBImageReadWriteTest(int argc, char * argv[])
 {
-  if (ac < 2)
+  if (argc < 2)
   {
-    std::cerr << "Usage: " << av[0] << " Input Output\n";
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " Input Output\n";
     return EXIT_FAILURE;
   }
 
@@ -38,7 +39,7 @@ itkNrrdRGBImageReadWriteTest(int ac, char * av[])
   using myImage = itk::Image<PixelType, 2>;
 
   itk::ImageFileReader<myImage>::Pointer reader = itk::ImageFileReader<myImage>::New();
-  reader->SetFileName(av[1]);
+  reader->SetFileName(argv[1]);
 
   try
   {
@@ -58,7 +59,7 @@ itkNrrdRGBImageReadWriteTest(int ac, char * av[])
   itk::ImageFileWriter<myImage>::Pointer writer;
   writer = itk::ImageFileWriter<myImage>::New();
   writer->SetInput(reader->GetOutput());
-  writer->SetFileName(av[2]);
+  writer->SetFileName(argv[2]);
   try
   {
     writer->Update();

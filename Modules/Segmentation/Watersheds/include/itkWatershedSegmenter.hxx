@@ -19,7 +19,6 @@
 #define itkWatershedSegmenter_hxx
 
 #include "itkMath.h"
-#include "itkWatershedSegmenter.h"
 #include "itkNeighborhoodAlgorithm.h"
 #include "itkImageRegionIterator.h"
 #include <stack>
@@ -176,7 +175,7 @@ Segmenter<TInputImage>::GenerateData()
   Self::MinMax(input, regionToProcess, minimum, maximum);
   // cap the maximum in the image so that we can always define a pixel
   // value that is one greater than the maximum value in the image.
-  if (NumericTraits<InputPixelType>::IsInteger
+  if (std::is_integral<InputPixelType>::value
         // clang-format off
 CLANG_PRAGMA_PUSH
 CLANG_SUPPRESS_Wfloat_equal
@@ -1198,7 +1197,7 @@ Segmenter<TInputImage>::Threshold(InputImageTypePointer destination,
     // value for the data type, then drop the value by one intensity
     // value. This the watershed algorithm to construct a "barrier" or
     // "wall" around the image that will stop the watershed without
-    // requiring a expensive boundary condition checks.
+    // requiring an expensive boundary condition checks.
     while (!dIt.IsAtEnd())
     {
       InputPixelType tmp = sIt.Get();
@@ -1293,9 +1292,7 @@ Segmenter<TInputImage>::UpdateOutputInformation()
     outputStartIndex[i] = inputStartIndex[i];
   }
 
-  typename OutputImageType::RegionType outputLargestPossibleRegion;
-  outputLargestPossibleRegion.SetSize(outputSize);
-  outputLargestPossibleRegion.SetIndex(outputStartIndex);
+  const typename OutputImageType::RegionType outputLargestPossibleRegion(outputStartIndex, outputSize);
 
   outputPtr->SetLargestPossibleRegion(outputLargestPossibleRegion);
 }

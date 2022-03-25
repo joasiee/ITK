@@ -20,6 +20,7 @@
 #include "itkImageToParametricSpaceFilter.h"
 #include "itkMesh.h"
 #include "itkMath.h"
+#include "itkTestingMacros.h"
 
 int
 itkImageToParametricSpaceFilterTest(int, char *[])
@@ -118,6 +119,12 @@ itkImageToParametricSpaceFilterTest(int, char *[])
 
 
   FilterPointer filter = FilterType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(filter, ImageToParametricSpaceFilter, ImageToMeshFilter);
+
+
+  bool computeIndices = true;
+  ITK_TEST_SET_GET_BOOLEAN(filter, ComputeIndices, computeIndices);
 
   // Connect the inputs
   filter->SetInput(0, imageX);

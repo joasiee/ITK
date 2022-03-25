@@ -28,7 +28,6 @@
 #ifndef itkRandomImageSource_hxx
 #define itkRandomImageSource_hxx
 
-#include "itkRandomImageSource.h"
 #include "itkImageRegionIterator.h"
 #include "itkObjectFactory.h"
 #include "itkTotalProgressReporter.h"
@@ -199,15 +198,9 @@ void
 RandomImageSource<TOutputImage>::GenerateOutputInformation()
 {
   TOutputImage * output;
-  IndexType      index;
-
-  index.Fill(0);
-
   output = this->GetOutput(0);
 
-  typename TOutputImage::RegionType largestPossibleRegion;
-  largestPossibleRegion.SetSize(this->m_Size);
-  largestPossibleRegion.SetIndex(index);
+  const typename TOutputImage::RegionType largestPossibleRegion(this->m_Size);
   output->SetLargestPossibleRegion(largestPossibleRegion);
 
   output->SetSpacing(m_Spacing);
@@ -231,7 +224,7 @@ RandomImageSource<TOutputImage>::DynamicThreadedGenerateData(const OutputImageRe
   TotalProgressReporter progress(this, image->GetRequestedRegion().GetNumberOfPixels());
 
   IndexValueType indSeed = outputRegionForThread.GetIndex(0);
-  for (unsigned d = 1; d < OutputImageDimension; ++d)
+  for (unsigned int d = 1; d < OutputImageDimension; ++d)
   {
     indSeed += outputRegionForThread.GetIndex(d);
   }

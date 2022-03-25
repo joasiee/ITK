@@ -22,6 +22,7 @@ import sys
 import os
 import numpy as np
 import pathlib
+import pickle
 
 import itk
 
@@ -161,6 +162,23 @@ except Exception as e:
         raise e
 image = itk.imread(filename, imageio=itk.PNGImageIO.New())
 assert type(image) == itk.Image[itk.RGBPixel[itk.UC], 2]
+
+# Test serialization with pickle
+array = np.random.randint(0, 256, (8, 12)).astype(np.uint8)
+image = itk.image_from_array(array)
+image.SetSpacing([1.0, 2.0])
+image.SetOrigin([11.0, 4.0])
+theta = np.radians(30)
+cosine = np.cos(theta)
+sine = np.sin(theta)
+rotation = np.array(((cosine, -sine), (sine, cosine)))
+image.SetDirection(rotation)
+serialize_deserialize = pickle.loads(pickle.dumps(image))
+# verify_input_information checks origin, spacing, direction consistency
+comparison = itk.comparison_image_filter(
+    image, serialize_deserialize, verify_input_information=True
+)
+assert np.sum(comparison) == 0.0
 
 # Make sure we can read unsigned short, unsigned int, and cast
 image = itk.imread(filename, itk.UI)
@@ -312,6 +330,9 @@ assert np.any(arr != itk.array_from_image(image))
 image = itk.GetImageViewFromArray(arr)
 image.FillBuffer(2)
 assert np.all(arr == itk.array_from_image(image))
+arr_fortran = arr.copy(order="F")
+image = itk.GetImageViewFromArray(arr_fortran)
+assert np.array_equal(arr_fortran.shape, image.shape)
 image = itk.image_from_array(arr, is_vector=True)
 assert image.GetImageDimension() == 2
 image = itk.GetImageViewFromArray(arr, is_vector=True)
@@ -321,6 +342,7 @@ assert arr.shape[0] == 2
 assert arr.shape[1] == 3
 assert arr[1, 1] == 5
 image = itk.image_from_array(arr)
+assert np.array_equal(arr.shape, image.shape)
 arrKeepAxes = itk.array_from_image(image, keep_axes=True)
 assert arrKeepAxes.shape[0] == 3
 assert arrKeepAxes.shape[1] == 2
@@ -396,9 +418,19 @@ assert arr2[0, 0] == 2
 # and make sure that the matrix hasn't changed.
 assert m_itk(0, 0) == 1
 # Test __repr__
-assert repr(m_itk) == "itkMatrixD33 ([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])"
+assert (
+    repr(m_itk) == "itkMatrixD33 ([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])"
+)
 # Test __array__
 assert np.array_equal(np.asarray(m_itk), np.eye(3))
+# Test array like input
+arr3 = [[0.0, 0.0], [0.0, 0.0]]
+m_itk = itk.matrix_from_array(arr3)
+m_itk.SetIdentity()
+# Test that the array like has not changed,...
+assert arr3[0][0] == 0
+# but that the ITK matrix has the correct value.
+assert m_itk(0, 0) == 1
 
 # test .astype for itk.Image
 numpyImage = np.random.randint(0, 256, (8, 12, 5)).astype(np.uint8)

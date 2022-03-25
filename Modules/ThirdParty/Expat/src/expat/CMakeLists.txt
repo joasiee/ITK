@@ -54,7 +54,7 @@ mark_as_advanced(EXPAT_LARGE_SIZE)
 option(EXPAT_MIN_SIZE "Get a smaller (but slower) parser (in particular avoid multiple copies of the tokenizer)" OFF)
 mark_as_advanced(EXPAT_MIN_SIZE)
 if(MSVC OR _EXPAT_HELP)
-    set(EXPAT_MSVC_STATIC_CRT OFF CACHE BOOL "Use /MT flag (static CRT) when compiling in MSVC")
+    set(EXPAT_MSVC_STATIC_CRT ${ITK_MSVC_STATIC_RUNTIME_LIBRARY} CACHE INTERNAL "Use /MT flag (static CRT) when compiling in MSVC")
 endif()
 
 #
@@ -196,6 +196,7 @@ INSTALL(FILES
   ${ITK3P_EXPAT_BINARY_DIR}/expatDllConfig.h
   ${ITK3P_EXPAT_SOURCE_DIR}/expat.h
   ${ITK3P_EXPAT_BINARY_DIR}/expat_config.h
+  ${ITK3P_EXPAT_SOURCE_DIR}/expat_external.h
   ${ITK3P_EXPAT_SOURCE_DIR}/itk_expat_mangle.h
   DESTINATION ${ITK3P_INSTALL_INCLUDE_DIR} # TODO: itk_expat.h #include "itkexpat/expat.h"
   COMPONENT Development)

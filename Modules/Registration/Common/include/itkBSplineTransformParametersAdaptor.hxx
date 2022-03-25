@@ -18,7 +18,6 @@
 #ifndef itkBSplineTransformParametersAdaptor_hxx
 #define itkBSplineTransformParametersAdaptor_hxx
 
-#include "itkBSplineTransformParametersAdaptor.h"
 
 #include "itkBSplineDecompositionImageFilter.h"
 #include "itkBSplineResampleImageFunction.h"
@@ -203,7 +202,6 @@ BSplineTransformParametersAdaptor<TTransform>::AdaptTransformParameters()
   if (!this->m_Transform)
   {
     itkExceptionMacro("Transform has not been set.");
-    return;
   }
 
   if (this->m_RequiredFixedParameters == this->m_Transform->GetFixedParameters())

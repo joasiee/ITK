@@ -18,7 +18,6 @@
 #ifndef itkImageKmeansModelEstimator_hxx
 #define itkImageKmeansModelEstimator_hxx
 
-#include "itkImageKmeansModelEstimator.h"
 
 namespace itk
 {
@@ -562,7 +561,7 @@ ImageKmeansModelEstimator<TInputImage, TMembershipFunction>::Perturb(double * ol
 
   for (i = 0; i < m_VectorDimension; ++i)
   {
-    srand((unsigned)time(nullptr));
+    srand((unsigned int)time(nullptr));
     rand_num = (rand()) / ((double)RAND_MAX);
 
     if (oldCodeword[i] == 0.0)
@@ -570,7 +569,7 @@ ImageKmeansModelEstimator<TInputImage, TMembershipFunction>::Perturb(double * ol
       newCodeword[i] = addoffset * rand_num;
     }
 
-    else if (std::fabs(oldCodeword[i]) < 0.9 * addoffset)
+    else if (itk::Math::abs(oldCodeword[i]) < 0.9 * addoffset)
     {
       newCodeword[i] = oldCodeword[i];
 

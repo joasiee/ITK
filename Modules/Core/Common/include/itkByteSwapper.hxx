@@ -27,7 +27,6 @@
  *=========================================================================*/
 #ifndef itkByteSwapper_hxx
 #define itkByteSwapper_hxx
-#include "itkByteSwapper.h"
 #include <memory>
 #include <cstring>
 
@@ -129,7 +128,6 @@ ByteSwapper<T>::SwapRangeFromSystemToBigEndian(T * p, BufferSizeType num)
       return;
     default:
       itkGenericExceptionMacro(<< "Cannot swap number of bytes requested");
-      return;
   }
 }
 

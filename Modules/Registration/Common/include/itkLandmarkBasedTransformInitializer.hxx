@@ -18,7 +18,6 @@
 #ifndef itkLandmarkBasedTransformInitializer_hxx
 #define itkLandmarkBasedTransformInitializer_hxx
 
-#include "itkLandmarkBasedTransformInitializer.h"
 #include "itkMatrix.h"
 #include "itkSymmetricEigenAnalysis.h"
 
@@ -350,12 +349,10 @@ LandmarkBasedTransformInitializer<TTransform, TFixedImage, TMovingImage>::Intern
   if (ImageDimension != 3)
   {
     itkExceptionMacro("Transform is VersorRigid3DTransform and Fixed image dimension is not 3");
-    return;
   }
   if (MovingImageType::ImageDimension != 3)
   {
     itkExceptionMacro("Transform is VersorRigid3DTransform and Moving image dimension is not 3");
-    return;
   }
 
   // --- compute the necessary transform to match the two sets of landmarks
@@ -536,12 +533,10 @@ LandmarkBasedTransformInitializer<TTransform, TFixedImage, TMovingImage>::Intern
   if (ImageDimension != 2)
   {
     itkExceptionMacro("Transform is Rigid2DTransfrom and Fixed image dimension is not 2");
-    return;
   }
   if (MovingImageType::ImageDimension != 2)
   {
     itkExceptionMacro("Transform is Rigid2DTransform and Moving image dimension is not 2");
-    return;
   }
 
   const double PI = 4.0 * std::atan(1.0);
@@ -627,7 +622,7 @@ LandmarkBasedTransformInitializer<TTransform, TFixedImage, TMovingImage>::Intern
     }
 
     itkDebugMacro(<< "Dot Product of landmarks: " << s_dot << " Cross Product: " << s_cross);
-    if (std::fabs(s_dot) > 0.00005)
+    if (itk::Math::abs(s_dot) > 0.00005)
     {
       rotationAngle = std::atan2(s_cross, s_dot);
     }
@@ -663,12 +658,10 @@ LandmarkBasedTransformInitializer<TTransform, TFixedImage, TMovingImage>::Initia
   if (!m_Transform)
   {
     itkExceptionMacro("Transform has not been set");
-    return;
   }
   if (m_FixedLandmarks.size() != m_MovingLandmarks.size())
   {
     itkExceptionMacro("Different number of fixed and moving landmarks");
-    return;
   }
   this->InternalInitializeTransform(static_cast<TTransform *>(nullptr));
 }

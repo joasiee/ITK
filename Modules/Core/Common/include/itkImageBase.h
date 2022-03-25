@@ -146,7 +146,7 @@ public:
 
   /** Spacing type alias support.  Spacing holds the size of a pixel.
    * The spacing is the geometric distance between image samples along
-   * each dimension. ITK only supports positive spacing value:
+   * each dimension. ITK only supports positive spacing values:
    * negative values may cause undesirable results.  */
   using SpacingValueType = SpacePrecisionType;
   using SpacingType = Vector<SpacingValueType, VImageDimension>;
@@ -156,7 +156,7 @@ public:
   using PointValueType = SpacePrecisionType;
   using PointType = Point<PointValueType, VImageDimension>;
 
-  /** Direction type alias support.  The Direction is a matix of
+  /** Direction type alias support.  The Direction is a matrix of
    * direction cosines that specify the direction in physical space
    * between samples along each dimension. */
   using DirectionType = Matrix<SpacePrecisionType, VImageDimension, VImageDimension>;
@@ -810,7 +810,7 @@ protected:
   /** Origin, spacing, and direction in physical coordinates. This variables are
    * protected for efficiency.  They are referenced frequently by
    * inner loop calculations. */
-  SpacingType   m_Spacing{ 1.0 };
+  SpacingType   m_Spacing{ MakeFilled<SpacingType>(1.0) };
   PointType     m_Origin{};
   DirectionType m_Direction{ DirectionType::GetIdentity() };
   DirectionType m_InverseDirection{ DirectionType::GetIdentity() };
@@ -820,7 +820,7 @@ protected:
   DirectionType m_IndexToPhysicalPoint{ DirectionType::GetIdentity() };
   DirectionType m_PhysicalPointToIndex{ DirectionType::GetIdentity() };
 
-  /** Restores the buffered region to it's default state
+  /** Restores the buffered region to its default state
    *  This method does not call Modify because Initialization is
    *  called by ReleaseData and can not modify the MTime
    * \sa  ReleaseData, Initialize, SetBufferedRegion */

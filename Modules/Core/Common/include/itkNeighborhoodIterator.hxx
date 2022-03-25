@@ -18,14 +18,13 @@
 #ifndef itkNeighborhoodIterator_hxx
 #define itkNeighborhoodIterator_hxx
 
-#include "itkNeighborhoodIterator.h"
 
 namespace itk
 {
 
 template <typename TImage, typename TBoundaryCondition>
 void
-NeighborhoodIterator<TImage, TBoundaryCondition>::SetPixel(const unsigned n, const PixelType & v)
+NeighborhoodIterator<TImage, TBoundaryCondition>::SetPixel(const unsigned int n, const PixelType & v)
 {
 
   if (this->m_NeedToUseBoundaryCondition == false)
@@ -96,7 +95,7 @@ NeighborhoodIterator<TImage, TBoundaryCondition>::SetPixel(const unsigned n, con
 
 template <typename TImage, typename TBoundaryCondition>
 void
-NeighborhoodIterator<TImage, TBoundaryCondition>::SetPixel(const unsigned n, const PixelType & v, bool & status)
+NeighborhoodIterator<TImage, TBoundaryCondition>::SetPixel(const unsigned int n, const PixelType & v, bool & status)
 {
   unsigned int i;
   OffsetType   temp;

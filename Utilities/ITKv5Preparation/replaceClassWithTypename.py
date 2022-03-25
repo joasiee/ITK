@@ -29,7 +29,7 @@ def replaceOneInstance(desired_outs):
 
 for fileName in sys.argv[1:]:
     print(f"Processing {fileName}")
-    filePtr = open(fileName, "r")
+    filePtr = open(fileName)
     fileOrignalText = filePtr.read()
     filePtr.close()
 
@@ -54,7 +54,7 @@ early c++ compilers did not have a "typename" keyword, and "class" was
 repurposed for declaring template parameters. It was later discovered that this
 lead to ambiguity in some valid code constructs, and the "typename" key word
 was added. It is sometimes stated [2] that "typename" is marginally more
-expressive in it's intent and ITK should consistently use "typename" instead of
+expressive in its intent and ITK should consistently use "typename" instead of
 "class".
 
 [1] http://www.vtk.org/Wiki/ITK/Coding_Style_Guide

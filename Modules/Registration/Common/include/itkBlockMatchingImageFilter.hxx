@@ -18,7 +18,6 @@
 #ifndef itkBlockMatchingImageFilter_hxx
 #define itkBlockMatchingImageFilter_hxx
 
-#include "itkBlockMatchingImageFilter.h"
 #include "itkImageRegionConstIterator.h"
 #include "itkConstNeighborhoodIterator.h"
 #include <limits>
@@ -48,7 +47,6 @@ BlockMatchingImageFilter<TFixedImage, TMovingImage, TFeatures, TDisplacements, T
   this->SetNthOutput(1, similarities.GetPointer());
 
   // all inputs are required
-  this->AddRequiredInputName("FeaturePoints");
   this->SetPrimaryInputName("FeaturePoints");
   this->AddRequiredInputName("FixedImage");
   this->AddRequiredInputName("MovingImage");
@@ -283,7 +281,7 @@ BlockMatchingImageFilter<TFixedImage, TMovingImage, TFeatures, TDisplacements, T
 
   // start constructing block iterator
   SizeValueType numberOfVoxelInBlock = 1;
-  for (unsigned i = 0; i < ImageSizeType::Dimension; ++i)
+  for (unsigned int i = 0; i < ImageSizeType::Dimension; ++i)
   {
     numberOfVoxelInBlock *= m_BlockRadius[i] + 1 + m_BlockRadius[i];
   }

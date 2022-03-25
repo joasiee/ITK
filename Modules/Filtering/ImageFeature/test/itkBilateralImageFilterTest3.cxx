@@ -20,21 +20,22 @@
 #include "itkBilateralImageFilter.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
+#include "itkTestingMacros.h"
 
 
 int
-itkBilateralImageFilterTest3(int ac, char * av[])
+itkBilateralImageFilterTest3(int argc, char * argv[])
 {
-  if (ac < 3)
+  if (argc < 3)
   {
-    std::cerr << "Usage: " << av[0] << " InputImage BaselineImage\n";
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " InputImage BaselineImage\n";
     return -1;
   }
 
   using PixelType = unsigned char;
   using myImage = itk::Image<PixelType, 2>;
   itk::ImageFileReader<myImage>::Pointer input = itk::ImageFileReader<myImage>::New();
-  input->SetFileName(av[1]);
+  input->SetFileName(argv[1]);
 
   // Create a filter
   using FilterType = itk::BilateralImageFilter<myImage, myImage>;
@@ -82,7 +83,7 @@ itkBilateralImageFilterTest3(int ac, char * av[])
   itk::ImageFileWriter<myImage>::Pointer writer;
   writer = itk::ImageFileWriter<myImage>::New();
   writer->SetInput(filter3->GetOutput());
-  writer->SetFileName(av[2]);
+  writer->SetFileName(argv[2]);
   writer->Update();
 
   return EXIT_SUCCESS;

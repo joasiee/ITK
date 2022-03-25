@@ -18,7 +18,6 @@
 #ifndef itkAnchorErodeDilateLine_hxx
 #define itkAnchorErodeDilateLine_hxx
 
-#include "itkAnchorErodeDilateLine.h"
 
 namespace itk
 {
@@ -32,7 +31,7 @@ template <typename TInputPix, typename TCompare>
 void
 AnchorErodeDilateLine<TInputPix, TCompare>::DoLine(std::vector<TInputPix> & buffer,
                                                    std::vector<TInputPix> & inbuffer,
-                                                   unsigned                 bufflength)
+                                                   unsigned int             bufflength)
 {
   // TCompare will be < for erosions
   // TFunction2 will be <=
@@ -48,7 +47,7 @@ AnchorErodeDilateLine<TInputPix, TCompare>::DoLine(std::vector<TInputPix> & buff
     // This is important when operating near the corner of images with
     // angled structuring elements
     InputImagePixelType Extreme = inbuffer[0];
-    for (unsigned i = 0; i < bufflength; ++i)
+    for (unsigned int i = 0; i < bufflength; ++i)
     {
       if (StrictCompare(Extreme, inbuffer[i]))
       {
@@ -56,7 +55,7 @@ AnchorErodeDilateLine<TInputPix, TCompare>::DoLine(std::vector<TInputPix> & buff
       }
     }
 
-    for (unsigned i = 0; i < bufflength; ++i)
+    for (unsigned int i = 0; i < bufflength; ++i)
     {
       buffer[i] = Extreme;
     }

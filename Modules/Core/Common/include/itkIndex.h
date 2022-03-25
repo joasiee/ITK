@@ -18,6 +18,7 @@
 #ifndef itkIndex_h
 #define itkIndex_h
 
+#include "itkMakeFilled.h"
 #include "itkOffset.h"
 #include <type_traits> // For is_integral.
 
@@ -74,14 +75,14 @@ public:
 
   /** Compatible Index and value type alias */
   using IndexType = Index<VDimension>;
-  using IndexValueType = ::itk::IndexValueType;
+  using IndexValueType = itk::IndexValueType;
 
   /** Compatible Size type alias. */
   using SizeType = Size<VDimension>;
 
   /** Compatible Offset and Offset value type alias. */
   using OffsetType = Offset<VDimension>;
-  using OffsetValueType = ::itk::OffsetValueType;
+  using OffsetValueType = itk::OffsetValueType;
 
   /** Dimension constant */
   static constexpr unsigned int Dimension = VDimension;
@@ -320,13 +321,13 @@ public:
    * so that the Index class can be treated as a container
    * class in a way that is similar to the std::array.
    */
-  using value_type = ::itk::IndexValueType;
+  using value_type = itk::IndexValueType;
   using reference = value_type &;
   using const_reference = const value_type &;
   using iterator = value_type *;
   using const_iterator = const value_type *;
   using size_type = unsigned int;
-  using difference_type = std::ptrdiff_t;
+  using difference_type = ptrdiff_t;
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
@@ -346,28 +347,40 @@ public:
     std::swap(m_InternalArray, other.m_InternalArray);
   }
 
-  iterator
+  constexpr const_iterator
+  cbegin() const
+  {
+    return &m_InternalArray[0];
+  }
+
+  constexpr iterator
   begin()
   {
-    return iterator(&m_InternalArray[0]);
+    return &m_InternalArray[0];
   }
 
-  const_iterator
+  constexpr const_iterator
   begin() const
   {
-    return const_iterator(&m_InternalArray[0]);
+    return &m_InternalArray[0];
   }
 
-  iterator
+  constexpr const_iterator
+  cend() const
+  {
+    return &m_InternalArray[VDimension];
+  }
+
+  constexpr iterator
   end()
   {
-    return iterator(&m_InternalArray[VDimension]);
+    return &m_InternalArray[VDimension];
   }
 
-  const_iterator
+  constexpr const_iterator
   end() const
   {
-    return const_iterator(&m_InternalArray[VDimension]);
+    return &m_InternalArray[VDimension];
   }
 
   reverse_iterator
@@ -472,12 +485,7 @@ public:
   static constexpr Self
   Filled(const IndexValueType value)
   {
-    Self result{};
-    for (IndexValueType & indexValue : result.m_InternalArray)
-    {
-      indexValue = value;
-    }
-    return result;
+    return MakeFilled<Self>(value);
   }
 
 

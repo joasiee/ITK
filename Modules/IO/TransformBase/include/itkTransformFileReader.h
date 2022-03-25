@@ -41,6 +41,7 @@ public:
 
   /** SmartPointer type alias support */
   using Self = TransformFileReaderTemplate;
+  using Superclass = LightProcessObject;
   using Pointer = SmartPointer<Self>;
   using TransformType = TransformBaseTemplate<TParametersValueType>;
 
@@ -57,7 +58,6 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  using Superclass = Object;
   itkTypeMacro(TransformFileReaderTemplate, LightProcessObject);
 
   /** Set the filename  */
@@ -113,13 +113,13 @@ using TransformFileReader = itk::TransformFileReaderTemplate<double>;
 
 } // namespace itk
 
-#ifdef ITK_IO_FACTORY_REGISTER_MANAGER
+#if defined ITK_TRANSFORMIO_FACTORY_REGISTER_MANAGER || defined ITK_IO_FACTORY_REGISTER_MANAGER
 #  include "itkTransformIOFactoryRegisterManager.h"
 #endif
 
 // Note: Explicit instantiation is done in itkTransformFileReader.cxx
 
-#endif // itkTransformFileReade_h
+#endif // itkTransformFileReader_h
 
 /** Explicit instantiations */
 #ifndef ITK_TEMPLATE_EXPLICIT_TransformFileReader

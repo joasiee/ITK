@@ -19,14 +19,13 @@
 #ifndef itkGenerateImageSource_hxx
 #define itkGenerateImageSource_hxx
 
-#include "itkGenerateImageSource.h"
 
 namespace itk
 {
 template <typename TOutputImage>
 GenerateImageSource<TOutputImage>::GenerateImageSource()
-  : m_Spacing(1.0)
-  , m_Origin(0.0)
+  : m_Spacing(MakeFilled<SpacingType>(1.0))
+  , m_Origin()
 
 {
   this->m_Size.Fill(64); // arbitrary default size

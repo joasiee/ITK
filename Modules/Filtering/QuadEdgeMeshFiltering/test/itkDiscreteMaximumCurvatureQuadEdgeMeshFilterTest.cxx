@@ -20,15 +20,15 @@
 
 #include "itkQuadEdgeMeshExtendedTraits.h"
 #include "itkDiscreteMaximumCurvatureQuadEdgeMeshFilter.h"
+#include "itkTestingMacros.h"
 
 int
 itkDiscreteMaximumCurvatureQuadEdgeMeshFilterTest(int argc, char * argv[])
 {
   if (argc < 2)
   {
-    std::cout << "*** GaussianCurvature ***" << std::endl;
-    std::cout << "This example requires at least one argument:" << std::endl;
-    std::cout << " 1- FileName" << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " inputFileName" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -58,6 +58,11 @@ itkDiscreteMaximumCurvatureQuadEdgeMeshFilterTest(int argc, char * argv[])
   MeshType::Pointer mesh = reader->GetOutput();
 
   auto max_curvature = CurvatureFilterType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(
+    max_curvature, DiscreteMaximumCurvatureQuadEdgeMeshFilter, DiscretePrincipalCurvaturesQuadEdgeMeshFilter);
+
+
   max_curvature->SetInput(mesh);
   max_curvature->Update();
 

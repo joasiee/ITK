@@ -18,7 +18,6 @@
 #ifndef itkPadImageFilter_hxx
 #define itkPadImageFilter_hxx
 
-#include "itkPadImageFilter.h"
 
 #include "itkImageAlgorithm.h"
 #include "itkImageRegionExclusionIteratorWithIndex.h"
@@ -116,9 +115,7 @@ PadImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
     outputStartIndex[i] = inputStartIndex[i] - static_cast<OffsetValueType>(m_PadLowerBound[i]);
   }
 
-  typename TOutputImage::RegionType outputLargestPossibleRegion;
-  outputLargestPossibleRegion.SetSize(outputSize);
-  outputLargestPossibleRegion.SetIndex(outputStartIndex);
+  const typename TOutputImage::RegionType outputLargestPossibleRegion(outputStartIndex, outputSize);
 
   outputPtr->SetLargestPossibleRegion(outputLargestPossibleRegion);
 }

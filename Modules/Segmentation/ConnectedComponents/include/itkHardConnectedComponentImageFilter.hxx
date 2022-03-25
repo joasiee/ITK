@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkHardConnectedComponentImageFilter_hxx
 #define itkHardConnectedComponentImageFilter_hxx
-#include "itkHardConnectedComponentImageFilter.h"
 #include "itkImageRegionIterator.h"
 #include "itkNumericTraits.h"
 #include "itkProgressReporter.h"
@@ -40,19 +39,15 @@ HardConnectedComponentImageFilter<TInputImage, TOutputImage>::GenerateData()
   auto *    equivalenceTable = new LabelType[NumericTraits<LabelType>::max()];
   LabelType label = 0;
   LabelType maxLabel = 0;
-  IndexType index;
   SizeType  size;
 
   typename ListType::iterator iter;
-  RegionType                  region;
 
   TOutputImage *      output = this->GetOutput();
   const TInputImage * input = this->GetInput();
 
   size = input->GetLargestPossibleRegion().GetSize();
-  index.Fill(0);
-  region.SetSize(size);
-  region.SetIndex(index);
+  const RegionType region(size);
   output->SetLargestPossibleRegion(region);
   output->SetBufferedRegion(region);
   output->SetRequestedRegion(region);

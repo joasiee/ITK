@@ -18,7 +18,6 @@
 #ifndef itkConformalFlatteningMeshFilter_hxx
 #define itkConformalFlatteningMeshFilter_hxx
 
-#include "itkConformalFlatteningMeshFilter.h"
 
 #include "itkMath.h"
 
@@ -210,7 +209,6 @@ ConformalFlatteningMeshFilter<TInputMesh, TOutputMesh>::GenerateData()
   if (normAB2 < 1e-10)
   {
     itkExceptionMacro("||AB||^2 = " << normAB2 << "\nRisk of division by zero");
-    return;
   }
 
   double E[3];
@@ -338,19 +336,16 @@ ConformalFlatteningMeshFilter<TInputMesh, TOutputMesh>::GenerateData()
     if (normAB2 < 1e-10)
     {
       itkExceptionMacro("normAB2 " << normAB2);
-      return;
     }
 
     if (normBC2 < 1e-10)
     {
       itkExceptionMacro("normBC2 " << normBC2);
-      return;
     }
 
     if (normCA2 < 1e-10)
     {
       itkExceptionMacro("normCA2 " << normCA2);
-      return;
     }
 
     normAB = std::sqrt(normAB2);
@@ -368,19 +363,16 @@ ConformalFlatteningMeshFilter<TInputMesh, TOutputMesh>::GenerateData()
     if (cosABC <= -1.0 || cosABC >= 1.0)
     {
       itkExceptionMacro("cosABC= " << cosABC);
-      return;
     }
 
     if (cosBCA <= -1.0 || cosBCA >= 1.0)
     {
       itkExceptionMacro("cosBCA= " << cosBCA);
-      return;
     }
 
     if (cosCAB <= -1.0 || cosCAB >= 1.0)
     {
       itkExceptionMacro("cosCAB= " << cosCAB);
-      return;
     }
 
     sinABC = std::sqrt(1.0 - cosABC * cosABC);
@@ -390,19 +382,16 @@ ConformalFlatteningMeshFilter<TInputMesh, TOutputMesh>::GenerateData()
     if (sinABC < 1e-10)
     {
       itkExceptionMacro("sinABC= " << sinABC);
-      return;
     }
 
     if (sinBCA < 1e-10)
     {
       itkExceptionMacro("sinBCA= " << sinBCA);
-      return;
     }
 
     if (sinCAB < 1e-10)
     {
       itkExceptionMacro("sinCAB= " << sinCAB);
-      return;
     }
 
     cotgABC = cosABC / sinABC;

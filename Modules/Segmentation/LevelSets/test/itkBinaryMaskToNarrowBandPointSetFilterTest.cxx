@@ -19,10 +19,19 @@
 #include "itkBinaryMaskToNarrowBandPointSetFilter.h"
 #include "itkPointSet.h"
 #include "itkImageRegionIterator.h"
+#include "itkTestingMacros.h"
 
 int
-itkBinaryMaskToNarrowBandPointSetFilterTest(int, char *[])
+itkBinaryMaskToNarrowBandPointSetFilterTest(int argc, char * argv[])
 {
+  if (argc != 2)
+  {
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << std::endl;
+    std::cerr << itkNameOfTestExecutableMacro(argv) << " bandWidth" << std::endl;
+    return EXIT_FAILURE;
+  }
+
   constexpr unsigned int Dimension = 2;
 
   using BinaryMaskPixelType = unsigned char;
@@ -78,6 +87,13 @@ itkBinaryMaskToNarrowBandPointSetFilterTest(int, char *[])
 
   auto narrowBandGenerator = GeneratorType::New();
 
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(narrowBandGenerator, BinaryMaskToNarrowBandPointSetFilter, ImageToMeshFilter);
+
+
+  auto bandWidth = std::stod(argv[1]);
+  narrowBandGenerator->SetBandWidth(bandWidth);
+  ITK_TEST_SET_GET_VALUE(bandWidth, narrowBandGenerator->GetBandWidth());
+
   narrowBandGenerator->SetInput(binaryMask);
 
   try
@@ -120,7 +136,7 @@ itkBinaryMaskToNarrowBandPointSetFilterTest(int, char *[])
 
     const PointType & p = point.Value();
 
-    binaryMask->TransformPhysicalPointToIndex(p, index);
+    index = binaryMask->TransformPhysicalPointToIndex(p);
 
     if ((!binaryMask->GetPixel(index) && data.Value() > 0) || (binaryMask->GetPixel(index) && data.Value() < 0))
     {

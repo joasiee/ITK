@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkLaplacianImageFilter_hxx
 #define itkLaplacianImageFilter_hxx
-#include "itkLaplacianImageFilter.h"
 
 #include "itkNeighborhoodOperatorImageFilter.h"
 #include "itkLaplacianOperator.h"
@@ -98,7 +97,7 @@ LaplacianImageFilter<TInputImage, TOutputImage>::GenerateData()
 
   // Create the Laplacian operator
   LaplacianOperator<OutputPixelType, ImageDimension> oper;
-  for (unsigned i = 0; i < ImageDimension; ++i)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     if (m_UseImageSpacing)
     {

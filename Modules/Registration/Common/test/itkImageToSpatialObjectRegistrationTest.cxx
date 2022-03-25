@@ -176,7 +176,7 @@ public:
     while (it != m_PointList.end())
     {
       PointType transformedPoint = this->m_Transform->TransformPoint(*it);
-      this->m_FixedImage->TransformPhysicalPointToIndex(transformedPoint, index);
+      index = this->m_FixedImage->TransformPhysicalPointToIndex(transformedPoint);
       if (index[0] > 0L && index[1] > 0L &&
           index[0] < static_cast<signed long>(this->m_FixedImage->GetLargestPossibleRegion().GetSize()[0]) &&
           index[1] < static_cast<signed long>(this->m_FixedImage->GetLargestPossibleRegion().GetSize()[1]))
@@ -223,17 +223,18 @@ itkImageToSpatialObjectRegistrationTest(int, char *[])
   ellipse3->SetRadiusInObjectSpace(10);
 
   // Place each ellipse at the right position to form a triangle
-  EllipseType::TransformType::OffsetType offset;
-  offset[0] = 100;
-  offset[1] = 40;
-  ellipse1->SetCenterInObjectSpace(offset);
+  EllipseType::PointType point;
+  point[0] = 100;
+  point[1] = 40;
+  ellipse1->SetCenterInObjectSpace(point);
   ellipse1->Update();
 
-  offset[0] = 40;
-  offset[1] = 150;
-  ellipse2->SetCenterInObjectSpace(offset);
+  point[0] = 40;
+  point[1] = 150;
+  ellipse2->SetCenterInObjectSpace(point);
   ellipse2->Update();
 
+  EllipseType::TransformType::OffsetType offset;
   offset[0] = 150;
   offset[1] = 150;
   // Moving the object using the ObjectToParentTransform should
@@ -311,6 +312,7 @@ itkImageToSpatialObjectRegistrationTest(int, char *[])
   }
 
   registration->SetFixedImage(image);
+  ITK_TEST_SET_GET_VALUE(image, registration->GetFixedImage());
 
   try
   {
@@ -329,6 +331,7 @@ itkImageToSpatialObjectRegistrationTest(int, char *[])
   }
 
   registration->SetMovingSpatialObject(group);
+  ITK_TEST_SET_GET_VALUE(group, registration->GetMovingSpatialObject());
 
   try
   {
@@ -347,6 +350,7 @@ itkImageToSpatialObjectRegistrationTest(int, char *[])
   }
 
   registration->SetMetric(metric);
+  ITK_TEST_SET_GET_VALUE(metric, registration->GetMetric());
 
   try
   {
@@ -387,6 +391,8 @@ itkImageToSpatialObjectRegistrationTest(int, char *[])
   std::cout << "Initial Parameters  : " << initialParameters << std::endl;
 
   registration->SetInitialTransformParameters(initialParameters);
+  ITK_TEST_SET_GET_VALUE(initialParameters, registration->GetInitialTransformParameters());
+
   optimizer->MaximizeOn();
 
   itk::Statistics::NormalVariateGenerator::Pointer generator = itk::Statistics::NormalVariateGenerator::New();
@@ -402,6 +408,7 @@ itkImageToSpatialObjectRegistrationTest(int, char *[])
   callback->SetOptimizer(optimizer);
 
   registration->SetOptimizer(optimizer);
+  ITK_TEST_SET_GET_VALUE(optimizer, registration->GetOptimizer());
 
   try
   {
@@ -421,6 +428,7 @@ itkImageToSpatialObjectRegistrationTest(int, char *[])
 
 
   registration->SetTransform(transform);
+  ITK_TEST_SET_GET_VALUE(transform, registration->GetTransform());
 
 
   try
@@ -440,6 +448,7 @@ itkImageToSpatialObjectRegistrationTest(int, char *[])
   }
 
   registration->SetInterpolator(interpolator);
+  ITK_TEST_SET_GET_VALUE(interpolator, registration->GetInterpolator());
 
   registration->Update();
 

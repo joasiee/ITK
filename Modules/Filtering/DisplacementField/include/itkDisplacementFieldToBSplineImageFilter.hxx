@@ -18,7 +18,6 @@
 #ifndef itkDisplacementFieldToBSplineImageFilter_hxx
 #define itkDisplacementFieldToBSplineImageFilter_hxx
 
-#include "itkDisplacementFieldToBSplineImageFilter.h"
 
 #include "itkContinuousIndex.h"
 #include "itkImportImageFilter.h"
@@ -185,7 +184,7 @@ DisplacementFieldToBSplineImageFilter<TInputImage, TInputPointSet, TOutputImage>
       }
       if (isOnStationaryBoundary)
       {
-        VectorType                            data(0.0);
+        VectorType                            data{};
         typename InputPointSetType::PointType point;
 
         bsplineParametricDomainField->TransformIndexToPhysicalPoint(index, point);
@@ -235,12 +234,13 @@ DisplacementFieldToBSplineImageFilter<TInputImage, TInputPointSet, TOutputImage>
         weight = static_cast<typename WeightsContainerType::Element>(confidenceImage->GetPixel(index));
       }
 
-      ContinuousIndexType                   cidx;
       PointType                             parametricPoint;
       typename InputPointSetType::PointType physicalPoint;
 
       inputField->TransformIndexToPhysicalPoint(index, physicalPoint);
-      bsplinePhysicalDomainField->TransformPhysicalPointToContinuousIndex(physicalPoint, cidx);
+      const ContinuousIndexType cidx =
+        bsplinePhysicalDomainField
+          ->template TransformPhysicalPointToContinuousIndex<typename InputFieldPointType::CoordRepType>(physicalPoint);
       bsplineParametricDomainField->TransformContinuousIndexToPhysicalPoint(cidx, parametricPoint);
 
       bool isInside = true;

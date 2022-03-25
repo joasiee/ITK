@@ -18,7 +18,6 @@
 #ifndef itkBSplineTransformInitializer_hxx
 #define itkBSplineTransformInitializer_hxx
 
-#include "itkBSplineTransformInitializer.h"
 
 #include "itkContinuousIndex.h"
 #include "itkPointSet.h"
@@ -47,17 +46,14 @@ BSplineTransformInitializer<TTransform, TImage>::InitializeTransform() const
   if (!this->m_Transform)
   {
     itkExceptionMacro(<< "Transform has not been set.");
-    return;
   }
   if (!this->m_Image)
   {
     itkExceptionMacro(<< "Image has not been set.");
-    return;
   }
   if (TImage::GetImageDimension() != SpaceDimension)
   {
     itkExceptionMacro(<< "Image dimensionality does not match the transform.");
-    return;
   }
 
   OriginType             transformDomainOrigin;
@@ -175,7 +171,7 @@ BSplineTransformInitializer<TTransform, TImage>::InitializeTransform() const
   {
     minAngle[d] = NumericTraits<double>::max();
 
-    VectorType vectorAxis(0.0);
+    VectorType vectorAxis{};
     vectorAxis[d] = 1.0;
 
     for (unsigned int i = 0; i < SpaceDimension; ++i)

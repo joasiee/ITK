@@ -28,7 +28,6 @@
 #ifndef itkSliceImageFilter_hxx
 #define itkSliceImageFilter_hxx
 
-#include "itkSliceImageFilter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkMath.h"
 #include "itkContinuousIndex.h"
@@ -210,9 +209,7 @@ SliceImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRegion()
   }
 
 
-  typename TInputImage::RegionType inputRequestedRegion;
-  inputRequestedRegion.SetIndex(inputRequestedRegionIndex);
-  inputRequestedRegion.SetSize(inputRequestedRegionSize);
+  const typename TInputImage::RegionType inputRequestedRegion(inputRequestedRegionIndex, inputRequestedRegionSize);
 
   // test if input RR is completely inside input largest region
   if (inputRequestedRegion.GetNumberOfPixels() > 0 &&
@@ -246,9 +243,6 @@ SliceImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
 
   typename TOutputImage::SpacingType outputSpacing;
   typename TOutputImage::SizeType    outputSize;
-
-  typename TOutputImage::IndexType outputStartIndex;
-  outputStartIndex.Fill(0);
 
   for (unsigned int i = 0; i < TOutputImage::ImageDimension; ++i)
   {
@@ -299,9 +293,8 @@ SliceImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
   outputPtr->SetOrigin(outputOrigin);
 
   // Set region
-  typename TOutputImage::RegionType outputLargestPossibleRegion;
-  outputLargestPossibleRegion.SetSize(outputSize);
-  outputLargestPossibleRegion.SetIndex(outputStartIndex);
+
+  const typename TOutputImage::RegionType outputLargestPossibleRegion(outputSize);
 
   outputPtr->SetLargestPossibleRegion(outputLargestPossibleRegion);
 }

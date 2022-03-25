@@ -94,7 +94,7 @@ public:
   itkNewMacro(Self);
 
   /** Standard part of every itk Object. */
-  itkTypeMacro(PointSet, Object);
+  itkTypeMacro(PointSet, DataObject);
 
   /** Hold on to the type information specified by the template parameters. */
   using MeshTraits = TMeshTraits;
@@ -106,6 +106,10 @@ public:
   using PointType = typename MeshTraits::PointType;
   using PointsContainer = typename MeshTraits::PointsContainer;
   using PointDataContainer = typename MeshTraits::PointDataContainer;
+
+  /** For improving Python support for PointSet and Meshes **/
+  using PointsVectorContainer = typename itk::VectorContainer<PointIdentifier, CoordRepType>;
+  using PointsVectorContainerPointer = typename PointsVectorContainer::Pointer;
 
   /** Convenient type alias obtained from TMeshTraits template parameter. */
   static constexpr unsigned int PointDimension = TMeshTraits::PointDimension;
@@ -155,6 +159,9 @@ public:
    * rather than through an entire container. */
   void
   SetPoints(PointsContainer *);
+
+  void
+  SetPoints(PointsVectorContainer *);
 
   PointsContainer *
   GetPoints();

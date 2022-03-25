@@ -18,7 +18,6 @@
 #ifndef itkGaussianDerivativeOperator_hxx
 #define itkGaussianDerivativeOperator_hxx
 
-#include "itkGaussianDerivativeOperator.h"
 #include "itkCompensatedSummation.h"
 #include "itkOutputWindow.h"
 #include "itkMacro.h"
@@ -128,7 +127,7 @@ GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::GenerateGaussianCoef
     if (coeff[i] < sum.GetSum() * NumericTraits<double>::epsilon())
     {
       // if the coeff is less then this value then the value of cap
-      // will not change, and it's will not contribute to the operator
+      // will not change, and it will not contribute to the operator
       itkWarningMacro("Kernel failed to accumulate to approximately one with current remainder "
                       << cap - sum.GetSum() << " and current coefficient " << coeff[i] << ".");
 
@@ -171,7 +170,7 @@ GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::ModifiedBesselI0(dou
   double d, accumulator;
   double m;
 
-  if ((d = std::fabs(y)) < 3.75)
+  if ((d = itk::Math::abs(y)) < 3.75)
   {
     m = y / 3.75;
     m *= m;
@@ -200,7 +199,7 @@ GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::ModifiedBesselI1(dou
   double d, accumulator;
   double m;
 
-  if ((d = std::fabs(y)) < 3.75)
+  if ((d = itk::Math::abs(y)) < 3.75)
   {
     m = y / 3.75;
     m *= m;
@@ -248,7 +247,7 @@ GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::ModifiedBesselI(int 
   }
   else
   {
-    toy = 2.0 / std::fabs(y);
+    toy = 2.0 / itk::Math::abs(y);
     qip = accumulator = 0.0;
     qi = 1.0;
     for (j = 2 * (n + (int)(DIGITS * std::sqrt((double)n))); j > 0; j--)
@@ -256,7 +255,7 @@ GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::ModifiedBesselI(int 
       qim = qip + j * toy * qi;
       qip = qi;
       qi = qim;
-      if (std::fabs(qi) > 1.0e10)
+      if (itk::Math::abs(qi) > 1.0e10)
       {
         accumulator *= 1.0e-10;
         qi *= 1.0e-10;

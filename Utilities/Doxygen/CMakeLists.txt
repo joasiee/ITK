@@ -54,18 +54,16 @@ endif()
 #
 set( ITK_DOXYGEN_OUTPUT_DIR ${ITK_BINARY_DIR}/Utilities/Doxygen )
 
-set( ITK_DOXYGEN_INPUT ${DOXYGEN_INCLUDE_DIRS} )
-
 set( ITK_DOXYGEN_DIAGRAMS YES )
 
-option( ITK_DOXYGEN_HTML "Doxygen will generate HTML Output" ON )
-option( ITK_DOXYGEN_DOCSET "Doxygen will generate additional index files for Xcode 3" OFF )
-option( ITK_DOXYGEN_CHM "Doxygen will generate Microsoft HTML help" OFF )
-option( ITK_DOXYGEN_QHP "Doxygen will generate Qt Compressed Help" OFF )
-option( ITK_DOXYGEN_ECLIPSEHELP "Doxygen will generate Eclipse help plugin" OFF )
-option( ITK_DOXYGEN_LATEX "Doxygen will generate LaTeX output" OFF )
-option( ITK_DOXYGEN_RTF "Doxygen will generate RTF output optimized for Word 97" OFF )
-option( ITK_DOXYGEN_XML "Doxygen will generate XML output" OFF )
+cmake_dependent_option( ITK_DOXYGEN_HTML "Doxygen will generate HTML Output" ON "ITK_BUILD_DOCUMENTATION" OFF)
+cmake_dependent_option( ITK_DOXYGEN_DOCSET "Doxygen will generate additional index files for Xcode 3" OFF "ITK_BUILD_DOCUMENTATION" OFF)
+cmake_dependent_option( ITK_DOXYGEN_CHM "Doxygen will generate Microsoft HTML help" OFF "ITK_BUILD_DOCUMENTATION" OFF)
+cmake_dependent_option( ITK_DOXYGEN_QHP "Doxygen will generate Qt Compressed Help" OFF "ITK_BUILD_DOCUMENTATION" OFF)
+cmake_dependent_option( ITK_DOXYGEN_ECLIPSEHELP "Doxygen will generate Eclipse help plugin" OFF "ITK_BUILD_DOCUMENTATION" OFF)
+cmake_dependent_option( ITK_DOXYGEN_LATEX "Doxygen will generate LaTeX output" OFF "ITK_BUILD_DOCUMENTATION" OFF)
+cmake_dependent_option( ITK_DOXYGEN_RTF "Doxygen will generate RTF output optimized for Word 97" OFF "ITK_BUILD_DOCUMENTATION" OFF)
+cmake_dependent_option( ITK_DOXYGEN_XML "Doxygen will generate XML output" OFF "ITK_BUILD_DOCUMENTATION" OFF)
 
 mark_as_advanced( ITK_DOXYGEN_HTML
   ITK_DOXYGEN_DOCSET
@@ -76,25 +74,6 @@ mark_as_advanced( ITK_DOXYGEN_HTML
   ITK_DOXYGEN_RTF
   ITK_DOXYGEN_XML
 )
-
-set( ITK_DOXYGEN_OUTPUT
-  HTML
-  DOCSET
-  CHM
-  QHP
-  ECLIPSEHELP
-  LATEX
-  RTF
-  XML
-)
-
-foreach( var ${ITK_DOXYGEN_OUTPUT} )
-  if( ITK_DOXYGEN_${var} )
-    set( ITK_DOXYGEN_GEN_${var} "YES" )
-  else()
-    set( ITK_DOXYGEN_GEN_${var} "NO" )
-  endif()
-endforeach()
 
 find_package( Perl )
 
@@ -108,22 +87,9 @@ else()
   set( ITK_DOXYGEN_INPUT_FILTER )
 endif()
 
-configure_file(${ITK_SOURCE_DIR}/Utilities/Doxygen/doxygen.config.in
-               ${ITK_BINARY_DIR}/Utilities/Doxygen/doxygen.config)
-
-
-set( ITK_DOXYGEN_OUTPUT_DIR ${ITK_BINARY_DIR}/temp )
-
-set( ITK_DOXYGEN_INPUT "\"INPUT_SINGLE_FILE\"" )
-
-set( ITK_DOXYGEN_DIAGRAMS NO )
-
-
-configure_file(${ITK_SOURCE_DIR}/Utilities/Doxygen/doxygen.config.in
-               ${ITK_BINARY_DIR}/single-doxygen.config)
-
 # -------------------------------------------------------------
 if (ITK_BUILD_DOCUMENTATION)
+
 
   # When updating Doxygen versions, also re-run workbox-sw to regenerate the
   # service worker pre-cache. Do this by running:
@@ -140,11 +106,18 @@ if (ITK_BUILD_DOCUMENTATION)
   file(COPY workbox-cli-config.js serviceWorker.js.in
     DESTINATION ${ITK_BINARY_DIR}/Utilities/Doxygen/)
 
-  find_package( LATEX )
+  execute_process(COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_CURRENT_LIST_DIR}/datetime.py"
+     RESULT_VARIABLE CMD_RESULT
+     OUTPUT_VARIABLE _DATETIME)
 
-  if( NOT LATEX_COMPILER )
-    message( "Warning: LaTeX not found. Formulas will not be generated in documentation." )
-  endif()
+   if (CMD_RESULT)
+     message(FATAL_ERROR "Datetime failed!")
+   endif()
+
+   configure_file(${CMAKE_CURRENT_LIST_DIR}/build_text.js.in
+     "${ITK_BINARY_DIR}/Utilities/Doxygen//html/build_text.js")
+
+  find_package( LATEX )
 
   # Custom command to generate a examples page which include all ITK examples
   add_custom_command( OUTPUT "${ITK_BINARY_DIR}/Documentation/Doxygen/Examples.dox"
@@ -155,13 +128,34 @@ if (ITK_BUILD_DOCUMENTATION)
     DEPENDS "${ITK_SOURCE_DIR}/Examples" "${ITK_SOURCE_DIR}/Utilities/Doxygen/GenerateExamplesDox.cmake"
     )
 
-  add_custom_target(Documentation ALL
-    COMMAND ${DOXYGEN_EXECUTABLE} ${ITK_BINARY_DIR}/Utilities/Doxygen/doxygen.config
-    MAIN_DEPENDENCY ${ITK_BINARY_DIR}/Utilities/Doxygen/doxygen.config
-    DEPENDS         ${ITK_BINARY_DIR}/Utilities/Doxygen/itkdoxygen.pl
-    DEPENDS         ${ITK_BINARY_DIR}/Documentation/Doxygen/Examples.dox
-    WORKING_DIRECTORY ${ITK_BINARY_DIR}/Utilities/Doxygen
+  set( ITK_DOXYGEN_INPUT ${DOXYGEN_INCLUDE_DIRS}
+    ${ITK_SOURCE_DIR}/Documentation/Doxygen
+    ${ITK_BINARY_DIR}/Documentation/Doxygen
+    ${ITK_BINARY_DIR}/Documentation/Doxygen/Examples.dox
+    ${ITK_BINARY_DIR}/Utilities/Doxygen/Modules
+    ${ITK_DOXYGEN_INPUT}
     )
+  list(REMOVE_DUPLICATES ITK_DOXYGEN_INPUT)
+
+  # The DoxygenConfig.cmake is a replacement for configuring a doxygen.config.in file
+  # https://cmake.org/cmake/help/v3.16/module/FindDoxygen.html
+  include(${CMAKE_CURRENT_LIST_DIR}/DoxygenConfig.cmake)
+  doxygen_add_docs(Documentation
+          ${ITK_DOXYGEN_INPUT}
+          # -- Only build if 'Documentation' target is requested ALL
+          WORKING_DIRECTORY ${ITK_BINARY_DIR}/Utilities/Doxygen
+          # -- Some of the ITK_DOXYGEN_INPUT are directories, USE_STAMP_FILE requires only files be listed
+          COMMENT "-- Wrapping ITK: Constructing documentation xml structure."
+      )
+  unset(ITK_DOXYGEN_INPUT)
+
+        #  add_custom_target(Documentation ALL
+        #    COMMAND ${DOXYGEN_EXECUTABLE} ${ITK_BINARY_DIR}/Utilities/Doxygen/doxygen.config
+        #    MAIN_DEPENDENCY ${ITK_BINARY_DIR}/Utilities/Doxygen/doxygen.config
+        #    DEPENDS         ${ITK_BINARY_DIR}/Utilities/Doxygen/itkdoxygen.pl
+        #    DEPENDS         ${ITK_BINARY_DIR}/Documentation/Doxygen/Examples.dox
+        #    WORKING_DIRECTORY ${ITK_BINARY_DIR}/Utilities/Doxygen
+        #    )
 
   # Somehow the logo image is not copied into the html folder.
   # Here we ensure that the logo image ends up in the right directory

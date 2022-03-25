@@ -28,7 +28,7 @@ namespace itk
 {
 /**
  * \brief Define numeric traits for VariableLengthVector.
- * \tparam T Component type of VariableLenghtVector
+ * \tparam T Component type of VariableLengthVector
  *
  * We provide here a generic implementation based on creating types of
  * VariableLengthVector whose components are the types of the NumericTraits from
@@ -192,8 +192,8 @@ public:
     return flag;
   }
 
-  static constexpr bool IsSigned = NumericTraits<ValueType>::IsSigned;
-  static constexpr bool IsInteger = NumericTraits<ValueType>::IsInteger;
+  static constexpr bool IsSigned = std::is_signed<ValueType>::value;
+  static constexpr bool IsInteger = std::is_integral<ValueType>::value;
   static constexpr bool IsComplex = NumericTraits<ValueType>::IsComplex;
 
 

@@ -18,7 +18,6 @@
 #ifndef itkBSplineExponentialDiffeomorphicTransform_hxx
 #define itkBSplineExponentialDiffeomorphicTransform_hxx
 
-#include "itkBSplineExponentialDiffeomorphicTransform.h"
 
 #include "itkAddImageFilter.h"
 #include "itkImageDuplicator.h"
@@ -31,8 +30,8 @@ namespace itk
 /**
  * Constructor
  */
-template <typename TParametersValueType, unsigned int NDimensions>
-BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::BSplineExponentialDiffeomorphicTransform()
+template <typename TParametersValueType, unsigned int VDimension>
+BSplineExponentialDiffeomorphicTransform<TParametersValueType, VDimension>::BSplineExponentialDiffeomorphicTransform()
 
 {
   this->m_NumberOfControlPointsForTheConstantVelocityField.Fill(4);
@@ -42,9 +41,9 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::BSp
 /**
  * set mesh size for update field
  */
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 void
-BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::SetMeshSizeForTheUpdateField(
+BSplineExponentialDiffeomorphicTransform<TParametersValueType, VDimension>::SetMeshSizeForTheUpdateField(
   const ArrayType & meshSize)
 {
   ArrayType numberOfControlPoints;
@@ -58,9 +57,9 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Set
 /**
  * set mesh size for update field
  */
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 void
-BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::SetMeshSizeForTheConstantVelocityField(
+BSplineExponentialDiffeomorphicTransform<TParametersValueType, VDimension>::SetMeshSizeForTheConstantVelocityField(
   const ArrayType & meshSize)
 {
   ArrayType numberOfControlPoints;
@@ -71,9 +70,9 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Set
   this->SetNumberOfControlPointsForTheConstantVelocityField(numberOfControlPoints);
 }
 
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 void
-BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::UpdateTransformParameters(
+BSplineExponentialDiffeomorphicTransform<TParametersValueType, VDimension>::UpdateTransformParameters(
   const DerivativeType & update,
   ScalarType             factor)
 {
@@ -103,7 +102,7 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Upd
   auto * updateFieldPointer =
     reinterpret_cast<DisplacementVectorType *>(const_cast<DerivativeType &>(update).data_block());
 
-  using ImporterType = ImportImageFilter<DisplacementVectorType, NDimensions>;
+  using ImporterType = ImportImageFilter<DisplacementVectorType, VDimension>;
   const bool importFilterWillReleaseMemory = false;
 
   auto importer = ImporterType::New();
@@ -127,7 +126,7 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Upd
     updateField = updateSmoothField;
   }
 
-  using RealImageType = Image<ScalarType, NDimensions>;
+  using RealImageType = Image<ScalarType, VDimension>;
 
   using MultiplierType = MultiplyImageFilter<ConstantVelocityFieldType, RealImageType, ConstantVelocityFieldType>;
   auto multiplier = MultiplierType::New();
@@ -175,9 +174,9 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Upd
   this->IntegrateVelocityField();
 }
 
-template <typename TParametersValueType, unsigned int NDimensions>
-typename BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::ConstantVelocityFieldPointer
-BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::BSplineSmoothConstantVelocityField(
+template <typename TParametersValueType, unsigned int VDimension>
+typename BSplineExponentialDiffeomorphicTransform<TParametersValueType, VDimension>::ConstantVelocityFieldPointer
+BSplineExponentialDiffeomorphicTransform<TParametersValueType, VDimension>::BSplineSmoothConstantVelocityField(
   const ConstantVelocityFieldType * field,
   const ArrayType &                 numberOfControlPoints)
 {
@@ -199,10 +198,10 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::BSp
 /**
  * Standard "PrintSelf" method
  */
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 void
-BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::PrintSelf(std::ostream & os,
-                                                                                       Indent         indent) const
+BSplineExponentialDiffeomorphicTransform<TParametersValueType, VDimension>::PrintSelf(std::ostream & os,
+                                                                                      Indent         indent) const
 {
   Superclass::PrintSelf(os, indent);
 

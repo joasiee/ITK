@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkMRFImageFilter_hxx
 #define itkMRFImageFilter_hxx
-#include "itkMRFImageFilter.h"
 #include "itkPrintHelper.h"
 
 namespace itk
@@ -365,12 +364,7 @@ MRFImageFilter<TInputImage, TClassifiedImage>::Allocate()
   }
 
   // Allocate the label image status
-  LabelStatusIndexType index;
-  index.Fill(0);
-
-  LabelStatusRegionType region;
-  region.SetSize(inputImageSize);
-  region.SetIndex(index);
+  const LabelStatusRegionType region(inputImageSize);
 
   m_LabelStatusImage = LabelStatusImageType::New();
   m_LabelStatusImage->SetLargestPossibleRegion(region);

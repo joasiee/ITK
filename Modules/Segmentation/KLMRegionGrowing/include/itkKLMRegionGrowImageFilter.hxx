@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkKLMRegionGrowImageFilter_hxx
 #define itkKLMRegionGrowImageFilter_hxx
-#include "itkKLMRegionGrowImageFilter.h"
 
 namespace itk
 {
@@ -175,15 +174,7 @@ KLMRegionGrowImageFilter<TInputImage, TOutputImage>::GetLabelledImage() -> Label
 
   LabelImagePointer labelImagePtr = LabelImageType::New();
 
-  typename LabelImageType::SizeType labelImageSize = this->GetInput()->GetBufferedRegion().GetSize();
-
-  LabelImageIndexType labelImageIndex;
-  labelImageIndex.Fill(0);
-
-  typename LabelImageType::RegionType labelImageRegion;
-
-  labelImageRegion.SetSize(labelImageSize);
-  labelImageRegion.SetIndex(labelImageIndex);
+  const typename LabelImageType::RegionType labelImageRegion(this->GetInput()->GetBufferedRegion().GetSize());
 
   labelImagePtr->SetLargestPossibleRegion(labelImageRegion);
   labelImagePtr->SetBufferedRegion(labelImageRegion);

@@ -19,7 +19,6 @@
 #define itkGPUReduction_hxx
 
 #include "itkMacro.h"
-#include "itkGPUReduction.h"
 
 //#define CPU_VERIFY
 
@@ -116,7 +115,6 @@ GPUReduction<TElement>::GetReductionKernel(int whichKernel, int blockSize, int i
   if (whichKernel != 5 && whichKernel != 6)
   {
     itkExceptionMacro(<< "Reduction kernel undefined!");
-    return 0;
   }
 
   std::ostringstream defines;

@@ -28,7 +28,6 @@
 #ifndef itkThresholdLabelerImageFilter_hxx
 #define itkThresholdLabelerImageFilter_hxx
 
-#include "itkThresholdLabelerImageFilter.h"
 #include "itkPrintHelper.h"
 
 namespace itk
@@ -48,9 +47,9 @@ ThresholdLabelerImageFilter<TInputImage, TOutputImage>::BeforeThreadedGenerateDa
 {
   auto size = static_cast<unsigned int>(m_Thresholds.size());
 
-  for (unsigned int i = 0; i < size - 1; ++i)
+  for (unsigned int i = 1; i < size; ++i)
   {
-    if (m_Thresholds[i] > m_Thresholds[i + 1])
+    if (m_Thresholds[i - 1] > m_Thresholds[i])
     {
       itkExceptionMacro(<< "Thresholds must be sorted.");
     }

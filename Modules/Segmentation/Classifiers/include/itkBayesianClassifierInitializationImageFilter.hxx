@@ -28,7 +28,6 @@
 #ifndef itkBayesianClassifierInitializationImageFilter_hxx
 #define itkBayesianClassifierInitializationImageFilter_hxx
 
-#include "itkBayesianClassifierInitializationImageFilter.h"
 #include "itkScalarImageKmeansImageFilter.h"
 
 #include "itkGaussianMembershipFunction.h"
@@ -93,7 +92,7 @@ BayesianClassifierInitializationImageFilter<TInputImage, TProbabilityPrecisionTy
   kmeansFilter->SetInput(this->GetInput());
   kmeansFilter->SetUseNonContiguousLabels(false);
 
-  for (unsigned k = 0; k < m_NumberOfClasses; ++k)
+  for (unsigned int k = 0; k < m_NumberOfClasses; ++k)
   {
     const double userProvidedInitialMean = k;
     // TODO: Choose more reasonable defaults for specifying the initial means

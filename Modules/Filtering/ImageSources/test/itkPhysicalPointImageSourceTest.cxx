@@ -87,8 +87,8 @@ itkPhysicalPointImageSourceTest(int argc, char * argv[])
   itk::Size<ImageDimension> size;
   size.Fill(64);
 
-  ImageType::SpacingType   spacing(1.0);
-  ImageType::PointType     origin(0.0);
+  auto                     spacing = itk::MakeFilled<ImageType::SpacingType>(1.0);
+  ImageType::PointType     origin{};
   ImageType::DirectionType direction;
   direction.SetIdentity();
 

@@ -27,7 +27,6 @@
  *=========================================================================*/
 #ifndef itkPadLabelMapFilter_hxx
 #define itkPadLabelMapFilter_hxx
-#include "itkPadLabelMapFilter.h"
 
 namespace itk
 {
@@ -43,9 +42,8 @@ PadLabelMapFilter<TInputImage>::GenerateOutputInformation()
   }
 
   // Compute the new region size.
-  RegionType croppedRegion;
-  SizeType   size;
-  IndexType  index;
+  SizeType  size;
+  IndexType index;
 
   SizeType  inputSize = inputPtr->GetLargestPossibleRegion().GetSize();
   IndexType inputIndex = inputPtr->GetLargestPossibleRegion().GetIndex();
@@ -55,8 +53,7 @@ PadLabelMapFilter<TInputImage>::GenerateOutputInformation()
   index = inputIndex - m_LowerBoundaryPadSize;
   size = inputSize + (originalPadSize);
 
-  croppedRegion.SetSize(size);
-  croppedRegion.SetIndex(index);
+  const RegionType croppedRegion(index, size);
 
   // Set extraction region in the superclass.
   this->SetRegion(croppedRegion);

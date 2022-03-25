@@ -18,7 +18,6 @@
 #ifndef itkArray2D_hxx
 #define itkArray2D_hxx
 
-#include "itkArray2D.h"
 
 namespace itk
 {
@@ -43,7 +42,7 @@ Array2D<TValue>::Array2D(const Self & array)
 
 /** Assignment Operator from Array */
 template <typename TValue>
-const Array2D<TValue> &
+Array2D<TValue> &
 Array2D<TValue>::operator=(const Self & array)
 {
   this->VnlMatrixType::operator=(array);
@@ -52,7 +51,7 @@ Array2D<TValue>::operator=(const Self & array)
 
 /** Assignment Operator from vnl_matrix */
 template <typename TValue>
-const Array2D<TValue> &
+Array2D<TValue> &
 Array2D<TValue>::operator=(const VnlMatrixType & matrix)
 {
   this->VnlMatrixType::operator=(matrix);

@@ -109,16 +109,16 @@ outputPoint = transform->TransformPoint( inputPoint );
  * \sphinxexample{Core/Transform/GlobalRegistrationTwoImagesBSpline,Global Registration Of Two Images (BSpline)}
  * \endsphinx
  */
-template <typename TParametersValueType = double, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3>
+template <typename TParametersValueType = double, unsigned int VDimension = 3, unsigned int VSplineOrder = 3>
 class ITK_TEMPLATE_EXPORT BSplineDeformableTransform
-  : public BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>
+  : public BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(BSplineDeformableTransform);
 
   /** Standard class type aliases. */
   using Self = BSplineDeformableTransform;
-  using Superclass = BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>;
+  using Superclass = BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -128,11 +128,11 @@ public:
   // explicitly.
   // TODO: shouldn't it be done with the Clone() method?
   itkSimpleNewMacro(Self);
-  ::itk::LightObject::Pointer
+  itk::LightObject::Pointer
   CreateAnother() const override
   {
-    ::itk::LightObject::Pointer smartPtr;
-    Pointer                     copyPtr = Self::New().GetPointer();
+    itk::LightObject::Pointer smartPtr;
+    Pointer                   copyPtr = Self::New().GetPointer();
     // THE FOLLOWING LINE IS DIFFERENT FROM THE DEFAULT MACRO!
     copyPtr->m_BulkTransform = this->GetBulkTransform();
     smartPtr = static_cast<Pointer>(copyPtr);
@@ -146,7 +146,7 @@ public:
   itkTypeMacro(BSplineDeformableTransform, BSplineBaseTransform);
 
   /** Dimension of the domain space. */
-  static constexpr unsigned int SpaceDimension = NDimensions;
+  static constexpr unsigned int SpaceDimension = VDimension;
 
   /** The BSpline order. */
   static constexpr unsigned int SplineOrder = VSplineOrder;

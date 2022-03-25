@@ -49,7 +49,7 @@ namespace watershed
  * \par Outputs
  * The output of this filter is a list of binary merges of segments at
  * increasing saliency.  This is the data structure
- * itk::watershed::WatershedSegmentTree referred to as a "merge tree" in the
+ * itk::watershed::SegmentTree referred to as a "merge tree" in the
  * itk::WatershedImageFilter documentation.
  *
  * \par Parameters
@@ -78,6 +78,8 @@ template <typename TScalar>
 class ITK_TEMPLATE_EXPORT SegmentTreeGenerator : public ProcessObject
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(SegmentTreeGenerator);
+
   /**  Standard itk smart pointer declarations    */
   using Self = SegmentTreeGenerator;
   using Superclass = ProcessObject;
@@ -86,7 +88,7 @@ public:
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
-  itkTypeMacro(WatershedSegmentTreeGenerator, ProcessObject);
+  itkTypeMacro(SegmentTreeGenerator, ProcessObject);
 
   /** Convenient type definitions */
   using ScalarType = TScalar;
@@ -200,10 +202,7 @@ public:
 protected:
   SegmentTreeGenerator();
   ~SegmentTreeGenerator() override = default;
-  SegmentTreeGenerator(const Self &) {}
-  void
-  operator=(const Self &)
-  {}
+
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

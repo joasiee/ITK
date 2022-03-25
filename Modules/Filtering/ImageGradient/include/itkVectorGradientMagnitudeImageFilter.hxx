@@ -18,7 +18,6 @@
 #ifndef itkVectorGradientMagnitudeImageFilter_hxx
 #define itkVectorGradientMagnitudeImageFilter_hxx
 
-#include "itkVectorGradientMagnitudeImageFilter.h"
 
 #include "itkNeighborhoodAlgorithm.h"
 #include "itkImageRegionIterator.h"
@@ -74,7 +73,7 @@ VectorGradientMagnitudeImageFilter<TInputImage, TRealType, TOutputImage>::SetUse
   // otherwise, the user may have provided their own weightings.
   if (f == false && m_UseImageSpacing == true)
   {
-    for (unsigned i = 0; i < ImageDimension; ++i)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       m_DerivativeWeights[i] = static_cast<TRealType>(1.0);
     }
@@ -139,7 +138,7 @@ VectorGradientMagnitudeImageFilter<TInputImage, TRealType, TOutputImage>::Before
   Superclass::BeforeThreadedGenerateData();
 
   // Calculate the square-roots of the component weights.
-  for (unsigned i = 0; i < VectorDimension; ++i)
+  for (unsigned int i = 0; i < VectorDimension; ++i)
   {
     if (m_ComponentWeights[i] < 0)
     {
@@ -153,7 +152,7 @@ VectorGradientMagnitudeImageFilter<TInputImage, TRealType, TOutputImage>::Before
   // in case our input image has changed.
   if (m_UseImageSpacing == true)
   {
-    for (unsigned i = 0; i < ImageDimension; ++i)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       if (static_cast<TRealType>(this->GetInput()->GetSpacing()[i]) == 0.0)
       {

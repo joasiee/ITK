@@ -18,7 +18,6 @@
 #ifndef itkSignedMaurerDistanceMapImageFilter_hxx
 #define itkSignedMaurerDistanceMapImageFilter_hxx
 
-#include "itkSignedMaurerDistanceMapImageFilter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkImageRegionIterator.h"
 #include "itkBinaryThresholdImageFilter.h"
@@ -34,7 +33,7 @@ namespace itk
 template <typename TInputImage, typename TOutputImage>
 SignedMaurerDistanceMapImageFilter<TInputImage, TOutputImage>::SignedMaurerDistanceMapImageFilter()
   : m_BackgroundValue(NumericTraits<InputPixelType>::ZeroValue())
-  , m_Spacing(0.0)
+  , m_Spacing()
   , m_InputCache(nullptr)
 {
   this->DynamicMultiThreadingOff();

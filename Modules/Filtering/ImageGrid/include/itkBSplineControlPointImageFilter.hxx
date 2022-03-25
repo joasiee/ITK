@@ -18,7 +18,6 @@
 #ifndef itkBSplineControlPointImageFilter_hxx
 #define itkBSplineControlPointImageFilter_hxx
 
-#include "itkBSplineControlPointImageFilter.h"
 
 #include "itkMath.h"
 #include "itkImageDuplicator.h"
@@ -240,11 +239,11 @@ BSplineControlPointImageFilter<TInputImage, TOutputImage>::DynamicThreadedGenera
     {
       U[i] = static_cast<RealType>(totalNumberOfSpans[i]) * static_cast<RealType>(idx[i] - startIndex[i]) /
              static_cast<RealType>(this->m_Size[i] - 1);
-      if (std::abs(U[i] - static_cast<RealType>(totalNumberOfSpans[i])) <= epsilon[i])
+      if (itk::Math::abs(U[i] - static_cast<RealType>(totalNumberOfSpans[i])) <= epsilon[i])
       {
         U[i] = static_cast<RealType>(totalNumberOfSpans[i]) - epsilon[i];
       }
-      if (U[i] < NumericTraits<RealType>::ZeroValue() && std::abs(U[i]) <= epsilon[i])
+      if (U[i] < NumericTraits<RealType>::ZeroValue() && itk::Math::abs(U[i]) <= epsilon[i])
       {
         U[i] = NumericTraits<RealType>::ZeroValue();
       }
@@ -467,7 +466,7 @@ BSplineControlPointImageFilter<TInputPointImage, TOutputImage>::RefineControlPoi
       }
       for (unsigned int i = 0; i < (2 << (ImageDimension - 1)); ++i)
       {
-        PixelType sum(0.0);
+        PixelType sum{};
 
         PixelType val;
         off = this->NumberToIndex(i, size);

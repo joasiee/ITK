@@ -165,7 +165,7 @@ DCMTKSequence::GetElementOB(const unsigned short group,
   obItem->getUint8Array(bytes);
   Uint32      length = obItem->getLength();
   std::string val;
-  for (unsigned i = 0; i < length; ++i)
+  for (unsigned int i = 0; i < length; ++i)
   {
     val += bytes[i];
   }
@@ -753,7 +753,7 @@ DCMTKFileReader::GetElementPN(const unsigned short group,
 int
 DCMTKFileReader::GetElementIS(const unsigned short group,
                               const unsigned short element,
-                              ::itk::int32_t &     target,
+                              itk::int32_t &       target,
                               const bool           throwException) const
 {
   DcmTagKey    tagkey(group, element);
@@ -769,20 +769,20 @@ DCMTKFileReader::GetElementIS(const unsigned short group,
                                 << std::dec);
   }
   Sint32 _target; // MSVC seems to have type conversion problems with
-                  // using int32_t as a an argument to getSint32
+                  // using int32_t as an argument to getSint32
   if (isItem->getSint32(_target) != EC_Normal)
   {
     DCMTKExceptionOrErrorReturn(<< "Can't get DecimalString Value at tag " << std::hex << group << " " << element
                                 << std::dec);
   }
-  target = static_cast<::itk::int32_t>(_target);
+  target = static_cast<itk::int32_t>(_target);
   return EXIT_SUCCESS;
 }
 
 int
 DCMTKFileReader::GetElementSL(const unsigned short group,
                               const unsigned short element,
-                              ::itk::int32_t &     target,
+                              itk::int32_t &       target,
                               const bool           throwException) const
 {
   DcmTagKey    tagkey(group, element);
@@ -798,20 +798,20 @@ DCMTKFileReader::GetElementSL(const unsigned short group,
                                 << std::dec);
   }
   Sint32 _target; // MSVC seems to have type conversion problems with
-                  // using int32_t as a an argument to getSint32
+                  // using int32_t as an argument to getSint32
   if (isItem->getSint32(_target) != EC_Normal)
   {
     DCMTKExceptionOrErrorReturn(<< "Can't get DecimalString Value at tag " << std::hex << group << " " << element
                                 << std::dec);
   }
-  target = static_cast<::itk::int32_t>(_target);
+  target = static_cast<itk::int32_t>(_target);
   return EXIT_SUCCESS;
 }
 
 int
 DCMTKFileReader::GetElementISorOB(const unsigned short group,
                                   const unsigned short element,
-                                  ::itk::int32_t &     target,
+                                  itk::int32_t &       target,
                                   const bool           throwException) const
 {
   if (this->GetElementIS(group, element, target, false) == EXIT_SUCCESS)
@@ -867,7 +867,7 @@ DCMTKFileReader::GetElementOB(const unsigned short group,
   obItem->getUint8Array(bytes);
   Uint32      length = obItem->getLength();
   std::string val;
-  for (unsigned i = 0; i < length; ++i)
+  for (unsigned int i = 0; i < length; ++i)
   {
     val += bytes[i];
   }

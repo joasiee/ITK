@@ -19,7 +19,6 @@
 #define itkHistogramImageToImageMetric_hxx
 
 #include "itkArray.h"
-#include "itkHistogramImageToImageMetric.h"
 #include "itkNumericTraits.h"
 #include "itkImageRegionConstIterator.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
@@ -29,8 +28,6 @@ namespace itk
 template <typename TFixedImage, typename TMovingImage>
 HistogramImageToImageMetric<TFixedImage, TMovingImage>::HistogramImageToImageMetric()
 {
-  itkDebugMacro("Constructor");
-
   m_HistogramSize.Fill(256);
   m_UsePaddingValue = false;
   m_DerivativeStepLength = 0.1;

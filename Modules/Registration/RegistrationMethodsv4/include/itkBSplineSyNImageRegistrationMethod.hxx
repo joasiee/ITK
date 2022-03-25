@@ -18,7 +18,6 @@
 #ifndef itkBSplineSyNImageRegistrationMethod_hxx
 #define itkBSplineSyNImageRegistrationMethod_hxx
 
-#include "itkBSplineSyNImageRegistrationMethod.h"
 
 #include "itkBSplineSmoothingOnUpdateDisplacementFieldTransformParametersAdaptor.h"
 #include "itkComposeDisplacementFieldsImageFilter.h"
@@ -244,7 +243,7 @@ typename BSplineSyNImageRegistrationMethod<TFixedImage, TMovingImage, TOutputTra
 
   if (this->m_Metric->GetMetricCategory() == ObjectToObjectMetricBaseTemplateEnums::MetricCategory::POINT_SET_METRIC)
   {
-    const DisplacementVectorType zeroVector(0.0);
+    constexpr DisplacementVectorType zeroVector{};
 
     VirtualImageBaseConstPointer virtualDomainImage = this->GetCurrentLevelVirtualDomainImage();
 

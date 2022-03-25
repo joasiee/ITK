@@ -18,7 +18,6 @@
 #ifndef itkVersor_hxx
 #define itkVersor_hxx
 
-#include "itkVersor.h"
 #include "itkNumericTraits.h"
 #include "itkMath.h"
 #include <vnl/vnl_det.h>
@@ -46,7 +45,7 @@ Versor<T>::Versor(const Self & v)
 
 /** Assignment Operator */
 template <typename T>
-const Versor<T> &
+Versor<T> &
 Versor<T>::operator=(const Self & v)
 {
   m_X = v.m_X;
@@ -152,7 +151,7 @@ Versor<T>::operator==(const Self & v) const
 
   const double epsilon = 1e-300;
 
-  if (std::fabs(1.0f - square) < epsilon)
+  if (itk::Math::abs(1.0f - square) < epsilon)
   {
     return true;
   }
@@ -207,7 +206,7 @@ Versor<T>::Normalize()
 {
   const ValueType tensor = this->GetTensor();
 
-  if (std::fabs(tensor) < 1e-20)
+  if (itk::Math::abs(tensor) < 1e-20)
   {
     ExceptionObject except;
     except.SetDescription("Attempt to normalize a \
@@ -373,11 +372,11 @@ Versor<T>::Set(const MatrixType & mat)
 
   // check for orthonormality and that it isn't a reflection
   const vnl_matrix_fixed<T, 3, 3> & I = m * m.transpose();
-  if (std::abs(I[0][1]) > epsilon || std::abs(I[0][2]) > epsilon || std::abs(I[1][0]) > epsilon ||
-      std::abs(I[1][2]) > epsilon || std::abs(I[2][0]) > epsilon || std::abs(I[2][1]) > epsilon ||
-      std::abs(I[0][0] - itk::NumericTraits<T>::OneValue()) > epsilonDiff ||
-      std::abs(I[1][1] - itk::NumericTraits<T>::OneValue()) > epsilonDiff ||
-      std::abs(I[2][2] - itk::NumericTraits<T>::OneValue()) > epsilonDiff || vnl_det(I) < 0)
+  if (itk::Math::abs(I[0][1]) > epsilon || itk::Math::abs(I[0][2]) > epsilon || itk::Math::abs(I[1][0]) > epsilon ||
+      itk::Math::abs(I[1][2]) > epsilon || itk::Math::abs(I[2][0]) > epsilon || itk::Math::abs(I[2][1]) > epsilon ||
+      itk::Math::abs(I[0][0] - itk::NumericTraits<T>::OneValue()) > epsilonDiff ||
+      itk::Math::abs(I[1][1] - itk::NumericTraits<T>::OneValue()) > epsilonDiff ||
+      itk::Math::abs(I[2][2] - itk::NumericTraits<T>::OneValue()) > epsilonDiff || vnl_det(I) < 0)
   {
     itkGenericExceptionMacro(<< "The following matrix does not represent rotation to within an epsion of " << epsilon
                              << "." << std::endl
@@ -445,7 +444,7 @@ Versor<T>::Set(const VectorType & axis)
     throw exception;
   }
 
-  const ValueType cosangle2 = std::sqrt(NumericTraits<double>::OneValue() - sinangle2 * sinangle2);
+  const ValueType cosangle2 = std::sqrt(1.0 - sinangle2 * sinangle2);
 
   m_X = axis[0];
   m_Y = axis[1];

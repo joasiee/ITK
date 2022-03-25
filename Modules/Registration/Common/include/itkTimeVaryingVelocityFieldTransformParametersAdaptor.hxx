@@ -18,7 +18,6 @@
 #ifndef itkTimeVaryingVelocityFieldTransformParametersAdaptor_hxx
 #define itkTimeVaryingVelocityFieldTransformParametersAdaptor_hxx
 
-#include "itkTimeVaryingVelocityFieldTransformParametersAdaptor.h"
 
 #include "itkIdentityTransform.h"
 #include "itkResampleImageFilter.h"
@@ -181,7 +180,6 @@ TimeVaryingVelocityFieldTransformParametersAdaptor<TTransform>::AdaptTransformPa
   if (!this->m_Transform)
   {
     itkExceptionMacro("Transform has not been set.");
-    return;
   }
 
   if (this->m_RequiredFixedParameters == this->m_Transform->GetFixedParameters())

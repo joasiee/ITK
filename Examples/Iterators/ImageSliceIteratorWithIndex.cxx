@@ -145,16 +145,10 @@ main(int argc, char * argv[])
     itk::ImageSliceConstIteratorWithIndex<ImageType3D>;
   // Software Guide : EndCodeSnippet
 
-  using ReaderType = itk::ImageFileReader<ImageType3D>;
-  using WriterType = itk::ImageFileWriter<ImageType2D>;
-
   ImageType3D::ConstPointer inputImage;
-  ReaderType::Pointer       reader = ReaderType::New();
-  reader->SetFileName(argv[1]);
   try
   {
-    reader->Update();
-    inputImage = reader->GetOutput();
+    inputImage = itk::ReadImage<ImageType3D>(argv[1]);
   }
   catch (const itk::ExceptionObject & err)
   {
@@ -173,7 +167,7 @@ main(int argc, char * argv[])
   // Software Guide : EndLatex
 
   // Software Guide : BeginCodeSnippet
-  auto projectionDirection = static_cast<unsigned int>(::std::stoi(argv[3]));
+  auto projectionDirection = static_cast<unsigned int>(std::stoi(argv[3]));
 
   unsigned int i, j;
   unsigned int direction[2];
@@ -186,7 +180,6 @@ main(int argc, char * argv[])
     }
   }
   // Software Guide : EndCodeSnippet
-
 
   // Software Guide : BeginLatex
   //
@@ -215,7 +208,7 @@ main(int argc, char * argv[])
   region.SetSize(size);
   region.SetIndex(index);
 
-  ImageType2D::Pointer outputImage = ImageType2D::New();
+  auto outputImage = ImageType2D::New();
 
   outputImage->SetRegions(region);
   outputImage->Allocate();
@@ -286,12 +279,9 @@ main(int argc, char * argv[])
   }
   // Software Guide : EndCodeSnippet
 
-  WriterType::Pointer writer = WriterType::New();
-  writer->SetFileName(argv[2]);
-  writer->SetInput(outputImage);
   try
   {
-    writer->Update();
+    itk::WriteImage(outputImage, argv[2]);
   }
   catch (const itk::ExceptionObject & err)
   {

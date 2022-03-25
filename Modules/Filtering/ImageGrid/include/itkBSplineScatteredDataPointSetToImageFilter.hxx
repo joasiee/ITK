@@ -18,7 +18,6 @@
 #ifndef itkBSplineScatteredDataPointSetToImageFilter_hxx
 #define itkBSplineScatteredDataPointSetToImageFilter_hxx
 
-#include "itkBSplineScatteredDataPointSetToImageFilter.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkImageDuplicator.h"
@@ -276,7 +275,7 @@ BSplineScatteredDataPointSetToImageFilter<TInputPointSet, TOutputImage>::Generat
   {
     this->m_PsiLattice->SetRegions(this->m_PhiLattice->GetLargestPossibleRegion());
     this->m_PsiLattice->Allocate();
-    PointDataType P(0.0);
+    PointDataType P{};
     this->m_PsiLattice->FillBuffer(P);
   }
 
@@ -492,11 +491,11 @@ BSplineScatteredDataPointSetToImageFilter<TInputPointSet, TOutputImage>::Threade
       unsigned int totalNumberOfSpans = this->m_CurrentNumberOfControlPoints[i] - this->m_SplineOrder[i];
 
       p[i] = (point[i] - this->m_Origin[i]) * r[i];
-      if (std::abs(p[i] - static_cast<RealType>(totalNumberOfSpans)) <= epsilon[i])
+      if (itk::Math::abs(p[i] - static_cast<RealType>(totalNumberOfSpans)) <= epsilon[i])
       {
         p[i] = static_cast<RealType>(totalNumberOfSpans) - epsilon[i];
       }
-      if (p[i] < NumericTraits<RealType>::ZeroValue() && std::abs(p[i]) <= epsilon[i])
+      if (p[i] < NumericTraits<RealType>::ZeroValue() && itk::Math::abs(p[i]) <= epsilon[i])
       {
         p[i] = NumericTraits<RealType>::ZeroValue();
       }
@@ -516,7 +515,7 @@ BSplineScatteredDataPointSetToImageFilter<TInputPointSet, TOutputImage>::Threade
       typename RealImageType::IndexType idx = ItW.GetIndex();
       for (unsigned int i = 0; i < ImageDimension; ++i)
       {
-        RealType u = static_cast<RealType>(p[i] - static_cast<unsigned>(p[i]) - idx[i]) +
+        RealType u = static_cast<RealType>(p[i] - static_cast<unsigned int>(p[i]) - idx[i]) +
                      0.5 * static_cast<RealType>(this->m_SplineOrder[i] - 1);
 
         switch (this->m_SplineOrder[i])
@@ -560,7 +559,7 @@ BSplineScatteredDataPointSetToImageFilter<TInputPointSet, TOutputImage>::Threade
       typename RealImageType::IndexType idx = ItW.GetIndex();
       for (unsigned int i = 0; i < ImageDimension; ++i)
       {
-        idx[i] += static_cast<unsigned>(p[i]);
+        idx[i] += static_cast<unsigned int>(p[i]);
         if (this->m_CloseDimension[i])
         {
           idx[i] %= size[i];
@@ -646,11 +645,11 @@ BSplineScatteredDataPointSetToImageFilter<TInputPointSet, TOutputImage>::Threade
       U[i] = static_cast<RealType>(totalNumberOfSpans[i]) * static_cast<RealType>(idx[i] - startIndex[i]) /
              static_cast<RealType>(this->m_Size[i] - 1);
 
-      if (std::abs(U[i] - static_cast<RealType>(totalNumberOfSpans[i])) <= epsilon[i])
+      if (itk::Math::abs(U[i] - static_cast<RealType>(totalNumberOfSpans[i])) <= epsilon[i])
       {
         U[i] = static_cast<RealType>(totalNumberOfSpans[i]) - epsilon[i];
       }
-      if (U[i] < NumericTraits<RealType>::ZeroValue() && std::abs(U[i]) <= epsilon[i])
+      if (U[i] < NumericTraits<RealType>::ZeroValue() && itk::Math::abs(U[i]) <= epsilon[i])
       {
         U[i] = NumericTraits<RealType>::ZeroValue();
       }
@@ -826,8 +825,8 @@ BSplineScatteredDataPointSetToImageFilter<TInputPointSet, TOutputImage>::RefineC
 
     for (unsigned int i = 0; i < (2 << (ImageDimension - 1)); ++i)
     {
-      PointDataType sum(0.0);
-      PointDataType val(0.0);
+      PointDataType sum{};
+      PointDataType val{};
       off = this->NumberToIndex(i, size);
 
       bool outOfBoundary = false;
@@ -975,11 +974,11 @@ BSplineScatteredDataPointSetToImageFilter<TInputPointSet, TOutputImage>::UpdateP
       U[i] = static_cast<RealType>(totalNumberOfSpans[i]) * static_cast<RealType>(point[i] - this->m_Origin[i]) /
              (static_cast<RealType>(this->m_Size[i] - 1) * this->m_Spacing[i]);
 
-      if (std::abs(U[i] - static_cast<RealType>(totalNumberOfSpans[i])) <= epsilon[i])
+      if (itk::Math::abs(U[i] - static_cast<RealType>(totalNumberOfSpans[i])) <= epsilon[i])
       {
         U[i] = static_cast<RealType>(totalNumberOfSpans[i]) - epsilon[i];
       }
-      if (U[i] < NumericTraits<RealType>::ZeroValue() && std::abs(U[i]) <= epsilon[i])
+      if (U[i] < NumericTraits<RealType>::ZeroValue() && itk::Math::abs(U[i]) <= epsilon[i])
       {
         U[i] = NumericTraits<RealType>::ZeroValue();
       }

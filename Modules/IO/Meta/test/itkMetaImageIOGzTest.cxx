@@ -19,21 +19,22 @@
 #include <fstream>
 #include "itkImageFileReader.h"
 #include "itkMetaImageIO.h"
+#include "itkTestingMacros.h"
 
 
 // Specific ImageIO test
 
 int
-itkMetaImageIOGzTest(int ac, char * av[])
+itkMetaImageIOGzTest(int argc, char * argv[])
 {
-  if (ac < 2)
+  if (argc < 2)
   {
-    std::cerr << "Usage: itkMetaImageIOGzTest testDataDirectory" << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << "testDataDirectory" << std::endl;
   }
   int result(0);
   std::cout << "Test whether MetaIO will search for a compressed data file" << std::endl
             << "if it can't find the uncompressed data file" << std::endl;
-  std::string headerName(av[1]);
+  std::string headerName(argv[1]);
   headerName += "/GzTest.mhd";
   std::ofstream hdr(headerName.c_str());
   hdr << "ObjectType = Image" << std::endl
@@ -42,7 +43,7 @@ itkMetaImageIOGzTest(int ac, char * av[])
       << "ElementType = MET_USHORT" << std::endl
       << "ElementDataFile = GzTest.raw" << std::endl;
   hdr.close();
-  std::string dataName(av[1]);
+  std::string dataName(argv[1]);
   dataName += "/GzTest.raw.gz";
   gzFile compressed = gzopen(dataName.c_str(), "wb");
   for (unsigned short i = 0; i < (32 * 32); ++i)
@@ -77,7 +78,7 @@ itkMetaImageIOGzTest(int ac, char * av[])
   }
   std::cout << "Test whether absolute path in MetaIO header works" << std::endl;
   // re-write header
-  headerName = av[1];
+  headerName = argv[1];
   headerName += "/AbsPathTest.mhd";
   std::ofstream hdr2(headerName.c_str());
   hdr2 << "ObjectType = Image" << std::endl

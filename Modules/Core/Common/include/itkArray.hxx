@@ -18,7 +18,6 @@
 #ifndef itkArray_hxx
 #define itkArray_hxx
 
-#include "itkArray.h"
 #include "itkNumericTraitsArrayPixel.h"
 
 namespace itk
@@ -149,7 +148,7 @@ Array<TValue>::SetSize(SizeValueType sz)
 
 template <typename TValue>
 auto
-Array<TValue>::operator=(const Self & rhs) -> const Self &
+Array<TValue>::operator=(const Self & rhs) -> Self &
 {
   if (this != &rhs)
   {
@@ -168,7 +167,7 @@ Array<TValue>::operator=(const Self & rhs) -> const Self &
 
 template <typename TValue>
 auto
-Array<TValue>::operator=(const VnlVectorType & rhs) -> const Self &
+Array<TValue>::operator=(const VnlVectorType & rhs) -> Self &
 {
   if (this != &rhs)
   {

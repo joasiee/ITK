@@ -18,7 +18,6 @@
 #ifndef itkEuclideanSquareDistanceMetric_hxx
 #define itkEuclideanSquareDistanceMetric_hxx
 
-#include "itkEuclideanSquareDistanceMetric.h"
 
 namespace itk
 {
@@ -39,7 +38,7 @@ EuclideanSquareDistanceMetric<TVector>::Evaluate(const MeasurementVectorType & x
     measurementVectorSize,
     "EuclideanSquareDistanceMetric::Evaluate Origin and input vector have different lengths");
 
-  double temp, distance = NumericTraits<double>::ZeroValue();
+  double temp, distance = 0.0;
 
   for (unsigned int i = 0; i < measurementVectorSize; ++i)
   {
@@ -62,7 +61,7 @@ EuclideanSquareDistanceMetric<TVector>::Evaluate(const MeasurementVectorType & x
     itkExceptionMacro(<< "EuclideanSquareDistanceMetric:: The two measurement vectors have unequal size");
   }
 
-  double temp, distance = NumericTraits<double>::ZeroValue();
+  double temp, distance = 0.0;
   for (unsigned int i = 0; i < measurementVectorSize; ++i)
   {
     temp = x1[i] - x2[i];

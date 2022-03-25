@@ -89,33 +89,58 @@ itkFFT1DImageFilterTest(int argc, char * argv[])
   using ImageType = itk::Image<PixelType, Dimension>;
   using ComplexImageType = itk::Image<std::complex<PixelType>, Dimension>;
 
+  using FFTForwardType = itk::Forward1DFFTImageFilter<ImageType, ComplexImageType>;
+  using FFTInverseType = itk::Inverse1DFFTImageFilter<ComplexImageType, ImageType>;
+
   int backend = 0;
   if (argc > 3)
   {
     backend = std::stoi(argv[3]);
   }
 
-  if (backend == 0)
+  if (backend == 0) // Default backend
   {
-    using FFTForwardType = itk::Forward1DFFTImageFilter<ImageType, ComplexImageType>;
-    using FFTInverseType = itk::Inverse1DFFTImageFilter<ComplexImageType, ImageType>;
+    using VnlForwardFFTSubtype = itk::VnlForward1DFFTImageFilter<ImageType, ComplexImageType>;
+    using VnlInverseFFTSubtype = itk::VnlInverse1DFFTImageFilter<ComplexImageType, ImageType>;
+
+    // Verify that FFT class is instantiated with expected backend through the object factory
+    auto forward = FFTForwardType::New();
+    if (dynamic_cast<VnlForwardFFTSubtype *>(forward.GetPointer()) == nullptr)
+    {
+      std::cerr << "Did not get Vnl default backend for forward FFT as expected!" << std::endl;
+      return EXIT_FAILURE;
+    }
+    auto inverse = FFTInverseType::New();
+    if (dynamic_cast<VnlInverseFFTSubtype *>(inverse.GetPointer()) == nullptr)
+    {
+      std::cerr << "Did not get Vnl default backend for inverse FFT as expected!" << std::endl;
+      return EXIT_FAILURE;
+    }
     return doTest<FFTForwardType, FFTInverseType>(argv[1], argv[2]);
   }
-  else if (backend == 1)
+  else if (backend == 1) // Vnl backend
   {
-    using FFTForwardType = itk::VnlForward1DFFTImageFilter<ImageType, ComplexImageType>;
-    using FFTInverseType = itk::VnlInverse1DFFTImageFilter<ComplexImageType, ImageType>;
-    return doTest<FFTForwardType, FFTInverseType>(argv[1], argv[2]);
+    // Verify object factory returns expected type
+    using VnlForwardType = itk::VnlForward1DFFTImageFilter<ImageType, ComplexImageType>;
+    using VnlInverseType = itk::VnlInverse1DFFTImageFilter<ComplexImageType, ImageType>;
+    return doTest<VnlForwardType, VnlInverseType>(argv[1], argv[2]);
   }
-  else if (backend == 2)
+  else if (backend == 2) // FFTW backend
   {
 #if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
-    using FFTForwardType = itk::FFTWForward1DFFTImageFilter<ImageType, ComplexImageType>;
-    using FFTInverseType = itk::FFTWInverse1DFFTImageFilter<ComplexImageType, ImageType>;
-    return doTest<FFTForwardType, FFTInverseType>(argv[1], argv[2]);
+    using FFTWForwardType = itk::FFTWForward1DFFTImageFilter<ImageType, ComplexImageType>;
+    using FFTWInverseType = itk::FFTWInverse1DFFTImageFilter<ComplexImageType, ImageType>;
+    itk::ObjectFactoryBase::RegisterInternalFactoryOnce<itk::FFTImageFilterFactory<itk::FFTWForward1DFFTImageFilter>>();
+    itk::ObjectFactoryBase::RegisterInternalFactoryOnce<itk::FFTImageFilterFactory<itk::FFTWInverse1DFFTImageFilter>>();
+    return doTest<FFTWForwardType, FFTWInverseType>(argv[1], argv[2]);
+#else
+    std::cerr << "FFTW is not defined and this test should not be run!" << std::endl;
+    return EXIT_FAILURE;
 #endif
   }
-
-  std::cerr << "Backend " << backend << " (" << argv[3] << ") not implemented" << std::endl;
-  return EXIT_FAILURE;
+  else
+  {
+    std::cerr << "Backend " << backend << " (" << argv[3] << ") not implemented" << std::endl;
+    return EXIT_FAILURE;
+  }
 }

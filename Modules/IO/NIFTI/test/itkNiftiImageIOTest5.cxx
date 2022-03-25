@@ -20,7 +20,7 @@
 #include "itkNiftiImageIOTest.h"
 
 
-template <typename PixelType, unsigned TType>
+template <typename PixelType, unsigned int TType>
 int
 SlopeInterceptTest()
 {
@@ -60,9 +60,9 @@ SlopeInterceptTest()
   niftiImage->qform_code = NIFTI_XFORM_ALIGNED_ANAT;
   niftiImage->qfac = 1;
   mat44 matrix;
-  for (unsigned i = 0; i < 4; ++i)
+  for (unsigned int i = 0; i < 4; ++i)
   {
-    for (unsigned j = 0; j < 4; ++j)
+    for (unsigned int j = 0; j < 4; ++j)
     {
       matrix.m[i][j] = (i == j) ? 1.0 : 0.0;
     }
@@ -83,7 +83,7 @@ SlopeInterceptTest()
                          nullptr,
                          &(niftiImage->qfac));
   niftiImage->data = malloc(sizeof(PixelType) * 256);
-  for (unsigned i = 0; i < 256; ++i)
+  for (unsigned int i = 0; i < 256; ++i)
   {
     static_cast<PixelType *>(niftiImage->data)[i] = i;
   }
@@ -106,7 +106,7 @@ SlopeInterceptTest()
   IteratorType it(image, image->GetLargestPossibleRegion());
   it.GoToBegin();
   double maxerror = 0.0;
-  for (unsigned i = 0; i < 256; i++, ++it)
+  for (unsigned int i = 0; i < 256; i++, ++it)
   {
     if (it.IsAtEnd())
     {
@@ -115,7 +115,7 @@ SlopeInterceptTest()
     if (!Equal(it.Value(), static_cast<float>(i) / 256.0))
     {
       //      return EXIT_FAILURE;
-      double error = std::abs(it.Value() - (static_cast<double>(i) / 256.0));
+      double error = itk::Math::abs(it.Value() - (static_cast<double>(i) / 256.0));
       if (error > maxerror)
       {
         maxerror = error;
@@ -152,7 +152,7 @@ SlopeInterceptWriteTest()
   using OutputIteratorType = itk::ImageRegionIterator<OutputImageType>;
   OutputIteratorType itout(outputimage, outputimage->GetLargestPossibleRegion());
   itout.GoToBegin();
-  for (unsigned i = 0; i < 256; i++, ++itout)
+  for (unsigned int i = 0; i < 256; i++, ++itout)
   {
     if (itout.IsAtEnd())
     {
@@ -194,7 +194,7 @@ SlopeInterceptWriteTest()
   IteratorType it(image, image->GetLargestPossibleRegion());
   it.GoToBegin();
   double maxerror = 0.0;
-  for (unsigned i = 0; i < 256; i++, ++it)
+  for (unsigned int i = 0; i < 256; i++, ++it)
   {
     if (it.IsAtEnd())
     {
@@ -203,7 +203,7 @@ SlopeInterceptWriteTest()
     if (!Equal(it.Value(), static_cast<float>(i) / 256.0 - 10.0))
     {
       //      return EXIT_FAILURE;
-      double error = std::abs(it.Value() - (static_cast<double>(i) / 256.0 - 10.0));
+      double error = itk::Math::abs(it.Value() - (static_cast<double>(i) / 256.0 - 10.0));
       if (error > maxerror)
       {
         maxerror = error;
@@ -218,13 +218,13 @@ SlopeInterceptWriteTest()
 //
 // test vector images
 int
-itkNiftiImageIOTest5(int ac, char * av[])
+itkNiftiImageIOTest5(int argc, char * argv[])
 {
   //
   // first argument is passing in the writable directory to do all testing
-  if (ac > 1)
+  if (argc > 1)
   {
-    char * testdir = *++av;
+    char * testdir = *++argv;
     itksys::SystemTools::ChangeDirectory(testdir);
   }
   else

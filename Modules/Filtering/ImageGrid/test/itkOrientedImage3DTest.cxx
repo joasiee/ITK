@@ -18,14 +18,15 @@
 
 #include "itkImageFileReader.h"
 #include "itkCentralDifferenceImageFunction.h"
+#include "itkTestingMacros.h"
 
 int
-itkOrientedImage3DTest(int ac, char * av[])
+itkOrientedImage3DTest(int argc, char * argv[])
 {
 
-  if (ac < 20)
+  if (argc < 20)
   {
-    std::cerr << "Usage: " << av[0] << " InputImage  "
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " InputImage  "
               << "corner1x corner1y corner1z "
               << "corner2x corner2y corner2z "
               << "corner3x corner3y corner3z "
@@ -46,7 +47,7 @@ itkOrientedImage3DTest(int ac, char * av[])
 
   auto reader = ReaderType::New();
 
-  reader->SetFileName(av[1]);
+  reader->SetFileName(argv[1]);
 
   try
   {
@@ -105,7 +106,7 @@ itkOrientedImage3DTest(int ac, char * av[])
 
     for (unsigned int dim = 0; dim < Dimension; ++dim)
     {
-      const double expectedValue = std::stod(av[element++]);
+      const double expectedValue = std::stod(argv[element++]);
       const double currentValue = physicalPoint[dim];
       const double difference = currentValue - expectedValue;
       if (itk::Math::abs(difference) > tolerance)
@@ -148,7 +149,7 @@ itkOrientedImage3DTest(int ac, char * av[])
 
     for (unsigned int dim = 0; dim < Dimension; ++dim)
     {
-      const double expectedValue = std::stod(av[element++]);
+      const double expectedValue = std::stod(argv[element++]);
       const double currentValue = gradient1a[dim];
       const double difference = currentValue - expectedValue;
       if (itk::Math::abs(difference) > tolerance)
@@ -173,7 +174,7 @@ itkOrientedImage3DTest(int ac, char * av[])
 
     for (unsigned int dim = 0; dim < Dimension; ++dim)
     {
-      const double expectedValue = std::stod(av[element++]);
+      const double expectedValue = std::stod(argv[element++]);
       const double currentValue = gradient1b[dim];
       const double difference = currentValue - expectedValue;
       if (itk::Math::abs(difference) > tolerance)

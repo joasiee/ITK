@@ -22,10 +22,10 @@
 #include "itkLevelSetEquationTermBase.h"
 #include "itkObject.h"
 
-#include <unordered_map>
-
+#include <atomic>
 #include <map>
 #include <string>
+#include <unordered_map>
 
 namespace itk
 {
@@ -34,7 +34,7 @@ namespace itk
  *  \brief Class for container holding the terms of a given level set update equation
  *
  *  \tparam TInputImage Input image or speed image or feature image for segmentation
- *  \tparam TLevelSetContainer Container holding the all the level set functions
+ *  \tparam TLevelSetContainer Container holding all the level set functions
  *
  *  \ingroup ITKLevelSetsv4
  */
@@ -320,7 +320,7 @@ protected:
 
   MapTermContainerType m_Container;
 
-  using MapCFLContainerType = std::map<TermIdType, LevelSetOutputRealType>;
+  using MapCFLContainerType = std::map<TermIdType, std::atomic<LevelSetOutputRealType>>;
   using MapCFLContainerIterator = typename MapCFLContainerType::iterator;
   using MapCFLContainerConstIterator = typename MapCFLContainerType::const_iterator;
 

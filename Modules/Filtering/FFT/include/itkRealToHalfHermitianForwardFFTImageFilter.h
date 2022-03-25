@@ -19,6 +19,7 @@
 #define itkRealToHalfHermitianForwardFFTImageFilter_h
 
 #include "itkImageToImageFilter.h"
+#include "itkMacro.h"
 #include "itkSimpleDataObjectDecorator.h"
 
 namespace itk
@@ -81,8 +82,7 @@ public:
    * selection of FFT implementation.
    *
    * Default implementation is VnlFFT. */
-  static Pointer
-  New();
+  itkFactoryOnlyNewMacro(Self);
 
   /* Return the preferred greatest prime factor supported for the input image
    * size. Defaults to 2 as many implementations work only for sizes that are
@@ -118,6 +118,10 @@ protected:
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #  include "itkRealToHalfHermitianForwardFFTImageFilter.hxx"
+#endif
+
+#ifdef ITK_FFTIMAGEFILTERINIT_FACTORY_REGISTER_MANAGER
+#  include "itkFFTImageFilterInitFactoryRegisterManager.h"
 #endif
 
 #endif

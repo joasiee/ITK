@@ -18,7 +18,6 @@
 #ifndef itkGaussianDerivativeImageFunction_hxx
 #define itkGaussianDerivativeImageFunction_hxx
 
-#include "itkGaussianDerivativeImageFunction.h"
 
 #include "itkImageNeighborhoodOffsets.h"
 #include "itkShapedImageNeighborhoodRange.h"
@@ -153,7 +152,7 @@ GaussianDerivativeImageFunction<TInputImage, TOutput>::RecomputeGaussianKernel()
   else
   {
     using SpacingType = typename TInputImage::SpacingType;
-    const SpacingType spacing = m_UseImageSpacing ? inputImage->GetSpacing() : SpacingType(1);
+    const SpacingType spacing = m_UseImageSpacing ? inputImage->GetSpacing() : MakeFilled<SpacingType>(1);
 
     for (unsigned int direction = 0; direction < Self::ImageDimension; ++direction)
     {

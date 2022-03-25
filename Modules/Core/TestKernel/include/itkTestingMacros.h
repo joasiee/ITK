@@ -36,18 +36,33 @@ namespace itk
 // In the future, they will be removed in favor of the "ITK_" prefixed
 // versions.
 #if defined(ITK_FUTURE_LEGACY_REMOVE)
-#  define EXERCISE_BASIC_OBJECT_METHODS "Replace EXERCISE_BASIC_OBJECT_METHODS with ITK_EXERCISE_BASIC_OBJECT_METHODS"
-#  define TRY_EXPECT_EXCEPTION "Replace TRY_EXPECT_EXCEPTION with ITK_TRY_EXPECT_EXCEPTION"
-#  define TRY_EXPECT_NO_EXCEPTION "Replace TRY_EXPECT_NO_EXCEPTION with ITK_TRY_EXPECT_NO_EXCEPTION"
-#  define TEST_EXPECT_TRUE_STATUS_VALUE "Replace TEST_EXPECT_TRUE_STATUS_VALUE with ITK_TEST_EXPECT_TRUE_STATUS_VALUE"
-#  define TEST_EXPECT_TRUE "Replace TEST_EXPECT_TRUE with ITK_TEST_EXPECT_TRUE"
-#  define TEST_EXPECT_EQUAL_STATUS_VALUE \
-    "Replace TEST_EXPECT_EQUAL_STATUS_VALUE with ITK_TEST_EXPECT_EQUAL_STATUS_VALUE"
-#  define TEST_EXPECT_EQUAL "Replace TEST_EXPECT_EQUAL with ITK_TEST_EXPECT_EQUAL"
-#  define TEST_SET_GET "Replace TEST_SET_GET with ITK_TEST_SET_GET"
-#  define TEST_SET_GET_VALUE "Replace TEST_SET_GET_VALUE with ITK_TEST_SET_GET_VALUE"
-#  define TEST_SET_GET_NULL_VALUE "Replace TEST_SET_GET_NULL_VALUE with ITK_TEST_SET_GET_NULL_VALUE"
-#  define TEST_SET_GET_BOOLEAN "Replace TEST_SET_GET_BOOLEAN with ITK_TEST_SET_GET_BOOLEAN"
+
+#  if defined(__clang__) || defined(__GNUC__)
+#    pragma GCC poison EXERCISE_BASIC_OBJECT_METHODS
+#    pragma GCC poison TRY_EXPECT_EXCEPTION
+#    pragma GCC poison TRY_EXPECT_NO_EXCEPTION
+#    pragma GCC poison TEST_EXPECT_TRUE_STATUS_VALUE
+#    pragma GCC poison TEST_EXPECT_TRUE
+#    pragma GCC poison TEST_EXPECT_EQUAL_STATUS_VALUE
+#    pragma GCC poison TEST_EXPECT_EQUAL
+#    pragma GCC poison TEST_SET_GET
+#    pragma GCC poison TEST_SET_GET_VALUE
+#    pragma GCC poison TEST_SET_GET_NULL_VALUE
+#    pragma GCC poison TEST_SET_GET_BOOLEAN
+#  else
+#    define EXERCISE_BASIC_OBJECT_METHODS "Replace EXERCISE_BASIC_OBJECT_METHODS with ITK_EXERCISE_BASIC_OBJECT_METHODS"
+#    define TRY_EXPECT_EXCEPTION "Replace TRY_EXPECT_EXCEPTION with ITK_TRY_EXPECT_EXCEPTION"
+#    define TRY_EXPECT_NO_EXCEPTION "Replace TRY_EXPECT_NO_EXCEPTION with ITK_TRY_EXPECT_NO_EXCEPTION"
+#    define TEST_EXPECT_TRUE_STATUS_VALUE "Replace TEST_EXPECT_TRUE_STATUS_VALUE with ITK_TEST_EXPECT_TRUE_STATUS_VALUE"
+#    define TEST_EXPECT_TRUE "Replace TEST_EXPECT_TRUE with ITK_TEST_EXPECT_TRUE"
+#    define TEST_EXPECT_EQUAL_STATUS_VALUE \
+      "Replace TEST_EXPECT_EQUAL_STATUS_VALUE with ITK_TEST_EXPECT_EQUAL_STATUS_VALUE"
+#    define TEST_EXPECT_EQUAL "Replace TEST_EXPECT_EQUAL with ITK_TEST_EXPECT_EQUAL"
+#    define TEST_SET_GET "Replace TEST_SET_GET with ITK_TEST_SET_GET"
+#    define TEST_SET_GET_VALUE "Replace TEST_SET_GET_VALUE with ITK_TEST_SET_GET_VALUE"
+#    define TEST_SET_GET_NULL_VALUE "Replace TEST_SET_GET_NULL_VALUE with ITK_TEST_SET_GET_NULL_VALUE"
+#    define TEST_SET_GET_BOOLEAN "Replace TEST_SET_GET_BOOLEAN with ITK_TEST_SET_GET_BOOLEAN"
+#  endif
 #else
 #  define EXERCISE_BASIC_OBJECT_METHODS ITK_EXERCISE_BASIC_OBJECT_METHODS
 #  define TRY_EXPECT_EXCEPTION ITK_TRY_EXPECT_EXCEPTION
@@ -67,22 +82,13 @@ namespace itk
 #define ITK_EXERCISE_BASIC_OBJECT_METHODS(object, ClassName, SuperclassName)                                           \
   object->Print(std::cout);                                                                                            \
   std::cout << "Name of Class = " << object->GetNameOfClass() << std::endl;                                            \
-  if (!std::strcmp(object->GetNameOfClass(), #ClassName))                                                              \
-  {                                                                                                                    \
-    std::cout << "Class name is correct" << std::endl;                                                                 \
-  }                                                                                                                    \
-  else                                                                                                                 \
-  {                                                                                                                    \
-    std::cerr << "Class name provided does not match object's NameOfClass" << std::endl;                               \
-    return EXIT_FAILURE;                                                                                               \
-  }                                                                                                                    \
   ITK_MACROEND_NOOP_STATEMENT
 #else // not GCC
 #define ITK_EXERCISE_BASIC_OBJECT_METHODS(object, ClassName, SuperclassName)                                           \
   object->Print(std::cout);                                                                                            \
-  std::cout << "Name of Class = " << object->GetNameOfClass() << std::endl;                                            \
+  std::cout << "Name of Class = " << object->Self::GetNameOfClass() << std::endl;                                            \
   std::cout << "Name of Superclass = " << object->Superclass::GetNameOfClass() << std::endl;                           \
-  if (!std::strcmp(object->GetNameOfClass(), #ClassName))                                                              \
+  if (!std::strcmp(object->Self::GetNameOfClass(), #ClassName))                                                              \
   {                                                                                                                    \
     std::cout << "Class name is correct" << std::endl;                                                                 \
   }                                                                                                                    \

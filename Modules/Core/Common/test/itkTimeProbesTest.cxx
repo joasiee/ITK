@@ -62,7 +62,7 @@ TestTransformPhysicalPointToIndex(T * image)
       for (int i = 0; i < 1000; ++i)
       {
         point3D[0] = static_cast<typename itk::NumericTraits<typename T::PointType>::ValueType>(i);
-        image->TransformPhysicalPointToIndex(point3D, index3D);
+        index3D = image->TransformPhysicalPointToIndex(point3D);
       }
     }
     if (k == 5)
@@ -156,13 +156,13 @@ itkTimeProbesTest(int, char *[])
   std::cout << std::endl << "Print a normal report of a specific probe" << std::endl;
   collector.Report("Loop1");
 
-  // Print a expanded report (including nameOfProbe, Iteration, Total, Min, Mean-Min
+  // Print an expanded report (including nameOfProbe, Iteration, Total, Min, Mean-Min
   //                          Mean/Min *100 (%), Mean, Max, Max- Mean, Max/Mean(%),
   //                          Total Diff(:Max - Min) and STD)
   std::cout << std::endl << "Print expanded reports from all probes" << std::endl;
   collector.ExpandedReport();
 
-  // Print a expanded report (including nameOfProbe, Iteration, Total, Min, Mean-Min
+  // Print an expanded report (including nameOfProbe, Iteration, Total, Min, Mean-Min
   //                          Mean/Min *100 (%), Mean, Max, Max- Mean, Max/Mean(%),
   //                          Total Diff(:Max - Min) and STD)
   std::cout << std::endl << "Print an expanded report of a specific probe" << std::endl;
@@ -174,7 +174,7 @@ itkTimeProbesTest(int, char *[])
   std::cout << std::endl << "Print a JSON report of a specific probe" << std::endl;
   collector.JSONReport("o:TransformPhysicalPointToIndex");
 
-  // Test writing to a ostream
+  // Test writing to an ostream
   std::ofstream logfile;
   logfile.open("itkTimeProbesTest.txt");
   collector.Report(logfile);

@@ -19,7 +19,6 @@
 #define itkDiffusionTensor3DReconstructionImageFilter_hxx
 
 #include "itkMath.h"
-#include "itkDiffusionTensor3DReconstructionImageFilter.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkImageRegionIterator.h"
 #include "itkArray.h"
@@ -466,7 +465,7 @@ const Image<TGradientImagePixelType, 3> *
 DiffusionTensor3DReconstructionImageFilter<TReferenceImagePixelType,
                                            TGradientImagePixelType,
                                            TTensorPixelType,
-                                           TMaskImageType>::GetGradientImage(unsigned index) const
+                                           TMaskImageType>::GetGradientImage(unsigned int index) const
 {
   if (m_GradientImageTypeEnumeration ==
       DiffusionTensor3DReconstructionImageFilterEnums::GradientImageFormat::GradientIsInASingleImage)

@@ -18,7 +18,6 @@
 #ifndef itkShapePriorMAPCostFunction_hxx
 #define itkShapePriorMAPCostFunction_hxx
 
-#include "itkShapePriorMAPCostFunction.h"
 
 namespace itk
 {
@@ -102,7 +101,7 @@ typename ShapePriorMAPCostFunction<TFeatureImage, TOutputPixel>::MeasureType
 ShapePriorMAPCostFunction<TFeatureImage, TOutputPixel>::ComputeLogShapePriorTerm(
   const ParametersType & parameters) const
 {
-  // assume the shape parameters is from a independent gaussian distributions
+  // assume the shape parameters is from an independent gaussian distributions
   MeasureType measure = 0.0;
 
   for (unsigned int j = 0; j < this->m_ShapeFunction->GetNumberOfShapeParameters(); ++j)

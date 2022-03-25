@@ -18,70 +18,9 @@
 #ifndef itkRealToHalfHermitianForwardFFTImageFilter_hxx
 #define itkRealToHalfHermitianForwardFFTImageFilter_hxx
 
-#include "itkVnlRealToHalfHermitianForwardFFTImageFilter.h"
-
-#if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
-#  include "itkFFTWRealToHalfHermitianForwardFFTImageFilter.h"
-#endif
 
 namespace itk
 {
-
-template <typename TSelfPointer, typename TInputImage, typename TOutputImage, typename TPixel>
-struct DispatchFFTW_R2C_New
-{
-  static TSelfPointer
-  Apply()
-  {
-    return VnlRealToHalfHermitianForwardFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
-  }
-};
-
-#ifdef ITK_USE_FFTWD
-template <typename TSelfPointer, typename TInputImage, typename TOutputImage>
-struct DispatchFFTW_R2C_New<TSelfPointer, TInputImage, TOutputImage, double>
-{
-  static TSelfPointer
-  Apply()
-  {
-    return FFTWRealToHalfHermitianForwardFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
-  }
-};
-#endif
-
-#ifdef ITK_USE_FFTWF
-template <typename TSelfPointer, typename TInputImage, typename TOutputImage>
-struct DispatchFFTW_R2C_New<TSelfPointer, TInputImage, TOutputImage, float>
-{
-  static TSelfPointer
-  Apply()
-  {
-    return FFTWRealToHalfHermitianForwardFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
-  }
-};
-#endif
-
-template <typename TInputImage, typename TOutputImage>
-auto
-RealToHalfHermitianForwardFFTImageFilter<TInputImage, TOutputImage>::New() -> Pointer
-{
-  Pointer smartPtr = ::itk::ObjectFactory<Self>::Create();
-
-  if (smartPtr.IsNull())
-  {
-    smartPtr =
-      DispatchFFTW_R2C_New<Pointer, TInputImage, TOutputImage, typename NumericTraits<OutputPixelType>::ValueType>::
-        Apply();
-  }
-  else
-  {
-    // Correct extra reference count from ::itk::ObjectFactory<Self>::Create()
-    smartPtr->UnRegister();
-  }
-
-  return smartPtr;
-}
-
 template <typename TInputImage, typename TOutputImage>
 RealToHalfHermitianForwardFFTImageFilter<TInputImage, TOutputImage>::RealToHalfHermitianForwardFFTImageFilter()
 {
@@ -125,9 +64,7 @@ RealToHalfHermitianForwardFFTImageFilter<TInputImage, TOutputImage>::GenerateOut
     outputStartIndex[i] = inputStartIndex[i];
   }
 
-  typename OutputImageType::RegionType outputLargestPossibleRegion;
-  outputLargestPossibleRegion.SetSize(outputSize);
-  outputLargestPossibleRegion.SetIndex(outputStartIndex);
+  const typename OutputImageType::RegionType outputLargestPossibleRegion(outputStartIndex, outputSize);
 
   outputPtr->SetLargestPossibleRegion(outputLargestPossibleRegion);
   this->SetActualXDimensionIsOdd(inputSize[0] % 2 != 0);

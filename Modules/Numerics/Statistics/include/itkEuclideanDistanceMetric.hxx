@@ -18,7 +18,6 @@
 #ifndef itkEuclideanDistanceMetric_hxx
 #define itkEuclideanDistanceMetric_hxx
 
-#include "itkEuclideanDistanceMetric.h"
 
 namespace itk
 {
@@ -38,7 +37,7 @@ EuclideanDistanceMetric<TVector>::Evaluate(const MeasurementVectorType & x) cons
                                   measurementVectorSize,
                                   "EuclideanDistanceMetric::Evaluate Origin and input vector have different lengths");
 
-  double sumOfSquares = NumericTraits<double>::ZeroValue();
+  double sumOfSquares = 0.0;
 
   for (unsigned int i = 0; i < measurementVectorSize; ++i)
   {
@@ -64,7 +63,7 @@ EuclideanDistanceMetric<TVector>::Evaluate(const MeasurementVectorType & x1, con
                       << NumericTraits<MeasurementVectorType>::GetLength(x2) << ")");
   }
 
-  double sumOfSquares = NumericTraits<double>::ZeroValue();
+  double sumOfSquares = 0.0;
 
   for (unsigned int i = 0; i < measurementVectorSize; ++i)
   {
@@ -83,7 +82,7 @@ EuclideanDistanceMetric<TVector>::Evaluate(const ValueType & a, const ValueType 
 {
   const double temp = a - b;
 
-  return std::abs(temp);
+  return itk::Math::abs(temp);
 }
 } // end of namespace Statistics
 } // end of namespace itk

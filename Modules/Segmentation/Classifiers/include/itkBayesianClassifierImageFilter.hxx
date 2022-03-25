@@ -28,7 +28,6 @@
 #ifndef itkBayesianClassifierImageFilter_hxx
 #define itkBayesianClassifierImageFilter_hxx
 
-#include "itkBayesianClassifierImageFilter.h"
 #include "itkImageRegionConstIterator.h"
 
 namespace itk
@@ -65,7 +64,6 @@ BayesianClassifierImageFilter<TInputVectorImage, TLabelsType, TPosteriorsPrecisi
   if (numberOfClasses == 0)
   {
     itkExceptionMacro("The number of components in the input Membership image is Zero !");
-    return;
   }
 
   this->AllocateOutputs();

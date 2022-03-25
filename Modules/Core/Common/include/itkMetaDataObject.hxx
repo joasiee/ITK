@@ -28,7 +28,6 @@
 #ifndef itkMetaDataObject_hxx
 #define itkMetaDataObject_hxx
 
-#include "itkMetaDataObject.h"
 
 namespace itk
 {
@@ -57,7 +56,7 @@ template <typename MetaDataObjectType>
 void
 MetaDataObject<MetaDataObjectType>::SetMetaDataObjectValue(const MetaDataObjectType & newValue)
 {
-  m_MetaDataObjectValue = newValue;
+  Self::Assign(m_MetaDataObjectValue, newValue);
 }
 
 template <typename MetaDataObjectType>

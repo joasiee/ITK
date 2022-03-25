@@ -18,7 +18,6 @@
 #ifndef itkInverseDisplacementFieldImageFilter_hxx
 #define itkInverseDisplacementFieldImageFilter_hxx
 
-#include "itkInverseDisplacementFieldImageFilter.h"
 #include "itkObjectFactory.h"
 #include "itkProgressReporter.h"
 #include "itkThinPlateSplineKernelTransform.h"
@@ -136,9 +135,7 @@ InverseDisplacementFieldImageFilter<TInputImage, TOutputImage>::PrepareKernelBas
     spacing[i] *= m_SubsamplingFactor;
   }
 
-  InputRegionType subsampledRegion;
-  subsampledRegion.SetSize(size);
-  subsampledRegion.SetIndex(region.GetIndex());
+  const InputRegionType subsampledRegion(region.GetIndex(), size);
 
   resampler->SetSize(size);
   resampler->SetOutputStartIndex(subsampledRegion.GetIndex());
@@ -284,8 +281,7 @@ InverseDisplacementFieldImageFilter<TInputImage, TOutputImage>::GenerateInputReq
   InputImagePointer inputPtr = const_cast<InputImageType *>(this->GetInput());
 
   // Request the entire input image
-  InputImageRegionType inputRegion;
-  inputRegion = inputPtr->GetLargestPossibleRegion();
+  const InputImageRegionType inputRegion = inputPtr->GetLargestPossibleRegion();
   inputPtr->SetRequestedRegion(inputRegion);
 }
 

@@ -15,20 +15,12 @@
  *  limitations under the License.
  *
  *=========================================================================*/
+
+// Legacy file for backwards compatibility
+
 #ifndef itkTestDriverIncludeRequiredIOFactories_h
 #define itkTestDriverIncludeRequiredIOFactories_h
 
-
-#include "itkTestDriverInclude.h"
-
-#ifdef __EMSCRIPTEN__
-#  include <emscripten.h>
-#endif
-
-void
-RegisterRequiredFactories();
-
-void
-ProcessArgumentsAndRegisterRequiredFactories(int * ac, ArgumentStringType * av);
+#include "itkTestDriverIncludeRequiredFactories.h"
 
 #endif

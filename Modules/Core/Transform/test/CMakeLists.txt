@@ -84,7 +84,7 @@ itk_add_test(NAME itkScaleTransformTest
 itk_add_test(NAME itkSimilarity3DTransformTest
       COMMAND ITKTransformTestDriver itkSimilarity3DTransformTest)
 itk_add_test(NAME itkAzimuthElevationToCartesianTransformTest
-      COMMAND ITKTransformTestDriver itkAzimuthElevationToCartesianTransformTest)
+      COMMAND ITKTransformTestDriver itkAzimuthElevationToCartesianTransformTest 0 0 1.0 1.0 1.0 0.0)
 itk_add_test(NAME itkCenteredEuler3DTransformTest
       COMMAND ITKTransformTestDriver itkCenteredEuler3DTransformTest)
 itk_add_test(NAME itkTransformsSetParametersTest
@@ -190,6 +190,7 @@ set(ITKTransformGTests
   itkEuler3DTransformGTest.cxx
   itkMatrixOffsetTransformBaseGTest.cxx
   itkSimilarityTransformGTest.cxx
+  itkTransformGTest.cxx
   itkTranslationTransformGTest.cxx
 )
 CreateGoogleTestDriver(ITKTransform "${ITKTransform-Test_LIBRARIES}" "${ITKTransformGTests}")

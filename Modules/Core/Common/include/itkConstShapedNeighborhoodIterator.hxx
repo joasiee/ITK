@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkConstShapedNeighborhoodIterator_hxx
 #define itkConstShapedNeighborhoodIterator_hxx
-#include "itkConstShapedNeighborhoodIterator.h"
 namespace itk
 {
 template <typename TImage, typename TBoundaryCondition>
@@ -77,7 +76,7 @@ ConstShapedNeighborhoodIterator<TImage, TBoundaryCondition>::ActivateIndex(Neigh
 
   // Set the pointer in the neighborhood location just activated.
   this->GetElement(n) = this->GetCenterPointer();
-  for (unsigned i = 0; i < Dimension; ++i)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
     this->GetElement(n) += OffsetTable[i] * this->GetOffset(n)[i];
   }

@@ -18,7 +18,6 @@
 #ifndef itkPipelineMonitorImageFilter_hxx
 #define itkPipelineMonitorImageFilter_hxx
 
-#include "itkPipelineMonitorImageFilter.h"
 
 namespace itk
 {
@@ -113,7 +112,7 @@ bool
 PipelineMonitorImageFilter<TImageType>::VerifyInputFilterBufferedRequestedRegions()
 {
   // we expect that the input filter's output image's buffered
-  // region is going to match it's requested region
+  // region is going to match its requested region
   bool         ret = true;
   unsigned int i;
   for (i = 0; i < m_UpdatedBufferedRegions.size(); ++i)
@@ -133,7 +132,7 @@ bool
 PipelineMonitorImageFilter<TImageType>::VerifyInputFilterMatchedRequestedRegions()
 {
   // we expect that the input filter's output image's buffered
-  // region is going to match it's requested region, which is going
+  // region is going to match its requested region, which is going
   // to match the requested region at the end of propagation
   //
   bool   ret = true;
@@ -159,7 +158,7 @@ PipelineMonitorImageFilter<TImageType>::VerifyInputFilterRequestedLargestRegion(
 {
   if (m_InputRequestedRegions.back() != m_UpdatedOutputLargestPossibleRegion)
   {
-    itkWarningMacro(<< "The input filter didn't set it's output request to the largest region");
+    itkWarningMacro(<< "The input filter didn't set its output request to the largest region");
     return false;
   }
   return true;

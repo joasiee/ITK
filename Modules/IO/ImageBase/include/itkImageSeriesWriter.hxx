@@ -18,7 +18,6 @@
 #ifndef itkImageSeriesWriter_hxx
 #define itkImageSeriesWriter_hxx
 
-#include "itkImageSeriesWriter.h"
 #include "itkDataObject.h"
 #include "itkImageIOFactory.h"
 #include "itkIOCommon.h"
@@ -244,7 +243,6 @@ ImageSeriesWriter<TInputImage, TOutputImage>::WriteFiles()
   {
     itkExceptionMacro(<< "The number of filenames passed is " << m_FileNames.size() << " but " << expectedNumberOfFiles
                       << " were expected ");
-    return;
   }
 
   itkDebugMacro(<< "Number of files to write = " << m_FileNames.size());
@@ -302,7 +300,7 @@ ImageSeriesWriter<TInputImage, TOutputImage>::WriteFiles()
         typename InputImageType::SpacingType spacing2 = inputImage->GetSpacing();
 
         // origin of the output slice in the
-        // N-Dimensional space of the input image.
+        // n-dimensional space of the input image.
         typename InputImageType::PointType origin2;
 
         inputImage->TransformIndexToPhysicalPoint(inIndex, origin2);

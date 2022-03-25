@@ -17,14 +17,16 @@
  *=========================================================================*/
 
 #include "itkImageFileWriter.h"
+#include "itkTestingMacros.h"
+
 
 int
-itkImageFileWriterTest(int ac, char * av[])
+itkImageFileWriterTest(int argc, char * argv[])
 {
 
-  if (ac < 2)
+  if (argc < 2)
   {
-    std::cout << "usage: itkIOTests itkImageFileWriterTest outputFileName" << std::endl;
+    std::cout << "Usage: " << itkNameOfTestExecutableMacro(argv) << " outputFileName " << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -111,7 +113,7 @@ itkImageFileWriterTest(int ac, char * av[])
   {
     auto writer = WriterType::New();
     writer->SetInput(image);
-    writer->SetFileName(av[1]);
+    writer->SetFileName(argv[1]);
     writer->Update();
   }
   catch (const itk::ExceptionObject & ex)
@@ -132,7 +134,7 @@ itkImageFileWriterTest(int ac, char * av[])
   {
     auto writer = WriterType::New();
     writer->SetInput(image);
-    writer->SetFileName(av[1]);
+    writer->SetFileName(argv[1]);
     writer->UpdateLargestPossibleRegion();
   }
   catch (const itk::ExceptionObject & ex)

@@ -53,7 +53,6 @@ public:
 
   using typename Superclass::ParametersValueType;
   using typename Superclass::ParametersType;
-  using EnabledArrayType = std::vector<bool>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -173,7 +172,14 @@ itkParametricBlindLeastSquaresDeconvolutionImageFilterTest(int argc, char * argv
   // Create an instance of the deconvolution filter
   using DeconvolutionFilterType = itk::ParametricBlindLeastSquaresDeconvolutionImageFilter<ImageType, KernelSourceType>;
   auto deconvolutionFilter = DeconvolutionFilterType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(
+    deconvolutionFilter, ParametricBlindLeastSquaresDeconvolutionImageFilter, IterativeDeconvolutionImageFilter);
+
+
   deconvolutionFilter->SetKernelSource(kernelSource);
+  ITK_TEST_SET_GET_VALUE(kernelSource, deconvolutionFilter->GetKernelSource());
+
   deconvolutionFilter->SetSizeGreatestPrimeFactor(5);
 
   // Change the sigma settings here to something different
@@ -207,7 +213,7 @@ itkParametricBlindLeastSquaresDeconvolutionImageFilterTest(int argc, char * argv
   }
 
   KernelSourceType::ParametersValueType expectedSigmaX = 2.90243;
-  if (std::abs(kernelSource->GetParameters()[0] - expectedSigmaX) > 1e-5)
+  if (itk::Math::abs(kernelSource->GetParameters()[0] - expectedSigmaX) > 1e-5)
   {
     std::cerr << "Kernel parameter[0] should have been " << expectedSigmaX << ", was "
               << kernelSource->GetParameters()[0] << "." << std::endl;
@@ -215,7 +221,7 @@ itkParametricBlindLeastSquaresDeconvolutionImageFilterTest(int argc, char * argv
   }
 
   KernelSourceType::ParametersValueType expectedSigmaY = 2.90597;
-  if (std::abs(kernelSource->GetParameters()[1] - expectedSigmaY) > 1e-5)
+  if (itk::Math::abs(kernelSource->GetParameters()[1] - expectedSigmaY) > 1e-5)
   {
     std::cerr << "Kernel parameter[1] should have been " << expectedSigmaY << ", was "
               << kernelSource->GetParameters()[0] << "." << std::endl;

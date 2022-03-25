@@ -80,7 +80,7 @@ namespace itk
  *
  * \ingroup ITKTransform
  */
-template <typename TParametersValueType, unsigned int NInputDimensions = 3, unsigned int NOutputDimensions = 3>
+template <typename TParametersValueType, unsigned int VInputDimension = 3, unsigned int VOutputDimension = 3>
 class ITK_TEMPLATE_EXPORT Transform : public TransformBaseTemplate<TParametersValueType>
 {
 public:
@@ -96,8 +96,8 @@ public:
   itkTypeMacro(Transform, TransformBaseTemplate);
 
   /** Dimension of the domain space. */
-  static constexpr unsigned int InputSpaceDimension = NInputDimensions;
-  static constexpr unsigned int OutputSpaceDimension = NOutputDimensions;
+  static constexpr unsigned int InputSpaceDimension = VInputDimension;
+  static constexpr unsigned int OutputSpaceDimension = VOutputDimension;
 
   /** define the Clone method */
   itkCloneMacro(Self);
@@ -106,14 +106,14 @@ public:
   unsigned int
   GetInputSpaceDimension() const override
   {
-    return NInputDimensions;
+    return VInputDimension;
   }
 
   /** Get the size of the output space */
   unsigned int
   GetOutputSpaceDimension() const override
   {
-    return NOutputDimensions;
+    return VOutputDimension;
   }
 
   /** Type of the input parameters. */
@@ -128,12 +128,12 @@ public:
 
   /** Type of the Jacobian matrix. */
   using JacobianType = Array2D<ParametersValueType>;
-  using JacobianPositionType = vnl_matrix_fixed<ParametersValueType, NOutputDimensions, NInputDimensions>;
-  using InverseJacobianPositionType = vnl_matrix_fixed<ParametersValueType, NInputDimensions, NOutputDimensions>;
+  using JacobianPositionType = vnl_matrix_fixed<ParametersValueType, VOutputDimension, VInputDimension>;
+  using InverseJacobianPositionType = vnl_matrix_fixed<ParametersValueType, VInputDimension, VOutputDimension>;
 
   /** Standard vector type for this class. */
-  using InputVectorType = Vector<TParametersValueType, NInputDimensions>;
-  using OutputVectorType = Vector<TParametersValueType, NOutputDimensions>;
+  using InputVectorType = Vector<TParametersValueType, VInputDimension>;
+  using OutputVectorType = Vector<TParametersValueType, VOutputDimension>;
 
   /** Standard variable length vector type for this class
    *  this provides an interface for the VectorImage class */
@@ -141,28 +141,28 @@ public:
   using OutputVectorPixelType = VariableLengthVector<TParametersValueType>;
 
   /* Standard symmetric second rank tenosr type for this class */
-  using InputSymmetricSecondRankTensorType = SymmetricSecondRankTensor<TParametersValueType, NInputDimensions>;
-  using OutputSymmetricSecondRankTensorType = SymmetricSecondRankTensor<TParametersValueType, NOutputDimensions>;
+  using InputSymmetricSecondRankTensorType = SymmetricSecondRankTensor<TParametersValueType, VInputDimension>;
+  using OutputSymmetricSecondRankTensorType = SymmetricSecondRankTensor<TParametersValueType, VOutputDimension>;
 
   /* Standard tensor type for this class */
   using InputDiffusionTensor3DType = DiffusionTensor3D<TParametersValueType>;
   using OutputDiffusionTensor3DType = DiffusionTensor3D<TParametersValueType>;
 
   /** Standard covariant vector type for this class */
-  using InputCovariantVectorType = CovariantVector<TParametersValueType, NInputDimensions>;
-  using OutputCovariantVectorType = CovariantVector<TParametersValueType, NOutputDimensions>;
+  using InputCovariantVectorType = CovariantVector<TParametersValueType, VInputDimension>;
+  using OutputCovariantVectorType = CovariantVector<TParametersValueType, VOutputDimension>;
 
   /** Standard vnl_vector type for this class. */
-  using InputVnlVectorType = vnl_vector_fixed<TParametersValueType, NInputDimensions>;
-  using OutputVnlVectorType = vnl_vector_fixed<TParametersValueType, NOutputDimensions>;
+  using InputVnlVectorType = vnl_vector_fixed<TParametersValueType, VInputDimension>;
+  using OutputVnlVectorType = vnl_vector_fixed<TParametersValueType, VOutputDimension>;
 
   /** Standard coordinate point type for this class */
-  using InputPointType = Point<TParametersValueType, NInputDimensions>;
-  using OutputPointType = Point<TParametersValueType, NOutputDimensions>;
+  using InputPointType = Point<TParametersValueType, VInputDimension>;
+  using OutputPointType = Point<TParametersValueType, VOutputDimension>;
 
   /** Base inverse transform type. This type should not be changed to the
    * concrete inverse transform type or inheritance would be lost. */
-  using InverseTransformBaseType = Transform<TParametersValueType, NOutputDimensions, NInputDimensions>;
+  using InverseTransformBaseType = Transform<TParametersValueType, VOutputDimension, VInputDimension>;
 
   using InverseTransformBasePointer = typename InverseTransformBaseType::Pointer;
 
@@ -331,7 +331,7 @@ public:
   /** Set the transformation parameters and update internal transformation.
    * SetParameters gives the transform the option to set it's
    * parameters by keeping a reference to the parameters, or by
-   * copying.  To force the transform to copy it's parameters call
+   * copying.  To force the transform to copy its parameters call
    * SetParametersByValue.
    * \sa SetParametersByValue
    */
@@ -554,10 +554,10 @@ public:
    * The image parameter may be either a SmartPointer or a raw pointer.
    * */
   template <typename TImage>
-  std::enable_if_t<TImage::ImageDimension == NInputDimensions && TImage::ImageDimension == NOutputDimensions, void>
+  std::enable_if_t<TImage::ImageDimension == VInputDimension && TImage::ImageDimension == VOutputDimension, void>
   ApplyToImageMetadata(TImage * image) const;
   template <typename TImage>
-  std::enable_if_t<TImage::ImageDimension == NInputDimensions && TImage::ImageDimension == NOutputDimensions, void>
+  std::enable_if_t<TImage::ImageDimension == VInputDimension && TImage::ImageDimension == VOutputDimension, void>
   ApplyToImageMetadata(SmartPointer<TImage> image) const
   {
     this->ApplyToImageMetadata(image.GetPointer()); // Delegate to the raw pointer signature
@@ -572,7 +572,9 @@ protected:
   typename LightObject::Pointer
   InternalClone() const override;
 
-  Transform();
+  /** Default-constructor. Creates a transform, having empty `Parameters` and `FixedParameters`. */
+  Transform() = default;
+
   Transform(NumberOfParametersType numberOfParameters);
 #if defined(__GNUC__)
   // A bug in some versions of the GCC and Clang compilers

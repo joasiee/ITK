@@ -18,7 +18,6 @@
 #ifndef itkFastSymmetricForcesDemonsRegistrationFilter_hxx
 #define itkFastSymmetricForcesDemonsRegistrationFilter_hxx
 
-#include "itkFastSymmetricForcesDemonsRegistrationFilter.h"
 
 namespace itk
 {
@@ -232,7 +231,7 @@ FastSymmetricForcesDemonsRegistrationFilter<TFixedImage, TMovingImage, TDisplace
   }
 
   // use time step if necessary
-  if (std::fabs(dt - 1.0) > 1.0e-4)
+  if (itk::Math::abs(dt - 1.0) > 1.0e-4)
   {
     itkDebugMacro("Using timestep: " << dt);
     m_Multiplier->SetInput2(dt);

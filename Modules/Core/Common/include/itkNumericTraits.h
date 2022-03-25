@@ -67,7 +67,7 @@ public:
   /** Return the type that can be printed. */
   using PrintType = T;
 
-  /** Return value of std::abs(). */
+  /** Return value of itk::Math::abs(). */
   using AbsType = T;
 
   /** Accumulation of addition and multiplication. */
@@ -1924,7 +1924,7 @@ public:
     return val.real() >= 0;
   }
 
-  static constexpr bool IsSigned = NumericTraits<ValueType>::IsSigned;
+  static constexpr bool IsSigned = std::is_signed<ValueType>::value;
   static constexpr bool IsInteger = false;
   static constexpr bool IsComplex = true;
   static Self

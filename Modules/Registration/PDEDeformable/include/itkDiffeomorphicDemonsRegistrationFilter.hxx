@@ -18,7 +18,6 @@
 #ifndef itkDiffeomorphicDemonsRegistrationFilter_hxx
 #define itkDiffeomorphicDemonsRegistrationFilter_hxx
 
-#include "itkDiffeomorphicDemonsRegistrationFilter.h"
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
 
 namespace itk
@@ -242,7 +241,7 @@ DiffeomorphicDemonsRegistrationFilter<TFixedImage, TMovingImage, TDisplacementFi
 
   // Use time step if necessary. In many cases
   // the time step is one so this will be skipped
-  if (std::fabs(dt - 1.0) > 1.0e-4)
+  if (itk::Math::abs(dt - 1.0) > 1.0e-4)
   {
     itkDebugMacro("Using timestep: " << dt);
     m_Multiplier->SetInput2(dt);

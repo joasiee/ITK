@@ -40,7 +40,7 @@ template class itk::ImageRegionRange<itk::Image<short, 4>>;
 template class itk::ImageRegionRange<const itk::Image<short>>;
 template class itk::ImageRegionRange<itk::VectorImage<short>>;
 template class itk::ImageRegionRange<const itk::VectorImage<short>>;
-template class itk::ImageRegionRange<itk::Image<itk::RGBPixel<std::uint8_t>>>;
+template class itk::ImageRegionRange<itk::Image<itk::RGBPixel<uint8_t>>>;
 template class itk::ImageRegionRange<itk::Image<itk::Vector<long, 11>>>;
 
 using itk::ImageRegionRange;
@@ -92,7 +92,7 @@ static_assert(IsIteratorTypeTheSameAsConstIteratorType<const itk::Image<int>>() 
 
 template <typename TImage>
 typename TImage::Pointer
-CreateImage(const unsigned sizeX, const unsigned sizeY)
+CreateImage(const unsigned int sizeX, const unsigned int sizeY)
 {
   const auto                      image = TImage::New();
   const typename TImage::SizeType imageSize = { { sizeX, sizeY } };
@@ -105,7 +105,7 @@ CreateImage(const unsigned sizeX, const unsigned sizeY)
 // Creates a test image, filled with a sequence of natural numbers, 1, 2, 3, ..., N.
 template <typename TImage>
 typename TImage::Pointer
-CreateImageFilledWithSequenceOfNaturalNumbers(const unsigned sizeX, const unsigned sizeY)
+CreateImageFilledWithSequenceOfNaturalNumbers(const unsigned int sizeX, const unsigned int sizeY)
 {
   using PixelType = typename TImage::PixelType;
   const auto                          image = CreateImage<TImage>(sizeX, sizeY);
@@ -115,18 +115,18 @@ CreateImageFilledWithSequenceOfNaturalNumbers(const unsigned sizeX, const unsign
 }
 
 
-template <typename TPixel, unsigned VImageDimension>
+template <typename TPixel, unsigned int VImageDimension>
 void
-SetVectorLengthIfImageIsVectorImage(itk::VectorImage<TPixel, VImageDimension> & image, const unsigned vectorLength)
+SetVectorLengthIfImageIsVectorImage(itk::VectorImage<TPixel, VImageDimension> & image, const unsigned int vectorLength)
 {
   image.SetVectorLength(vectorLength);
 }
 
 
-template <typename TPixel, unsigned VImageDimension>
+template <typename TPixel, unsigned int VImageDimension>
 void
 SetVectorLengthIfImageIsVectorImage(itk::Image<TPixel, VImageDimension> & itkNotUsed(image),
-                                    const unsigned                        itkNotUsed(vectorLength))
+                                    const unsigned int                    itkNotUsed(vectorLength))
 {
   // Do not set the VectorLength. The specified image is not a VectorImage.
 }
@@ -351,7 +351,7 @@ TEST(ImageRegionRange, IteratorsCanBePassedToStdReverseCopy)
 
   ImageRegionRange<ImageType> range{ *image, region };
 
-  const unsigned numberOfPixels = sizeX * sizeY;
+  const unsigned int numberOfPixels = sizeX * sizeY;
 
   const std::vector<PixelType> stdVector(range.begin(), range.end());
   std::vector<PixelType>       reversedStdVector1(numberOfPixels);
@@ -500,19 +500,7 @@ TEST(ImageRegionRange, SupportsVectorImage)
 
 TEST(ImageRegionRange, IteratorIsDefaultConstructible)
 {
-  using RangeType = ImageRegionRange<itk::Image<int>>;
-
-  RangeType::iterator defaultConstructedIterator{};
-
-  // Test that a default-constructed iterator behaves according to C++ proposal
-  // N3644, "Null Forward Iterators" by Alan Talbot, which is accepted with
-  // C++14: "value-initialized iterators may be compared and shall compare
-  // equal to other value-initialized iterators of the same type."
-  // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3644.pdf
-
-  EXPECT_TRUE(defaultConstructedIterator == defaultConstructedIterator);
-  EXPECT_FALSE(defaultConstructedIterator != defaultConstructedIterator);
-  EXPECT_EQ(defaultConstructedIterator, RangeType::iterator{});
+  itk::RangeGTestUtilities::ExpectIteratorIsDefaultConstructible<ImageRegionRange<itk::Image<int>>>();
 }
 
 
@@ -532,7 +520,7 @@ TEST(ImageRegionRange, ProvidesReverseIterators)
 
   RangeType range{ *image, region };
 
-  const unsigned numberOfPixels = sizeX * sizeY;
+  const unsigned int numberOfPixels = sizeX * sizeY;
 
   const std::vector<PixelType> stdVector(range.begin(), range.end());
   std::vector<PixelType>       reversedStdVector1(numberOfPixels);

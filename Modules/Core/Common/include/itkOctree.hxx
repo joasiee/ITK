@@ -18,7 +18,6 @@
 #ifndef itkOctree_hxx
 #define itkOctree_hxx
 
-#include "itkOctree.h"
 
 namespace itk
 {
@@ -146,13 +145,13 @@ Octree<TPixel, ColorTableSize, MappingFunctionType>::GetValue(const unsigned int
 template <typename TPixel, unsigned int ColorTableSize, typename MappingFunctionType>
 OctreeNodeBranch *
 Octree<TPixel, ColorTableSize, MappingFunctionType>::maskToOctree(const TPixel * Mask,
-                                                                  unsigned       width,
-                                                                  unsigned       x,
-                                                                  unsigned       y,
-                                                                  unsigned       z,
-                                                                  unsigned       xsize,
-                                                                  unsigned       ysize,
-                                                                  unsigned       zsize)
+                                                                  unsigned int   width,
+                                                                  unsigned int   x,
+                                                                  unsigned int   y,
+                                                                  unsigned int   z,
+                                                                  unsigned int   xsize,
+                                                                  unsigned int   ysize,
+                                                                  unsigned int   zsize)
 {
   if ((x >= xsize) || (y >= ysize) || (z >= zsize))
   {
@@ -226,9 +225,9 @@ Octree<TPixel, ColorTableSize, MappingFunctionType>::BuildFromBuffer(const void 
                                                                      const unsigned int ysize,
                                                                      const unsigned int zsize)
 {
-  unsigned maxSize = xsize >= ysize ? (xsize >= zsize ? xsize : zsize) : (ysize >= zsize ? ysize : zsize);
-  unsigned width = 1;
-  unsigned depth = 0;
+  unsigned int maxSize = xsize >= ysize ? (xsize >= zsize ? xsize : zsize) : (ysize >= zsize ? ysize : zsize);
+  unsigned int width = 1;
+  unsigned int depth = 0;
 
   while (width < maxSize)
   {
@@ -266,11 +265,9 @@ Octree<TPixel, ColorTableSize, MappingFunctionType>::GetImage() -> ImageTypePoin
   sizes[1] = m_TrueDims[1];
   sizes[2] = m_TrueDims[2];
   imageSize.SetSize(sizes);
-  const typename ImageType::IndexType imageIndex = { { 0, 0, 0 } };
-  typename ImageType::RegionType      region;
-  region.SetSize(imageSize);
-  region.SetIndex(imageIndex);
-  auto img = ImageType::New();
+  const typename ImageType::IndexType  imageIndex = { { 0, 0, 0 } };
+  const typename ImageType::RegionType region(imageIndex, imageSize);
+  auto                                 img = ImageType::New();
   img->SetLargestPossibleRegion(region);
   img->SetBufferedRegion(region);
   img->SetRequestedRegion(region);

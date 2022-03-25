@@ -53,9 +53,9 @@ CloseEnough(double a, double b)
 bool
 Equal(DirectionType dir1, DirectionType dir2)
 {
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
-    for (unsigned j = 0; j < 3; ++j)
+    for (unsigned int j = 0; j < 3; ++j)
     {
       if (!CloseEnough(dir1(i, j), dir2(i, j)))
       {
@@ -69,7 +69,7 @@ Equal(DirectionType dir1, DirectionType dir2)
 bool
 Equal(SpacingType spacing1, SpacingType spacing2)
 {
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     if (!CloseEnough(spacing1[i], spacing2[i]))
     {
@@ -84,19 +84,19 @@ Equal(SpacingType spacing1, SpacingType spacing2)
 // known to exist in the test file in order to ensure that
 // they're properly read out of the functional group.
 int
-itkDCMTKImageIOMultiFrameImageTest(int ac, char * av[])
+itkDCMTKImageIOMultiFrameImageTest(int argc, char * argv[])
 {
-  if (ac < 2)
+  if (argc < 2)
   {
     std::cerr << "Missing Parameters." << std::endl;
-    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(av) << " multiframeImage" << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " multiframeImage" << std::endl;
     return EXIT_FAILURE;
   }
 
   auto dcmImageIO = ImageIOType::New();
 
   auto reader = ReaderType::New();
-  reader->SetFileName(av[1]);
+  reader->SetFileName(argv[1]);
   reader->SetImageIO(dcmImageIO);
 
   ITK_TRY_EXPECT_NO_EXCEPTION(reader->Update());

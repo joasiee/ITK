@@ -18,7 +18,6 @@
 #ifndef itkHalfToFullHermitianImageFilter_hxx
 #define itkHalfToFullHermitianImageFilter_hxx
 
-#include "itkHalfToFullHermitianImageFilter.h"
 
 #include "itkImageAlgorithm.h"
 #include "itkImageRegionIteratorWithIndex.h"
@@ -68,9 +67,7 @@ HalfToFullHermitianImageFilter<TInputImage>::GenerateOutputInformation()
     outputSize[0]++;
   }
 
-  typename OutputImageType::RegionType outputLargestPossibleRegion;
-  outputLargestPossibleRegion.SetSize(outputSize);
-  outputLargestPossibleRegion.SetIndex(outputStartIndex);
+  const typename OutputImageType::RegionType outputLargestPossibleRegion(outputStartIndex, outputSize);
 
   outputPtr->SetLargestPossibleRegion(outputLargestPossibleRegion);
 }

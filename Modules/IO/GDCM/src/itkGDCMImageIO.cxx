@@ -53,6 +53,7 @@
 #include "gdcmAttribute.h"
 #include "gdcmGlobal.h"
 #include "gdcmMediaStorage.h"
+#include "gdcmDirectionCosines.h"
 
 #include <fstream>
 #include <sstream>
@@ -190,7 +191,7 @@ readNoPreambleDicom(std::ifstream & file) // NOTE: This file is duplicated in it
   std::ostringstream itkmsg;
   itkmsg << "No DICOM magic number found, but the file appears to be DICOM without a preamble.\n"
          << "Proceeding without caution.";
-  ::itk::OutputWindowDisplayDebugText(itkmsg.str().c_str());
+  itk::OutputWindowDisplayDebugText(itkmsg.str().c_str());
 #endif
   return true;
 }
@@ -441,6 +442,11 @@ GDCMImageIO::Read(void * pointer)
 void
 GDCMImageIO::InternalReadImageInformation()
 {
+  // Reset, a user can re-use IO.
+  m_RescaleIntercept = 0.0;
+  m_RescaleSlope = 1.0;
+  m_SingleBit = false;
+
   // ensure file can be opened for reading, before doing any more work
   std::ifstream inputFileStream;
   // let any exceptions propagate
@@ -676,7 +682,7 @@ GDCMImageIO::InternalReadImageInformation()
   }
 
   const double * origin = image.GetOrigin();
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     m_Spacing[i] = spacing[i];
     m_Origin[i] = origin[i];
@@ -1098,6 +1104,11 @@ GDCMImageIO::Write(const void * buffer)
     {
       image.SetDirectionCosines(5, 0);
     }
+  }
+  gdcm::DirectionCosines gdcmDirection(image.GetDirectionCosines());
+  if (!gdcmDirection.IsValid())
+  {
+    itkExceptionMacro("Invalid direction cosines, non-orthogonal or unit length.");
   }
 
   // reset any previous value:

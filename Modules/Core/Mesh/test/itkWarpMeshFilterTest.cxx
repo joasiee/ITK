@@ -19,6 +19,7 @@
 #include "itkWarpMeshFilter.h"
 #include "itkRegularSphereMeshSource.h"
 #include "itkImage.h"
+#include "itkTestingMacros.h"
 
 int
 itkWarpMeshFilterTest(int, char *[])
@@ -102,6 +103,9 @@ itkWarpMeshFilterTest(int, char *[])
 
   auto warpFilter = WarpFilterType::New();
 
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(warpFilter, WarpMeshFilter, MeshToMeshFilter);
+
+
   warpFilter->SetInput(sphereMeshSource->GetOutput());
 
   warpFilter->SetDisplacementField(deformationField);
@@ -135,7 +139,7 @@ itkWarpMeshFilterTest(int, char *[])
     for (unsigned int i = 0; i < Dimension; ++i)
     {
       const double distance = outputPoint.Value()[i] - inputPoint.Value()[i];
-      if (std::fabs(distance - simpleVector[i]) > tolerance)
+      if (itk::Math::abs(distance - simpleVector[i]) > tolerance)
       {
         std::cerr << "Filter failed" << std::endl;
         std::cerr << "Expected displacement = " << simpleVector[i] << std::endl;

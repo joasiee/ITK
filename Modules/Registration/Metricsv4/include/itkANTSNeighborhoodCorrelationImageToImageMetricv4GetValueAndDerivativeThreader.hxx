@@ -18,7 +18,6 @@
 #ifndef itkANTSNeighborhoodCorrelationImageToImageMetricv4GetValueAndDerivativeThreader_hxx
 #define itkANTSNeighborhoodCorrelationImageToImageMetricv4GetValueAndDerivativeThreader_hxx
 
-#include "itkANTSNeighborhoodCorrelationImageToImageMetricv4GetValueAndDerivativeThreader.h"
 
 namespace itk
 {
@@ -34,11 +33,13 @@ ANTSNeighborhoodCorrelationImageToImageMetricv4GetValueAndDerivativeThreader<TDo
     const ThreadIdType                                                                         threadId)
 {
   /* Store the casted pointer to avoid dynamic casting in tight loops. */
-  this->m_ANTSAssociate = dynamic_cast<TNeighborhoodCorrelationMetric *>(this->m_Associate);
-  if (this->m_ANTSAssociate == nullptr)
+  auto associate = dynamic_cast<TNeighborhoodCorrelationMetric *>(this->m_Associate);
+  if (associate == nullptr)
   {
     itkExceptionMacro("Dynamic casting of associate pointer failed.");
   }
+
+  std::call_once(this->m_ANTSAssociateOnceFlag, [this, &associate]() { this->m_ANTSAssociate = associate; });
 
   VirtualPointType   virtualPoint;
   MeasureType        metricValueResult = NumericTraits<MeasureType>::ZeroValue();
@@ -51,7 +52,7 @@ ANTSNeighborhoodCorrelationImageToImageMetricv4GetValueAndDerivativeThreader<TDo
   DerivativeType & localDerivativeResult = this->m_GetValueAndDerivativePerThreadVariables[threadId].LocalDerivatives;
 
   /* Create an iterator over the virtual sub region */
-  // this->m_ANTSAssociate->InitializeScanning( virtualImageSubRegion, scanIt, scanMem, scanParameters );
+  // associate->InitializeScanning( virtualImageSubRegion, scanIt, scanMem, scanParameters );
   this->InitializeScanning(virtualImageSubRegion, scanIt, scanMem, scanParameters);
 
   /* Iterate over the sub region */
@@ -59,7 +60,7 @@ ANTSNeighborhoodCorrelationImageToImageMetricv4GetValueAndDerivativeThreader<TDo
   while (!scanIt.IsAtEnd())
   {
     /* Get the virtual point */
-    this->m_ANTSAssociate->TransformVirtualIndexToPhysicalPoint(scanIt.GetIndex(), virtualPoint);
+    associate->TransformVirtualIndexToPhysicalPoint(scanIt.GetIndex(), virtualPoint);
 
     /* Call the user method in derived classes to do the specific
      * calculations for value and derivative. */
@@ -525,7 +526,7 @@ ANTSNeighborhoodCorrelationImageToImageMetricv4GetValueAndDerivativeThreader<
 
   LocalRealType sFixedFixed_sMovingMoving = sFixedFixed * sMovingMoving;
 
-  if (fabs(sFixedFixed_sMovingMoving) > NumericTraits<LocalRealType>::epsilon())
+  if (itk::Math::abs(sFixedFixed_sMovingMoving) > NumericTraits<LocalRealType>::epsilon())
   {
     localCC = sFixedMoving * sFixedMoving / (sFixedFixed_sMovingMoving);
   }
@@ -596,11 +597,9 @@ ANTSNeighborhoodCorrelationImageToImageMetricv4GetValueAndDerivativeThreader<TDo
 
 
   // convert virtualPoint to a single point region
-  ImageRegionType singlePointRegion;
-  singlePointRegion.SetIndex(virtualIndex);
   typename ImageRegionType::SizeType singlePointSize;
   singlePointSize.Fill(1);
-  singlePointRegion.SetSize(singlePointSize);
+  const ImageRegionType singlePointRegion(virtualIndex, singlePointSize);
 
   // use scanning variables just for a single point region
   // iterate over the single point and initialize the scanning variables

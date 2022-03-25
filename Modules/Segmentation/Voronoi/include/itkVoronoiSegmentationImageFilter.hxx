@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkVoronoiSegmentationImageFilter_hxx
 #define itkVoronoiSegmentationImageFilter_hxx
-#include "itkVoronoiSegmentationImageFilter.h"
 
 #include "itkImageRegionIteratorWithIndex.h"
 
@@ -72,7 +71,7 @@ VoronoiSegmentationImageFilter<TInputImage, TOutputImage, TBinaryPriorImage>::Te
   }
 
   //   // jvm - Mahalanobis distance
-  //   if (savevar > 0 && std::fabs(savemean - m_Mean) / m_Var < 2.5)
+  //   if (savevar > 0 && itk::Math::abs(savemean - m_Mean) / m_Var < 2.5)
   //     return true;
   //   else
   //     return false;
@@ -188,7 +187,7 @@ VoronoiSegmentationImageFilter<TInputImage, TOutputImage, TBinaryPriorImage>::Ta
 
   if (this->GetUseBackgroundInAPrior())
   {
-    m_MeanTolerance = std::fabs(m_Mean - b_Mean) * this->GetMeanDeviation();
+    m_MeanTolerance = itk::Math::abs(m_Mean - b_Mean) * this->GetMeanDeviation();
   }
   else
   {

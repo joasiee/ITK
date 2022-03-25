@@ -18,6 +18,7 @@
 
 #include "itkRegularSphereMeshSource.h"
 #include "itkVTKPolyDataWriter.h"
+#include "itkTestingMacros.h"
 
 #include <iostream>
 
@@ -26,7 +27,8 @@ itkVTKPolyDataWriterTest02(int argc, char * argv[])
 {
   if (argc != 2)
   {
-    std::cerr << "Usage: itkVTKPolyDataWriter outputFileName" << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " outputFileName " << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -55,15 +57,8 @@ itkVTKPolyDataWriterTest02(int argc, char * argv[])
 
   mySphereMeshSource->Modified();
 
-  try
-  {
-    mySphereMeshSource->Update();
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    std::cerr << "Error during Update() " << std::endl;
-    std::cerr << excp << std::endl;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(mySphereMeshSource->Update());
+
 
   std::cout << "mySphereMeshSource: " << mySphereMeshSource;
 
@@ -96,7 +91,7 @@ itkVTKPolyDataWriterTest02(int argc, char * argv[])
 
   CellsContainerPointer cells = myMesh->GetCells();
 
-  unsigned faceId = 0;
+  unsigned int faceId = 0;
 
   MeshType::CellsContainerIterator cellsItr = cells->Begin();
 

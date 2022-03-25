@@ -18,7 +18,6 @@
 #ifndef itkNormalizedCorrelationPointSetToImageMetric_hxx
 #define itkNormalizedCorrelationPointSetToImageMetric_hxx
 
-#include "itkNormalizedCorrelationPointSetToImageMetric.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 
 namespace itk
@@ -200,8 +199,8 @@ NormalizedCorrelationPointSetToImageMetric<TFixedPointSet, TMovingImage>::GetDer
       using CoordRepType = typename OutputPointType::CoordRepType;
       using MovingImageContinuousIndexType = ContinuousIndex<CoordRepType, MovingImageType::ImageDimension>;
 
-      MovingImageContinuousIndexType tempIndex;
-      this->GetMovingImage()->TransformPhysicalPointToContinuousIndex(transformedPoint, tempIndex);
+      const MovingImageContinuousIndexType tempIndex =
+        this->GetMovingImage()->template TransformPhysicalPointToContinuousIndex<CoordRepType>(transformedPoint);
 
       typename MovingImageType::IndexType mappedIndex;
       mappedIndex.CopyWithRound(tempIndex);
@@ -346,8 +345,8 @@ NormalizedCorrelationPointSetToImageMetric<TFixedPointSet, TMovingImage>::GetVal
       using CoordRepType = typename OutputPointType::CoordRepType;
       using MovingImageContinuousIndexType = ContinuousIndex<CoordRepType, MovingImageType::ImageDimension>;
 
-      MovingImageContinuousIndexType tempIndex;
-      this->GetMovingImage()->TransformPhysicalPointToContinuousIndex(transformedPoint, tempIndex);
+      const MovingImageContinuousIndexType tempIndex =
+        this->GetMovingImage()->template TransformPhysicalPointToContinuousIndex<CoordRepType>(transformedPoint);
 
       typename MovingImageType::IndexType mappedIndex;
       mappedIndex.CopyWithRound(tempIndex);

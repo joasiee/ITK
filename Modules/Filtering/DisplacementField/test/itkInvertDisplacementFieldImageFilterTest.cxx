@@ -18,10 +18,19 @@
 
 #include "itkInvertDisplacementFieldImageFilter.h"
 #include "itkImageRegionIteratorWithIndex.h"
+#include "itkTestingMacros.h"
 
 int
-itkInvertDisplacementFieldImageFilterTest(int, char *[])
+itkInvertDisplacementFieldImageFilterTest(int argc, char * argv[])
 {
+  if (argc != 5)
+  {
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv)
+              << " numberOfIterations meanTolerance maxTolerance enforceBoundaryCondition" << std::endl;
+    return EXIT_FAILURE;
+  }
+
   constexpr unsigned int ImageDimension = 2;
 
   using VectorType = itk::Vector<float, ImageDimension>;
@@ -38,7 +47,7 @@ itkInvertDisplacementFieldImageFilterTest(int, char *[])
   spacing.Fill(0.5);
   size.Fill(100);
 
-  VectorType ones(1);
+  auto ones = itk::MakeFilled<VectorType>(1);
 
   auto field = DisplacementFieldType::New();
   field->SetOrigin(origin);
@@ -48,7 +57,7 @@ itkInvertDisplacementFieldImageFilterTest(int, char *[])
   field->Allocate();
   field->FillBuffer(ones);
 
-  const VectorType zeroVector(0.0);
+  constexpr VectorType zeroVector{};
 
   // make sure boundary does not move
   float weight1 = 1.0;
@@ -79,20 +88,35 @@ itkInvertDisplacementFieldImageFilterTest(int, char *[])
     }
   }
 
-  unsigned int numberOfIterations = 50;
-  float        maxTolerance = 0.1;
-  float        meanTolerance = 0.001;
-
   using InverterType = itk::InvertDisplacementFieldImageFilter<DisplacementFieldType>;
   auto inverter = InverterType::New();
-  inverter->SetInput(field);
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(inverter, InvertDisplacementFieldImageFilter, ImageToImageFilter);
+
+
+  auto numberOfIterations = static_cast<unsigned int>(std::stoi(argv[1]));
   inverter->SetMaximumNumberOfIterations(numberOfIterations);
+  ITK_TEST_SET_GET_VALUE(numberOfIterations, inverter->GetMaximumNumberOfIterations());
+
+  auto meanTolerance = static_cast<typename InverterType::RealType>(std::stod(argv[2]));
   inverter->SetMeanErrorToleranceThreshold(meanTolerance);
+  ITK_TEST_SET_GET_VALUE(meanTolerance, inverter->GetMeanErrorToleranceThreshold());
+
+  auto maxTolerance = static_cast<typename InverterType::RealType>(std::stod(argv[3]));
   inverter->SetMaxErrorToleranceThreshold(maxTolerance);
-  inverter->SetEnforceBoundaryCondition(false);
-  std::cout << "number of iterations: " << inverter->GetMaximumNumberOfIterations() << std::endl;
-  std::cout << "mean error tolerance: " << inverter->GetMeanErrorToleranceThreshold() << std::endl;
-  std::cout << "max error tolerance: " << inverter->GetMaxErrorToleranceThreshold() << std::endl;
+  ITK_TEST_SET_GET_VALUE(maxTolerance, inverter->GetMaxErrorToleranceThreshold());
+
+  auto enforceBoundaryCondition = static_cast<bool>(std::stoi(argv[4]));
+  ITK_TEST_SET_GET_BOOLEAN(inverter, EnforceBoundaryCondition, enforceBoundaryCondition);
+
+  inverter->SetInput(field);
+  ITK_TEST_SET_GET_VALUE(field, inverter->GetDisplacementField());
+
+  inverter->SetDisplacementField(field);
+  ITK_TEST_SET_GET_VALUE(field, inverter->GetDisplacementField());
+
+  typename InverterType::RealType maxErrorNorm = 0.0;
+  ITK_TEST_EXPECT_EQUAL(maxErrorNorm, inverter->GetMaxErrorNorm());
 
   try
   {
@@ -122,8 +146,6 @@ itkInvertDisplacementFieldImageFilterTest(int, char *[])
     std::cerr << "Failed to converge properly." << std::endl;
     return EXIT_FAILURE;
   }
-
-  inverter->Print(std::cout, 3);
 
   return EXIT_SUCCESS;
 }

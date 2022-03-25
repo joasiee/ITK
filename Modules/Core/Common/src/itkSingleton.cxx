@@ -17,14 +17,17 @@
  *=========================================================================*/
 #include "itkSingleton.h"
 
+#include <mutex>
 
 namespace
 {
+std::once_flag globalSingletonOnceFlag;
+
 // This ensures that m_GlobalSingletonIndex has been initialized once the library
 // has been loaded. In some cases, this call will perform the initialization.
 // In other cases, static initializers like the IO factory initialization code
 // will have done the initialization.
-::itk::SingletonIndex * initializedGlobalSingletonIndex = ::itk::SingletonIndex::GetInstance();
+itk::SingletonIndex * initializedGlobalSingletonIndex = itk::SingletonIndex::GetInstance();
 
 /** \class GlobalSingletonIndexInitializer
  *
@@ -35,7 +38,7 @@ class GlobalSingletonIndexInitializer
 {
 public:
   using Self = GlobalSingletonIndexInitializer;
-  using SingletonIndex = ::itk::SingletonIndex;
+  using SingletonIndex = itk::SingletonIndex;
 
   GlobalSingletonIndexInitializer() = default;
 
@@ -50,13 +53,14 @@ public:
   static SingletonIndex *
   GetGlobalSingletonIndex()
   {
-    if (m_GlobalSingletonIndex == nullptr)
-    {
+    std::call_once(globalSingletonOnceFlag, []() {
       m_GlobalSingletonIndex = new SingletonIndex;
+
       // To avoid being optimized out. The compiler does not like this
       // statement at a higher scope.
       Unused(initializedGlobalSingletonIndex);
-    }
+    });
+
     return m_GlobalSingletonIndex;
   }
 
@@ -98,7 +102,7 @@ bool
 SingletonIndex::SetGlobalInstancePrivate(const char *                globalName,
                                          void *                      global,
                                          std::function<void(void *)> func,
-                                         std::function<void(void)>   deleteFunc)
+                                         std::function<void()>       deleteFunc)
 {
   m_GlobalObjects.erase(globalName);
   m_GlobalObjects.insert(std::make_pair(globalName, std::make_tuple(global, func, deleteFunc)));

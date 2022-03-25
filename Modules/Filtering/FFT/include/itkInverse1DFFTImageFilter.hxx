@@ -18,81 +18,16 @@
 #ifndef itkInverse1DFFTImageFilter_hxx
 #define itkInverse1DFFTImageFilter_hxx
 
-#include "itkInverse1DFFTImageFilter.h"
-
-#include "itkVnlInverse1DFFTImageFilter.h"
-
-#if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
-#  include "itkFFTWInverse1DFFTImageFilter.h"
-#endif
 
 #include "itkMetaDataDictionary.h"
 #include "itkMetaDataObject.h"
 
 namespace itk
 {
-template <typename TSelfPointer, typename TInputImage, typename TOutputImage, typename TPixel>
-struct Dispatch_1DComplexConjugateToReal_New
-{
-  static TSelfPointer
-  Apply()
-  {
-    return VnlInverse1DFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
-  }
-};
-
-#ifdef ITK_USE_FFTWD
-template <typename TSelfPointer, typename TInputImage, typename TOutputImage>
-struct Dispatch_1DComplexConjugateToReal_New<TSelfPointer, TInputImage, TOutputImage, double>
-{
-  static TSelfPointer
-  Apply()
-  {
-    return FFTWInverse1DFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
-  }
-};
-#endif // ITK_USE_FFTWD
-
-
-#ifdef ITK_USE_FFTWF
-template <typename TSelfPointer, typename TInputImage, typename TOutputImage>
-struct Dispatch_1DComplexConjugateToReal_New<TSelfPointer, TInputImage, TOutputImage, float>
-{
-  static TSelfPointer
-  Apply()
-  {
-    return FFTWInverse1DFFTImageFilter<TInputImage, TOutputImage>::New().GetPointer();
-  }
-};
-#endif // ITK_USE_FFTWF
-
-template <typename TInputImage, typename TOutputImage>
-typename Inverse1DFFTImageFilter<TInputImage, TOutputImage>::Pointer
-Inverse1DFFTImageFilter<TInputImage, TOutputImage>::New()
-{
-  Pointer smartPtr = ObjectFactory<Self>::Create();
-
-  if (smartPtr.IsNull())
-  {
-    smartPtr = Dispatch_1DComplexConjugateToReal_New<
-      Pointer,
-      TInputImage,
-      TOutputImage,
-      typename NumericTraits<typename TOutputImage::PixelType>::ValueType>::Apply();
-  }
-  else
-  {
-    smartPtr->UnRegister();
-  }
-
-  return smartPtr;
-}
-
-
 template <typename TInputImage, typename TOutputImage>
 Inverse1DFFTImageFilter<TInputImage, TOutputImage>::Inverse1DFFTImageFilter()
-  : m_Direction(0)
-{}
+
+  = default;
 
 
 template <typename TInputImage, typename TOutputImage>
@@ -128,10 +63,8 @@ Inverse1DFFTImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRegion
   const typename InputImageType::IndexType & inputLargeIndex = input->GetLargestPossibleRegion().GetIndex();
   inputRequestedRegionStartIndex[direction] = inputLargeIndex[direction];
 
-  typename InputImageType::RegionType inputRequestedRegion;
-  inputRequestedRegion.SetSize(inputRequestedRegionSize);
-  inputRequestedRegion.SetIndex(inputRequestedRegionStartIndex);
-
+  const typename InputImageType::RegionType inputRequestedRegion(inputRequestedRegionStartIndex,
+                                                                 inputRequestedRegionSize);
   input->SetRequestedRegion(inputRequestedRegion);
 }
 
@@ -156,9 +89,7 @@ Inverse1DFFTImageFilter<TInputImage, TOutputImage>::EnlargeOutputRequestedRegion
   enlargedSize[this->m_Direction] = outputLargeSize[this->m_Direction];
   enlargedIndex[this->m_Direction] = outputLargeIndex[this->m_Direction];
 
-  typename OutputImageType::RegionType enlargedRegion;
-  enlargedRegion.SetSize(enlargedSize);
-  enlargedRegion.SetIndex(enlargedIndex);
+  const typename OutputImageType::RegionType enlargedRegion(enlargedIndex, enlargedSize);
   output->SetRequestedRegion(enlargedRegion);
 }
 

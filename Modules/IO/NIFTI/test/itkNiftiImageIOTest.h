@@ -54,29 +54,10 @@ constexpr unsigned char LEFT = 128;    /*Bit pattern 1 0 0  00000*/
 constexpr unsigned char ANTERIOR = 64; /*Bit pattern 0 1 0  00000*/
 constexpr unsigned char SUPERIOR = 32; /*Bit pattern 0 0 1  00000*/
 
+// Specializations of this function template are only implemented for 1D to 4D (defined in the cxx file).
 template <unsigned int TDimension>
 typename itk::ImageBase<TDimension>::DirectionType
-PreFillDirection()
-{
-  typename itk::ImageBase<TDimension>::DirectionType myDirection;
-  myDirection.Fill(0.0);
-  myDirection.SetIdentity();
-  itkGenericExceptionMacro("This template should never be used. Only valid values are given below.");
-  return myDirection;
-}
-
-template <>
-itk::ImageBase<1>::DirectionType
-PreFillDirection<1>();
-template <>
-itk::ImageBase<2>::DirectionType
-PreFillDirection<2>();
-template <>
-itk::ImageBase<3>::DirectionType
-PreFillDirection<3>();
-template <>
-itk::ImageBase<4>::DirectionType
-PreFillDirection<4>();
+PreFillDirection();
 
 template <typename T>
 int
@@ -245,12 +226,12 @@ template <typename ImageType>
 typename ImageType::DirectionType
 CORDirCosines()
 {
-  typename itk::SpatialOrientationAdapter::DirectionType CORdir =
-    itk::SpatialOrientationAdapter().ToDirectionCosines(itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RIP);
+  typename itk::SpatialOrientationAdapter::DirectionType CORdir = itk::SpatialOrientationAdapter().ToDirectionCosines(
+    itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RIP);
   typename ImageType::DirectionType dir;
-  for (unsigned i = 0; i < ImageType::ImageDimension; ++i)
+  for (unsigned int i = 0; i < ImageType::ImageDimension; ++i)
   {
-    for (unsigned j = 0; j < ImageType::ImageDimension; ++j)
+    for (unsigned int j = 0; j < ImageType::ImageDimension; ++j)
     {
       dir[i][j] = CORdir[i][j];
     }
@@ -266,7 +247,7 @@ CORDirCosines()
  *
  * Could probably be made to fo the image of vector test as well
  */
-template <typename PixelType, unsigned VDimension>
+template <typename PixelType, unsigned int VDimension>
 int
 TestImageOfSymMats(const std::string & fname)
 {
@@ -301,7 +282,7 @@ TestImageOfSymMats(const std::string & fname)
             << "======================== Initialized Direction" << std::endl
             << myDirection << std::endl;
 
-  for (unsigned i = 0; i < VDimension; ++i)
+  for (unsigned int i = 0; i < VDimension; ++i)
   {
     size[i] = dimsize;
     index[i] = 0;
@@ -318,11 +299,11 @@ TestImageOfSymMats(const std::string & fname)
 
   int dims[7];
   int _index[7];
-  for (unsigned i = 0; i < VDimension; ++i)
+  for (unsigned int i = 0; i < VDimension; ++i)
   {
     dims[i] = size[i];
   }
-  for (unsigned i = VDimension; i < 7; ++i)
+  for (unsigned int i = VDimension; i < 7; ++i)
   {
     dims[i] = 1;
   }
@@ -420,7 +401,7 @@ TestImageOfSymMats(const std::string & fname)
   {
     for (unsigned int c = 0; c < VDimension; ++c)
     {
-      if (std::abs(readback->GetDirection()[r][c] - vi->GetDirection()[r][c]) > 1e-7)
+      if (itk::Math::abs(readback->GetDirection()[r][c] - vi->GetDirection()[r][c]) > 1e-7)
       {
         std::cout << "Direction is different:\n " << readback->GetDirection() << "\n != \n"
                   << vi->GetDirection() << std::endl;
@@ -490,18 +471,18 @@ Equal(const double a, const double b);
 
 template <typename RGBPixelType>
 int
-RGBTest(int ac, char * av[])
+RGBTest(int argc, char * argv[])
 {
-  if (ac > 2)
+  if (argc > 2)
   {
-    char * testdir = *++av;
+    char * testdir = *++argv;
     itksys::SystemTools::ChangeDirectory(testdir);
   }
   else
   {
     return EXIT_FAILURE;
   }
-  char * tmpImage = *++av;
+  char * tmpImage = *++argv;
   int    success(EXIT_SUCCESS);
   using RGBImageType = typename itk::Image<RGBPixelType, 3>;
   typename RGBImageType::RegionType  imageRegion;
@@ -510,7 +491,7 @@ RGBTest(int ac, char * av[])
   typename RGBImageType::SpacingType spacing;
   typename RGBImageType::PointType   origin;
 
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     size[i] = 5;
     index[i] = 0;

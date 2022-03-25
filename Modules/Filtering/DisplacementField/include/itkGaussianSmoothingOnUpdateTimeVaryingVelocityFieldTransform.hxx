@@ -18,7 +18,6 @@
 #ifndef itkGaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform_hxx
 #define itkGaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform_hxx
 
-#include "itkGaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform.h"
 
 #include "itkImageAlgorithm.h"
 #include "itkImageDuplicator.h"
@@ -31,8 +30,8 @@
 namespace itk
 {
 
-template <typename TParametersValueType, unsigned int NDimensions>
-GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType, NDimensions>::
+template <typename TParametersValueType, unsigned int VDimension>
+GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType, VDimension>::
   GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform()
   : m_GaussianSpatialSmoothingVarianceForTheUpdateField(3.0)
   , m_GaussianSpatialSmoothingVarianceForTheTotalField(0.5)
@@ -40,17 +39,18 @@ GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType,
   , m_GaussianTemporalSmoothingVarianceForTheTotalField(0.0)
 {}
 
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 void
-GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType, NDimensions>::
-  UpdateTransformParameters(const DerivativeType & update, ScalarType factor)
+GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType, VDimension>::UpdateTransformParameters(
+  const DerivativeType & update,
+  ScalarType             factor)
 {
   TimeVaryingVelocityFieldPointer velocityField = this->GetModifiableVelocityField();
 
   const typename VelocityFieldType::RegionType & bufferedRegion = velocityField->GetBufferedRegion();
   const SizeValueType                            numberOfPixels = bufferedRegion.GetNumberOfPixels();
 
-  using ImporterType = ImportImageFilter<DisplacementVectorType, NDimensions + 1>;
+  using ImporterType = ImportImageFilter<DisplacementVectorType, VDimension + 1>;
   const bool importFilterWillReleaseMemory = false;
 
   //
@@ -133,10 +133,10 @@ GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType,
   this->IntegrateVelocityField();
 }
 
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 typename GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType,
-                                                                    NDimensions>::TimeVaryingVelocityFieldPointer
-GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType, NDimensions>::
+                                                                    VDimension>::TimeVaryingVelocityFieldPointer
+GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType, VDimension>::
   GaussianSmoothTimeVaryingVelocityField(VelocityFieldType * field,
                                          ScalarType          spatialVariance,
                                          ScalarType          temporalVariance)
@@ -158,9 +158,9 @@ GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType,
 
   for (unsigned int d = 0; d < TimeVaryingVelocityFieldDimension; ++d)
   {
-    using GaussianType = GaussianOperator<DisplacementVectorValueType, NDimensions + 1>;
+    using GaussianType = GaussianOperator<DisplacementVectorValueType, VDimension + 1>;
     GaussianType gaussian;
-    if (d < NDimensions)
+    if (d < VDimension)
     {
       gaussian.SetVariance(spatialVariance);
     }
@@ -187,7 +187,7 @@ GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType,
 
   // make sure boundary does not move
 
-  const DisplacementVectorType zeroVector(0.0);
+  constexpr DisplacementVectorType zeroVector{};
 
   ScalarType weight1 = 1.0;
   if (spatialVariance < 0.5)
@@ -210,7 +210,7 @@ GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType,
     TimeVaryingVelocityFieldIndexType index = fieldIt.GetIndex();
 
     bool isOnBoundary = false;
-    for (unsigned int d = 0; d < NDimensions; ++d)
+    for (unsigned int d = 0; d < VDimension; ++d)
     {
       if (index[d] == startIndex[d] || index[d] == static_cast<IndexValueType>(size[d]) - startIndex[d] - 1)
       {
@@ -231,9 +231,9 @@ GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType,
   return field;
 }
 
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 void
-GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType, NDimensions>::PrintSelf(
+GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType, VDimension>::PrintSelf(
   std::ostream & os,
   Indent         indent) const
 {

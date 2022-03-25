@@ -12,14 +12,8 @@
 #
 set(ITK_OLDEST_VALIDATED_POLICIES_VERSION "3.16.3")
 set(ITK_NEWEST_VALIDATED_POLICIES_VERSION "3.19.7")
-cmake_minimum_required(VERSION ${ITK_OLDEST_VALIDATED_POLICIES_VERSION} FATAL_ERROR)
-if("${CMAKE_VERSION}" VERSION_LESS_EQUAL "${ITK_NEWEST_VALIDATED_POLICIES_VERSION}")
-  #Set and use the newest available cmake policies that are validated to work
-  set(ITK_CMAKE_POLICY_VERSION "${CMAKE_VERSION}")
-else()
-  set(ITK_CMAKE_POLICY_VERSION "${ITK_NEWEST_VALIDATED_POLICIES_VERSION}")
-endif()
-cmake_policy(VERSION ${ITK_CMAKE_POLICY_VERSION})
+cmake_minimum_required(VERSION ${ITK_OLDEST_VALIDATED_POLICIES_VERSION}...${ITK_NEWEST_VALIDATED_POLICIES_VERSION} FATAL_ERROR)
+
 #
 # Now enumerate specific policies newer than ITK_NEWEST_VALIDATED_POLICIES_VERSION
 # that may need to be individually set to NEW/OLD
@@ -29,7 +23,7 @@ foreach(pnew "CMP0120")
     cmake_policy(SET ${pnew} NEW)
   endif()
 endforeach()
-foreach(pold "CMP0091")
+foreach(pold "")
   if(POLICY ${pold})
     cmake_policy(SET ${pold} OLD)
   endif()
@@ -51,6 +45,8 @@ set(ITK_VERSION
     "${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}.${ITK_VERSION_PATCH}")
 project(ITK
   VERSION ${ITK_VERSION}
+  DESCRIPTION "The Insight Toolkit (ITK) is an open-source, cross-platform toolkit for N-dimensional scientific image processing, segmentation, and registration."
+  HOMEPAGE_URL "https://itk.org"
   LANGUAGES CXX C)
 
 set(ITK_CMAKE_DIR "${ITK_SOURCE_DIR}/CMake")
@@ -124,6 +120,20 @@ if(NOT EXISTS "${ITK_SOURCE_DIR}/.ExternalData/README.rst")
 endif()
 include(CTest)
 mark_as_advanced(CLEAR BUILD_TESTING)
+
+if(MSVC) #-- Configure MSVC_STATIC_RUNTIME only if using MSVC environment
+  option(ITK_MSVC_STATIC_RUNTIME_LIBRARY "Link to MSVC's static CRT (/MT and /MTd).
+OFF (default) means link to regular, dynamic CRT (/MD and /MDd)." OFF)
+  mark_as_advanced(ITK_MSVC_STATIC_RUNTIME_LIBRARY)
+  set(ITK_MSVC_STATIC_RUNTIME_LIBRARY_value ${ITK_MSVC_STATIC_RUNTIME_LIBRARY})
+  if(ITK_MSVC_STATIC_RUNTIME_LIBRARY)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    message(STATUS "Using MSVC's static CRT (/MT and /MTd)")
+  else()
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+    message(STATUS "Using MSVC's dynamic CRT (/MD and /MDd)")
+  endif()
+endif()
 
 include(ITKDownloadSetup)
 include(PreventInSourceBuilds)
@@ -205,7 +215,11 @@ endif()
 option(BUILD_SHARED_LIBS "Build ITK with shared libraries." OFF)
 set(ITK_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
 
-option(ITK_DYNAMIC_LOADING "Support run-time loading of shared libraries" ON)
+set(ITK_DYNAMIC_LOADING_DEFAULT ON)
+if(WASI OR EMSCRIPTEN)
+  set(ITK_DYNAMIC_LOADING_DEFAULT OFF)
+endif()
+option(ITK_DYNAMIC_LOADING "Support run-time loading of shared libraries" ${ITK_DYNAMIC_LOADING_DEFAULT})
 mark_as_advanced(ITK_DYNAMIC_LOADING)
 
 #-----------------------------------------------------------------------------
@@ -259,6 +273,9 @@ if(ITK_WRAPPING)
     set(ITK_WRAP_PYTHON_ROOT_BINARY_DIR "${WRAPPER_LIBRARY_OUTPUT_DIR}/Generators/Python" CACHE INTERNAL "python binary dir")
     # create the directory to avoid loosing case on windows
     file(MAKE_DIRECTORY ${ITK_WRAP_PYTHON_ROOT_BINARY_DIR})
+
+    set(ITK_STUB_DIR "${ITK_WRAP_PYTHON_ROOT_BINARY_DIR}/itk-stubs")
+    file(MAKE_DIRECTORY ${ITK_STUB_DIR})
 
     set(ITK_PYTHON_PACKAGE_DIR "${ITK_WRAP_PYTHON_ROOT_BINARY_DIR}/itk")
     # create the directory to avoid loosing case on windows
@@ -526,6 +543,8 @@ include(ITKModuleEnablement)
 
 # Setup clang-format for code style enforcement
 include(ITKClangFormatSetup)
+# Setup clang-tidy for code best-practices enforcement for C++11
+include(ITKClangTidySetup)
 #----------------------------------------------------------------------
 # Generate ITKConfig.cmake for the build tree.
 set(ITK_CONFIG_CODE "
@@ -567,6 +586,8 @@ install(FILES ${ITK_BINARY_DIR}/CMakeFiles/ITKConfig.cmake
               ${ITK_BINARY_DIR}/ITKConfigVersion.cmake
               CMake/ITKModuleAPI.cmake
               CMake/UseITK.cmake
+              CMake/ITKFactoryRegistration.cmake
+              CMake/itkFFTImageFilterInitFactoryRegisterManager.h.in
               CMake/itkImageIOFactoryRegisterManager.h.in
               CMake/itkTransformIOFactoryRegisterManager.h.in
               CMake/itkMeshIOFactoryRegisterManager.h.in

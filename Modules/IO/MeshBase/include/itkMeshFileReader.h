@@ -76,7 +76,7 @@ namespace itk
 
 template <typename TOutputMesh,
           typename ConvertPointPixelTraits = MeshConvertPixelTraits<typename TOutputMesh::PixelType>,
-          class ConvertCellPixelTraits = MeshConvertPixelTraits<typename TOutputMesh::CellPixelType>>
+          typename ConvertCellPixelTraits = MeshConvertPixelTraits<typename TOutputMesh::CellPixelType>>
 class ITK_TEMPLATE_EXPORT MeshFileReader : public MeshSource<TOutputMesh>
 {
 public:
@@ -187,13 +187,36 @@ protected:
 private:
   std::string m_ExceptionMessage;
 };
+
+
+/** Convenience function for reading a mesh.
+ *
+ * `TOutputMesh` is the expected output mesh type, and the optional
+ * `ConvertPointPixelTraits`, ``ConvertCellPixelTraits` template parameters are used to do the conversion,
+ * as specified by MeshFileReader.
+ *
+ * The function reads the mesh from the specified file, and returns the
+ * mesh that it has read.
+ * */
+template <typename TOutputMesh,
+          typename ConvertPointPixelTraits = MeshConvertPixelTraits<typename TOutputMesh::PixelType>,
+          typename ConvertCellPixelTraits = MeshConvertPixelTraits<typename TOutputMesh::CellPixelType>>
+typename TOutputMesh::Pointer
+ReadMesh(const std::string & filename)
+{
+  const auto reader = MeshFileReader<TOutputMesh, ConvertPointPixelTraits, ConvertCellPixelTraits>::New();
+  reader->SetFileName(filename);
+  reader->Update();
+  return reader->GetOutput();
+}
+
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #  include "itkMeshFileReader.hxx"
 #endif
 
-#ifdef ITK_IO_FACTORY_REGISTER_MANAGER
+#if defined ITK_MESHIO_FACTORY_REGISTER_MANAGER || defined ITK_IO_FACTORY_REGISTER_MANAGER
 #  include "itkMeshIOFactoryRegisterManager.h"
 #endif
 

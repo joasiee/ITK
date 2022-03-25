@@ -18,16 +18,15 @@
 #ifndef itkTimeVaryingVelocityFieldTransform_hxx
 #define itkTimeVaryingVelocityFieldTransform_hxx
 
-#include "itkTimeVaryingVelocityFieldTransform.h"
 
 #include "itkTimeVaryingVelocityFieldIntegrationImageFilter.h"
 
 namespace itk
 {
 
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 void
-TimeVaryingVelocityFieldTransform<TParametersValueType, NDimensions>::IntegrateVelocityField()
+TimeVaryingVelocityFieldTransform<TParametersValueType, VDimension>::IntegrateVelocityField()
 {
   if (this->GetVelocityField())
   {

@@ -18,7 +18,6 @@
 #ifndef itkTriangleThresholdCalculator_hxx
 #define itkTriangleThresholdCalculator_hxx
 
-#include "itkTriangleThresholdCalculator.h"
 #include "itkProgressReporter.h"
 #include "itkMath.h"
 
@@ -51,7 +50,7 @@ TriangleThresholdCalculator<THistogram, TOutput>::GenerateData()
 
   // Triangle method needs the maximum and minimum indexes
   // Minimum indexes for this purpose are poorly defined - can't just
-  // take a index with zero entries.
+  // take an index with zero entries.
   double         Mx = itk::NumericTraits<double>::min();
   IndexValueType MxIdx = 0;
 
@@ -83,7 +82,7 @@ TriangleThresholdCalculator<THistogram, TOutput>::GenerateData()
   // Figure out which way we are looking - we want to construct our
   // line between the max index and the further of 1% and 99%
   IndexValueType ThreshIdx = 0;
-  if (fabs((float)MxIdx - (float)onePCIdx) > fabs((float)MxIdx - (float)nnPCIdx))
+  if (itk::Math::abs((float)MxIdx - (float)onePCIdx) > itk::Math::abs((float)MxIdx - (float)nnPCIdx))
   {
     // line to 1 %
     double slope = Mx / (MxIdx - onePCIdx);

@@ -21,7 +21,6 @@
 
 #include "itkConvertPixelBuffer.h"
 
-#include "itkVideoFileReader.h"
 
 namespace itk
 {
@@ -83,9 +82,7 @@ VideoFileReader<TOutputVideoStream>::UpdateOutputInformation()
   //
 
   // Set up largest possible spatial region
-  RegionType    region;
   SizeType      size;
-  IndexType     start;
   PointType     origin;
   SpacingType   spacing;
   DirectionType direction;
@@ -100,9 +97,7 @@ VideoFileReader<TOutputVideoStream>::UpdateOutputInformation()
       direction[j][i] = directionInI[j];
     }
   }
-  start.Fill(0);
-  region.SetSize(size);
-  region.SetIndex(start);
+  const RegionType region(size);
 
   VideoStreamPointer output = this->GetOutput();
 
@@ -315,7 +310,6 @@ VideoFileReader<TOutputVideoStream>::DoConvertBuffer(void * inputData, FrameOffs
     e.SetDescription(msg.str().c_str());
     e.SetLocation(ITK_LOCATION);
     throw e;
-    return;
   }
 #undef ITK_CONVERT_BUFFER_IF_BLOCK
 }
@@ -327,11 +321,7 @@ VideoFileReader<TOutputVideoStream>::PrintSelf(std::ostream & os, Indent indent)
   Superclass::PrintSelf(os, indent);
 
   os << indent << "FileName: " << this->m_FileName << std::endl;
-  if (m_VideoIO)
-  {
-    os << indent << "VideoIO:" << std::endl;
-    this->m_VideoIO->Print(os, indent.GetNextIndent());
-  }
+  itkPrintSelfObjectMacro(VideoIO);
 }
 
 } // end namespace itk

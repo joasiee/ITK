@@ -19,11 +19,11 @@
 #include "itkNiftiImageIOTest.h"
 
 int
-itkNiftiImageIOTest6(int ac, char * av[])
+itkNiftiImageIOTest6(int argc, char * argv[])
 {
-  if (ac > 1)
+  if (argc > 1)
   {
-    char * testdir = *++av;
+    char * testdir = *++argv;
     itksys::SystemTools::ChangeDirectory(testdir);
   }
   else
@@ -39,7 +39,7 @@ itkNiftiImageIOTest6(int ac, char * av[])
   VectorImageType::SpacingType      spacing;
   VectorImageType::VectorLengthType vecLength(4);
 
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     size[i] = 3;
     index[i] = 0;
@@ -55,7 +55,7 @@ itkNiftiImageIOTest6(int ac, char * av[])
   for (it.GoToBegin(); !it.IsAtEnd(); ++it)
   {
     VectorImageType::PixelType p(vecLength);
-    for (unsigned i = 0; i < vecLength; ++i)
+    for (unsigned int i = 0; i < vecLength; ++i)
     {
       p[i] = val;
       val++;

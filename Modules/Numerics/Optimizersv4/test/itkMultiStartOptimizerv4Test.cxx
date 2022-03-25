@@ -16,6 +16,7 @@
  *
  *=========================================================================*/
 #include "itkMultiStartOptimizerv4.h"
+#include "itkTestingMacros.h"
 
 /**
  *  \class MultiStartOptimizerv4TestMetric for test
@@ -187,7 +188,7 @@ MultiStartOptimizerv4RunTest(itk::MultiStartOptimizerv4::Pointer & itkOptimizer)
   trueParameters[1] = -2.0;
   for (itk::SizeValueType j = 0; j < 2; ++j)
   {
-    if (fabs(bestPosition[j] - trueParameters[j]) > 0.01)
+    if (itk::Math::abs(bestPosition[j] - trueParameters[j]) > 0.01)
     {
       std::cerr << "Results do not match: " << std::endl
                 << "expected: " << trueParameters << std::endl
@@ -207,8 +208,14 @@ itkMultiStartOptimizerv4Test(int, char *[])
 
   using OptimizerType = itk::MultiStartOptimizerv4;
 
-  // Declaration of a itkOptimizer
+  // Declaration of an itkOptimizer
   auto itkOptimizer = OptimizerType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(itkOptimizer, MultiStartOptimizerv4Template, ObjectToObjectOptimizerBaseTemplate);
+
+
+  auto stopCondition = itk::StopConditionObjectToObjectOptimizerEnum::MAXIMUM_NUMBER_OF_ITERATIONS;
+  ITK_TEST_EXPECT_EQUAL(stopCondition, itkOptimizer->GetStopCondition());
 
   // Declaration of the Metric
   auto metric = MultiStartOptimizerv4TestMetric::New();
@@ -290,6 +297,7 @@ itkMultiStartOptimizerv4Test(int, char *[])
   optimizer->SetLearningRate(1.e-1);
   optimizer->SetNumberOfIterations(25);
   itkOptimizer->SetLocalOptimizer(optimizer);
+  ITK_TEST_SET_GET_VALUE(optimizer, itkOptimizer->GetLocalOptimizer());
   if (MultiStartOptimizerv4RunTest(itkOptimizer) == EXIT_FAILURE)
   {
     return EXIT_FAILURE;

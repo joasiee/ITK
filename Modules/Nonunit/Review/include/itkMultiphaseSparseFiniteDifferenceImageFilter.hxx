@@ -18,7 +18,6 @@
 #ifndef itkMultiphaseSparseFiniteDifferenceImageFilter_hxx
 #define itkMultiphaseSparseFiniteDifferenceImageFilter_hxx
 
-#include "itkMultiphaseSparseFiniteDifferenceImageFilter.h"
 #include "itkPrintHelper.h"
 
 
@@ -723,7 +722,7 @@ MultiphaseSparseFiniteDifferenceImageFilter<TInputImage, TFeatureImage, TOutputI
         {
           //  Neighbors are same sign OR at least one neighbor is zero.
           // Pick the larger magnitude derivative.
-          if (::itk::Math::abs(forward - center) > ::itk::Math::abs(center - backward))
+          if (itk::Math::abs(forward - center) > itk::Math::abs(center - backward))
           {
             dx = (forward - current) / spacing[j];
           }

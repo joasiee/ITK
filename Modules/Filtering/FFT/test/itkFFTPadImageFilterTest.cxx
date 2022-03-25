@@ -26,6 +26,13 @@
 #include "itkConstantBoundaryCondition.h"
 #include "itkTestingMacros.h"
 
+#include "itkObjectFactoryBase.h"
+#include "itkVnlForwardFFTImageFilter.h"
+#if defined(ITK_USE_FFTWD) || defined(ITK_USE_FFTWF)
+#  include "itkFFTWForwardFFTImageFilter.h"
+#endif
+
+
 int
 itkFFTPadImageFilterTest(int argc, char * argv[])
 {
@@ -61,8 +68,16 @@ itkFFTPadImageFilterTest(int argc, char * argv[])
 
   // Create the filters
   auto fftpad = FFTPadType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(fftpad, FFTPadImageFilter, PadImageFilterBase);
+
+
+  itk::SizeValueType sizeGreatestPrimeFactor = std::stoi(argv[3]);
+  fftpad->SetSizeGreatestPrimeFactor(sizeGreatestPrimeFactor);
+  ITK_TEST_SET_GET_VALUE(sizeGreatestPrimeFactor, fftpad->GetSizeGreatestPrimeFactor());
+
   fftpad->SetInput(reader->GetOutput());
-  fftpad->SetSizeGreatestPrimeFactor(std::stoi(argv[3]));
+
   std::string padMethod = argv[4];
   if (padMethod == "Mirror")
   {

@@ -35,14 +35,14 @@
 int
 itkImageSpatialObjectTest(int, char *[])
 {
-#define NDimensions 3
+#define VDimension 3
 
   using ScalarType = double;
   using Pixel = unsigned short;
-  using ImageType = itk::Image<Pixel, NDimensions>;
-  using ImageSpatialObject = itk::ImageSpatialObject<NDimensions, Pixel>;
+  using ImageType = itk::Image<Pixel, VDimension>;
+  using ImageSpatialObject = itk::ImageSpatialObject<VDimension, Pixel>;
   using Iterator = itk::ImageRegionIterator<ImageType>;
-  using PointType = itk::Point<ScalarType, NDimensions>;
+  using PointType = itk::Point<ScalarType, VDimension>;
 
   auto                  image = ImageType::New();
   ImageType::SizeType   size = { { 10, 10, 10 } };
@@ -72,6 +72,11 @@ itkImageSpatialObjectTest(int, char *[])
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(imageSO, ImageSpatialObject, SpatialObject);
 
+
+  typename ImageSpatialObject::IndexType sliceNumber;
+  sliceNumber.Fill(0);
+  imageSO->SetSliceNumber(sliceNumber);
+  ITK_TEST_SET_GET_VALUE(sliceNumber, imageSO->GetSliceNumber());
 
   imageSO->SetImage(image);
   imageSO->Update();
@@ -160,7 +165,7 @@ itkImageSpatialObjectTest(int, char *[])
 
 
   std::cout << "ValueAt() with interpolator...";
-  if (std::fabs(returnedValue - expectedValue) > 0.001)
+  if (itk::Math::abs(returnedValue - expectedValue) > 0.001)
   {
     std::cout << "Expected: " << expectedValue << " returned: " << returnedValue << std::endl;
     return EXIT_FAILURE;
@@ -176,9 +181,9 @@ itkImageSpatialObjectTest(int, char *[])
   expectedDerivative[1] = 10;
   expectedDerivative[2] = 100;
   std::cout << "DerivativeAt() with interpolator ...";
-  if (std::fabs(derivative[0] - expectedDerivative[0]) > 0.00001 ||
-      std::fabs(derivative[1] - expectedDerivative[1]) > 0.00001 ||
-      std::fabs(derivative[2] - expectedDerivative[2]) > 0.00001)
+  if (itk::Math::abs(derivative[0] - expectedDerivative[0]) > 0.00001 ||
+      itk::Math::abs(derivative[1] - expectedDerivative[1]) > 0.00001 ||
+      itk::Math::abs(derivative[2] - expectedDerivative[2]) > 0.00001)
   {
     std::cout << "Expected: " << derivative << " returned: " << expectedDerivative << std::endl;
     std::cout << "[FAILED]" << std::endl;

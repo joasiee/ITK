@@ -25,14 +25,15 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkSimpleFilterWatcher.h"
+#include "itkTestingMacros.h"
 
 int
-itkNormalizedCorrelationImageFilterTest(int ac, char * av[])
+itkNormalizedCorrelationImageFilterTest(int argc, char * argv[])
 {
-  if (ac < 4)
+  if (argc < 4)
   {
-    std::cerr << "Usage: " << av[0] << " InputImage MaskImage OutputImage\n";
-    return -1;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " InputImage MaskImage OutputImage\n";
+    return EXIT_FAILURE;
   }
 
   constexpr unsigned int Dimension = 2;
@@ -43,7 +44,7 @@ itkNormalizedCorrelationImageFilterTest(int ac, char * av[])
   using CorrelationImageType = itk::Image<CorrelationPixelType, Dimension>;
 
   itk::ImageFileReader<InputImageType>::Pointer input = itk::ImageFileReader<InputImageType>::New();
-  input->SetFileName(av[1]);
+  input->SetFileName(argv[1]);
   input->Update();
 
   // define an operator
@@ -57,7 +58,7 @@ itkNormalizedCorrelationImageFilterTest(int ac, char * av[])
 
   // create a mask
   itk::ImageFileReader<InputImageType>::Pointer mask = itk::ImageFileReader<InputImageType>::New();
-  mask->SetFileName(av[2]);
+  mask->SetFileName(argv[2]);
 
   // resample the mask to be the size of the input
   using InterpolatorType = itk::NearestNeighborInterpolateImageFunction<InputImageType>;
@@ -96,22 +97,10 @@ itkNormalizedCorrelationImageFilterTest(int ac, char * av[])
   itk::ImageFileWriter<InputImageType>::Pointer writer;
   writer = itk::ImageFileWriter<InputImageType>::New();
   writer->SetInput(threshold->GetOutput());
-  writer->SetFileName(av[3]);
+  writer->SetFileName(argv[3]);
 
-  try
-  {
-    writer->Update();
-  }
-  catch (const itk::ExceptionObject & e)
-  {
-    std::cerr << "Exception detected: " << e.GetDescription();
-    return -1;
-  }
-  catch (...)
-  {
-    std::cerr << "Some other exception occurred" << std::endl;
-    return -2;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(writer->Update());
+
 
   return EXIT_SUCCESS;
 }

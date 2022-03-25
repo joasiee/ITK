@@ -19,7 +19,9 @@
 #define itkVnlComplexToComplex1DFFTImageFilter_h
 
 #include "itkComplexToComplex1DFFTImageFilter.h"
+
 #include <complex>
+#include "itkFFTImageFilterFactory.h"
 
 namespace itk
 {
@@ -29,9 +31,10 @@ namespace itk
  * \brief Perform the FFT along one dimension of an image using Vnl as a
  * backend.
  *
- * \ingroup Ultrasound
+ * \ingroup ITKFFT
+ * \ingroup FourierTransform
  */
-template <typename TInputImage, typename TOutputImage>
+template <typename TInputImage, typename TOutputImage = TInputImage>
 class ITK_TEMPLATE_EXPORT VnlComplexToComplex1DFFTImageFilter
   : public ComplexToComplex1DFFTImageFilter<TInputImage, TOutputImage>
 {
@@ -62,6 +65,16 @@ protected:
 
   void
   GenerateData() override;
+};
+
+template <>
+struct FFTImageFilterTraits<VnlComplexToComplex1DFFTImageFilter>
+{
+  template <typename TUnderlying>
+  using InputPixelType = std::complex<TUnderlying>;
+  template <typename TUnderlying>
+  using OutputPixelType = std::complex<TUnderlying>;
+  using FilterDimensions = std::integer_sequence<unsigned int, 4, 3, 2, 1>;
 };
 
 } // end namespace itk

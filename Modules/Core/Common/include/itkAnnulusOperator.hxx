@@ -18,9 +18,10 @@
 #ifndef itkAnnulusOperator_hxx
 #define itkAnnulusOperator_hxx
 
-#include "itkAnnulusOperator.h"
 #include "itkMath.h"
 #include "itkSphereSpatialFunction.h"
+
+#include <memory> // For make_unique.
 
 namespace itk
 {
@@ -106,7 +107,7 @@ AnnulusOperator<TPixel, TDimension, TAllocator>::GenerateCoefficients() -> Coeff
 
   const typename SizeType::SizeValueType w = this->Size();
 
-  std::vector<bool>              outside(w);
+  const auto                     outside = std::make_unique<bool[]>(w);
   CoefficientVector              coeffP(w);
   OffsetType                     offset;
   typename SphereType::InputType point;

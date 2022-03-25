@@ -125,7 +125,7 @@ public:
     }
     double currentValue = optimizer->GetValue();
     // Only print out when the Metric value changes
-    if (std::fabs(m_LastMetricValue - currentValue) > 1e-7)
+    if (itk::Math::abs(m_LastMetricValue - currentValue) > 1e-7)
     {
       std::cout << optimizer->GetCurrentIteration() << "   ";
       std::cout << currentValue << "   ";
@@ -149,7 +149,7 @@ itkOnePlusOneEvolutionaryOptimizerTest(int, char *[])
 
   using OptimizerType = itk::OnePlusOneEvolutionaryOptimizer;
 
-  // Declaration of a itkOptimizer
+  // Declaration of an itkOptimizer
   auto itkOptimizer = OptimizerType::New();
 
   itk::OnePlusOneCommandIterationUpdate::Pointer observer = itk::OnePlusOneCommandIterationUpdate::New();

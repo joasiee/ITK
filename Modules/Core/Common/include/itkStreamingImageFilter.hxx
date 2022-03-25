@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkStreamingImageFilter_hxx
 #define itkStreamingImageFilter_hxx
-#include "itkStreamingImageFilter.h"
 #include "itkCommand.h"
 #include "itkImageAlgorithm.h"
 #include "itkImageRegionSplitterSlowDimension.h"
@@ -120,7 +119,6 @@ StreamingImageFilter<TInputImage, TOutputImage>::UpdateOutputData(DataObject * i
   {
     itkExceptionMacro(<< "At least " << this->GetNumberOfRequiredInputs() << " inputs are required but only " << ninputs
                       << " are specified.");
-    return;
   }
 
   /**

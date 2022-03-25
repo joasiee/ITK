@@ -203,7 +203,7 @@ RunLinearInterpolateTest()
                     const AccumulatorType computedValue = interpolator->Evaluate(point);
                     const AccumulatorType difference = expectedValue - computedValue;
 
-                    if (std::fabs(difference) > tolerance)
+                    if (itk::Math::abs(difference) > tolerance)
                     {
                       std::cerr << "Error found while computing interpolation " << std::endl;
                       std::cerr << "Point = " << point << std::endl;
@@ -215,7 +215,7 @@ RunLinearInterpolateTest()
 
                     const InterpolatedVectorType & vectorpixel = vectorinterpolator->Evaluate(point);
 
-                    const InterpolatedVectorType expectedvector(expectedValue);
+                    const auto expectedvector = itk::MakeFilled<InterpolatedVectorType>(expectedValue);
 
                     const AccumulatorType & errornorm = (expectedvector - vectorpixel).GetNorm();
 

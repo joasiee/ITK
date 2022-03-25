@@ -36,7 +36,7 @@ HDF5ReadWriteTest(const char * fileName)
   typename ImageType::SpacingType spacing;
   typename ImageType::PointType   origin;
 
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     size[i] = 5;
     index[i] = 0;
@@ -282,7 +282,7 @@ HDF5ReadWriteTest(const char * fileName)
   }
 
   itk::Array<double> metaDataDoubleArray2;
-  metaDataDoubleArray2.Fill(itk::NumericTraits<double>::ZeroValue());
+  metaDataDoubleArray2.Fill(0.0);
   if (!itk::ExposeMetaData<itk::Array<double>>(metaDict2, "TestDoubleArray", metaDataDoubleArray2) ||
       metaDataDoubleArray2 != metaDataDoubleArray)
   {
@@ -340,13 +340,13 @@ HDF5ReuseReadWriteTest(const char * fileName)
 }
 
 int
-itkHDF5ImageIOTest(int ac, char * av[])
+itkHDF5ImageIOTest(int argc, char * argv[])
 {
   std::string prefix("");
-  if (ac > 1)
+  if (argc > 1)
   {
-    prefix = *++av;
-    --ac;
+    prefix = *++argv;
+    --argc;
     itksys::SystemTools::ChangeDirectory(prefix.c_str());
   }
   itk::ObjectFactoryBase::RegisterFactory(itk::HDF5ImageIOFactory::New());

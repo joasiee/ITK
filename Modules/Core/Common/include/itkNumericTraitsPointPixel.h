@@ -73,43 +73,43 @@ public:
   static const Self
   max(const Self &)
   {
-    return Self(NumericTraits<T>::max());
+    return MakeFilled<Self>(NumericTraits<T>::max());
   }
 
   static const Self
   min(const Self &)
   {
-    return Self(NumericTraits<T>::min());
+    return MakeFilled<Self>(NumericTraits<T>::min());
   }
 
   static const Self
   max()
   {
-    return Self(NumericTraits<T>::max());
+    return MakeFilled<Self>(NumericTraits<T>::max());
   }
 
   static const Self
   min()
   {
-    return Self(NumericTraits<T>::min());
+    return MakeFilled<Self>(NumericTraits<T>::min());
   }
 
   static const Self
   NonpositiveMin()
   {
-    return Self(NumericTraits<T>::NonpositiveMin());
+    return MakeFilled<Self>(NumericTraits<T>::NonpositiveMin());
   }
 
   static const Self
   ZeroValue()
   {
-    return Self(NumericTraits<T>::ZeroValue());
+    return MakeFilled<Self>(NumericTraits<T>::ZeroValue());
   }
 
   static const Self
   OneValue()
   {
-    return Self(NumericTraits<T>::OneValue());
+    return MakeFilled<Self>(NumericTraits<T>::OneValue());
   }
 
   static const Self
@@ -130,8 +130,8 @@ public:
     return OneValue();
   }
 
-  static constexpr bool IsSigned = NumericTraits<ValueType>::IsSigned;
-  static constexpr bool IsInteger = NumericTraits<ValueType>::IsInteger;
+  static constexpr bool IsSigned = std::is_signed<ValueType>::value;
+  static constexpr bool IsInteger = std::is_integral<ValueType>::value;
   static constexpr bool IsComplex = NumericTraits<ValueType>::IsComplex;
 
   /** Fixed length vectors cannot be resized, so an exception will

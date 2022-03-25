@@ -28,7 +28,6 @@
 #ifndef itkImageBase_hxx
 #define itkImageBase_hxx
 
-#include "itkImageBase.h"
 
 #include <mutex>
 #include "itkProcessObject.h"
@@ -72,14 +71,23 @@ ImageBase<VImageDimension>::SetSpacing(const SpacingType & spacing)
 {
   for (unsigned int i = 0; i < VImageDimension; ++i)
   {
-    if (this->m_Spacing[i] < 0.0)
+    // Check for zero-valued spacing
+    if (spacing[i] == 0.0)
     {
+      itkExceptionMacro(
+        "Zero-valued spacing is not supported and may result in undefined behavior.\nRefusing to change spacing from "
+        << this->m_Spacing << " to " << spacing);
+    }
+
+    // Check for negative-valued spacing
+    if (spacing[i] < 0.0)
+    {
+      constexpr char message[] = "Negative spacing is not supported and may result in undefined behavior.\n";
 #if !defined(ITK_LEGACY_REMOVE)
-      itkWarningMacro("Negative spacing is not supported and may result in undefined behavior. Spacing is "
-                      << this->m_Spacing);
+      itkWarningMacro(<< message << "Proceeding to set spacing to " << spacing);
       break;
 #else
-      itkExceptionMacro("Negative spacing is not allowed: Spacing is " << this->m_Spacing);
+      itkExceptionMacro(<< message << "Refusing to change spacing from " << this->m_Spacing << " to " << spacing);
 #endif
     }
   }
@@ -132,6 +140,12 @@ ImageBase<VImageDimension>::SetDirection(const DirectionType & direction)
 {
   bool modified = false;
 
+  if (vnl_determinant(direction.GetVnlMatrix()) == 0.0)
+  {
+    itkExceptionMacro("Bad direction, determinant is 0. Refusing to change direction from " << this->m_Direction
+                                                                                            << " to " << direction);
+  }
+
   for (unsigned int r = 0; r < VImageDimension; ++r)
   {
     for (unsigned int c = 0; c < VImageDimension; ++c)
@@ -160,16 +174,7 @@ ImageBase<VImageDimension>::ComputeIndexToPhysicalPointMatrices()
 
   for (unsigned int i = 0; i < VImageDimension; ++i)
   {
-    if (this->m_Spacing[i] == 0.0)
-    {
-      itkExceptionMacro("A spacing of 0 is not allowed: Spacing is " << this->m_Spacing);
-    }
     scale[i][i] = this->m_Spacing[i];
-  }
-
-  if (vnl_determinant(this->m_Direction.GetVnlMatrix()) == 0.0)
-  {
-    itkExceptionMacro(<< "Bad direction, determinant is 0. Direction is " << this->m_Direction);
   }
 
   this->m_IndexToPhysicalPoint = this->m_Direction * scale;

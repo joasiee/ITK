@@ -205,7 +205,7 @@ PoolMultiThreader::ParallelizeArray(SizeValueType             firstIndex,
         do
         {
           status = m_ThreadInfoArray[i].Future.wait_for(threadCompletionPollingInterval);
-          if (filter)
+          if (filter && status == std::future_status::timeout)
           {
             filter->IncrementProgress(0);
           }
@@ -244,7 +244,7 @@ PoolMultiThreader::ParallelizeImageRegion(unsigned int         dimension,
   else
   {
     ImageIORegion region(dimension);
-    for (unsigned d = 0; d < dimension; ++d)
+    for (unsigned int d = 0; d < dimension; ++d)
     {
       region.SetIndex(d, index[d]);
       region.SetSize(d, size[d]);
@@ -297,7 +297,7 @@ PoolMultiThreader::ParallelizeImageRegion(unsigned int         dimension,
           do
           {
             status = m_ThreadInfoArray[i].Future.wait_for(threadCompletionPollingInterval);
-            if (filter)
+            if (filter && status == std::future_status::timeout)
             {
               filter->IncrementProgress(0);
             }

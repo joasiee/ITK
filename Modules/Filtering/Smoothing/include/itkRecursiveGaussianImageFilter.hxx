@@ -18,7 +18,6 @@
 #ifndef itkRecursiveGaussianImageFilter_hxx
 #define itkRecursiveGaussianImageFilter_hxx
 
-#include "itkRecursiveGaussianImageFilter.h"
 #include "itkObjectFactory.h"
 #include "itkImageLinearIteratorWithIndex.h"
 #include <new>
@@ -202,7 +201,6 @@ RecursiveGaussianImageFilter<TInputImage, TOutputImage>::SetUp(ScalarRealType sp
     default:
     {
       itkExceptionMacro(<< "Unknown Order");
-      return;
     }
   }
 }

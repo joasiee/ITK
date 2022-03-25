@@ -18,7 +18,6 @@
 #ifndef itkConstantBoundaryCondition_hxx
 #define itkConstantBoundaryCondition_hxx
 
-#include "itkConstantBoundaryCondition.h"
 
 namespace itk
 {
@@ -74,12 +73,8 @@ ConstantBoundaryCondition<TInputImage, TOutputImage>::GetInputRequestedRegion(
 
   if (!cropped)
   {
-    IndexType index;
-    index.Fill(0);
-    SizeType size;
-    size.Fill(0);
-    inputRequestedRegion.SetIndex(index);
-    inputRequestedRegion.SetSize(size);
+    inputRequestedRegion.SetIndex({ { 0 } });
+    inputRequestedRegion.SetSize({ { 0 } });
   }
 
   return inputRequestedRegion;

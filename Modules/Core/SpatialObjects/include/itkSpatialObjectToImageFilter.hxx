@@ -18,7 +18,6 @@
 #ifndef itkSpatialObjectToImageFilter_hxx
 #define itkSpatialObjectToImageFilter_hxx
 
-#include "itkSpatialObjectToImageFilter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkProgressReporter.h"
 #include "itkMath.h"
@@ -32,6 +31,7 @@ SpatialObjectToImageFilter<TInputSpatialObject, TOutputImage>::SpatialObjectToIm
   this->SetNumberOfRequiredInputs(1);
   m_ChildrenDepth = TInputSpatialObject::MaximumDepth;
   m_Size.Fill(0);
+  m_Index.Fill(0);
   m_Direction.SetIdentity();
 
   for (unsigned int i = 0; i < OutputImageDimension; ++i)
@@ -285,8 +285,6 @@ SpatialObjectToImageFilter<TInputSpatialObject, TOutputImage>::GenerateData()
                                          InputObject->GetFamilyBoundingBoxInWorldSpace()->GetMinimum()[i]);
   }
 
-  typename OutputImageType::IndexType index;
-  index.Fill(0);
   typename OutputImageType::RegionType region;
 
   // If the size of the output has been explicitly specified, the filter
@@ -312,7 +310,8 @@ SpatialObjectToImageFilter<TInputSpatialObject, TOutputImage>::GenerateData()
   {
     region.SetSize(size);
   }
-  region.SetIndex(index);
+
+  region.SetIndex(m_Index);
 
   OutputImage->SetLargestPossibleRegion(region); //
   OutputImage->SetBufferedRegion(region);        // set the region
@@ -379,6 +378,7 @@ SpatialObjectToImageFilter<TInputSpatialObject, TOutputImage>::PrintSelf(std::os
 {
   Superclass::PrintSelf(os, indent);
   os << indent << "Size : " << m_Size << std::endl;
+  os << indent << "Index : " << m_Index << std::endl;
   os << indent << "Children depth : " << m_ChildrenDepth << std::endl;
   os << indent << "Inside Value : " << m_InsideValue << std::endl;
   os << indent << "Outside Value : " << m_OutsideValue << std::endl;

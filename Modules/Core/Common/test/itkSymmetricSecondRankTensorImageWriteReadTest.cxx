@@ -19,15 +19,16 @@
 #include <fstream>
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
+#include "itkTestingMacros.h"
 
 
 // Write a 2D SymmetricSecondRankTensor image to file and read it back again.
 int
-itkSymmetricSecondRankTensorImageWriteReadTest(int ac, char * av[])
+itkSymmetricSecondRankTensorImageWriteReadTest(int argc, char * argv[])
 {
-  if (ac < 1)
+  if (argc < 1)
   {
-    std::cerr << "Usage: " << av[0] << " Input\n";
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " Input\n";
     return EXIT_FAILURE;
   }
 
@@ -69,8 +70,8 @@ itkSymmetricSecondRankTensorImageWriteReadTest(int ac, char * av[])
 
   try
   {
-    itk::WriteImage(tensorImageInput, av[1]);
-    const TensorImageType::ConstPointer tensorImageOutput = itk::ReadImage<TensorImageType>(av[1]);
+    itk::WriteImage(tensorImageInput, argv[1]);
+    const TensorImageType::ConstPointer tensorImageOutput = itk::ReadImage<TensorImageType>(argv[1]);
 
     // Compare the read values to the original values
     const float tolerance = 1e-5;
@@ -88,7 +89,7 @@ itkSymmetricSecondRankTensorImageWriteReadTest(int ac, char * av[])
 
       for (unsigned int i = 0; i < 3; ++i)
       {
-        if (std::abs(tensorPixelInput[i] - tensorPixelOutput[i]) > tolerance)
+        if (itk::Math::abs(tensorPixelInput[i] - tensorPixelOutput[i]) > tolerance)
         {
           std::cerr << "Tensor read does not match expected values " << std::endl;
           std::cerr << "Index " << inIt.GetIndex() << std::endl;

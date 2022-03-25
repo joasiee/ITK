@@ -82,13 +82,13 @@ private:
   // iterator::operator*() returns a reference to the internally stored pixel,
   // otherwise iterator::operator*() returns a proxy, which internally uses the
   // AccessorFunctor of the image to access the pixel indirectly.
-  constexpr static bool SupportsDirectPixelAccess =
+  static constexpr bool SupportsDirectPixelAccess =
     std::is_same<PixelType, InternalPixelType>::value &&
     std::is_same<typename TImage::AccessorType, DefaultPixelAccessor<PixelType>>::value &&
     std::is_same<AccessorFunctorType, DefaultPixelAccessorFunctor<std::remove_const_t<TImage>>>::value;
 
   // Tells whether or not this range is using a pointer as iterator.
-  constexpr static bool UsingPointerAsIterator = SupportsDirectPixelAccess;
+  static constexpr bool UsingPointerAsIterator = SupportsDirectPixelAccess;
 
   struct EmptyAccessorFunctor
   {};
@@ -289,7 +289,7 @@ private:
 
   public:
     // Types conforming the iterator requirements of the C++ standard library:
-    using difference_type = std::ptrdiff_t;
+    using difference_type = ptrdiff_t;
     using value_type = PixelType;
     using reference = std::conditional_t<SupportsDirectPixelAccess, QualifiedPixelType &, PixelProxy<IsImageTypeConst>>;
     using pointer = QualifiedPixelType *;
@@ -635,7 +635,7 @@ public:
 
 
   /** Returns the size of the range, that is the number of pixels. */
-  std::size_t
+  size_t
   size() const noexcept
   {
     return m_NumberOfPixels;
@@ -654,12 +654,12 @@ public:
    * \note The return type QualifiedIterator<false>::reference is equivalent to
    * iterator::reference.
    */
-  typename QualifiedIterator<false>::reference operator[](const std::size_t n) const noexcept
+  typename QualifiedIterator<false>::reference operator[](const size_t n) const noexcept
   {
     assert(n < this->size());
-    assert(n <= static_cast<std::size_t>(std::numeric_limits<std::ptrdiff_t>::max()));
+    assert(n <= static_cast<size_t>(std::numeric_limits<ptrdiff_t>::max()));
 
-    return this->begin()[static_cast<std::ptrdiff_t>(n)];
+    return this->begin()[static_cast<ptrdiff_t>(n)];
   }
 };
 

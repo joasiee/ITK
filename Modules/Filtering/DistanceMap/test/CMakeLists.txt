@@ -79,7 +79,7 @@ itk_add_test(NAME itkSignedDanielssonDistanceMapImageFilterTest4D
       ${ITK_TEST_OUTPUT_DIR}/itkSignedDanielssonDistanceMapImageFilterTest4D.mhd 4)
 
 itk_add_test(NAME itkContourMeanDistanceImageFilterTest
-      COMMAND ITKDistanceMapTestDriver itkContourMeanDistanceImageFilterTest)
+      COMMAND ITKDistanceMapTestDriver itkContourMeanDistanceImageFilterTest 1)
 itk_add_test(NAME itkContourDirectedMeanDistanceImageFilterTest
       COMMAND ITKDistanceMapTestDriver itkContourDirectedMeanDistanceImageFilterTest)
 itk_add_test(NAME itkFastChamferDistanceImageFilterTest1
@@ -91,7 +91,7 @@ itk_add_test(NAME itkFastChamferDistanceImageFilterTest3
 itk_add_test(NAME itkFastChamferDistanceImageFilterTest4
       COMMAND ITKDistanceMapTestDriver itkFastChamferDistanceImageFilterTest 4)
 itk_add_test(NAME itkHausdorffDistanceImageFilterTest
-      COMMAND ITKDistanceMapTestDriver itkHausdorffDistanceImageFilterTest)
+      COMMAND ITKDistanceMapTestDriver itkHausdorffDistanceImageFilterTest 1)
 itk_add_test(NAME itkReflectiveImageRegionIteratorTest
       COMMAND ITKDistanceMapTestDriver itkReflectiveImageRegionIteratorTest)
 itk_add_test(NAME itkSignedMaurerDistanceMapImageFilterTest1

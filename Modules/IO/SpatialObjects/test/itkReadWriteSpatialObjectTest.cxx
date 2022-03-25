@@ -20,7 +20,7 @@
 #include "itkSpatialObjectReader.h"
 
 #include "itkMath.h"
-#include "itkMath.h"
+#include "itkTestingMacros.h"
 
 int
 itkReadWriteSpatialObjectTest(int argc, char * argv[])
@@ -386,45 +386,52 @@ itkReadWriteSpatialObjectTest(int argc, char * argv[])
   std::cout << "Testing Writing SceneSpatialObject: " << std::endl;
 
   auto writer = WriterType::New();
-  try
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(writer, SpatialObjectWriter, Object);
+
+
+  auto binaryPoints = false;
+
+  if ((argc > 3) && (!strcmp(argv[2], "binary")))
   {
-    writer->SetInput(tubeN1);
-    writer->SetFileName(argv[1]);
-    writer->SetBinaryPoints(false);
-    if (writer->GetBinaryPoints())
-    {
-      std::cout << "[FAILURE]" << std::endl;
-      return EXIT_FAILURE;
-    }
-    if ((argc > 3) && (!strcmp(argv[2], "binary")))
-    {
-      writer->SetBinaryPoints(true);
-    }
-    writer->Update();
+    binaryPoints = true;
   }
-  catch (const itk::ExceptionObject & e)
-  {
-    std::cout << e << std::endl;
-  }
-  catch (...)
-  {
-    std::cout << "[EXCEPTION FAILURE]" << std::endl;
-    return EXIT_FAILURE;
-  }
+
+  ITK_TEST_SET_GET_BOOLEAN(writer, BinaryPoints, binaryPoints);
+
+  auto writeImagesInSeparateFile = false;
+  ITK_TEST_SET_GET_BOOLEAN(writer, WriteImagesInSeparateFile, writeImagesInSeparateFile);
+
+  std::string fileName = argv[1];
+  writer->SetFileName(fileName);
+  ITK_TEST_SET_GET_VALUE(fileName, writer->GetFileName());
+
+  writer->SetInput(tubeN1);
+
+  ITK_TRY_EXPECT_NO_EXCEPTION(writer->Update());
+
 
   std::cout << "[PASSED]" << std::endl;
 
   std::cout << "Testing Reading SceneSpatialObject: ";
 
   auto reader = ReaderType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(reader, SpatialObjectReader, Object);
+
+
   if ((argc > 2) && (strcmp(argv[2], "binary")))
   {
-    reader->SetFileName(argv[2]);
+    fileName = argv[2];
   }
   else
   {
-    reader->SetFileName(argv[1]);
+    fileName = argv[1];
   }
+
+  reader->SetFileName(fileName);
+  ITK_TEST_SET_GET_VALUE(fileName, reader->GetFileName());
+
   reader->Update();
 
   ReaderType::SpatialObjectPointer myScene = reader->GetOutput();

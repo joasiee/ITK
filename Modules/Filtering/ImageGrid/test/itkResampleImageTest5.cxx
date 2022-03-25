@@ -37,9 +37,8 @@ itkResampleImageTest5(int argc, char * argv[])
   }
 
   // Resample an RGB image
-  constexpr unsigned int NDimensions = 2;
+  constexpr unsigned int VDimension = 2;
 
-  using PixelType = unsigned char;
   using RGBPixelType = itk::RGBPixel<unsigned char>;
   using ImageType = itk::Image<RGBPixelType, 2>;
 
@@ -50,7 +49,7 @@ itkResampleImageTest5(int argc, char * argv[])
 
   using CoordRepType = double;
 
-  using AffineTransformType = itk::AffineTransform<CoordRepType, NDimensions>;
+  using AffineTransformType = itk::AffineTransform<CoordRepType, VDimension>;
   using InterpolatorType = itk::LinearInterpolateImageFunction<ImageType, CoordRepType>;
   using WriterType = itk::ImageFileWriter<ImageType>;
 
@@ -76,12 +75,11 @@ itkResampleImageTest5(int argc, char * argv[])
 
   // Fill image with a ramp
   itk::ImageRegionIteratorWithIndex<ImageType> iter(image, region);
-  PixelType                                    value;
   for (iter.GoToBegin(); !iter.IsAtEnd(); ++iter)
   {
     index = iter.GetIndex();
-    value = index[0] + index[1];
-    iter.Set(value);
+    const auto rgbPixel = itk::MakeFilled<RGBPixelType>(index[0] + index[1]);
+    iter.Set(rgbPixel);
   }
 
   // Create an affine transformation

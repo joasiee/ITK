@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkConstNeighborhoodIterator_hxx
 #define itkConstNeighborhoodIterator_hxx
-#include "itkConstNeighborhoodIterator.h"
 namespace itk
 {
 template <typename TImage, typename TBoundaryCondition>
@@ -202,42 +201,14 @@ auto
 ConstNeighborhoodIterator<TImage, TBoundaryCondition>::GetBoundingBoxAsImageRegion() const -> RegionType
 {
   const IndexValueType zero = NumericTraits<IndexValueType>::ZeroValue();
-  RegionType           ans;
-
-  ans.SetIndex(this->GetIndex(zero));
-  ans.SetSize(this->GetSize());
+  const RegionType     ans(this->GetIndex(zero), this->GetSize());
 
   return ans;
 }
 
 template <typename TImage, typename TBoundaryCondition>
 ConstNeighborhoodIterator<TImage, TBoundaryCondition>::ConstNeighborhoodIterator()
-
 {
-  IndexType zeroIndex;
-  zeroIndex.Fill(0);
-  SizeType zeroSize;
-  zeroSize.Fill(0);
-
-  m_Bound.Fill(0);
-  m_Begin = nullptr;
-  m_BeginIndex.Fill(0);
-
-  m_End = nullptr;
-  m_EndIndex.Fill(0);
-  m_Loop.Fill(0);
-  m_Region.SetIndex(zeroIndex);
-  m_Region.SetSize(zeroSize);
-
-  m_WrapOffset.Fill(0);
-
-  for (DimensionValueType i = 0; i < Dimension; ++i)
-  {
-    m_InBounds[i] = false;
-  }
-
-  this->ResetBoundaryCondition();
-
   m_BoundaryCondition = &m_InternalBoundaryCondition;
 }
 

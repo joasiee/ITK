@@ -87,6 +87,8 @@ itkMultipleLogOutputTest.cxx
 itkVectorTest.cxx
 itkImageTest.cxx
 itkPointSetTest.cxx
+itkPointSetToImageFilterTest1.cxx
+itkPointSetToImageFilterTest2.cxx
 itkBresenhamLineTest.cxx
 itkSparseFieldLayerTest.cxx
 itkDataObjectTest.cxx
@@ -100,6 +102,7 @@ itkMersenneTwisterRandomVariateGeneratorTest.cxx
 itkNumberToStringTest.cxx
 itkTimeProbeTest.cxx
 itkTimeProbeTest2.cxx
+itkSpatialOrientationTest.cxx
 itkStdStreamStateSaveTest.cxx
 itkVersionTest.cxx
 VNLSparseLUSolverTraitsTest.cxx
@@ -153,6 +156,7 @@ itkNeighborhoodTest.cxx
 itkVersorTest.cxx
 itkObjectFactoryTest2.cxx
 itkObjectFactoryTest3.cxx
+itkObjectFactoryOnlyNewTest.cxx
 itkMinimumMaximumImageCalculatorTest.cxx
 itkSliceIteratorTest.cxx
 itkImageRegionExclusionIteratorWithIndexTest.cxx
@@ -264,6 +268,7 @@ itk_add_test(NAME itkBoundaryConditionTest COMMAND ITKCommon1TestDriver itkBound
 itk_add_test(NAME itkByteSwapTest COMMAND ITKCommon1TestDriver itkByteSwapTest)
 itk_add_test(NAME itkBSplineInterpolationWeightFunctionTest COMMAND ITKCommon2TestDriver itkBSplineInterpolationWeightFunctionTest)
 itk_add_test(NAME itkBSplineKernelFunctionTest COMMAND ITKCommon1TestDriver itkBSplineKernelFunctionTest)
+itk_add_test(NAME itkSpatialOrientationTest COMMAND ITKCommon1TestDriver itkSpatialOrientationTest)
 itk_add_test(NAME VNLSparseLUSolverTraitsTest COMMAND ITKCommon1TestDriver VNLSparseLUSolverTraitsTest)
 itk_add_test(NAME itkGaussianDerivativeOperatorTest
   COMMAND ITKCommon1TestDriver itkGaussianDerivativeOperatorTest)
@@ -342,6 +347,14 @@ itk_add_test(NAME itkIteratorTests COMMAND ITKCommon1TestDriver itkIteratorTests
 itk_add_test(NAME itkObjectFactoryTest COMMAND ITKCommon1TestDriver itkObjectFactoryTest)
 itk_add_test(NAME itkVectorTest COMMAND ITKCommon1TestDriver itkVectorTest)
 itk_add_test(NAME itkPointSetTest COMMAND ITKCommon1TestDriver itkPointSetTest)
+itk_add_test(NAME itkPointSetToImageFilterTest1
+      COMMAND ITKCommon1TestDriver
+    --compare DATA{Baseline/itkPointSetToImageFilterTest1.png} ${ITK_TEST_OUTPUT_DIR}/itkPointSetToImageFilterTest1.png
+     itkPointSetToImageFilterTest1 ${ITK_TEST_OUTPUT_DIR}/itkPointSetToImageFilterTest1.png)
+itk_add_test(NAME itkPointSetToImageFilterTest2
+      COMMAND ITKCommon1TestDriver
+    --compare DATA{Baseline/itkPointSetToImageFilterTest2.mha} ${ITK_TEST_OUTPUT_DIR}/itkPointSetToImageFilterTest2.mha
+     itkPointSetToImageFilterTest2 DATA{${ITK_DATA_ROOT}/Input/VascularTreePointSet.txt} ${ITK_TEST_OUTPUT_DIR}/itkPointSetToImageFilterTest2.mha)
 itk_add_test(NAME itkBresenhamLineTest COMMAND ITKCommon1TestDriver itkBresenhamLineTest)
 itk_add_test(NAME itkSparseFieldLayerTest COMMAND ITKCommon1TestDriver itkSparseFieldLayerTest)
 itk_add_test(NAME itkDataObjectTest COMMAND ITKCommon1TestDriver itkDataObjectTest)
@@ -462,6 +475,7 @@ set_tests_properties(itkObjectFactoryTest2 PROPERTIES RUN_SERIAL 1)
 endif()
 
 itk_add_test(NAME itkObjectFactoryTest3 COMMAND ITKCommon2TestDriver itkObjectFactoryTest3)
+itk_add_test(NAME itkObjectFactoryOnlyNewTest COMMAND ITKCommon2TestDriver itkObjectFactoryOnlyNewTest)
 itk_add_test(NAME itkPeriodicBoundaryConditionTest COMMAND ITKCommon2TestDriver itkPeriodicBoundaryConditionTest)
 itk_add_test(NAME itkPhasedArray3DSpecialCoordinatesImageTest COMMAND ITKCommon1TestDriver itkPhasedArray3DSpecialCoordinatesImageTest)
 itk_add_test(NAME itkPriorityQueueTest COMMAND ITKCommon1TestDriver itkPriorityQueueTest)
@@ -603,6 +617,7 @@ endif()
 
 set(ITKCommonGTests
       itkAggregateTypesGTest.cxx
+      itkBooleanStdVectorGTest.cxx
       itkBuildInformationGTest.cxx
       itkConnectedImageNeighborhoodShapeGTest.cxx
       itkConstantBoundaryImageNeighborhoodPixelAccessPolicyGTest.cxx
@@ -614,12 +629,14 @@ set(ITKCommonGTests
       itkImageBufferRangeGTest.cxx
       itkImageRegionRangeGTest.cxx
       itkImageIORegionGTest.cxx
+      itkImageRegionGTest.cxx
       itkIndexGTest.cxx
       itkIndexRangeGTest.cxx
       itkMatrixGTest.cxx
       itkMersenneTwisterRandomVariateGeneratorGTest.cxx
       itkNeighborhoodAllocatorGTest.cxx
       itkNumberToStringGTest.cxx
+      itkOffsetGTest.cxx
       itkOptimizerParametersGTest.cxx
       itkPointGTest.cxx
       itkShapedImageNeighborhoodRangeGTest.cxx

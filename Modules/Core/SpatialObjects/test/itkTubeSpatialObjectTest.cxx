@@ -59,6 +59,9 @@ itkTubeSpatialObjectTest(int, char *[])
   ITK_EXERCISE_BASIC_OBJECT_METHODS(tube1, TubeSpatialObject, PointBasedSpatialObject);
 
 
+  auto root = false;
+  ITK_TEST_SET_GET_BOOLEAN(tube1, Root, root);
+
   tube1->GetProperty().SetName("Tube 1");
   tube1->SetId(1);
 
@@ -81,6 +84,14 @@ itkTubeSpatialObjectTest(int, char *[])
   p.SetPositionInObjectSpace(1, 2, 3);
   p.SetRadiusInObjectSpace(1);
   p.Print(std::cout);
+
+  // Test TubeSpatialObjectPoint exceptions: no spatial object exists so far
+  ITK_TRY_EXPECT_EXCEPTION(p.GetTangentInWorldSpace());
+
+  ITK_TRY_EXPECT_EXCEPTION(p.GetNormal1InWorldSpace());
+
+  ITK_TRY_EXPECT_EXCEPTION(p.GetNormal2InWorldSpace());
+
 
   tube1->SetPoints(list);
   tube1->Update();
@@ -443,11 +454,11 @@ itkTubeSpatialObjectTest(int, char *[])
   TubePointType::CovariantVectorType n2 =
     static_cast<const TubePointType *>(tube1->GetPoint(1))->GetNormal2InWorldSpace();
 
-  if ((std::fabs(t[0] - 0.57735) > 0.0001) || (std::fabs(t[1] - 0.57735) > 0.0001) ||
-      (std::fabs(t[2] - 0.57735) > 0.0001) || (std::fabs(n1[0] - 0.707107) > 0.0001) ||
-      (std::fabs(n1[1] + 0.707107) > 0.0001) || (std::fabs(n1[2] - 0.0) > 0.0001) ||
-      (std::fabs(n2[0] - 0.408248) > 0.0001) || (std::fabs(n2[1] - 0.408248) > 0.0001) ||
-      (std::fabs(n2[2] + 0.816497) > 0.0001))
+  if ((itk::Math::abs(t[0] - 0.57735) > 0.0001) || (itk::Math::abs(t[1] - 0.57735) > 0.0001) ||
+      (itk::Math::abs(t[2] - 0.57735) > 0.0001) || (itk::Math::abs(n1[0] - 0.707107) > 0.0001) ||
+      (itk::Math::abs(n1[1] + 0.707107) > 0.0001) || (itk::Math::abs(n1[2] - 0.0) > 0.0001) ||
+      (itk::Math::abs(n2[0] - 0.408248) > 0.0001) || (itk::Math::abs(n2[1] - 0.408248) > 0.0001) ||
+      (itk::Math::abs(n2[2] + 0.816497) > 0.0001))
   {
     std::cout << "[FAILED]" << std::endl;
     std::cout << " t = " << t << std::endl;
@@ -458,10 +469,11 @@ itkTubeSpatialObjectTest(int, char *[])
 
   std::cout << "[PASSED]" << std::endl;
 
-  // Testing IsInside() with m_EndType set to rounded end-type;
-  std::cout << "IsInside() with m_RoundedEnd=True: ";
+  // Testing IsInside() with different end types
+  auto endRounded = false;
+  ITK_TEST_SET_GET_BOOLEAN(tube1, EndRounded, endRounded);
+
   p1.Fill(19.5);
-  tube1->SetEndRounded(false);
 
   if (tube1->IsInsideInWorldSpace(p1))
   {
@@ -469,7 +481,8 @@ itkTubeSpatialObjectTest(int, char *[])
     return EXIT_FAILURE;
   }
 
-  tube1->SetEndRounded(true);
+  endRounded = true;
+  ITK_TEST_SET_GET_BOOLEAN(tube1, EndRounded, endRounded);
 
   if (!tube1->IsInsideInWorldSpace(p1))
   {

@@ -30,7 +30,6 @@
 #include "itkImageToVTKImageFilter.h"
 #include "itkStatisticsImageFilter.h"
 #include "itkFixedArray.h"
-#include "itkViewImage.h"
 
 namespace itk
 {
@@ -74,7 +73,7 @@ ViewImage<TImage>::View(const ImageType * img, const std::string & winTitle, siz
   double level = minIntensity + window / 2;
   /** SLICES */
   FixedArray<vtkSmartPointer<vtkImagePlaneWidget>, 3> slicePlanes;
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     slicePlanes[i] = vtkSmartPointer<vtkImagePlaneWidget>::New();
     slicePlanes[i]->SetResliceInterpolateToCubic();

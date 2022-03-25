@@ -37,7 +37,7 @@ namespace itk
 namespace testhelper
 {
 
-template <typename TFixedPixelType, typename TMovingPixelType, unsigned int NDimension>
+template <typename TFixedPixelType, typename TMovingPixelType, unsigned int VDimension>
 class ImageRegistrationMethodImageSource : public itk::Object
 {
 public:
@@ -54,8 +54,8 @@ public:
   itkTypeMacro(Image, Object);
 
 
-  using MovingImageType = itk::Image<TMovingPixelType, NDimension>;
-  using FixedImageType = itk::Image<TFixedPixelType, NDimension>;
+  using MovingImageType = itk::Image<TMovingPixelType, VDimension>;
+  using FixedImageType = itk::Image<TFixedPixelType, VDimension>;
 
   const MovingImageType *
   GetMovingImage() const
@@ -79,11 +79,7 @@ public:
   void
   GenerateImages(const typename MovingImageType::SizeType & size)
   {
-    typename MovingImageType::IndexType index;
-    index.Fill(0);
-    typename MovingImageType::RegionType region;
-    region.SetSize(size);
-    region.SetIndex(index);
+    const typename MovingImageType::RegionType region(size);
 
     m_MovingImage->SetLargestPossibleRegion(region);
     m_MovingImage->SetBufferedRegion(region);

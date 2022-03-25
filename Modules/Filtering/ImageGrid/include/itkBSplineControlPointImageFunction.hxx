@@ -18,7 +18,6 @@
 #ifndef itkBSplineControlPointImageFunction_hxx
 #define itkBSplineControlPointImageFunction_hxx
 
-#include "itkBSplineControlPointImageFunction.h"
 
 #include "itkMath.h"
 #include "itkImageRegionIteratorWithIndex.h"
@@ -168,11 +167,11 @@ BSplineControlPointImageFunction<TInputImage, TCoordRep>::Evaluate(const PointTy
   for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     p[i] = params[i];
-    if (std::abs(p[i] - NumericTraits<CoordRepType>::OneValue()) <= this->m_BSplineEpsilon)
+    if (itk::Math::abs(p[i] - NumericTraits<CoordRepType>::OneValue()) <= this->m_BSplineEpsilon)
     {
       p[i] = NumericTraits<CoordRepType>::OneValue() - this->m_BSplineEpsilon;
     }
-    if (p[i] < NumericTraits<RealType>::ZeroValue() && std::abs(p[i]) <= this->m_BSplineEpsilon)
+    if (p[i] < NumericTraits<RealType>::ZeroValue() && itk::Math::abs(p[i]) <= this->m_BSplineEpsilon)
     {
       p[i] = NumericTraits<RealType>::ZeroValue();
     }
@@ -200,7 +199,7 @@ BSplineControlPointImageFunction<TInputImage, TCoordRep>::Evaluate(const PointTy
   {
     for (unsigned int j = 0; j < bsplineWeights[i].size(); ++j)
     {
-      CoordRepType u = p[i] - static_cast<CoordRepType>(static_cast<unsigned>(p[i]) + j) +
+      CoordRepType u = p[i] - static_cast<CoordRepType>(static_cast<unsigned int>(p[i]) + j) +
                        0.5 * static_cast<CoordRepType>(this->m_SplineOrder[i] - 1);
 
       CoordRepType B = 1.0;
@@ -316,11 +315,11 @@ BSplineControlPointImageFunction<TInputImage, TCoordRep>::EvaluateGradient(const
   for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     p[i] = params[i];
-    if (std::abs(p[i] - NumericTraits<CoordRepType>::OneValue()) <= this->m_BSplineEpsilon)
+    if (itk::Math::abs(p[i] - NumericTraits<CoordRepType>::OneValue()) <= this->m_BSplineEpsilon)
     {
       p[i] = NumericTraits<CoordRepType>::OneValue() - this->m_BSplineEpsilon;
     }
-    if (p[i] < NumericTraits<RealType>::ZeroValue() && std::abs(p[i]) <= this->m_BSplineEpsilon)
+    if (p[i] < NumericTraits<RealType>::ZeroValue() && itk::Math::abs(p[i]) <= this->m_BSplineEpsilon)
     {
       p[i] = NumericTraits<RealType>::ZeroValue();
     }
@@ -357,7 +356,7 @@ BSplineControlPointImageFunction<TInputImage, TCoordRep>::EvaluateGradient(const
     {
       for (unsigned int j = 0; j < bsplineWeights[i].size(); ++j)
       {
-        CoordRepType u = p[i] - static_cast<CoordRepType>(static_cast<unsigned>(p[i]) + j) +
+        CoordRepType u = p[i] - static_cast<CoordRepType>(static_cast<unsigned int>(p[i]) + j) +
                          0.5 * static_cast<CoordRepType>(this->m_SplineOrder[i] - 1);
 
         CoordRepType B = 1.0;
@@ -482,11 +481,11 @@ BSplineControlPointImageFunction<TInputImage, TCoordRep>::EvaluateHessian(const 
   for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     p[i] = params[i];
-    if (std::abs(p[i] - NumericTraits<CoordRepType>::OneValue()) <= this->m_BSplineEpsilon)
+    if (itk::Math::abs(p[i] - NumericTraits<CoordRepType>::OneValue()) <= this->m_BSplineEpsilon)
     {
       p[i] = NumericTraits<CoordRepType>::OneValue() - this->m_BSplineEpsilon;
     }
-    if (p[i] < NumericTraits<RealType>::ZeroValue() && std::abs(p[i]) <= this->m_BSplineEpsilon)
+    if (p[i] < NumericTraits<RealType>::ZeroValue() && itk::Math::abs(p[i]) <= this->m_BSplineEpsilon)
     {
       p[i] = NumericTraits<RealType>::ZeroValue();
     }
@@ -526,7 +525,7 @@ BSplineControlPointImageFunction<TInputImage, TCoordRep>::EvaluateHessian(const 
       {
         for (unsigned int h = 0; h < bsplineWeights[i].size(); ++h)
         {
-          CoordRepType u = p[i] - static_cast<CoordRepType>(static_cast<unsigned>(p[i]) + h) +
+          CoordRepType u = p[i] - static_cast<CoordRepType>(static_cast<unsigned int>(p[i]) + h) +
                            0.5 * static_cast<CoordRepType>(this->m_SplineOrder[i] - 1);
 
           CoordRepType B = 1.0;

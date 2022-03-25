@@ -23,6 +23,7 @@
 #include "itkImageFileWriter.h"
 #include "itkChangeInformationImageFilter.h"
 #include "itkTestingComparisonImageFilter.h"
+#include "itkTestingMacros.h"
 #include <fstream>
 
 using PixelType = float;
@@ -64,17 +65,17 @@ SameImage(ImagePointer testImage, ImagePointer baselineImage)
 
 
 int
-itkGradientAnisotropicDiffusionImageFilterTest2(int ac, char * av[])
+itkGradientAnisotropicDiffusionImageFilterTest2(int argc, char * argv[])
 {
-  if (ac < 3)
+  if (argc < 3)
   {
-    std::cerr << "Usage: " << av[0] << " InputImage OutputImage\n";
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " InputImage OutputImage\n";
     return -1;
   }
 
 
   itk::ImageFileReader<myFloatImage>::Pointer input = itk::ImageFileReader<myFloatImage>::New();
-  input->SetFileName(av[1]);
+  input->SetFileName(argv[1]);
 
   // Create a filter
   itk::GradientAnisotropicDiffusionImageFilter<myFloatImage, myFloatImage>::Pointer filter =
@@ -104,8 +105,8 @@ itkGradientAnisotropicDiffusionImageFilterTest2(int ac, char * av[])
   itk::ImageFileWriter<myUCharImage>::Pointer writer;
   writer = itk::ImageFileWriter<myUCharImage>::New();
   writer->SetInput(caster->GetOutput());
-  std::cout << "Writing " << av[2] << std::endl;
-  writer->SetFileName(av[2]);
+  std::cout << "Writing " << argv[2] << std::endl;
+  writer->SetFileName(argv[2]);
   writer->Update();
 
   myFloatImage::Pointer normalImage = filter->GetOutput();

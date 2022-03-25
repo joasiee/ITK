@@ -19,6 +19,7 @@
 #define itkHalfHermitianToRealInverseFFTImageFilter_h
 
 #include "itkImageToImageFilter.h"
+#include "itkMacro.h"
 #include "itkSimpleDataObjectDecorator.h"
 
 namespace itk
@@ -80,8 +81,7 @@ public:
    * selection of FFT implementation.
    *
    * Default implementation is VnlFFT. */
-  static Pointer
-  New();
+  itkFactoryOnlyNewMacro(Self);
 
   /** Was the original truncated dimension size odd? */
   itkSetGetDecoratedInputMacro(ActualXDimensionIsOdd, bool);
@@ -116,6 +116,10 @@ protected:
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #  include "itkHalfHermitianToRealInverseFFTImageFilter.hxx"
+#endif
+
+#ifdef ITK_FFTIMAGEFILTERINIT_FACTORY_REGISTER_MANAGER
+#  include "itkFFTImageFilterInitFactoryRegisterManager.h"
 #endif
 
 #endif

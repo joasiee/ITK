@@ -18,7 +18,6 @@
 #ifndef itkImageSink_hxx
 #define itkImageSink_hxx
 
-#include "itkImageSink.h"
 #include "itkProgressTransformer.h"
 #include "itkInputDataObjectConstIterator.h"
 #include "itkMultiThreaderBase.h"
@@ -160,7 +159,6 @@ ImageSink<TInputImage>::GenerateNthInputRequestedRegion(unsigned int inputReques
         continue;
       }
       // copy the requested region of the first input to the others
-      InputImageRegionType inputRegion;
       input->SetRequestedRegion(m_CurrentInputRegion);
     }
   }
@@ -205,7 +203,7 @@ ImageSink<TInputImage>::VerifyInputInformation() ITKv5_CONST
       // tolerance for origin and spacing depends on the size of pixel
       // tolerance for directions a fraction of the unit cube.
       const SpacePrecisionType coordinateTol =
-        std::abs(this->m_CoordinateTolerance * inputPtr1->GetSpacing()[0]); // use first dimension spacing
+        itk::Math::abs(this->m_CoordinateTolerance * inputPtr1->GetSpacing()[0]); // use first dimension spacing
 
       if (!inputPtr1->GetOrigin().GetVnlVector().is_equal(inputPtrN->GetOrigin().GetVnlVector(), coordinateTol) ||
           !inputPtr1->GetSpacing().GetVnlVector().is_equal(inputPtrN->GetSpacing().GetVnlVector(), coordinateTol) ||

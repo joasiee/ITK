@@ -20,7 +20,6 @@
 
 #include <iostream>
 
-#include "itkGaussianMixtureModelComponent.h"
 #include "itkMath.h"
 
 namespace itk
@@ -66,9 +65,9 @@ GaussianMixtureModelComponent<TSample>::SetSample(const TSample * sample)
   NumericTraits<MeasurementVectorType>::SetLength(m_Mean, measurementVectorLength);
   m_Covariance.SetSize(measurementVectorLength, measurementVectorLength);
 
-  m_Mean.Fill(NumericTraits<double>::ZeroValue());
+  m_Mean.Fill(0.0);
 
-  m_Covariance.Fill(NumericTraits<double>::ZeroValue());
+  m_Covariance.Fill(0.0);
 
   typename NativeMembershipFunctionType::MeanVectorType mean;
 

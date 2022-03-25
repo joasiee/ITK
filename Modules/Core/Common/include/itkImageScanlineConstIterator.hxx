@@ -18,14 +18,13 @@
 #ifndef itkImageScanlineConstIterator_hxx
 #define itkImageScanlineConstIterator_hxx
 
-#include "itkImageScanlineConstIterator.h"
 
 namespace itk
 {
 
 template <typename TImage>
 void
-ImageScanlineConstIterator<TImage>::Increment()
+ImageScanlineConstIterator<TImage>::NextLine()
 {
   // increment to the next scanline
 

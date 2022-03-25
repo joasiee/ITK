@@ -18,7 +18,6 @@
 #ifndef itkBSplineInterpolationWeightFunction_hxx
 #define itkBSplineInterpolationWeightFunction_hxx
 
-#include "itkBSplineInterpolationWeightFunction.h"
 #include "itkBSplineKernelFunction.h"
 #include "itkImage.h"
 #include "itkMatrix.h"
@@ -26,6 +25,20 @@
 
 namespace itk
 {
+
+#if __cplusplus < 201703L
+// For compatibility with pre C++17 International Standards, a constexpr static
+// data member may be redundantly redeclared outside the class with no
+// initializer. This usage is deprecated.
+//
+// For C++14 and earlier, the definition of static constexpr must be outside of
+// class until C++17, see .h file for declaration & initialization
+
+template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+constexpr typename BSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::SizeType
+  BSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::SupportSize;
+#endif
+
 /** Compute weights for interpolation at continuous index position */
 template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 typename BSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::WeightsType

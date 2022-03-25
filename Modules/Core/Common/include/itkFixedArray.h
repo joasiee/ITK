@@ -19,6 +19,7 @@
 #define itkFixedArray_h
 
 #include "itkMacro.h"
+#include "itkMakeFilled.h"
 #include <algorithm>
 #include <array>
 
@@ -189,15 +190,9 @@ public:
   using SizeType = unsigned int;
 
 public:
-  /** Constructors */
+  /** Default-constructor.
+   * \note The other five "special member functions" are defaulted implicitly, following the C++ "Rule of Zero". */
   FixedArray() = default;
-  FixedArray(const FixedArray &) = default;
-  FixedArray &
-  operator=(const FixedArray &) = default;
-  FixedArray(FixedArray &&) = default;
-  FixedArray &
-  operator=(FixedArray &&) = default;
-  ~FixedArray() = default;
 
   /** Conversion constructors */
   FixedArray(const ValueType r[VLength]);
@@ -328,37 +323,37 @@ public:
 
   itkLegacyMacro(ConstReverseIterator rEnd() const);
 
-  const_iterator
+  constexpr const_iterator
   cbegin() const noexcept
   {
     return m_InternalArray;
   }
 
-  iterator
+  constexpr iterator
   begin() noexcept
   {
     return m_InternalArray;
   }
 
-  const_iterator
+  constexpr const_iterator
   begin() const noexcept
   {
     return this->cbegin();
   }
 
-  const_iterator
+  constexpr const_iterator
   cend() const noexcept
   {
     return m_InternalArray + VLength;
   }
 
-  iterator
+  constexpr iterator
   end() noexcept
   {
     return m_InternalArray + VLength;
   }
 
-  const_iterator
+  constexpr const_iterator
   end() const noexcept
   {
     return this->cend();
@@ -429,12 +424,7 @@ public:
   static constexpr FixedArray
   Filled(const ValueType & value)
   {
-    FixedArray result{};
-    for (ValueType & element : result.m_InternalArray)
-    {
-      element = value;
-    }
-    return result;
+    return MakeFilled<FixedArray>(value);
   }
 };
 

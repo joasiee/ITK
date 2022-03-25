@@ -20,6 +20,7 @@
 #include "itkPointSetToSpatialObjectDemonsRegistration.h"
 
 #include "itkRegularSphereMeshSource.h"
+#include "itkTestingMacros.h"
 
 
 int
@@ -29,7 +30,7 @@ itkPointSetToSpatialObjectDemonsRegistrationTest(int, char *[])
 
   using EllipseType = itk::EllipseSpatialObject<Dimension>;
 
-  // Create a ellipse.
+  // Create an ellipse.
   auto ellipse = EllipseType::New();
 
   // Set the radius
@@ -56,8 +57,14 @@ itkPointSetToSpatialObjectDemonsRegistrationTest(int, char *[])
 
   auto demonsRegistration = DemonsRegistrationType::New();
 
-  demonsRegistration->SetFixedPointSet(sphereSource->GetOutput());
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(demonsRegistration, PointSetToSpatialObjectDemonsRegistration, ProcessObject);
+
+  auto fixedPointSet = sphereSource->GetOutput();
+  demonsRegistration->SetFixedPointSet(fixedPointSet);
+  ITK_TEST_SET_GET_VALUE(fixedPointSet, demonsRegistration->GetFixedPointSet());
+
   demonsRegistration->SetMovingSpatialObject(ellipse);
+  ITK_TEST_SET_GET_VALUE(ellipse, demonsRegistration->GetMovingSpatialObject());
 
 
   try

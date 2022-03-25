@@ -554,6 +554,7 @@ class itkTemplate(Mapping):
             namespace = {}
             if not hasattr(this_module, "__templates_loaded"):
                 base.itk_load_swig_module(module, namespace)
+                base.load_module_needed_factories(module)
 
     def __dir__(self):
         """Returns the list of the attributes available in the current template.
@@ -746,8 +747,7 @@ or via one of the following keyword arguments: %s"""
     # and is a copy/paste from DictMixin
     # only methods to edit dictionary are not there
     def __iter__(self):
-        for k in self.keys():
-            yield k
+        yield from self.keys()
 
     def __contains__(self, key):
         return key in self

@@ -45,10 +45,14 @@ RunTest(int argc, char * argv[])
   using Mirror = itk::MirrorPadImageFilter<InImageType, OutImageType>;
   auto filter = Mirror::New();
 
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(filter, MirrorPadImageFilter, PadImageFilter);
+
+
   if (argc > 4)
   {
     double decayFactor = std::stod(argv[4]);
     filter->SetDecayBase(decayFactor);
+    ITK_TEST_SET_GET_VALUE(decayFactor, filter->GetDecayBase());
   }
 
   typename OutImageType::SizeType pad;
@@ -78,7 +82,7 @@ itkMirrorPadImageFilterTest(int argc, char * argv[])
 {
   if (argc < 4)
   {
-    std::cerr << "Usage:\n itkMirrorPadImageFilterTest";
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
     std::cerr << " float | uchar in.png out.nrrd [decayFactor [lowerPad [upperPad]]]" << std::endl;
     return EXIT_FAILURE;
   }

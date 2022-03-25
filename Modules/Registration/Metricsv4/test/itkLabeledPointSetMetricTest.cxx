@@ -17,7 +17,9 @@
  *=========================================================================*/
 
 #include "itkLabeledPointSetToPointSetMetricv4.h"
+#include "itkEuclideanDistancePointSetToPointSetMetricv4.h"
 #include "itkTranslationTransform.h"
+#include "itkTestingMacros.h"
 
 #include <fstream>
 #include "itkMath.h"
@@ -87,6 +89,16 @@ itkLabeledPointSetMetricTestRun()
   // Instantiate the metric
   using PointSetMetricType = itk::LabeledPointSetToPointSetMetricv4<PointSetType>;
   auto metric = PointSetMetricType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(metric, LabeledPointSetToPointSetMetricv4, PointSetToPointSetMetricv4);
+
+
+  using EuclideanDistanceMetricType =
+    itk::EuclideanDistancePointSetToPointSetMetricv4<PointSetType, PointSetType, double>;
+  auto pointSetMetric = EuclideanDistanceMetricType::New();
+  metric->SetPointSetMetric(pointSetMetric);
+  ITK_TEST_SET_GET_VALUE(pointSetMetric, metric->GetPointSetMetric());
+
   metric->SetFixedPointSet(fixedPoints);
   metric->SetMovingPointSet(movingPoints);
   metric->SetMovingTransform(translationTransform);
@@ -101,7 +113,7 @@ itkLabeledPointSetMetricTestRun()
   std::cout << "derivative: " << derivative << std::endl;
   for (unsigned int d = 0; d < metric->GetNumberOfParameters(); ++d)
   {
-    if (std::fabs(derivative[d] - offset[d]) / offset[d] > 0.01)
+    if (itk::Math::abs(derivative[d] - offset[d]) / offset[d] > 0.01)
     {
       std::cerr << "derivative does not match expected offset of " << offset << std::endl;
       return EXIT_FAILURE;

@@ -126,6 +126,10 @@ itkNearestNeighborInterpolateImageFunctionTest(int, char *[])
   }
 
   auto interpolator = InterpolatorType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(interpolator, NearestNeighborInterpolateImageFunction, InterpolateImageFunction);
+
+
   interpolator->SetInputImage(image);
 
   typename ImageType::SizeType radius;
@@ -175,7 +179,7 @@ itkNearestNeighborInterpolateImageFunctionTest(int, char *[])
 
             // test image of vectors
             const InterpolatedVectorType vectorpixel = vectorinterpolator->Evaluate(point);
-            const InterpolatedVectorType expectedvector(expectedValue);
+            const auto                   expectedvector = itk::MakeFilled<InterpolatedVectorType>(expectedValue);
             const double                 errornorm = (expectedvector - vectorpixel).GetNorm();
 
             if (errornorm > 0)

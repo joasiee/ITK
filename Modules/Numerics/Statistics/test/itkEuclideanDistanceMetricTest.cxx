@@ -34,7 +34,7 @@ itkEuclideanDistanceMetricTest(int, char *[])
   distance->Print(std::cout);
 
   MeasurementVectorType measurementNew;
-  ::itk::NumericTraits<MeasurementVectorType>::SetLength(measurementNew, 3);
+  itk::NumericTraits<MeasurementVectorType>::SetLength(measurementNew, 3);
   measurementNew[0] = 2.5;
   measurementNew[1] = 3.3;
   measurementNew[2] = 4.0;
@@ -64,14 +64,14 @@ itkEuclideanDistanceMetricTest(int, char *[])
 
   // Test if the distance computed is correct
   DistanceMetricType::OriginType origin;
-  ::itk::NumericTraits<DistanceMetricType::OriginType>::SetLength(origin, 3);
+  itk::NumericTraits<DistanceMetricType::OriginType>::SetLength(origin, 3);
   origin[0] = 1.5;
   origin[1] = 2.3;
   origin[2] = 1.0;
   distance->SetOrigin(origin);
 
   MeasurementVectorType measurement;
-  ::itk::NumericTraits<MeasurementVectorType>::SetLength(measurement, 3);
+  itk::NumericTraits<MeasurementVectorType>::SetLength(measurement, 3);
   measurement[0] = 2.5;
   measurement[1] = 3.3;
   measurement[2] = 4.0;
@@ -80,7 +80,7 @@ itkEuclideanDistanceMetricTest(int, char *[])
   double           distanceComputed = distance->Evaluate(measurement);
   constexpr double tolerance = 0.001;
 
-  if (std::fabs(distanceComputed - trueValue) > tolerance)
+  if (itk::Math::abs(distanceComputed - trueValue) > tolerance)
   {
     std::cerr << "Distance computed not correct: "
               << "truevalue= " << trueValue << "ComputedValue=" << distanceComputed << std::endl;
@@ -89,7 +89,7 @@ itkEuclideanDistanceMetricTest(int, char *[])
 
   // Compute distance between two measurement vectors
   MeasurementVectorType measurement2;
-  ::itk::NumericTraits<MeasurementVectorType>::SetLength(measurement2, 3);
+  itk::NumericTraits<MeasurementVectorType>::SetLength(measurement2, 3);
   measurement2[0] = 1.5;
   measurement2[1] = 3.5;
   measurement2[2] = 3.5;
@@ -97,7 +97,7 @@ itkEuclideanDistanceMetricTest(int, char *[])
   double trueValue2 = 1.136;
   double distanceComputed2 = distance->Evaluate(measurement, measurement2);
 
-  if (std::fabs(distanceComputed2 - trueValue2) > tolerance)
+  if (itk::Math::abs(distanceComputed2 - trueValue2) > tolerance)
   {
     std::cerr << "Distance computed not correct: "
               << "truevalue= " << trueValue2 << "ComputedValue=" << distanceComputed2 << std::endl;

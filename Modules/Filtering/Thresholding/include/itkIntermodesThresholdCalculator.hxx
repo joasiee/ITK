@@ -18,7 +18,6 @@
 #ifndef itkIntermodesThresholdCalculator_hxx
 #define itkIntermodesThresholdCalculator_hxx
 
-#include "itkIntermodesThresholdCalculator.h"
 #include "itkProgressReporter.h"
 
 namespace itk
@@ -95,7 +94,6 @@ IntermodesThresholdCalculator<THistogram, TOutput>::GenerateData()
     if (smIter > m_MaximumSmoothingIterations)
     {
       itkGenericExceptionMacro(<< "Exceeded maximum iterations for histogram smoothing.");
-      return;
     }
   }
 

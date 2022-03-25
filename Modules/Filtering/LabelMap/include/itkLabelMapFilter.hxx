@@ -27,17 +27,16 @@
  *=========================================================================*/
 #ifndef itkLabelMapFilter_hxx
 #define itkLabelMapFilter_hxx
-#include "itkLabelMapFilter.h"
 #include <mutex>
-#include <itkTotalProgressReporter.h>
+#include "itkTotalProgressReporter.h"
 
 namespace itk
 {
 template <typename TInputImage, typename TOutputImage>
 LabelMapFilter<TInputImage, TOutputImage>::LabelMapFilter()
-
 {
   this->DynamicMultiThreadingOn();
+  this->ThreaderUpdateProgressOff();
 }
 
 template <typename TInputImage, typename TOutputImage>

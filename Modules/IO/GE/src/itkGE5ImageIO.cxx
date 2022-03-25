@@ -408,16 +408,20 @@ GE5ImageIO::ReadHeader(const char * FileNameToRead)
   switch (GE_Plane)
   {
     case GE_CORONAL:
-      curImage->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RSP;
+      curImage->coordinateOrientation =
+        itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RSP;
       break;
     case GE_SAGITTAL:
-      curImage->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_AIR;
+      curImage->coordinateOrientation =
+        itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_AIR;
       break;
     case GE_AXIAL:
-      curImage->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RAI;
+      curImage->coordinateOrientation =
+        itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RAI;
       break;
     default:
-      curImage->coordinateOrientation = itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RSP;
+      curImage->coordinateOrientation =
+        itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RSP;
       break;
   }
 
@@ -571,7 +575,7 @@ GE5ImageIO::ModifyImageInformation()
     delete hdr2;
   }
   else
-  // If there is only one slice, the use it's origin
+  // If there is only one slice, the use its origin
   {
     this->SetOrigin(0, -m_ImageHeader->tlhcR);
     this->SetOrigin(1, -m_ImageHeader->tlhcA);

@@ -16,6 +16,7 @@
  *
  *=========================================================================*/
 #include "itkMultiGradientOptimizerv4.h"
+#include "itkTestingMacros.h"
 
 /**
  *  \class MultiGradientOptimizerv4TestMetric
@@ -290,6 +291,8 @@ MultiGradientOptimizerv4RunTest(itk::MultiGradientOptimizerv4::Pointer & itkOpti
     return EXIT_FAILURE;
   }
 
+  std::cout << "StopCondition: " << itkOptimizer->GetStopCondition() << std::endl;
+
   using ParametersType = MultiGradientOptimizerv4TestMetric::ParametersType;
   ParametersType finalPosition = itkOptimizer->GetMetric()->GetParameters();
 
@@ -305,7 +308,7 @@ MultiGradientOptimizerv4RunTest(itk::MultiGradientOptimizerv4::Pointer & itkOpti
   trueParameters[1] = -1.5;
   for (itk::SizeValueType j = 0; j < 2; ++j)
   {
-    if (fabs(finalPosition[j] - trueParameters[j]) > 0.01)
+    if (itk::Math::abs(finalPosition[j] - trueParameters[j]) > 0.01)
     {
       std::cerr << "Results do not match: " << std::endl
                 << "expected: " << trueParameters << std::endl
@@ -326,8 +329,11 @@ itkMultiGradientOptimizerv4Test(int, char *[])
   using OptimizerType = itk::MultiGradientOptimizerv4;
   using ParametersType = MultiGradientOptimizerv4TestMetric::ParametersType;
 
-  // Declaration of a itkOptimizer
+  // Declaration of an itkOptimizer
   auto itkOptimizer = OptimizerType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(itkOptimizer, MultiGradientOptimizerv4Template, GradientDescentOptimizerv4Template);
+
 
   // Declaration of the Metric
   auto                   metric = MultiGradientOptimizerv4TestMetric::New();

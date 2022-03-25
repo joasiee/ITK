@@ -21,6 +21,7 @@
 #include <complex>
 
 #include "itkImageToImageFilter.h"
+#include "itkMacro.h"
 
 namespace itk
 {
@@ -28,8 +29,8 @@ namespace itk
  * \brief Perform the Fast Fourier Transform, in the reverse direction, with
  * real output, but only along one dimension.
  *
+ * \ingroup ITKFFT
  * \ingroup FourierTransform
- * \ingroup Ultrasound
  */
 template <typename TInputImage,
           typename TOutputImage =
@@ -59,8 +60,7 @@ public:
    *
    * Default implementation is VnlFFT1D.
    */
-  static Pointer
-  New(void);
+  itkFactoryOnlyNewMacro(Self);
 
   /** Get the direction in which the filter is to be applied. */
   itkGetConstMacro(Direction, unsigned int);
@@ -89,22 +89,18 @@ protected:
 
   /** Direction in which the filter is to be applied
    * this should be in the range [0,ImageDimension-1]. */
-  unsigned int m_Direction;
+  unsigned int m_Direction{ 0 };
 
 private:
 };
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#  ifndef itkVnlInverse1DFFTImageFilter_h
-#    ifndef itkVnlInverse1DFFTImageFilter_hxx
-#      ifndef itkFFTWInverse1DFFTImageFilter_h
-#        ifndef itkFFTWInverse1DFFTImageFilter_hxx
-#          include "itkInverse1DFFTImageFilter.hxx"
-#        endif
-#      endif
-#    endif
-#  endif
+#  include "itkInverse1DFFTImageFilter.hxx"
+#endif
+
+#ifdef ITK_FFTIMAGEFILTERINIT_FACTORY_REGISTER_MANAGER
+#  include "itkFFTImageFilterInitFactoryRegisterManager.h"
 #endif
 
 #endif // itkInverse1DFFTImageFilter_h

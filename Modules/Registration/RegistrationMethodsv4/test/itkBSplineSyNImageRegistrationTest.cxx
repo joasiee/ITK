@@ -161,7 +161,7 @@ PerformBSplineSyNImageRegistration(int itkNotUsed(argc), char * argv[])
   affineWriter->Update();
 
   using VectorType = itk::Vector<RealType, ImageDimension>;
-  VectorType zeroVector(0.0);
+  constexpr VectorType zeroVector{};
 
   // Create the SyN deformable registration method
 
@@ -181,6 +181,10 @@ PerformBSplineSyNImageRegistration(int itkNotUsed(argc), char * argv[])
   using DisplacementFieldRegistrationType = itk::BSplineSyNImageRegistrationMethod<FixedImageType, MovingImageType>;
   typename DisplacementFieldRegistrationType::Pointer displacementFieldRegistration =
     DisplacementFieldRegistrationType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(
+    displacementFieldRegistration, BSplineSyNImageRegistrationMethod, SyNImageRegistrationMethod);
+
 
   typename DisplacementFieldRegistrationType::OptimizerWeightsType optimizerWeights;
   optimizerWeights.SetSize(TDimension);

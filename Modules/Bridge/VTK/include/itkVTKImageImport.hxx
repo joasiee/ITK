@@ -18,7 +18,6 @@
 #ifndef itkVTKImageImport_hxx
 #define itkVTKImageImport_hxx
 
-#include "itkVTKImageImport.h"
 #include "itkPixelTraits.h"
 #include "itkNumericTraits.h"
 #include "itkNumericTraitsArrayPixel.h"
@@ -125,7 +124,6 @@ VTKImageImport<TOutputImage>::PropagateRequestedRegion(DataObject * outputPtr)
   if (!output)
   {
     itkExceptionMacro(<< "Downcast from DataObject to my Image type failed.");
-    return;
   }
   Superclass::PropagateRequestedRegion(output);
   if (m_PropagateUpdateExtentCallback)
@@ -195,9 +193,7 @@ VTKImageImport<TOutputImage>::GenerateOutputInformation()
       size[i] = (extent[i * 2 + 1] - extent[i * 2]) + 1;
     }
 
-    OutputRegionType region;
-    region.SetIndex(index);
-    region.SetSize(size);
+    const OutputRegionType region(index, size);
     output->SetLargestPossibleRegion(region);
   }
   if (m_SpacingCallback)
@@ -327,9 +323,7 @@ VTKImageImport<TOutputImage>::GenerateData()
       importSize *= size[i];
     }
 
-    OutputRegionType region;
-    region.SetIndex(index);
-    region.SetSize(size);
+    const OutputRegionType region(index, size);
     output->SetBufferedRegion(region);
 
     void * data = (m_BufferPointerCallback)(m_CallbackUserData);

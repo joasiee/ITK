@@ -120,8 +120,8 @@ main(int argc, char * argv[])
   using ImageIOType = itk::GDCMImageIO;
   using NamesGeneratorType = itk::GDCMSeriesFileNames;
 
-  ImageIOType::Pointer        gdcmIO = ImageIOType::New();
-  NamesGeneratorType::Pointer namesGenerator = NamesGeneratorType::New();
+  auto gdcmIO = ImageIOType::New();
+  auto namesGenerator = NamesGeneratorType::New();
   // Software Guide : EndCodeSnippet
 
   //  Software Guide : BeginLatex
@@ -143,7 +143,7 @@ main(int argc, char * argv[])
     namesGenerator->GetInputFileNames();
   // Software Guide : EndCodeSnippet
 
-  std::size_t numberOfFileNames = filenames.size();
+  size_t numberOfFileNames = filenames.size();
   std::cout << numberOfFileNames << std::endl;
   for (unsigned int fni = 0; fni < numberOfFileNames; ++fni)
   {
@@ -160,7 +160,7 @@ main(int argc, char * argv[])
   // Software Guide : EndLatex
 
   // Software Guide : BeginCodeSnippet
-  ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
 
   reader->SetImageIO(gdcmIO);
   reader->SetFileNames(filenames);
@@ -249,7 +249,7 @@ main(int argc, char * argv[])
   //  the writer filter.  Software Guide : EndLatex
 
   // Software Guide : BeginCodeSnippet
-  SeriesWriterType::Pointer seriesWriter = SeriesWriterType::New();
+  auto seriesWriter = SeriesWriterType::New();
 
   seriesWriter->SetInput(reader->GetOutput());
   seriesWriter->SetImageIO(gdcmIO);

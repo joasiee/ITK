@@ -18,7 +18,6 @@
 #ifndef itkSyNImageRegistrationMethod_hxx
 #define itkSyNImageRegistrationMethod_hxx
 
-#include "itkSyNImageRegistrationMethod.h"
 
 #include "itkComposeDisplacementFieldsImageFilter.h"
 #include "itkGaussianOperator.h"
@@ -73,7 +72,7 @@ SyNImageRegistrationMethod<TFixedImage, TMovingImage, TOutputTransform, TVirtual
 
       VirtualImageBaseConstPointer virtualDomainImage = this->GetCurrentLevelVirtualDomainImage();
 
-      const DisplacementVectorType zeroVector(0.0);
+      constexpr DisplacementVectorType zeroVector{};
 
       auto fixedDisplacementField = DisplacementFieldType::New();
       fixedDisplacementField->CopyInformation(virtualDomainImage);
@@ -573,7 +572,7 @@ typename SyNImageRegistrationMethod<TFixedImage, TMovingImage, TOutputTransform,
   if (this->m_DownsampleImagesForMetricDerivatives &&
       this->m_Metric->GetMetricCategory() != ObjectToObjectMetricBaseTemplateEnums::MetricCategory::POINT_SET_METRIC)
   {
-    const DisplacementVectorType zeroVector(0.0);
+    const DisplacementVectorType zeroVector{};
 
     auto identityField = DisplacementFieldType::New();
     identityField->CopyInformation(virtualDomainImage);
@@ -781,7 +780,7 @@ typename SyNImageRegistrationMethod<TFixedImage, TMovingImage, TOutputTransform,
     smoothField->DisconnectPipeline();
   }
 
-  const DisplacementVectorType zeroVector(0.0);
+  const DisplacementVectorType zeroVector{};
 
   // make sure boundary does not move
   RealType weight1 = 1.0;

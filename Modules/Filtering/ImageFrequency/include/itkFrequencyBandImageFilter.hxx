@@ -18,10 +18,9 @@
 #ifndef itkFrequencyBandImageFilter_hxx
 #define itkFrequencyBandImageFilter_hxx
 
-#include <itkFrequencyBandImageFilter.h>
 
-#include <itkMath.h>
-#include <itkImageAlgorithm.h>
+#include "itkMath.h"
+#include "itkImageAlgorithm.h"
 #include <algorithm>
 #include <cmath>
 
@@ -140,8 +139,8 @@ FrequencyBandImageFilter<TImageType, TFrequencyIterator>::BandPass(FrequencyIter
   else // Cut-off box taking into account max absolute scalar frequency.
   {
     vectorFrequency = freqIt.GetFrequency();
-    maxFrequency = std::abs(*std::max_element(vectorFrequency.cbegin(), vectorFrequency.cend()));
-    minFrequency = std::abs(*std::min_element(vectorFrequency.cbegin(), vectorFrequency.cend()));
+    maxFrequency = itk::Math::abs(*std::max_element(vectorFrequency.cbegin(), vectorFrequency.cend()));
+    minFrequency = itk::Math::abs(*std::min_element(vectorFrequency.cbegin(), vectorFrequency.cend()));
     scalarFrequency = std::max(maxFrequency, minFrequency);
     if (minFrequency < maxFrequency)
     {

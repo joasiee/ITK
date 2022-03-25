@@ -22,12 +22,11 @@
 #include "itkConvertArrayPixelBuffer.h"
 #include "itkConvertVariableLengthVectorPixelBuffer.h"
 #include "itkMeshIOFactory.h"
-#include "itkMeshFileReader.h"
 #include "itkMeshRegion.h"
 #include "itkObjectFactory.h"
 #include "itkPixelTraits.h"
 
-#include <itksys/SystemTools.hxx>
+#include "itksys/SystemTools.hxx"
 #include <fstream>
 
 namespace itk
@@ -47,16 +46,7 @@ MeshFileReader<TOutputMesh, ConvertPointPixelTraits, ConvertCellPixelTraits>::Pr
 {
   Superclass::PrintSelf(os, indent);
 
-  if (m_MeshIO)
-  {
-    os << indent << "MeshIO: \n";
-    m_MeshIO->Print(os, indent.GetNextIndent());
-  }
-  else
-  {
-    os << indent << "MeshIO: (null)"
-       << "\n";
-  }
+  itkPrintSelfObjectMacro(MeshIO);
 
   os << indent << "UserSpecifiedMeshIO flag: " << m_UserSpecifiedMeshIO << "\n";
   os << indent << "FileName: " << m_FileName << "\n";
@@ -89,7 +79,6 @@ MeshFileReader<TOutputMesh, ConvertPointPixelTraits, ConvertCellPixelTraits>::Te
     msg << "The file doesn't exist. " << std::endl << "Filename = " << m_FileName << std::endl;
     e.SetDescription(msg.str().c_str());
     throw e;
-    return;
   }
 
   // Test if the file can be open for reading access.
@@ -102,7 +91,6 @@ MeshFileReader<TOutputMesh, ConvertPointPixelTraits, ConvertCellPixelTraits>::Te
     msg << "The file couldn't be opened for reading. " << std::endl << "Filename: " << m_FileName << std::endl;
     MeshFileReaderException e(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
     throw e;
-    return;
   }
   readTester.close();
 }
@@ -509,7 +497,6 @@ MeshFileReader<TOutputMesh, ConvertPointPixelTraits, ConvertCellPixelTraits>::Ge
 
     MeshFileReaderException e(__FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION);
     throw e;
-    return;
   }
 }
 
@@ -859,7 +846,6 @@ MeshFileReader<TOutputMesh, ConvertPointPixelTraits, ConvertCellPixelTraits>::Co
     e.SetDescription(msg.str().c_str());
     e.SetLocation(ITK_LOCATION);
     throw e;
-    return;
   }
 #undef ITK_CONVERT_POINT_PIXEL_BUFFER_IF_BLOCK
 }
@@ -931,7 +917,6 @@ MeshFileReader<TOutputMesh, ConvertPointPixelTraits, ConvertCellPixelTraits>::Co
     e.SetDescription(msg.str().c_str());
     e.SetLocation(ITK_LOCATION);
     throw e;
-    return;
   }
 #undef ITK_CONVERT_CELL_PIXEL_BUFFER_IF_BLOCK
 }

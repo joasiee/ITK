@@ -22,17 +22,19 @@
 #include "itkImageFileWriter.h"
 #include "itkTextOutput.h"
 #include "itkSimpleFilterWatcher.h"
+#include "itkTestingMacros.h"
 
 int
-itkVectorConfidenceConnectedImageFilterTest(int ac, char * av[])
+itkVectorConfidenceConnectedImageFilterTest(int argc, char * argv[])
 {
   // Comment the following if you want to use the itk text output window
   itk::OutputWindow::SetInstance(itk::TextOutput::New());
 
-  if (ac < 9)
+  if (argc < 9)
   {
-    std::cerr << "Usage: " << av[0] << " InputImage BaselineImage seed1X seed1Y seed2X seed2Y multiplier iterations\n";
-    return -1;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv)
+              << " InputImage BaselineImage seed1X seed1Y seed2X seed2Y multiplier iterations\n";
+    return EXIT_FAILURE;
   }
 
   constexpr unsigned int Dimension = 2;
@@ -48,7 +50,7 @@ itkVectorConfidenceConnectedImageFilterTest(int ac, char * av[])
   using ReaderType = itk::ImageFileReader<ImageType>;
 
   auto input = ReaderType::New();
-  input->SetFileName(av[1]);
+  input->SetFileName(argv[1]);
 
   // Create a filter
   using FilterType = itk::VectorConfidenceConnectedImageFilter<ImageType, OutputImageType>;
@@ -62,29 +64,23 @@ itkVectorConfidenceConnectedImageFilterTest(int ac, char * av[])
   FilterType::IndexType seed1;
   FilterType::IndexType seed2;
 
-  seed1[0] = std::stoi(av[3]);
-  seed1[1] = std::stoi(av[4]);
+  seed1[0] = std::stoi(argv[3]);
+  seed1[1] = std::stoi(argv[4]);
 
-  seed2[0] = std::stoi(av[5]);
-  seed2[1] = std::stoi(av[6]);
+  seed2[0] = std::stoi(argv[5]);
+  seed2[1] = std::stoi(argv[6]);
 
   filter->AddSeed(seed1);
   filter->AddSeed(seed2);
 
   filter->SetReplaceValue(255);
-  filter->SetMultiplier(std::stod(av[7]));
-  filter->SetNumberOfIterations(std::stoi(av[8]));
+  filter->SetMultiplier(std::stod(argv[7]));
+  filter->SetNumberOfIterations(std::stoi(argv[8]));
 
-  try
-  {
-    input->Update();
-    filter->Update();
-  }
-  catch (const itk::ExceptionObject & e)
-  {
-    std::cerr << "Exception detected: " << e.GetDescription();
-    return -1;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(input->Update());
+
+  ITK_TRY_EXPECT_NO_EXCEPTION(filter->Update());
+
 
   // Test the GetMacros
   double doubleMultiplier = filter->GetMultiplier();
@@ -105,7 +101,7 @@ itkVectorConfidenceConnectedImageFilterTest(int ac, char * av[])
   auto writer = WriterType::New();
 
   writer->SetInput(filter->GetOutput());
-  writer->SetFileName(av[2]);
+  writer->SetFileName(argv[2]);
   writer->Update();
 
   // Exercise SetSeed() method
@@ -116,7 +112,7 @@ itkVectorConfidenceConnectedImageFilterTest(int ac, char * av[])
 
   using VectorReaderType = itk::ImageFileReader<VectorImageType>;
   auto vinput = VectorReaderType::New();
-  vinput->SetFileName(av[1]);
+  vinput->SetFileName(argv[1]);
 
   using VectorFilterType = itk::VectorConfidenceConnectedImageFilter<VectorImageType, OutputImageType>;
   auto vFilter = VectorFilterType::New();
@@ -126,8 +122,8 @@ itkVectorConfidenceConnectedImageFilterTest(int ac, char * av[])
   vFilter->AddSeed(seed1);
   vFilter->AddSeed(seed2);
   vFilter->SetReplaceValue(255);
-  vFilter->SetMultiplier(std::stod(av[7]));
-  vFilter->SetNumberOfIterations(std::stoi(av[8]));
+  vFilter->SetMultiplier(std::stod(argv[7]));
+  vFilter->SetNumberOfIterations(std::stoi(argv[8]));
   vFilter->Update();
 
 

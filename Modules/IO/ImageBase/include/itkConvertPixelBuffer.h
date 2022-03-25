@@ -139,6 +139,13 @@ protected:
                               OutputPixelType * outputData,
                               size_t            size);
 
+  /** This is meant for many component vectors, e.g. converting 31-component float to 31-component double. */
+  static void
+  ConvertVectorToVector(InputPixelType *  inputData,
+                        int               inputNumberOfComponents,
+                        OutputPixelType * outputData,
+                        size_t            size);
+
   /** Convert tensor output. */
   /** Each input is made into a 6 component symmetric pixel */
   static void
@@ -167,11 +174,11 @@ protected:
    *  world of rgb<float> or rgb<double> alpha would have to be 1.0
    */
   template <typename UComponentType>
-  static std::enable_if_t<!NumericTraits<UComponentType>::IsInteger, UComponentType>
+  static std::enable_if_t<!std::is_integral<UComponentType>::value, UComponentType>
   DefaultAlphaValue();
 
   template <typename UComponentType>
-  static std::enable_if_t<NumericTraits<UComponentType>::IsInteger, UComponentType>
+  static std::enable_if_t<std::is_integral<UComponentType>::value, UComponentType>
   DefaultAlphaValue();
 };
 } // namespace itk

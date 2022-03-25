@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkWarpImageFilter_hxx
 #define itkWarpImageFilter_hxx
-#include "itkWarpImageFilter.h"
 
 #include "itkImageRegionIterator.h"
 #include "itkImageRegionIteratorWithIndex.h"
@@ -152,7 +151,7 @@ WarpImageFilter<TInputImage, TOutputImage, TDisplacementField>::BeforeThreadedGe
   if (!m_DefFieldSameInformation)
   {
     m_StartIndex = fieldPtr->GetBufferedRegion().GetIndex();
-    for (unsigned i = 0; i < ImageDimension; ++i)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       m_EndIndex[i] = m_StartIndex[i] + fieldPtr->GetBufferedRegion().GetSize()[i] - 1;
     }
@@ -184,8 +183,8 @@ WarpImageFilter<TInputImage, TOutputImage, TDisplacementField>::EvaluateDisplace
   const DisplacementFieldType * fieldPtr,
   DisplacementType &            output)
 {
-  ContinuousIndex<double, ImageDimension> index;
-  fieldPtr->TransformPhysicalPointToContinuousIndex(point, index);
+  const ContinuousIndex<double, ImageDimension> index =
+    fieldPtr->template TransformPhysicalPointToContinuousIndex<double>(point);
   unsigned int dim; // index over dimension
   /**
    * Compute base index = closest index below point

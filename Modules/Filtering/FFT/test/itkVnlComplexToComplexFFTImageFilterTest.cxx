@@ -18,10 +18,14 @@
 
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-#include "itkVnlComplexToComplexFFTImageFilter.h"
 #include "itkForwardFFTImageFilter.h"
 #include "itkInverseFFTImageFilter.h"
 #include "itkTestingMacros.h"
+
+#include "itkObjectFactoryBase.h"
+#include "itkVnlComplexToComplexFFTImageFilter.h"
+#include "itkVnlForwardFFTImageFilter.h"
+#include "itkVnlInverseFFTImageFilter.h"
 
 template <typename TPixel, unsigned int VDimension>
 int
@@ -38,12 +42,17 @@ transformImage(const char * inputImageFileName, const char * outputImageFileName
   auto reader = ReaderType::New();
   reader->SetFileName(inputImageFileName);
 
-  using ForwardFilterType = itk::ForwardFFTImageFilter<RealImageType, ComplexImageType>;
+  using ForwardFilterType = itk::VnlForwardFFTImageFilter<RealImageType, ComplexImageType>;
   auto forwardFilter = ForwardFilterType::New();
   forwardFilter->SetInput(reader->GetOutput());
 
   using ComplexFilterType = itk::VnlComplexToComplexFFTImageFilter<ComplexImageType>;
   auto inverseComplexFilter = ComplexFilterType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(
+    inverseComplexFilter, VnlComplexToComplexFFTImageFilter, ComplexToComplexFFTImageFilter);
+
+
   inverseComplexFilter->SetInput(forwardFilter->GetOutput());
   inverseComplexFilter->SetTransformDirection(ComplexFilterType::TransformDirectionEnum::INVERSE);
 
@@ -51,7 +60,7 @@ transformImage(const char * inputImageFileName, const char * outputImageFileName
   forwardComplexFilter->SetInput(inverseComplexFilter->GetOutput());
   forwardComplexFilter->SetTransformDirection(ComplexFilterType::TransformDirectionEnum::FORWARD);
 
-  using InverseFilterType = itk::InverseFFTImageFilter<ComplexImageType, RealImageType>;
+  using InverseFilterType = itk::VnlInverseFFTImageFilter<ComplexImageType, RealImageType>;
   auto inverseFilter = InverseFilterType::New();
   inverseFilter->SetInput(forwardComplexFilter->GetOutput());
 

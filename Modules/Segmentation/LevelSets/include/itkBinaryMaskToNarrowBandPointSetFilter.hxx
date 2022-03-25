@@ -18,7 +18,6 @@
 #ifndef itkBinaryMaskToNarrowBandPointSetFilter_hxx
 #define itkBinaryMaskToNarrowBandPointSetFilter_hxx
 
-#include "itkBinaryMaskToNarrowBandPointSetFilter.h"
 #include "itkNumericTraits.h"
 #include "itkProgressReporter.h"
 
@@ -116,7 +115,7 @@ BinaryMaskToNarrowBandPointSetFilter<TInputImage, TOutputMesh>::GenerateData()
   {
     const NodeType & node = nodeItr.Value();
     const float      distance = node.GetValue();
-    if (std::fabs(distance) < m_BandWidth)
+    if (itk::Math::abs(distance) < m_BandWidth)
     {
       image->TransformIndexToPhysicalPoint(node.GetIndex(), point);
       points->push_back(point);

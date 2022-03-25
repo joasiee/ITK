@@ -63,13 +63,13 @@ itkGaussianMembershipFunctionTest(int, char *[])
 
   // Test if the membership function value computed is correct
   MembershipFunctionType::MeanVectorType mean;
-  ::itk::NumericTraits<MembershipFunctionType::MeanVectorType>::SetLength(mean, MeasurementVectorSize);
+  itk::NumericTraits<MembershipFunctionType::MeanVectorType>::SetLength(mean, MeasurementVectorSize);
   mean[0] = 1.5;
   function->SetMean(mean);
 
   constexpr double tolerance = 0.001;
 
-  if (std::fabs(function->GetMean()[0] - mean[0]) > tolerance)
+  if (itk::Math::abs(function->GetMean()[0] - mean[0]) > tolerance)
   {
     std::cerr << "Error in GetMean() method" << std::endl;
     return EXIT_FAILURE;
@@ -87,13 +87,13 @@ itkGaussianMembershipFunctionTest(int, char *[])
   }
 
   MeasurementVectorType measurement;
-  ::itk::NumericTraits<MeasurementVectorType>::SetLength(measurement, MeasurementVectorSize);
+  itk::NumericTraits<MeasurementVectorType>::SetLength(measurement, MeasurementVectorSize);
   measurement[0] = 1.5;
 
   double trueValue = 0.3989;
   double distanceComputed = function->Evaluate(measurement);
 
-  if (std::fabs(distanceComputed - trueValue) > tolerance)
+  if (itk::Math::abs(distanceComputed - trueValue) > tolerance)
   {
     std::cerr << "Distance computed not correct: "
               << "truevalue= " << trueValue << ", ComputedValue=" << distanceComputed << std::endl;

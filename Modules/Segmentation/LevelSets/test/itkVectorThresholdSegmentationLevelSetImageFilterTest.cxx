@@ -22,17 +22,19 @@
 #include "itkTextOutput.h"
 #include "itkRescaleIntensityImageFilter.h"
 #include "itkMath.h"
+#include "itkTestingMacros.h"
 
 int
-itkVectorThresholdSegmentationLevelSetImageFilterTest(int ac, char * av[])
+itkVectorThresholdSegmentationLevelSetImageFilterTest(int argc, char * argv[])
 {
   // Comment the following if you want to use the itk text output window
   itk::OutputWindow::SetInstance(itk::TextOutput::New());
 
-  if (ac < 6)
+  if (argc < 6)
   {
-    std::cerr << "Usage: " << av[0] << " InputInitialImage InputColorImage BaselineImage threshold curvatureScaling\n";
-    return -1;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv)
+              << " InputInitialImage InputColorImage BaselineImage threshold curvatureScaling\n";
+    return EXIT_FAILURE;
   }
 
   constexpr unsigned int Dimension = 2;
@@ -54,13 +56,17 @@ itkVectorThresholdSegmentationLevelSetImageFilterTest(int ac, char * av[])
   auto rgbReader = RGBReaderType::New();
   auto inputReader = InputReaderType::New();
 
-  inputReader->SetFileName(av[1]);
-  rgbReader->SetFileName(av[2]);
+  inputReader->SetFileName(argv[1]);
+  rgbReader->SetFileName(argv[2]);
 
   // Create a filter
   using FilterType = itk::VectorThresholdSegmentationLevelSetImageFilter<InputImageType, RGBImageType, OutputPixelType>;
 
   auto filter = FilterType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(
+    filter, VectorThresholdSegmentationLevelSetImageFilter, SegmentationLevelSetImageFilter);
+
 
   filter->SetInput(inputReader->GetOutput());
 
@@ -92,24 +98,18 @@ itkVectorThresholdSegmentationLevelSetImageFilterTest(int ac, char * av[])
 
   filter->SetCovariance(covariance);
 
-  const double threshold = std::stod(av[4]);
+  const double threshold = std::stod(argv[4]);
 
   filter->SetThreshold(threshold);
 
-  const double curvatureScaling = std::stod(av[5]);
+  const double curvatureScaling = std::stod(argv[5]);
 
   filter->SetCurvatureScaling(curvatureScaling);
 
-  try
-  {
-    rgbReader->Update();
-    filter->Update();
-  }
-  catch (const itk::ExceptionObject & e)
-  {
-    std::cerr << "Exception detected: " << e.GetDescription();
-    return -1;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(rgbReader->Update());
+
+  ITK_TRY_EXPECT_NO_EXCEPTION(filter->Update());
+
 
   // Test the GetMacros
   if (itk::Math::NotExactlyEquals(filter->GetThreshold(), threshold))
@@ -135,7 +135,7 @@ itkVectorThresholdSegmentationLevelSetImageFilterTest(int ac, char * av[])
   auto writer = WriterType::New();
 
   writer->SetInput(rescaler->GetOutput());
-  writer->SetFileName(av[3]);
+  writer->SetFileName(argv[3]);
   writer->Update();
 
   std::cout << "Test PASSED !" << std::endl;

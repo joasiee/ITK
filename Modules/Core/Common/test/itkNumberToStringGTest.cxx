@@ -79,7 +79,7 @@ Test_decimal_notation_supports_up_to_twentyone_digits()
 {
   const itk::NumberToString<TValue> numberToString{};
 
-  for (std::int8_t exponent{ 20 }; exponent > 0; --exponent)
+  for (int8_t exponent{ 20 }; exponent > 0; --exponent)
   {
     const auto power_of_ten = std::pow(TValue{ 10 }, static_cast<TValue>(exponent));
 
@@ -88,13 +88,55 @@ Test_decimal_notation_supports_up_to_twentyone_digits()
     EXPECT_EQ(numberToString(-power_of_ten), "-1" + std::string(exponent, '0'));
   }
 
-  for (std::int8_t exponent{ -6 }; exponent < 0; ++exponent)
+  for (int8_t exponent{ -6 }; exponent < 0; ++exponent)
   {
     const auto power_of_ten = std::pow(TValue{ 10 }, static_cast<TValue>(exponent));
 
     // Test +/- 10 ^ exponent
     EXPECT_EQ(numberToString(power_of_ten), "0." + std::string(-1 - exponent, '0') + '1');
     EXPECT_EQ(numberToString(-power_of_ten), "-0." + std::string(-1 - exponent, '0') + '1');
+  }
+}
+
+
+template <typename TValue>
+void
+Test_default_specialization_of_NumberToString()
+{
+  using NumericLimitsType = std::numeric_limits<TValue>;
+
+  for (const TValue value : { NumericLimitsType::lowest(),
+                              NumericLimitsType::denorm_min(),
+                              TValue(),
+                              NumericLimitsType::epsilon(),
+                              NumericLimitsType::min(),
+                              NumericLimitsType::max(),
+                              NumericLimitsType::infinity(),
+                              NumericLimitsType::quiet_NaN() })
+  {
+    // Expect the same string from the default specialization `NumberToString<>` as from the TValue specific
+    // `NumberToString<TValue>`.
+    EXPECT_EQ(itk::NumberToString<>()(value), itk::NumberToString<TValue>()(value));
+  }
+}
+
+template <typename TValue>
+void
+Test_ConvertNumberToString()
+{
+  using NumericLimitsType = std::numeric_limits<TValue>;
+
+  for (const TValue value : { NumericLimitsType::lowest(),
+                              NumericLimitsType::denorm_min(),
+                              TValue(),
+                              NumericLimitsType::epsilon(),
+                              NumericLimitsType::min(),
+                              NumericLimitsType::max(),
+                              NumericLimitsType::infinity(),
+                              NumericLimitsType::quiet_NaN() })
+  {
+    // Expect the same string from `ConvertNumberToString` as from `NumberToString<TValue>`.
+    EXPECT_EQ(itk::ConvertNumberToString(value), itk::NumberToString<TValue>()(value));
   }
 }
 
@@ -141,4 +183,25 @@ TEST(NumberToString, DecimalNotationUpTo21Digits)
 {
   Test_decimal_notation_supports_up_to_twentyone_digits<float>();
   Test_decimal_notation_supports_up_to_twentyone_digits<double>();
+}
+
+
+TEST(NumberToString, DefaultSpecialization)
+{
+  Test_default_specialization_of_NumberToString<int8_t>();
+  Test_default_specialization_of_NumberToString<uint8_t>();
+  Test_default_specialization_of_NumberToString<intmax_t>();
+  Test_default_specialization_of_NumberToString<uintmax_t>();
+  Test_default_specialization_of_NumberToString<float>();
+  Test_default_specialization_of_NumberToString<double>();
+}
+
+TEST(NumberToString, ConvertNumberToString)
+{
+  Test_ConvertNumberToString<int8_t>();
+  Test_ConvertNumberToString<uint8_t>();
+  Test_ConvertNumberToString<intmax_t>();
+  Test_ConvertNumberToString<uintmax_t>();
+  Test_ConvertNumberToString<float>();
+  Test_ConvertNumberToString<double>();
 }

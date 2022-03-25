@@ -16,10 +16,17 @@
  *
  *=========================================================================*/
 
-#include <iostream>
 #include "itkTimeStamp.h"
 #include "itkMultiThreaderBase.h"
 
+#include <iostream>
+#include <memory> // For make_unique.
+#include <type_traits>
+
+static_assert(std::is_nothrow_default_constructible<itk::TimeStamp>::value, "Check TimeStamp default-constructibility");
+static_assert(std::is_trivially_copy_constructible<itk::TimeStamp>::value, "Check TimeStamp copy-constructibility");
+static_assert(std::is_trivially_copy_assignable<itk::TimeStamp>::value, "Check TimeStamp copy-assignability");
+static_assert(std::is_trivially_destructible<itk::TimeStamp>::value, "Check TimeStamp destructibility");
 
 // A helper struct for the test, the idea is to have one timestamp per thread.
 // To ease the writing of the test, we use  MultiThreaderBase::SingleMethodExecute
@@ -83,7 +90,7 @@ itkTimeStampTest(int, char *[])
 
     // Declare an array to test whether the all modified times have
     // been used
-    std::vector<bool> istimestamped(numberOfWorkUnits);
+    const auto istimestamped = std::make_unique<bool[]>(numberOfWorkUnits);
 
     // Call Modified once  on any object to make it up-to-date
     multithreader->Modified();

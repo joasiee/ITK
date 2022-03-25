@@ -18,7 +18,6 @@
 #ifndef itkResampleImageFilter_hxx
 #define itkResampleImageFilter_hxx
 
-#include "itkResampleImageFilter.h"
 #include "itkObjectFactory.h"
 #include "itkIdentityTransform.h"
 #include "itkTotalProgressReporter.h"
@@ -40,8 +39,8 @@ template <typename TInputImage,
 ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
   ResampleImageFilter()
   : m_Extrapolator(nullptr)
-  , m_OutputSpacing(1.0)
-  , m_OutputOrigin(0.0)
+  , m_OutputSpacing(MakeFilled<SpacingType>(1.0))
+  , m_OutputOrigin()
 
 {
 
@@ -625,9 +624,7 @@ ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTran
   }
   else
   {
-    typename TOutputImage::RegionType outputLargestPossibleRegion;
-    outputLargestPossibleRegion.SetSize(m_Size);
-    outputLargestPossibleRegion.SetIndex(m_OutputStartIndex);
+    const typename TOutputImage::RegionType outputLargestPossibleRegion(m_OutputStartIndex, m_Size);
     outputPtr->SetLargestPossibleRegion(outputLargestPossibleRegion);
   }
 

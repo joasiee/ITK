@@ -65,7 +65,7 @@ itkVersorTransformTest(int, char *[])
 
     auto transform = TransformType::New();
 
-    VectorType axis(1.5);
+    auto axis = itk::MakeFilled<VectorType>(1.5);
 
     ValueType angle = 120.0 * std::atan(1.0) / 45.0;
 
@@ -103,7 +103,7 @@ itkVersorTransformTest(int, char *[])
 
     auto rotation = TransformType::New();
 
-    itk::Vector<double, 3> axis(1);
+    auto axis = itk::MakeFilled<itk::Vector<double, 3>>(1);
 
     const double angle = (std::atan(1.0) / 45.0) * 120.0; // turn 120 degrees
 
@@ -115,7 +115,7 @@ itkVersorTransformTest(int, char *[])
     std::cout << offset << std::endl;
     for (unsigned int i = 0; i < 3; ++i)
     {
-      if (std::fabs(offset[i] - 0.0) > epsilon)
+      if (itk::Math::abs(offset[i] - 0.0) > epsilon)
       {
         Ok = false;
         break;
@@ -142,7 +142,7 @@ itkVersorTransformTest(int, char *[])
       r = rotation->TransformPoint(p);
       for (unsigned int i = 0; i < 3; ++i)
       {
-        if (std::fabs(q[i] - r[i]) > epsilon)
+        if (itk::Math::abs(q[i] - r[i]) > epsilon)
         {
           Ok = false;
           break;
@@ -172,7 +172,7 @@ itkVersorTransformTest(int, char *[])
       r = rotation->TransformVector(p);
       for (unsigned int i = 0; i < 3; ++i)
       {
-        if (std::fabs(q[i] - r[i]) > epsilon)
+        if (itk::Math::abs(q[i] - r[i]) > epsilon)
         {
           Ok = false;
           break;
@@ -202,7 +202,7 @@ itkVersorTransformTest(int, char *[])
       r = rotation->TransformCovariantVector(p);
       for (unsigned int i = 0; i < 3; ++i)
       {
-        if (std::fabs(q[i] - r[i]) > epsilon)
+        if (itk::Math::abs(q[i] - r[i]) > epsilon)
         {
           Ok = false;
           break;
@@ -235,7 +235,7 @@ itkVersorTransformTest(int, char *[])
       r = rotation->TransformVector(p);
       for (unsigned int i = 0; i < 3; ++i)
       {
-        if (std::fabs(q[i] - r[i]) > epsilon)
+        if (itk::Math::abs(q[i] - r[i]) > epsilon)
         {
           Ok = false;
           break;
@@ -261,7 +261,7 @@ itkVersorTransformTest(int, char *[])
 
     auto transform = TransformType::New();
 
-    itk::Vector<double, 3> axis(1);
+    auto axis = itk::MakeFilled<itk::Vector<double, 3>>(1);
 
     const double angle = (std::atan(1.0) / 45.0) * 30.0; // turn 30 degrees
 
@@ -278,7 +278,7 @@ itkVersorTransformTest(int, char *[])
     transformedPoint = transform->TransformPoint(center);
     for (unsigned int i = 0; i < 3; ++i)
     {
-      if (std::fabs(center[i] - transformedPoint[i]) > epsilon)
+      if (itk::Math::abs(center[i] - transformedPoint[i]) > epsilon)
       {
         Ok = false;
         break;
@@ -312,7 +312,7 @@ itkVersorTransformTest(int, char *[])
     const double tolerance = 1e-8;
     for (unsigned int p = 0; p < np; ++p)
     {
-      if (std::fabs(parameters[p] - parameters2[p]) > tolerance)
+      if (itk::Math::abs(parameters[p] - parameters2[p]) > tolerance)
       {
         std::cerr << "Output parameter does not match input " << std::endl;
         return EXIT_FAILURE;
@@ -460,7 +460,7 @@ itkVersorTransformTest(int, char *[])
     ParametersType p = t2->GetParameters();
     for (unsigned int k = 0; k < e.GetSize(); ++k)
     {
-      if (std::fabs(e[k] - p[k]) > epsilon)
+      if (itk::Math::abs(e[k] - p[k]) > epsilon)
       {
         std::cout << " [ FAILED ] " << std::endl;
         std::cout << "Expected parameters: " << e << std::endl;
@@ -489,7 +489,7 @@ itkVersorTransformTest(int, char *[])
       TransformType::OffsetType offset = t->GetOffset();
       for (unsigned int k = 0; k < 3; ++k)
       {
-        if (std::fabs(expectedOffset[k] - offset[k]) > epsilon)
+        if (itk::Math::abs(expectedOffset[k] - offset[k]) > epsilon)
         {
           std::cerr << " [ FAILED ] " << std::endl;
           std::cerr << "Expected offset: " << expectedOffset << std::endl;

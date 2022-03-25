@@ -28,7 +28,6 @@
 #ifndef itkVectorRescaleIntensityImageFilter_hxx
 #define itkVectorRescaleIntensityImageFilter_hxx
 
-#include "itkVectorRescaleIntensityImageFilter.h"
 #include "itkImageRegionConstIterator.h"
 
 namespace itk
@@ -49,7 +48,6 @@ VectorRescaleIntensityImageFilter<TInputImage, TOutputImage>::BeforeThreadedGene
   if (m_OutputMaximumMagnitude < NumericTraits<OutputRealType>::ZeroValue())
   {
     itkExceptionMacro(<< "Maximum output value cannot be negative. You are passing " << m_OutputMaximumMagnitude);
-    return;
   }
 
   InputImagePointer inputImage = this->GetInput();

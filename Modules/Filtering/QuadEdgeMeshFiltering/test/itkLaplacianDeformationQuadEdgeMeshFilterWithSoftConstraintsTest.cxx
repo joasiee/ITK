@@ -22,6 +22,7 @@
 #include "itkQuadEdgeMeshParamMatrixCoefficients.h"
 #include "itkLaplacianDeformationQuadEdgeMeshFilterWithSoftConstraints.h"
 #include "VNLSparseLUSolverTraits.h"
+#include "itkTestingMacros.h"
 
 int
 itkLaplacianDeformationQuadEdgeMeshFilterWithSoftConstraintsTest(int argc, char * argv[])
@@ -29,10 +30,9 @@ itkLaplacianDeformationQuadEdgeMeshFilterWithSoftConstraintsTest(int argc, char 
   // ** ERROR MESSAGE AND HELP ** //
   if (argc != 4)
   {
-    std::cout << "Requires 3 argument: " << std::endl;
-    std::cout << "1-Input file name " << std::endl;
-    std::cout << "2-Output file name " << std::endl;
-    std::cout << "3-Use Mixed Area" << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " inputFileName outputFileName useMixedArea"
+              << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -49,9 +49,18 @@ itkLaplacianDeformationQuadEdgeMeshFilterWithSoftConstraintsTest(int argc, char 
 
   using FilterType = itk::LaplacianDeformationQuadEdgeMeshFilterWithSoftConstraints<MeshType, MeshType, SolverType>;
   auto filter = FilterType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(
+    filter, LaplacianDeformationQuadEdgeMeshFilterWithSoftConstraints, LaplacianDeformationQuadEdgeMeshFilter);
+
+
   filter->SetInput(reader->GetOutput());
   filter->SetOrder(1);
-  filter->SetLambda(1.);
+
+  typename FilterType::OutputCoordRepType lambda = 1.0;
+  filter->SetLambda(lambda);
+  ITK_TEST_SET_GET_VALUE(lambda, filter->GetLambda());
+
   if (std::stoi(argv[3]) == 1)
   {
     filter->SetAreaComputationType(FilterType::AreaEnum::MIXEDAREA);
@@ -66,7 +75,7 @@ itkLaplacianDeformationQuadEdgeMeshFilterWithSoftConstraintsTest(int argc, char 
   CoefficientType coeff;
   filter->SetCoefficientsMethod(&coeff);
 
-  MeshType::VectorType nullVector(0.);
+  constexpr MeshType::VectorType nullVector{};
 
   std::map<MeshType::PointIdentifier, MeshType::VectorType> constraints;
   constraints[150] = nullVector;
@@ -77,13 +86,13 @@ itkLaplacianDeformationQuadEdgeMeshFilterWithSoftConstraintsTest(int argc, char 
   constraints[183] = nullVector;
   constraints[226] = nullVector;
 
-  MeshType::VectorType d(0.);
+  MeshType::VectorType d{};
   d[2] = -0.1;
 
   constraints[729] = d;
   constraints[938] = d;
 
-  MeshType::VectorType e(0.);
+  MeshType::VectorType e{};
   e[1] = 0.1;
   e[2] = -0.1;
 

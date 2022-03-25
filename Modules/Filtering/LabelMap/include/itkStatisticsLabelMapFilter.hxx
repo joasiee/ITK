@@ -19,7 +19,6 @@
 #define itkStatisticsLabelMapFilter_hxx
 
 #include "itkMath.h"
-#include "itkStatisticsLabelMapFilter.h"
 #include "itkMinimumMaximumImageCalculator.h"
 #include "itkProgressReporter.h"
 #include "vnl/algo/vnl_real_eigensystem.h"
@@ -73,8 +72,9 @@ StatisticsLabelMapFilter<TImage, TFeatureImage>::ThreadedProcessLabelObject(Labe
   typename HistogramType::MeasurementVectorType featureImageMax(1);
 
 
-  if (NumericTraits<typename Self::FeatureImagePixelType>::IsInteger &&
-      m_NumberOfBins == 1 << (8 * sizeof(typename Self::FeatureImagePixelType)))
+  constexpr size_t bitsShift = std::min(8 * sizeof(FeatureImagePixelType), 8 * sizeof(m_NumberOfBins) - 1);
+  if (std::is_integral<FeatureImagePixelType>::value && sizeof(FeatureImagePixelType) <= 2 &&
+      m_NumberOfBins == 1u << bitsShift)
   {
     // Add padding so the center of bins are integers
     featureImageMin.Fill(NumericTraits<typename Self::FeatureImagePixelType>::min() - 0.5);
@@ -165,7 +165,7 @@ StatisticsLabelMapFilter<TImage, TFeatureImage>::ThreadedProcessLabelObject(Labe
   const double sigma = std::sqrt(variance);
   const double mean2 = mean * mean;
   double       skewness;
-  if (std::abs(variance * sigma) > itk::NumericTraits<double>::min())
+  if (itk::Math::abs(variance * sigma) > itk::NumericTraits<double>::min())
   {
     skewness = ((sum3 - 3.0 * mean * sum2) / totalFreq + 2.0 * mean * mean2) / (variance * sigma);
   }
@@ -174,7 +174,7 @@ StatisticsLabelMapFilter<TImage, TFeatureImage>::ThreadedProcessLabelObject(Labe
     skewness = 0.0;
   }
   double kurtosis;
-  if (std::abs(variance) > itk::NumericTraits<double>::min())
+  if (itk::Math::abs(variance) > itk::NumericTraits<double>::min())
   {
     kurtosis =
       ((sum4 - 4.0 * mean * sum3 + 6.0 * mean2 * sum2) / totalFreq - 3.0 * mean2 * mean2) / (variance * variance) - 3.0;

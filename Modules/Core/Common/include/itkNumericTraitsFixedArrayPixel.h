@@ -86,43 +86,43 @@ public:
   static const Self
   max(const Self &)
   {
-    return Self(NumericTraits<T>::max());
+    return MakeFilled<Self>(NumericTraits<T>::max());
   }
 
   static const Self
   min(const Self &)
   {
-    return Self(NumericTraits<T>::min());
+    return MakeFilled<Self>(NumericTraits<T>::min());
   }
 
   static const Self
   max()
   {
-    return Self(NumericTraits<T>::max());
+    return MakeFilled<Self>(NumericTraits<T>::max());
   }
 
   static const Self
   min()
   {
-    return Self(NumericTraits<T>::min());
+    return MakeFilled<Self>(NumericTraits<T>::min());
   }
 
   static const Self
   NonpositiveMin()
   {
-    return Self(NumericTraits<T>::NonpositiveMin());
+    return MakeFilled<Self>(NumericTraits<T>::NonpositiveMin());
   }
 
   static const Self
   ZeroValue()
   {
-    return Self(NumericTraits<T>::ZeroValue());
+    return MakeFilled<Self>(NumericTraits<T>::ZeroValue());
   }
 
   static const Self
   OneValue()
   {
-    return Self(NumericTraits<T>::OneValue());
+    return MakeFilled<Self>(NumericTraits<T>::OneValue());
   }
 
   static const Self
@@ -201,10 +201,10 @@ public:
 #define itkStaticNumericTraitsGenericArrayMacro(GENERIC_ARRAY, T, D)                    \
   template <>                                                                           \
   ITKCommon_EXPORT const GENERIC_ARRAY<T, D> NumericTraits<GENERIC_ARRAY<T, D>>::Zero = \
-    GENERIC_ARRAY<T, D>((T)(NumericTraits<T>::Zero));                                   \
+    MakeFilled<GENERIC_ARRAY<T, D>>(NumericTraits<T>::Zero);                            \
   template <>                                                                           \
   ITKCommon_EXPORT const GENERIC_ARRAY<T, D> NumericTraits<GENERIC_ARRAY<T, D>>::One =  \
-    GENERIC_ARRAY<T, D>((T)(NumericTraits<T>::One));
+    MakeFilled<GENERIC_ARRAY<T, D>>(NumericTraits<T>::One);
 
 //
 // List here the array dimension specializations of these static

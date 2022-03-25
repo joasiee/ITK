@@ -35,6 +35,10 @@ fileiotype = Union[str, bytes, os.PathLike]
 
 import itk.support.types as itkt
 
+from .helpers import wasm_type_from_image_type, image_type_from_wasm_type
+from .helpers import wasm_type_from_mesh_type, mesh_type_from_wasm_type, python_to_js
+from .helpers import wasm_type_from_pointset_type, pointset_type_from_wasm_type
+
 if TYPE_CHECKING:
     try:
         import xarray as xr
@@ -89,11 +93,17 @@ __all__ = [
     "image_from_xarray",
     "vtk_image_from_image",
     "image_from_vtk_image",
+    "dict_from_image",
+    "image_from_dict",
     "image_intensity_min_max",
     "imwrite",
     "imread",
     "meshwrite",
     "meshread",
+    "mesh_from_dict",
+    "dict_from_mesh",
+    "pointset_from_dict",
+    "dict_from_pointset",
     "transformwrite",
     "transformread",
     "search",
@@ -250,13 +260,18 @@ def _get_itk_pixelid(numpy_array_type):
     """Returns a ITK PixelID given a numpy array."""
 
     import itk
+    def _long_type():
+        if os.name == "nt":
+            return itk.ULL
+        else:
+            return itk.UL
 
     # This is a Mapping from numpy array types to itk pixel types.
     _np_itk = {
         np.uint8: itk.UC,
         np.uint16: itk.US,
         np.uint32: itk.UI,
-        np.uint64: itk.UL,
+        np.uint64: _long_type(),
         np.int8: itk.SC,
         np.int16: itk.SS,
         np.int32: itk.SI,
@@ -465,7 +480,10 @@ def vector_container_from_array(arr: ArrayLike, ttype=None) -> "itkt.VectorConta
         arr = np.asarray(arr)
 
     # Return VectorContainer with 64-bit index type
-    IndexType = itk.ULL
+    if os.name == "nt":
+        IndexType = itk.ULL
+    else:
+        IndexType = itk.UL
 
     # Find container type
     if ttype is not None:
@@ -588,7 +606,12 @@ array_from_matrix = GetArrayFromMatrix
 def GetMatrixFromArray(arr: ArrayLike) -> "itkt.Matrix":
     import itk
 
+    # Verify inputs
+    if not isinstance(arr, np.ndarray):
+        arr = np.asarray(arr)
+
     vnl_matrix = GetVnlMatrixFromArray(arr)
+
     dims = arr.shape
     PixelType = _get_itk_pixelid(arr)
     m = itk.Matrix[PixelType, dims[0], dims[1]](vnl_matrix)
@@ -637,7 +660,7 @@ def xarray_from_image(l_image: "itkt.ImageOrImageSource") -> "xr.DataArray":
     direction = np.flip(itk.array_from_matrix(l_image.GetDirection()))
     attrs = {"direction": direction}
     metadata = dict(l_image)
-    ignore_keys = set(["direction", "origin", "spacing"])
+    ignore_keys = {"direction", "origin", "spacing"}
     for key in metadata:
         if not key in ignore_keys:
             attrs[key] = metadata[key]
@@ -689,7 +712,7 @@ def image_from_xarray(data_array: "xr.DataArray") -> "itkt.ImageBase":
     if "direction" in data_array.attrs:
         direction = data_array.attrs["direction"]
         itk_image.SetDirection(np.flip(direction))
-    ignore_keys = set(["direction", "origin", "spacing"])
+    ignore_keys = {"direction", "origin", "spacing"}
     for key in data_array.attrs:
         if not key in ignore_keys:
             itk_image[key] = data_array.attrs[key]
@@ -801,8 +824,193 @@ def image_from_vtk_image(vtk_image: "vtk.vtkImageData") -> "itkt.ImageBase":
     return l_image
 
 
-# return an image
+def dict_from_image(image: "itkt.Image") -> Dict:
+    """Serialize a Python itk.Image object to a pickable Python dictionary."""
+    import itk
 
+    pixel_arr = itk.array_view_from_image(image)
+    imageType = wasm_type_from_image_type(image)
+    return dict(
+        imageType=imageType,
+        origin=tuple(image.GetOrigin()),
+        spacing=tuple(image.GetSpacing()),
+        size=tuple(image.GetBufferedRegion().GetSize()),
+        direction=np.asarray(image.GetDirection()),
+        data=pixel_arr,
+    )
+
+
+def image_from_dict(image_dict: Dict) -> "itkt.Image":
+    """Deserialize an dictionary representing an itk.Image object."""
+    import itk
+
+    ImageType = image_type_from_wasm_type(image_dict["imageType"])
+    image = itk.PyBuffer[ImageType].GetImageViewFromArray(image_dict["data"])
+    image.SetOrigin(image_dict["origin"])
+    image.SetSpacing(image_dict["spacing"])
+    image.SetDirection(image_dict["direction"])
+    return image
+
+
+def mesh_from_dict(mesh_dict: Dict) -> "itkt.Mesh":
+    """Deserialize an dictionary representing an itk.Mesh object."""
+    import itk
+
+    MeshType = mesh_type_from_wasm_type(mesh_dict["meshType"])
+    mesh = MeshType.New()
+
+    mesh.SetObjectName(mesh_dict["name"])
+
+    points = mesh_dict["points"]
+    points = itk.vector_container_from_array(points)
+    mesh.SetPoints(points)
+
+    point_data = mesh_dict["pointData"]
+    point_data = itk.vector_container_from_array(point_data)
+    mesh.SetPointData(point_data)
+
+    cells = mesh_dict["cells"]
+    cells = itk.vector_container_from_array(cells)
+    mesh.SetCellsArray(cells)
+
+    cell_data = mesh_dict["cellData"]
+    cell_data = itk.vector_container_from_array(cell_data)
+    mesh.SetCellData(cell_data)
+
+    return mesh
+
+
+def dict_from_mesh(mesh: "itkt.Mesh") -> Dict:
+    """Serialize a Python itk.Mesh object to a pickable Python dictionary."""
+    import itk
+
+    mesh_template = itk.template(mesh)
+    pixel_type, mangle, pixel_type_components = wasm_type_from_mesh_type(mesh)
+
+    number_of_points = mesh.GetNumberOfPoints()
+    number_of_cells = mesh.GetNumberOfCells()
+
+    if number_of_cells == 0:
+        cells_array = np.array([], np.uint)
+    else:
+        cells_array = itk.array_view_from_vector_container(mesh.GetCellsArray())
+
+    if number_of_points == 0:
+        points_array = np.array([], np.float32)
+    else:
+        points_array = itk.array_view_from_vector_container(mesh.GetPoints()).flatten()
+
+    point_data = mesh.GetPointData()
+    if point_data.Size() == 0:
+        point_data_numpy = np.array([], mangle)
+    else:
+        point_data_numpy = itk.array_view_from_vector_container(point_data)
+
+    cell_data = mesh.GetCellData()
+    if cell_data.Size() == 0:
+        cell_data_numpy = np.array([], mangle)
+    else:
+        cell_data_numpy = itk.array_view_from_vector_container(cell_data)
+
+    if os.name == "nt":
+        cell_component_type = python_to_js(itk.ULL)
+    else:
+        cell_component_type = python_to_js(itk.UL)
+
+    point_component_type = python_to_js(itk.F)
+
+    # Currently use the same data type for point and cell data
+    mesh_type = dict()
+    mesh_type["dimension"] = mesh_template[1][1]
+    mesh_type["pointComponentType"] = point_component_type
+    mesh_type["pointPixelComponentType"] = mangle
+    mesh_type["pointPixelType"] = pixel_type
+    mesh_type["pointPixelComponents"] = pixel_type_components
+    mesh_type["cellComponentType"] = cell_component_type
+    mesh_type["cellPixelComponentType"] = mangle
+    mesh_type["cellPixelType"] = pixel_type
+    mesh_type["cellPixelComponents"] = pixel_type_components
+
+    cell_buffer_size = cells_array.size
+
+    return dict(
+        meshType=mesh_type,
+        name=mesh.GetObjectName(),
+        dimension=mesh_template[1][1],
+        numberOfPoints=number_of_points,
+        points=points_array,
+        numberOfPointPixels=point_data.Size(),
+        pointData=point_data_numpy,
+        numberOfCells=number_of_cells,
+        cells=cells_array,
+        numberOfCellPixels=cell_data.Size(),
+        cellData=cell_data_numpy,
+        cellBufferSize=cell_buffer_size,
+    )
+
+def pointset_from_dict(pointset_dict: Dict) -> "itkt.PointSet":
+    """Deserialize an dictionary representing an itk.PointSet object."""
+    import itk
+
+    MeshType = pointset_type_from_wasm_type(pointset_dict["pointSetType"])
+    mesh = MeshType.New()
+
+    mesh.SetObjectName(pointset_dict["name"])
+
+    points = pointset_dict["points"]
+    points = itk.vector_container_from_array(points)
+    mesh.SetPoints(points)
+
+    point_data = pointset_dict["pointData"]
+    point_data = itk.vector_container_from_array(point_data)
+    mesh.SetPointData(point_data)
+    return mesh
+
+
+def dict_from_pointset(pointset: "itkt.PointSet") -> Dict:
+    """Serialize a Python itk.PointSet object to a pickable Python dictionary."""
+    import itk
+
+    pointset_template = itk.template(pointset)
+    pixel_type, mangle, pixel_type_components = wasm_type_from_pointset_type(pointset)
+
+    number_of_points = pointset.GetNumberOfPoints()
+
+    if number_of_points == 0:
+        points_array = np.array([], np.float32)
+    else:
+        points_array = itk.array_view_from_vector_container(pointset.GetPoints()).flatten()
+
+    point_data = pointset.GetPointData()
+    if point_data.Size() == 0:
+        point_data_numpy = np.array([], mangle)
+    else:
+        point_data_numpy = itk.array_view_from_vector_container(point_data)
+
+    if os.name == "nt":
+        cell_component_type = python_to_js(itk.ULL)
+    else:
+        cell_component_type = python_to_js(itk.UL)
+
+    point_component_type = python_to_js(itk.F)
+
+    # Currently use the same data type for point and cell data
+    pointset_type = dict()
+    pointset_type["dimension"] = pointset_template[1][1]
+    pointset_type["pointComponentType"] = point_component_type
+    pointset_type["pointPixelComponentType"] = mangle
+    pointset_type["pointPixelType"] = pixel_type
+    pointset_type["pointPixelComponents"] = pixel_type_components
+
+    return dict(
+        pointSetType=pointset_type,
+        name=pointset.GetObjectName(),
+        dimension=pointset_template[1][1],
+        numberOfPoints=number_of_points,
+        points=points_array,
+        numberOfPointPixels=point_data.Size(),
+        pointData=point_data_numpy,
+    )
 
 def image_intensity_min_max(image_or_filter: "itkt.ImageOrImageSource"):
     """Return the minimum and maximum of values in a image of in the output image of a filter
@@ -1413,8 +1621,7 @@ class templated_class:
     # and is a copy/paste from DictMixin
     # only methods to edit dictionary are not there
     def __iter__(self) -> str:
-        for k in self.keys():
-            yield k
+        yield from self.keys()
 
     def has_key(self, key: str):
         return key in self.__templates__

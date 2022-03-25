@@ -506,14 +506,18 @@ TIFFImageIO::ReadImageInformation()
 
     if (!m_IsReadAsScalarPlusPalette)
     {
-      itkDebugMacro(<< "Using TIFFReadRGBAImage");
+      itkDebugMacro(<< "Using TIFFReadRGBAImageOriented");
+      if (m_InternalImage->m_BitsPerSample > 8)
+      {
+        itkWarningMacro("Falling back to suboptimal 8-bit RGBA reader. Data loss will occur with reduced bit depth.");
+      }
       this->SetNumberOfComponents(4);
       this->SetPixelType(IOPixelEnum::RGBA);
       m_ComponentType = IOComponentEnum::UCHAR;
     }
     else
     {
-      itkDebugMacro(<< "Using TIFFReadRGBImage");
+      itkDebugMacro(<< "Using TIFFReadRGBAImageOriented");
       itkWarningMacro(<< "Could not read this palette image as scalar+Palette because of its TIFF format");
       // can't read as scalar+palette so reset type to RGB
       m_IsReadAsScalarPlusPalette = false;
@@ -688,9 +692,8 @@ TIFFImageIO::InternalWrite(const void * buffer)
       switch (m_Compression)
       {
         case TIFFImageIO::LZW:
-          itkWarningMacro(
-            << "LZW compression is patented outside US so it is disabled. packbits compression will be used instead");
-          ITK_FALLTHROUGH;
+          compression = COMPRESSION_LZW;
+          break;
         case TIFFImageIO::PackBits:
           compression = COMPRESSION_PACKBITS;
           break;

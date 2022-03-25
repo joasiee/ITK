@@ -18,7 +18,6 @@
 #ifndef itkMattesMutualInformationImageToImageMetric_hxx
 #define itkMattesMutualInformationImageToImageMetric_hxx
 
-#include "itkMattesMutualInformationImageToImageMetric.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageIterator.h"
 #include "itkMath.h"
@@ -236,20 +235,11 @@ MattesMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Initialize
   }
 
   {
-    JointPDFRegionType jointPDFRegion;
-    {
-      // For the joint PDF define a region starting from {0,0}
-      // with size {m_NumberOfHistogramBins, this->m_NumberOfHistogramBins}.
-      // The dimension represents fixed image bin size
-      // and moving image bin size , respectively.
-      JointPDFIndexType jointPDFIndex;
-      jointPDFIndex.Fill(0);
-      JointPDFSizeType jointPDFSize;
-      jointPDFSize.Fill(m_NumberOfHistogramBins);
-
-      jointPDFRegion.SetIndex(jointPDFIndex);
-      jointPDFRegion.SetSize(jointPDFSize);
-    }
+    // For the joint PDF define a region starting from {0,0}
+    // with size {m_NumberOfHistogramBins, this->m_NumberOfHistogramBins}.
+    // The dimension represents fixed image bin size
+    // and moving image bin size , respectively.
+    const JointPDFRegionType jointPDFRegion(JointPDFSizeType::Filled(m_NumberOfHistogramBins));
 
     // By setting these values, the joint histogram physical locations will
     // correspond to intensity values.
@@ -285,24 +275,14 @@ MattesMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Initialize
     // Not needed if this->m_UseExplicitPDFDerivatives
     this->m_PRatioArray.SetSize(0, 0);
     {
-      JointPDFDerivativesRegionType jointPDFDerivativesRegion;
-      {
-        // For the derivatives of the joint PDF define a region
-        // starting from {0,0,0} with size
-        // {m_NumberOfParameters,m_NumberOfHistogramBins,
-        // this->m_NumberOfHistogramBins}. The dimension represents
-        // transform parameters, fixed image parzen window index and
-        // moving image parzen window index, respectively.
-        JointPDFDerivativesIndexType jointPDFDerivativesIndex;
-        jointPDFDerivativesIndex.Fill(0);
-        JointPDFDerivativesSizeType jointPDFDerivativesSize;
-        jointPDFDerivativesSize[0] = this->m_NumberOfParameters;
-        jointPDFDerivativesSize[1] = this->m_NumberOfHistogramBins;
-        jointPDFDerivativesSize[2] = this->m_NumberOfHistogramBins;
-
-        jointPDFDerivativesRegion.SetIndex(jointPDFDerivativesIndex);
-        jointPDFDerivativesRegion.SetSize(jointPDFDerivativesSize);
-      }
+      // For the derivatives of the joint PDF define a region
+      // starting from {0,0,0} with size
+      // {m_NumberOfParameters,m_NumberOfHistogramBins,
+      // this->m_NumberOfHistogramBins}. The dimension represents
+      // transform parameters, fixed image parzen window index and
+      // moving image parzen window index, respectively.
+      const JointPDFDerivativesRegionType jointPDFDerivativesRegion(JointPDFDerivativesSizeType{
+        { this->m_NumberOfParameters, this->m_NumberOfHistogramBins, this->m_NumberOfHistogramBins } });
 
       // Set the regions and allocate
       for (ThreadIdType workUnitID = 0; workUnitID < this->m_NumberOfWorkUnits; ++workUnitID)

@@ -18,7 +18,6 @@
 #ifndef itkAnchorUtilities_hxx
 #define itkAnchorUtilities_hxx
 
-#include "itkAnchorUtilities.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkImageRegionConstIterator.h"
 #include "itkNeighborhoodAlgorithm.h"
@@ -67,10 +66,10 @@ DoAnchorFace(const TImage *                            input,
   for (unsigned int it = 0; it < face.GetNumberOfPixels(); ++it)
   {
     typename TImage::IndexType Ind = dumbImg->ComputeIndex(it);
-    unsigned                   start, end;
+    unsigned int               start, end;
     if (FillLineBuffer<TImage, TBres, TLine>(input, Ind, NormLine, tol, LineOffsets, AllImage, inbuffer, start, end))
     {
-      const unsigned len = end - start + 1;
+      const unsigned int len = end - start + 1;
       // compat
       inbuffer[0] = border;
       inbuffer[len + 1] = border;

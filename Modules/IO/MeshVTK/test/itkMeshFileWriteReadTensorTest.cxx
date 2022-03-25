@@ -26,8 +26,7 @@ itkMeshFileWriteReadTensorTest(int argc, char * argv[])
 {
   if (argc < 3)
   {
-    std::cerr << "Usage: "
-              << "<OutputMesh2D.vtk> "
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << "<OutputMesh2D.vtk> "
               << "<OutputMesh3D.vtk> " << std::endl;
     return EXIT_FAILURE;
   }
@@ -61,7 +60,15 @@ itkMeshFileWriteReadTensorTest(int argc, char * argv[])
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(mesh2dWriter, MeshFileWriter, ProcessObject);
 
-  mesh2dWriter->SetMeshIO(itk::VTKPolyDataMeshIO::New());
+  itk::VTKPolyDataMeshIO::Pointer vtkPolyDataMeshIO = itk::VTKPolyDataMeshIO::New();
+
+  // Supported read extensions are empty by default
+  ITK_TEST_EXPECT_TRUE(vtkPolyDataMeshIO->GetSupportedReadExtensions().size() == 0);
+
+  const itk::MeshIOBase::ArrayOfExtensionsType supportedExtensions{ ".vtk" };
+  ITK_TEST_EXPECT_TRUE(vtkPolyDataMeshIO->GetSupportedWriteExtensions() == supportedExtensions);
+
+  mesh2dWriter->SetMeshIO(vtkPolyDataMeshIO);
   mesh2dWriter->SetInput(mesh2d);
   mesh2dWriter->SetFileName(outputMesh2D);
   try

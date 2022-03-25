@@ -18,7 +18,6 @@
 #ifndef itkComposeDisplacementFieldsImageFilter_hxx
 #define itkComposeDisplacementFieldsImageFilter_hxx
 
-#include "itkComposeDisplacementFieldsImageFilter.h"
 
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkImageRegionIterator.h"
@@ -61,7 +60,7 @@ template <typename InputImage, typename TOutputImage>
 void
 ComposeDisplacementFieldsImageFilter<InputImage, TOutputImage>::BeforeThreadedGenerateData()
 {
-  VectorType zeroVector(0.0);
+  constexpr VectorType zeroVector{};
 
   this->GetOutput()->FillBuffer(zeroVector);
 
@@ -98,7 +97,7 @@ ComposeDisplacementFieldsImageFilter<InputImage, TOutputImage>::DynamicThreadedG
       pointIn2[d] = pointIn1[d] + warpVector[d];
     }
 
-    typename InterpolatorType::OutputType displacement(0.0);
+    typename InterpolatorType::OutputType displacement{};
     if (this->m_Interpolator->IsInsideBuffer(pointIn2))
     {
       displacement = this->m_Interpolator->Evaluate(pointIn2);

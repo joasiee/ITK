@@ -19,7 +19,6 @@
 #define itkImageMaskSpatialObject_hxx
 
 #include "itkMath.h"
-#include "itkImageMaskSpatialObject.h"
 #include "itkImageRegionRange.h"
 
 #include <cstdint> // For uintmax_t.
@@ -76,7 +75,7 @@ ImageMaskSpatialObject<TDimension, TPixel>::ComputeMyBoundingBox()
     typename Superclass::ContinuousIndexType maxContinuousIndex{ minIndex + boundingBoxInIndexSpace.GetSize() };
 
     // Allow a margin of half a pixel in each direction.
-    const typename SpatialObject<TDimension>::VectorType half_pixel_size{ 0.5 };
+    const auto half_pixel_size = MakeFilled<typename SpatialObject<TDimension>::VectorType>(0.5);
     minContinuousIndex -= half_pixel_size;
     maxContinuousIndex -= half_pixel_size;
 
@@ -89,17 +88,17 @@ ImageMaskSpatialObject<TDimension, TPixel>::ComputeMyBoundingBox()
     boundingBoxInObjectSpace->SetMaximum(firstPoint);
 
     // The total number of corner points of the bounding box.
-    constexpr auto numberOfCorners = std::uintmax_t{ 1 } << TDimension;
+    constexpr auto numberOfCorners = uintmax_t{ 1 } << TDimension;
 
-    for (std::uintmax_t cornerNumber{ 1 }; cornerNumber < numberOfCorners; ++cornerNumber)
+    for (uintmax_t cornerNumber{ 1 }; cornerNumber < numberOfCorners; ++cornerNumber)
     {
       // For each corner, estimate the n-dimensional index.
 
       auto continuousIndex = minContinuousIndex;
 
-      for (unsigned dim{}; dim < TDimension; ++dim)
+      for (unsigned int dim{}; dim < TDimension; ++dim)
       {
-        const std::uintmax_t bitMask{ std::uintmax_t{ 1 } << dim };
+        const uintmax_t bitMask{ uintmax_t{ 1 } << dim };
 
         if ((cornerNumber & bitMask) != 0)
         {
@@ -172,7 +171,7 @@ ImageMaskSpatialObject<TDimension, TPixel>::ComputeMyBoundingBoxInIndexSpace() c
   const auto CreateRegion = [](const IndexType & minIndex, const IndexType & maxIndex) {
     SizeType regionSize;
 
-    for (unsigned dim = 0; dim < SizeType::Dimension; ++dim)
+    for (unsigned int dim = 0; dim < SizeType::Dimension; ++dim)
     {
       regionSize[dim] = static_cast<SizeValueType>(maxIndex[dim] + 1 - minIndex[dim]);
     }

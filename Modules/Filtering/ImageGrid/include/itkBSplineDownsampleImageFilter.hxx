@@ -27,7 +27,6 @@
  *=========================================================================*/
 #ifndef itkBSplineDownsampleImageFilter_hxx
 #define itkBSplineDownsampleImageFilter_hxx
-#include "itkBSplineDownsampleImageFilter.h"
 
 namespace itk
 {
@@ -90,9 +89,7 @@ BSplineDownsampleImageFilter<TInputImage, TOutputImage, ResamplerType>::Generate
     inputRequestedRegionStartIndex[i] = outputRequestedRegionStartIndex[i] * (int)2;
   }
 
-  typename TInputImage::RegionType inputRequestedRegion;
-  inputRequestedRegion.SetSize(inputRequestedRegionSize);
-  inputRequestedRegion.SetIndex(inputRequestedRegionStartIndex);
+  const typename TInputImage::RegionType inputRequestedRegion(inputRequestedRegionStartIndex, inputRequestedRegionSize);
 
   inputPtr->SetRequestedRegion(inputRequestedRegion);
 }

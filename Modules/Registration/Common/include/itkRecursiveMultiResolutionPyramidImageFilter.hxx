@@ -18,7 +18,6 @@
 #ifndef itkRecursiveMultiResolutionPyramidImageFilter_hxx
 #define itkRecursiveMultiResolutionPyramidImageFilter_hxx
 
-#include "itkRecursiveMultiResolutionPyramidImageFilter.h"
 #include "itkGaussianOperator.h"
 #include "itkCastImageFilter.h"
 #include "itkDiscreteGaussianImageFilter.h"
@@ -377,7 +376,6 @@ RecursiveMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>::GenerateI
   unsigned int refLevel = this->GetNumberOfLevels() - 1;
   SizeType     baseSize = this->GetOutput(refLevel)->GetRequestedRegion().GetSize();
   IndexType    baseIndex = this->GetOutput(refLevel)->GetRequestedRegion().GetIndex();
-  RegionType   baseRegion;
 
   unsigned int idim;
   for (idim = 0; idim < ImageDimension; ++idim)
@@ -386,8 +384,7 @@ RecursiveMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>::GenerateI
     baseIndex[idim] *= static_cast<IndexValueType>(factor);
     baseSize[idim] *= static_cast<SizeValueType>(factor);
   }
-  baseRegion.SetIndex(baseIndex);
-  baseRegion.SetSize(baseSize);
+  const RegionType baseRegion(baseIndex, baseSize);
 
   // compute requirements for the smoothing part
   using OutputPixelType = typename TOutputImage::PixelType;

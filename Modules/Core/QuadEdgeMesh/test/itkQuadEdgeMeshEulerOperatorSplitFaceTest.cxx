@@ -19,6 +19,7 @@
 #include "itkQuadEdgeMeshEulerOperatorSplitFacetFunction.h"
 #include "itkQuadEdgeMeshEulerOperatorJoinFacetFunction.h"
 #include "itkQuadEdgeMeshEulerOperatorsTestHelper.h"
+#include "itkTestingMacros.h"
 
 int
 itkQuadEdgeMeshEulerOperatorSplitFaceTest(int, char *[])
@@ -41,6 +42,10 @@ itkQuadEdgeMeshEulerOperatorSplitFaceTest(int, char *[])
   std::cout << "Checking SplitFacet." << std::endl;
 
   auto splitFacet = SplitFacet::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(splitFacet, QuadEdgeMeshEulerOperatorSplitFacetFunction, QuadEdgeMeshFunctionBase);
+
+
   std::cout << "     "
             << "Test No Mesh Input";
   if (splitFacet->Evaluate((QEType *)1, (QEType *)2))
@@ -49,8 +54,6 @@ itkQuadEdgeMeshEulerOperatorSplitFaceTest(int, char *[])
     return EXIT_FAILURE;
   }
   std::cout << "OK" << std::endl;
-
-  (void)splitFacet->GetNameOfClass();
 
   MeshPointer mesh = MeshType::New();
   CreateSquareTriangularMesh<MeshType>(mesh);
@@ -93,7 +96,8 @@ itkQuadEdgeMeshEulerOperatorSplitFaceTest(int, char *[])
   }
   std::cout << "OK" << std::endl;
 
-  auto     joinFacet = JoinFacet::New();
+  auto joinFacet = JoinFacet::New();
+  joinFacet->SetInput(mesh);
   QEType * DeletedEdge = mesh->FindEdge(12, 7);
   QEType * G = DeletedEdge->GetSym()->GetLprev();
   QEType * H = joinFacet->Evaluate(DeletedEdge);

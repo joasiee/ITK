@@ -68,10 +68,15 @@ itkStatisticsImageFilterTest(int argc, char * argv[])
   using FilterType = itk::StatisticsImageFilter<FloatImage>;
   auto filter = FilterType::New();
 
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(filter, StatisticsImageFilter, ImageSink);
+
+
   itk::SimpleFilterWatcher filterWatch(filter);
 
-  filter->SetInput(image);
   filter->SetNumberOfStreamDivisions(numberOfStreamDivisions);
+  ITK_TEST_SET_GET_VALUE(numberOfStreamDivisions, filter->GetNumberOfStreamDivisions());
+
+  filter->SetInput(image);
 
   ITK_TRY_EXPECT_NO_EXCEPTION(filter->Update());
 

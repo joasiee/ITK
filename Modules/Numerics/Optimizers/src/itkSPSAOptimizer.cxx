@@ -27,8 +27,6 @@ namespace itk
 SPSAOptimizer ::SPSAOptimizer()
 
 {
-  itkDebugMacro("Constructor");
-
   m_CurrentIteration = 0;
   m_Maximize = false;
   m_StopCondition = StopConditionSPSAOptimizerEnum::Unknown;
@@ -94,7 +92,7 @@ SPSAOptimizer::GetValue(const ParametersType & parameters) const
 {
   /**
    * This method just calls the Superclass' implementation,
-   * but is necessary because GetValue(void) is also declared
+   * but is necessary because GetValue() is also declared
    * in this class.
    */
   return this->Superclass::GetValue(parameters);
@@ -450,7 +448,7 @@ SPSAOptimizer::GuessParameters(SizeValueType numberOfGradientEstimates, double i
     this->ComputeGradient(initialPosition, m_Gradient);
     for (unsigned int j = 0; j < spaceDimension; ++j)
     {
-      averageAbsoluteGradient[j] += std::fabs(m_Gradient[j]);
+      averageAbsoluteGradient[j] += itk::Math::abs(m_Gradient[j]);
     }
   } // end for ++n
   averageAbsoluteGradient /= static_cast<double>(numberOfGradientEstimates);

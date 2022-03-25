@@ -18,7 +18,6 @@
 #ifndef itkGPUDiscreteGaussianImageFilter_hxx
 #define itkGPUDiscreteGaussianImageFilter_hxx
 
-#include "itkGPUDiscreteGaussianImageFilter.h"
 #include "itkGPUNeighborhoodOperatorImageFilter.h"
 #include "itkGaussianOperator.h"
 #include "itkImageRegionIterator.h"
@@ -58,7 +57,7 @@ GPUDiscreteGaussianImageFilter<TInputImage, TOutputImage>::GPUDiscreteGaussianIm
   }
   else
   {
-    itkExceptionMacro("GPUDiscreteGaussianImageFilter only supports n-Dimensional image.");
+    itkExceptionMacro("GPUDiscreteGaussianImageFilter only supports n-dimensional image.");
   }
 }
 

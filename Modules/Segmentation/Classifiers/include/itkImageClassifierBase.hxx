@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkImageClassifierBase_hxx
 #define itkImageClassifierBase_hxx
-#include "itkImageClassifierBase.h"
 
 namespace itk
 {
@@ -138,13 +137,7 @@ ImageClassifierBase<TInputImage, TClassifiedImage>::Allocate()
 
   this->SetClassifiedImage(classifiedImage);
 
-  typename TClassifiedImage::IndexType classifiedImageIndex;
-  classifiedImageIndex.Fill(0);
-
-  typename TClassifiedImage::RegionType classifiedImageRegion;
-
-  classifiedImageRegion.SetSize(inputImageSize);
-  classifiedImageRegion.SetIndex(classifiedImageIndex);
+  const typename TClassifiedImage::RegionType classifiedImageRegion(inputImageSize);
 
   classifiedImage->SetLargestPossibleRegion(classifiedImageRegion);
   classifiedImage->SetBufferedRegion(classifiedImageRegion);

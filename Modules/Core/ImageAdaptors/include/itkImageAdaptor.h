@@ -122,7 +122,7 @@ public:
    * of the index (0,0). */
   using typename Superclass::PointType;
 
-  /** Direction type alias support  The Direction is a matix of
+  /** Direction type alias support  The Direction is a matrix of
    * direction cosines that specify the direction between samples.
    * */
   using typename Superclass::DirectionType;
@@ -140,8 +140,8 @@ public:
     using Type = Image<UPixelType, UImageDimension>;
   };
 
-  template <typename UPixelType, unsigned int NUImageDimension = TImage::ImageDimension>
-  using RebindImageType = itk::Image<UPixelType, NUImageDimension>;
+  template <typename UPixelType, unsigned int VUImageDimension = TImage::ImageDimension>
+  using RebindImageType = itk::Image<UPixelType, VUImageDimension>;
 
 
   /** Set the region object that defines the size and starting index
@@ -381,6 +381,14 @@ public:
   bool
   VerifyRequestedRegion() override;
 
+  /** Returns the continuous index from a physical point. */
+  template <typename TIndexRep, typename TCoordRep>
+  ContinuousIndex<TIndexRep, TImage::ImageDimension>
+  TransformPhysicalPointToContinuousIndex(const Point<TCoordRep, TImage::ImageDimension> & point) const
+  {
+    return m_Image->template TransformPhysicalPointToContinuousIndex<TIndexRep>(point);
+  }
+
   /** \brief Get the continuous index from a physical point
    *
    * Returns true if the resulting index is within the image, false otherwise.
@@ -391,6 +399,14 @@ public:
                                           ContinuousIndex<TCoordRep, Self::ImageDimension> & index) const
   {
     return m_Image->TransformPhysicalPointToContinuousIndex(point, index);
+  }
+
+  /** Returns the index (discrete) of a voxel from a physical point. */
+  template <typename TCoordRep>
+  IndexType
+  TransformPhysicalPointToIndex(const Point<TCoordRep, Self::ImageDimension> & point) const
+  {
+    return m_Image->TransformPhysicalPointToIndex(point);
   }
 
   /** Get the index (discrete) from a physical point.
@@ -416,6 +432,14 @@ public:
     m_Image->TransformContinuousIndexToPhysicalPoint(index, point);
   }
 
+  /** Returns a physical point from a continuous index (in the index space) */
+  template <typename TCoordRep, typename TIndexRep>
+  Point<TCoordRep, TImage::ImageDimension>
+  TransformContinuousIndexToPhysicalPoint(const ContinuousIndex<TIndexRep, Self::ImageDimension> & index) const
+  {
+    return m_Image->template TransformContinuousIndexToPhysicalPoint<TIndexRep>(index);
+  }
+
   /** Get a physical point (in the space which
    * the origin and spacing information comes from)
    * from a discrete index (in the index space)
@@ -426,6 +450,14 @@ public:
   TransformIndexToPhysicalPoint(const IndexType & index, Point<TCoordRep, Self::ImageDimension> & point) const
   {
     m_Image->TransformIndexToPhysicalPoint(index, point);
+  }
+
+  /** Returns a physical point from a discrete index (in the index space) */
+  template <typename TCoordRep>
+  Point<TCoordRep, Self::ImageDimension>
+  TransformIndexToPhysicalPoint(const IndexType & index) const
+  {
+    return m_Image->template TransformIndexToPhysicalPoint<TCoordRep>(index);
   }
 
   template <typename TCoordRep>
@@ -476,7 +508,7 @@ private:
   // to have the correct vector length of the image.
   template <typename TPixelType>
   void
-  UpdateAccessor(typename ::itk::VectorImage<TPixelType, ImageDimension> * itkNotUsed(dummy))
+  UpdateAccessor(typename itk::VectorImage<TPixelType, ImageDimension> * itkNotUsed(dummy))
   {
     this->m_PixelAccessor.SetVectorLength(this->m_Image->GetNumberOfComponentsPerPixel());
   }

@@ -21,7 +21,6 @@
 #include "itkImageRegionIterator.h"
 #include "itkMacro.h"
 #include "itkEventObject.h"
-#include "itkFiniteDifferenceImageFilter.h"
 
 namespace itk
 {
@@ -168,7 +167,7 @@ FiniteDifferenceImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRe
 template <typename TInputImage, typename TOutputImage>
 typename FiniteDifferenceImageFilter<TInputImage, TOutputImage>::TimeStepType
 FiniteDifferenceImageFilter<TInputImage, TOutputImage>::ResolveTimeStep(const std::vector<TimeStepType> & timeStepList,
-                                                                        const std::vector<bool> &         valid) const
+                                                                        const BooleanStdVectorType &      valid) const
 {
   TimeStepType oMin = NumericTraits<TimeStepType>::ZeroValue();
   bool         flag = false;

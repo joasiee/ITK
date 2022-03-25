@@ -16,7 +16,7 @@
  *
  *=========================================================================*/
 
-/** Example illustrating use of FFTComplexToComplexImageFilter
+/** Example illustrating use of FFTWComplexToComplexFFTImageFilter
  *
  * \author Simon K. Warfield simon.warfield\@childrens.harvard.edu
  *
@@ -34,9 +34,13 @@
 
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-#include "itkFFTWComplexToComplexFFTImageFilter.h"
 #include "itkForwardFFTImageFilter.h"
 #include "itkInverseFFTImageFilter.h"
+
+#include "itkObjectFactoryBase.h"
+#include "itkFFTWComplexToComplexFFTImageFilter.h"
+#include "itkFFTWForwardFFTImageFilter.h"
+#include "itkFFTWInverseFFTImageFilter.h"
 
 template <typename TPixel, unsigned int VDimension>
 int
@@ -53,7 +57,7 @@ transformImage(const char * inputImageFileName, const char * outputImageFileName
   auto reader = ReaderType::New();
   reader->SetFileName(inputImageFileName);
 
-  using ForwardFilterType = itk::ForwardFFTImageFilter<RealImageType, ComplexImageType>;
+  using ForwardFilterType = itk::FFTWForwardFFTImageFilter<RealImageType, ComplexImageType>;
   auto forwardFilter = ForwardFilterType::New();
   forwardFilter->SetInput(reader->GetOutput());
 
@@ -68,7 +72,7 @@ transformImage(const char * inputImageFileName, const char * outputImageFileName
   // This tests the CanUseDestructiveAlgorithm state with the FFTW version.
   forwardComplexFilter->ReleaseDataFlagOn();
 
-  using InverseFilterType = itk::InverseFFTImageFilter<ComplexImageType, RealImageType>;
+  using InverseFilterType = itk::FFTWInverseFFTImageFilter<ComplexImageType, RealImageType>;
   auto inverseFilter = InverseFilterType::New();
   inverseFilter->SetInput(forwardComplexFilter->GetOutput());
 

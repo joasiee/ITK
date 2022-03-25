@@ -18,6 +18,7 @@
 #ifndef itkNarrowBandImageFilterBase_h
 #define itkNarrowBandImageFilterBase_h
 
+#include "itkBooleanStdVector.h"
 #include "itkFiniteDifferenceImageFilter.h"
 #include "itkMultiThreaderBase.h"
 #include "itkNarrowBand.h"
@@ -292,7 +293,7 @@ protected:
 
   bool m_Touched;
 
-  std::vector<bool> m_TouchedForThread;
+  BooleanStdVectorType m_TouchedForThread;
 
   ValueType m_IsoSurfaceValue;
 

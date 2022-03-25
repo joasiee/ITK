@@ -18,6 +18,7 @@
 
 #include "itkBSplineInterpolationWeightFunction.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
+#include "itkTestingMacros.h"
 
 // Test template instantiation for TCoordRep = float and VSplineOrder = 1.
 // Note that this particular template instantiation would take forever to
@@ -58,6 +59,19 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
 
     auto function = FunctionType::New();
 
+    ITK_EXERCISE_BASIC_OBJECT_METHODS(function, BSplineInterpolationWeightFunction, FunctionBase);
+
+
+#if !defined(ITK_LEGACY_REMOVE)
+#  if defined(ITK_LEGACY_SILENT)
+    typename FunctionType::SizeType supportSize = FunctionType::SizeType::Filled(SplineOrder + 1);
+    ITK_TEST_EXPECT_EQUAL(supportSize, function->GetSupportSize());
+
+    unsigned int numberOfWeights = WeightsType::Length;
+    ITK_TEST_EXPECT_EQUAL(numberOfWeights, function->GetNumberOfWeights());
+#  endif
+#endif
+
     WeightsType weights1;
     WeightsType weights2;
 
@@ -67,7 +81,7 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
     IndexType startIndex1;
     IndexType startIndex2;
 
-    double testFailed = false;
+    bool testFailed = false;
 
     for (double x = 0.0; x <= 2.0; x += 0.1)
     {
@@ -145,6 +159,7 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
 
     auto function = FunctionType::New();
 
+
     WeightsType weights1;
     WeightsType weights2;
 
@@ -154,7 +169,7 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
     IndexType startIndex1;
     IndexType startIndex2;
 
-    double testFailed = false;
+    bool testFailed = false;
 
     for (double x = 0.0; x <= 2.0; x += 0.1)
     {
@@ -283,7 +298,7 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
       if (itk::Math::abs(weights[counter] - value) > 1e-7)
       {
         std::cout << "Error at weights[" << counter << "]" << std::endl;
-        std::cout << "Compuated value: " << weights[counter] << std::endl;
+        std::cout << "Computed value: " << weights[counter] << std::endl;
         std::cout << "Expected value: " << value << std::endl;
         return EXIT_FAILURE;
       }

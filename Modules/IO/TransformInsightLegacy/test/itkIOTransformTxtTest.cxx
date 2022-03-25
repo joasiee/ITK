@@ -26,6 +26,7 @@
 #include "itkTransformFactory.h"
 #include "itkSimilarity2DTransform.h"
 #include "itkBSplineTransform.h"
+#include "itkTestingMacros.h"
 #include "itksys/SystemTools.hxx"
 
 template <typename ScalarType>
@@ -39,7 +40,7 @@ oneTest(const std::string & outputDirectory, const char * goodname, const char *
 
   itk::ObjectFactoryBase::RegisterFactory(itk::TxtTransformIOFactory::New());
 
-  // Set it's parameters
+  // Set its parameters
   {
     typename AffineTransformType::ParametersType p = affine->GetParameters();
     for (i = 0; i < p.GetSize(); ++i)
@@ -60,11 +61,19 @@ oneTest(const std::string & outputDirectory, const char * goodname, const char *
   typename itk::TransformFileReaderTemplate<ScalarType>::Pointer reader;
 
   reader = itk::TransformFileReaderTemplate<ScalarType>::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(reader, TransformFileReaderTemplate, LightProcessObject);
+
+
   writer = itk::TransformFileWriterTemplate<ScalarType>::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(writer, TransformFileWriterTemplate, LightProcessObject);
+
   writer->AddTransform(affine);
 
   writer->SetFileName(outputDirectory + goodname);
   reader->SetFileName(outputDirectory + goodname);
+  ITK_TEST_SET_GET_VALUE(outputDirectory + goodname, reader->GetFileName());
 
   // Testing writing std::cout << "Testing write : ";
   affine->Print(std::cout);
@@ -118,7 +127,7 @@ oneTest(const std::string & outputDirectory, const char * goodname, const char *
   std::cout << "Creating bad writer" << std::endl;
   auto Bogus = AffineTransformTypeNotRegistered::New();
 
-  // Set it's parameters
+  // Set its parameters
   {
     typename AffineTransformType::ParametersType p = Bogus->GetParameters();
     for (i = 0; i < p.GetSize(); ++i)

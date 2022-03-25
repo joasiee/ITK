@@ -138,7 +138,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(Octree, Superclass);
+  itkTypeMacro(Octree, OctreeBase);
 
   ImageTypePointer
   GetImage();
@@ -203,13 +203,13 @@ public:
 private:
   OctreeNodeBranch *
   maskToOctree(const TPixel * Mask,
-               unsigned       width,
-               unsigned       x,
-               unsigned       y,
-               unsigned       z,
-               unsigned       xsize,
-               unsigned       ysize,
-               unsigned       zsize);
+               unsigned int   width,
+               unsigned int   x,
+               unsigned int   y,
+               unsigned int   z,
+               unsigned int   xsize,
+               unsigned int   ysize,
+               unsigned int   zsize);
 
   OctreeEnum m_Plane{ OctreeEnum::UNKNOWN_PLANE }; // The orientation of the plane for this octree
 

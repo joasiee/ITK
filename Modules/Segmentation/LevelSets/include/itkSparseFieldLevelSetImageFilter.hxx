@@ -18,7 +18,6 @@
 #ifndef itkSparseFieldLevelSetImageFilter_hxx
 #define itkSparseFieldLevelSetImageFilter_hxx
 
-#include "itkSparseFieldLevelSetImageFilter.h"
 #include "itkZeroCrossingImageFilter.h"
 #include "itkImageRegionIterator.h"
 #include "itkShiftScaleImageFilter.h"
@@ -76,7 +75,7 @@ void
 SparseFieldCityBlockNeighborList<TNeighborhoodType>::Print(std::ostream & os) const
 {
   os << "SparseFieldCityBlockNeighborList: " << std::endl;
-  for (unsigned i = 0; i < this->GetSize(); ++i)
+  for (unsigned int i = 0; i < this->GetSize(); ++i)
   {
     os << "m_ArrayIndex[" << i << "]: " << m_ArrayIndex[i] << std::endl;
     os << "m_NeighborhoodOffset[" << i << "]: " << m_NeighborhoodOffset[i] << std::endl;
@@ -375,7 +374,7 @@ SparseFieldLevelSetImageFilter<TInputImage, TOutputImage>::UpdateActiveLayerValu
           // Keep the smallest possible value for the new active node.  This
           // places the new active layer node closest to the zero level-set.
           if (outputIt.GetPixel(idx) < LOWER_ACTIVE_THRESHOLD ||
-              ::itk::Math::abs(temp_value) < ::itk::Math::abs(outputIt.GetPixel(idx)))
+              itk::Math::abs(temp_value) < itk::Math::abs(outputIt.GetPixel(idx)))
           {
             outputIt.SetPixel(idx, temp_value, bounds_status);
           }
@@ -426,7 +425,7 @@ SparseFieldLevelSetImageFilter<TInputImage, TOutputImage>::UpdateActiveLayerValu
           // Keep the smallest magnitude value for this active set node.  This
           // places the node closest to the active layer.
           if (outputIt.GetPixel(idx) >= UPPER_ACTIVE_THRESHOLD ||
-              ::itk::Math::abs(temp_value) < ::itk::Math::abs(outputIt.GetPixel(idx)))
+              itk::Math::abs(temp_value) < itk::Math::abs(outputIt.GetPixel(idx)))
           {
             outputIt.SetPixel(idx, temp_value, bounds_status);
           }
@@ -850,9 +849,9 @@ SparseFieldLevelSetImageFilter<TInputImage, TOutputImage>::CalculateChange() -> 
 {
   const typename Superclass::FiniteDifferenceFunctionType::Pointer   df = this->GetDifferenceFunction();
   typename Superclass::FiniteDifferenceFunctionType::FloatOffsetType offset;
-  ValueType norm_grad_phi_squared, dx_forward, dx_backward, forwardValue, backwardValue, centerValue;
-  unsigned  i;
-  ValueType MIN_NORM = 1.0e-6;
+  ValueType    norm_grad_phi_squared, dx_forward, dx_backward, forwardValue, backwardValue, centerValue;
+  unsigned int i;
+  ValueType    MIN_NORM = 1.0e-6;
   if (this->GetUseImageSpacing())
   {
     SpacePrecisionType minSpacing = NumericTraits<SpacePrecisionType>::max();
@@ -907,7 +906,7 @@ SparseFieldLevelSetImageFilter<TInputImage, TOutputImage>::CalculateChange() -> 
           dx_backward = centerValue - backwardValue;
 
           // Pick the larger magnitude derivative.
-          if (::itk::Math::abs(dx_forward) > ::itk::Math::abs(dx_backward))
+          if (itk::Math::abs(dx_forward) > itk::Math::abs(dx_backward))
           {
             offset[i] = dx_forward;
           }

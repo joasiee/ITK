@@ -18,6 +18,7 @@
 #ifndef itkFiniteDifferenceSparseImageFilter_h
 #define itkFiniteDifferenceSparseImageFilter_h
 
+#include "itkBooleanStdVector.h"
 #include "itkFiniteDifferenceSparseImageFunction.h"
 #include "itkFiniteDifferenceImageFilter.h"
 #include "itkMultiThreaderBase.h"
@@ -197,7 +198,7 @@ protected:
     FiniteDifferenceSparseImageFilter * Filter;
     TimeStepType                        TimeStep;
     std::vector<TimeStepType>           TimeStepList;
-    std::vector<bool>                   ValidTimeStepList;
+    BooleanStdVectorType                ValidTimeStepList;
   };
 
 private:

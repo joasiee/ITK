@@ -18,9 +18,8 @@
 #ifndef itkLabelImageToLabelMapFilter_hxx
 #define itkLabelImageToLabelMapFilter_hxx
 
-#include "itkLabelImageToLabelMapFilter.h"
 #include "itkNumericTraits.h"
-#include "itkProgressReporter.h"
+#include "itkTotalProgressReporter.h"
 #include "itkImageLinearConstIteratorWithIndex.h"
 
 namespace itk
@@ -86,7 +85,7 @@ LabelImageToLabelMapFilter<TInputImage, TOutputImage>::ThreadedGenerateData(
   const OutputImageRegionType & regionForThread,
   ThreadIdType                  threadId)
 {
-  ProgressReporter progress(this, threadId, regionForThread.GetNumberOfPixels());
+  TotalProgressReporter progress(this, this->GetInput()->GetRequestedRegion().GetNumberOfPixels());
 
   using InputLineIteratorType = ImageLinearConstIteratorWithIndex<InputImageType>;
   InputLineIteratorType it(this->GetInput(), regionForThread);
@@ -121,6 +120,7 @@ LabelImageToLabelMapFilter<TInputImage, TOutputImage>::ThreadedGenerateData(
         ++it;
       }
     }
+    progress.Completed(regionForThread.GetSize(0));
   }
 }
 

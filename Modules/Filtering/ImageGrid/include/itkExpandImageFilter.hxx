@@ -18,7 +18,6 @@
 #ifndef itkExpandImageFilter_hxx
 #define itkExpandImageFilter_hxx
 
-#include "itkExpandImageFilter.h"
 #include "itkImageScanlineIterator.h"
 #include "itkObjectFactory.h"
 #include "itkProgressReporter.h"
@@ -255,9 +254,7 @@ ExpandImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
   outputPtr->SetSpacing(outputSpacing);
   outputPtr->SetOrigin(outputOrigin);
 
-  typename TOutputImage::RegionType outputLargestPossibleRegion;
-  outputLargestPossibleRegion.SetSize(outputSize);
-  outputLargestPossibleRegion.SetIndex(outputStartIndex);
+  const typename TOutputImage::RegionType outputLargestPossibleRegion(outputStartIndex, outputSize);
 
   outputPtr->SetLargestPossibleRegion(outputLargestPossibleRegion);
 }

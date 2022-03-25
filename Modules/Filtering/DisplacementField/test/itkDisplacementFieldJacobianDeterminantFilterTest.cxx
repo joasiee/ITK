@@ -106,7 +106,7 @@ TestDisplacementJacobianDeterminantValue()
   float jacobianDeterminant = output->GetPixel(index);
   // std::cout << "Output "  << output->GetPixel(index) << std::endl;
   double epsilon = 1e-13;
-  if (std::abs(jacobianDeterminant - expectedJacobianDeterminant) > epsilon)
+  if (itk::Math::abs(jacobianDeterminant - expectedJacobianDeterminant) > epsilon)
   {
     std::cerr << "Test failed!" << std::endl;
     std::cerr << "Error in pixel value at index [" << index << "]" << std::endl;
@@ -166,8 +166,10 @@ itkDisplacementFieldJacobianDeterminantFilterTest(int, char *[])
     filter->Print(std::cout);
 
     // Run the test again with specified weights
-    float weights[3] = { 1.0, 2.0, 3.0 };
+    typename FilterType::WeightsType weights{ { { 1.0, 2.0, 3.0 } } };
     filter->SetDerivativeWeights(weights);
+    ITK_TEST_SET_GET_VALUE(weights, filter->GetDerivativeWeights());
+
     test1.Execute();
     filter->Print(std::cout);
   }

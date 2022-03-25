@@ -18,7 +18,6 @@
 #ifndef itkBSplineBaseTransform_hxx
 #define itkBSplineBaseTransform_hxx
 
-#include "itkBSplineBaseTransform.h"
 
 #include "itkContinuousIndex.h"
 #include "itkImageRegionIterator.h"
@@ -28,8 +27,8 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::BSplineBaseTransform()
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::BSplineBaseTransform()
   : Superclass(0)
   , m_CoefficientImages(Self::ArrayOfImagePointerGeneratorHelper())
 {
@@ -40,9 +39,9 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::BSplineBa
 }
 
 // Set the parameters
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
 void
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::SetIdentity()
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::SetIdentity()
 {
   if (this->m_InternalParametersBuffer.Size() != this->GetNumberOfParameters())
   {
@@ -55,9 +54,9 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::SetIdenti
 }
 
 // Set the parameters
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
 void
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::SetParameters(const ParametersType & parameters)
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::SetParameters(const ParametersType & parameters)
 {
   // check if the number of parameters match the
   // expected number of parameters
@@ -87,9 +86,9 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::SetParame
 }
 
 // Set the parameters by value
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
 void
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::SetParametersByValue(
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::SetParametersByValue(
   const ParametersType & parameters)
 {
   // check if the number of parameters match the
@@ -106,19 +105,19 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::SetParame
 }
 
 
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
 void
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::
-  SetFixedParametersFromTransformDomainInformation() const
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::SetFixedParametersFromTransformDomainInformation()
+  const
 {
   //  Fixed Parameters store the following information:
   //  Grid Size
   //  Grid Origin
   //  Grid Spacing
   //  Grid Direction
-  //  The size of each of these is equal to NDimensions
+  //  The size of each of these is equal to VDimension
 
-  this->m_FixedParameters.SetSize(NDimensions * (NDimensions + 3));
+  this->m_FixedParameters.SetSize(VDimension * (VDimension + 3));
 
   this->SetFixedParametersGridSizeFromTransformDomainInformation();
   this->SetFixedParametersGridOriginFromTransformDomainInformation();
@@ -131,9 +130,9 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::
 /**
  * UpdateTransformParameters
  */
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
 void
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::UpdateTransformParameters(
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::UpdateTransformParameters(
   const DerivativeType & update,
   TParametersValueType   factor)
 {
@@ -186,9 +185,9 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::UpdateTra
 }
 
 // Wrap flat parameters as images
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
 void
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::WrapAsImages()
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::WrapAsImages()
 {
   /**
    * Wrap flat parameters array into SpaceDimension number of ITK images
@@ -206,17 +205,17 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::WrapAsIma
 }
 
 // Get the parameters
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
 auto
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::GetParameters() const -> const ParametersType &
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::GetParameters() const -> const ParametersType &
 {
   return this->m_InternalParametersBuffer;
 }
 
 // Get the parameters
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
 auto
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::GetFixedParameters() const
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::GetFixedParameters() const
   -> const FixedParametersType &
 {
   // HACK:  This should not be necessary if the
@@ -226,9 +225,9 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::GetFixedP
 }
 
 // Print self
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
 void
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::PrintSelf(std::ostream & os, Indent indent) const
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::PrintSelf(std::ostream & os, Indent indent) const
 {
   this->Superclass::PrintSelf(os, indent);
 
@@ -242,16 +241,15 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::PrintSelf
 
 
 /** Get Jacobian at a point. A very specialized function just for BSplines */
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
 void
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::
   ComputeJacobianFromBSplineWeightsWithRespectToPosition(const InputPointType &    point,
                                                          WeightsType &             weights,
                                                          ParameterIndexArrayType & indexes) const
 {
-  ContinuousIndexType index;
-
-  this->m_CoefficientImages[0]->TransformPhysicalPointToContinuousIndex(point, index);
+  ContinuousIndexType index =
+    this->m_CoefficientImages[0]->template TransformPhysicalPointToContinuousIndex<TParametersValueType>(point);
 
   // NOTE: if the support region does not lie totally within the grid
   // we assume zero displacement and return the input point
@@ -267,12 +265,10 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::
   this->m_WeightsFunction->Evaluate(index, weights, supportIndex);
 
   // For each dimension, copy the weight to the support region
-  RegionType supportRegion;
-  SizeType   supportSize;
+  SizeType supportSize;
   supportSize.Fill(SplineOrder + 1);
-  supportRegion.SetSize(supportSize);
-  supportRegion.SetIndex(supportIndex);
-  unsigned long counter = 0;
+  const RegionType supportRegion(supportIndex, supportSize);
+  unsigned long    counter = 0;
 
   using IteratorType = ImageRegionIterator<ImageType>;
 
@@ -288,18 +284,18 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::
   }
 }
 
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
 unsigned int
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::GetNumberOfAffectedWeights() const
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::GetNumberOfAffectedWeights() const
 {
   return WeightsFunctionType::NumberOfWeights;
 }
 
 // This helper class is used to work around a race condition where the dynamically
 // generated images must exist before the references to the sub-sections are created.
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
 auto
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::ArrayOfImagePointerGeneratorHelper()
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::ArrayOfImagePointerGeneratorHelper()
   -> CoefficientImageArray
 {
   CoefficientImageArray tempArrayOfPointers;
@@ -312,10 +308,9 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::ArrayOfIm
 }
 
 // Transform a point
-template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
-typename BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::OutputPointType
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::TransformPoint(
-  const InputPointType & point) const
+template <typename TParametersValueType, unsigned int VDimension, unsigned int VSplineOrder>
+typename BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::OutputPointType
+BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>::TransformPoint(const InputPointType & point) const
 {
   WeightsType             weights;
   ParameterIndexArrayType indices;

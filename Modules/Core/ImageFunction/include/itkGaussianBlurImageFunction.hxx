@@ -18,7 +18,6 @@
 #ifndef itkGaussianBlurImageFunction_hxx
 #define itkGaussianBlurImageFunction_hxx
 
-#include "itkGaussianBlurImageFunction.h"
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkMath.h"
 
@@ -406,9 +405,9 @@ template <typename TInputImage, typename TOutput>
 TOutput
 GaussianBlurImageFunction<TInputImage, TOutput>::Evaluate(const PointType & point) const
 {
-  ContinuousIndexType cindex;
-
-  this->m_InternalImage->TransformPhysicalPointToContinuousIndex(point, cindex);
+  const ContinuousIndexType cindex =
+    this->m_InternalImage->template TransformPhysicalPointToContinuousIndex<typename ContinuousIndexType::ValueType>(
+      point);
 
   return this->EvaluateAtContinuousIndex(cindex);
 }

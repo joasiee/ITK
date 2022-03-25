@@ -84,8 +84,8 @@ using TetrahedronType = itk::TetrahedronCell<CellType>;
 //  Software Guide : EndLatex
 
 
-#ifndef __CustomTriangleVisitor
-#  define __CustomTriangleVisitor
+#ifndef CustomTriangleVisitorDefine
+#  define CustomTriangleVisitorDefine
 // Software Guide : BeginCodeSnippet
 class CustomTriangleVisitor
 {
@@ -101,12 +101,12 @@ public:
   virtual ~CustomTriangleVisitor() = default;
 };
 // Software Guide : EndCodeSnippet
-#endif
+#endif // CustomTriangleVisitorDefine
 
 int
 main(int, char *[])
 {
-  MeshType::Pointer mesh = MeshType::New();
+  auto mesh = MeshType::New();
 
 
   // Creating the points and inserting them in the mesh
@@ -269,8 +269,7 @@ main(int, char *[])
 
 
   // Software Guide : BeginCodeSnippet
-  TriangleVisitorInterfaceType::Pointer triangleVisitor =
-    TriangleVisitorInterfaceType::New();
+  auto triangleVisitor = TriangleVisitorInterfaceType::New();
   // Software Guide : EndCodeSnippet
 
 
@@ -286,7 +285,7 @@ main(int, char *[])
 
   // Software Guide : BeginCodeSnippet
   using CellMultiVisitorType = CellType::MultiVisitor;
-  CellMultiVisitorType::Pointer multiVisitor = CellMultiVisitorType::New();
+  auto multiVisitor = CellMultiVisitorType::New();
   // Software Guide : EndCodeSnippet
 
 

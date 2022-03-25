@@ -18,7 +18,6 @@
 #ifndef itkResourceProbesCollectorBase_hxx
 #define itkResourceProbesCollectorBase_hxx
 
-#include "itkResourceProbesCollectorBase.h"
 #include <iostream>
 
 namespace itk
@@ -44,7 +43,6 @@ ResourceProbesCollectorBase<TProbe>::Stop(const char * id)
   if (pos == this->m_Probes.end())
   {
     itkGenericExceptionMacro(<< "The probe \"" << id << "\" does not exist. It can not be stopped.");
-    return;
   }
   pos->second.Stop();
 }
@@ -109,7 +107,7 @@ ResourceProbesCollectorBase<TProbe>::Report(const char *   name,
   auto pos = this->m_Probes.find(tid);
   if (pos == this->m_Probes.end())
   {
-    os << "The probe \"" << name << "\" does not exist. It's report is not available" << std::endl;
+    os << "The probe \"" << name << "\" does not exist. Its report is not available" << std::endl;
     return;
   }
 
@@ -164,7 +162,7 @@ ResourceProbesCollectorBase<TProbe>::ExpandedReport(const char *   name,
   auto pos = this->m_Probes.find(tid);
   if (pos == this->m_Probes.end())
   {
-    os << "The probe \"" << name << "\" does not exist. It's report is not available" << std::endl;
+    os << "The probe \"" << name << "\" does not exist. Its report is not available" << std::endl;
     return;
   }
 

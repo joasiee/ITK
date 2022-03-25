@@ -18,7 +18,6 @@
 #ifndef itkSegmentationLevelSetFunction_hxx
 #define itkSegmentationLevelSetFunction_hxx
 
-#include "itkSegmentationLevelSetFunction.h"
 
 namespace itk
 {
@@ -85,7 +84,7 @@ SegmentationLevelSetFunction<TImageType, TFeatureImageType>::PropagationSpeed(co
 
   ContinuousIndexType cdx;
 
-  for (unsigned i = 0; i < ImageDimension; ++i)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     cdx[i] = static_cast<double>(idx[i]) - offset[i];
   }
@@ -109,7 +108,7 @@ SegmentationLevelSetFunction<TImageType, TFeatureImageType>::AdvectionField(cons
   IndexType           idx = neighborhood.GetIndex();
   ContinuousIndexType cdx;
 
-  for (unsigned i = 0; i < ImageDimension; ++i)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     cdx[i] = static_cast<double>(idx[i]) - offset[i];
   }

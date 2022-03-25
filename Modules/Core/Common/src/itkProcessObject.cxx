@@ -195,7 +195,7 @@ ProcessObject::AddInput(DataObject * input)
    * Adds an input to the first null position in the input list.
    * Expands the list memory if necessary
    */
-  for (unsigned idx = 0; idx < this->GetNumberOfIndexedInputs(); ++idx)
+  for (unsigned int idx = 0; idx < this->GetNumberOfIndexedInputs(); ++idx)
   {
     if (!this->GetInput(idx))
     {
@@ -1157,9 +1157,9 @@ ProcessObject::IncrementProgress(float increment)
   // Clamp the value to be between 0 and 1.
   uint32_t integerIncrement = progressFloatToFixed(increment);
 
-  uint32_t oldProgress = m_Progress;
+  uint32_t oldProgress = m_Progress.fetch_add(integerIncrement);
 
-  uint32_t updatedProgress = m_Progress.fetch_add(integerIncrement);
+  uint32_t updatedProgress = m_Progress;
 
   // check if progress overflowed
   if (oldProgress > updatedProgress)

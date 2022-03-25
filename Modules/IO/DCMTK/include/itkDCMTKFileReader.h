@@ -216,7 +216,7 @@ public:
       DCMTKExceptionOrErrorReturn(<< "DecimalString " << std::hex << group << " " << std::hex << element << " expected "
                                   << count << "items, but found " << doubleVals.size() << std::dec);
     }
-    for (unsigned i = 0; i < count; ++i)
+    for (unsigned int i = 0; i < count; ++i)
     {
       target[i] = static_cast<TType>(doubleVals[i]);
     }
@@ -302,7 +302,7 @@ public:
       DCMTKExceptionOrErrorReturn(<< "DecimalString " << std::hex << group << " " << std::hex << element << " expected "
                                   << count << "items, but found " << doubleVals.size() << std::dec);
     }
-    for (unsigned i = 0; i < count; ++i)
+    for (unsigned int i = 0; i < count; ++i)
     {
       target[i] = static_cast<TType>(doubleVals[i]);
     }
@@ -404,19 +404,19 @@ public:
   int
   GetElementIS(const unsigned short group,
                const unsigned short element,
-               ::itk::int32_t &     target,
+               itk::int32_t &       target,
                const bool           throwException = true) const;
 
   int
   GetElementSL(const unsigned short group,
                const unsigned short element,
-               ::itk::int32_t &     target,
+               itk::int32_t &       target,
                const bool           throwException = true) const;
 
   int
   GetElementISorOB(const unsigned short group,
                    const unsigned short element,
-                   ::itk::int32_t &     target,
+                   itk::int32_t &       target,
                    const bool           throwException = true) const;
 
   int

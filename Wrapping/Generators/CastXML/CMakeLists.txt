@@ -25,7 +25,7 @@ else()
   # If 64 bit Linux build host, use the CastXML binary
   if(CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
 
-    set(_castxml_hash a3c929ebd652fd159709826e154d566235fb12903dac04070854e83abf0e091ae369421b83699d4d78d4334ce1c5b7c9fda5f90e0c8e31170b7e902273eb4a09)
+    set(_castxml_hash dc78771884ce27837b408f339cc7bb7c5152552f88ebf30ffbc2069ae0407bb27ab2b37679adeff10ed26739571bf4c455dad309891c1c7f0fdc990fea474db1)
     set(_castxml_url "https://data.kitware.com/api/v1/file/hashsum/sha512/${_castxml_hash}/download")
     set(_download_castxml_binaries 1)
   elseif(CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "aarch64")
@@ -37,14 +37,14 @@ else()
   # If 64 bit Windows build host, use the CastXML binary
   elseif(CMAKE_HOST_SYSTEM_NAME MATCHES "Windows" AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64")
 
-    set(_castxml_hash fa7a38dbdb71e0484cfeb255aef6d085abf23496a85051e3dccac593d9eec042fad5be72110d7f3528b424d90fbf5b5053c31f054470d691a7109c1f13776229)
+    set(_castxml_hash 54a10b68399d17d41360a28c2f5091ed2dfcd104b8acb0f68a6224263de56348792af453355c1b243fb019efe476d01ad68dbd68db0908ce9cf62f606a5a31bb)
     set(_castxml_url "https://data.kitware.com/api/v1/file/hashsum/sha512/${_castxml_hash}/download")
     set(_download_castxml_binaries 1)
 
   # If 64 bit Mac OS X build host ( >= 10.9, Mavericks), use the CastXML binary
   elseif(CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" AND (NOT CMAKE_HOST_SYSTEM_VERSION VERSION_LESS "13.0.0"))
 
-    set(_castxml_hash 0ba8deff17b3a8f5a2cd22939ff83a864629201d8b881e44d7ed01d0fd2aa578338e3319e402c226b3648a6027a4538e8c4cd066d6fe2c49eb1a4471e803b827)
+    set(_castxml_hash f7d62660b8c3f19481c0f2b87b144f9cd2a500ad94b1b50b27c1f36d4c0096ca46df9c8a833426392a1d5152bd58dabd2bb0b525f56e341f5310afcf98013748)
     set(_castxml_url "https://data.kitware.com/api/v1/file/hashsum/sha512/${_castxml_hash}/download")
     set(_download_castxml_binaries 1)
   elseif(CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64")
@@ -169,175 +169,3 @@ mark_as_advanced(CASTXML_EXECUTABLE)
 ###############################################################################
 # store the current dir, so it can be reused later
 set(ITK_WRAP_CASTXML_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}" CACHE INTERNAL "castxml source dir")
-
-
-macro(itk_wrap_include_castxml include_file)
-  if("${include_file}" MATCHES "<.*>")
-    set(CASTXML_INCLUDES "${CASTXML_INCLUDES}#include ${include_file}\n")
-  else()
-    set(CASTXML_INCLUDES "${CASTXML_INCLUDES}#include \"${include_file}\"\n")
-  endif()
-endmacro()
-
-
-macro(itk_wrap_simple_type_castxml wrap_class swig_name)
-  set(CASTXML_TYPEDEFS "${CASTXML_TYPEDEFS}    typedef ${wrap_class} ${swig_name};\n")
-  set(CASTXML_FORCE_INSTANTIATE "${CASTXML_FORCE_INSTANTIATE}    (void)sizeof(${swig_name});\n")
-endmacro()
-
-
-macro(itk_wrap_submodule_castxml module)
-  # clear the typedefs and the includes
-  set(CASTXML_TYPEDEFS )
-  set(CASTXML_INCLUDES )
-  set(CASTXML_FORCE_INSTANTIATE )
-endmacro()
-
-macro(itk_end_wrap_submodule_castxml module)
-  # write the wrap_*.cxx file
-  #
-  # Global vars used: WRAPPER_INCLUDE_FILES WRAPPER_MODULE_NAME and WRAPPER_TYPEDEFS
-  # Global vars modified: none
-
-  # Create the cxx file which will be given to castxml.
-  set(cxx_file "${WRAPPER_LIBRARY_OUTPUT_DIR}/${module}.cxx")
-  configure_file("${ITK_WRAP_CASTXML_SOURCE_DIR}/wrap_.cxx.in" "${cxx_file}" @ONLY)
-
-  # generate the xml file
-  set(xml_file "${WRAPPER_LIBRARY_OUTPUT_DIR}/${module}.xml")
-
-  set(_castxml_depends)
-  if(NOT ITK_USE_SYSTEM_CASTXML)
-    # ExternalProject target for CastXML.
-    set(_castxml_depends castxml)
-  endif()
-  set(ccache_cmd)
-  if(ITK_USE_CCACHE)
-    set(_ccache_cmd ${CCACHE_EXECUTABLE})
-  endif()
-  set(_castxml_cc_flags ${CMAKE_CXX_FLAGS})
-  # Avoid missing omp.h include
-  if(CMAKE_CXX_EXTENSIONS)
-    set(_castxml_cc_flags "${_castxml_cc_flags} ${CMAKE_CXX14_EXTENSION_COMPILE_OPTION}")
-  else()
-    set(_castxml_cc_flags "${_castxml_cc_flags} ${CMAKE_CXX14_STANDARD_COMPILE_OPTION}")
-  endif()
-
-  # Agressive optimization flags cause cast_xml to give invalid error conditions
-  set(INVALID_OPTIMIZATION_FLAGS "-fopenmp;-march=[a-zA-Z0-9\-]*;-mtune=[a-zA-Z0-9\-]*;-mfma")
-  foreach( rmmatch ${INVALID_OPTIMIZATION_FLAGS})
-    string(REGEX REPLACE ${rmmatch} "" _castxml_cc_flags "${_castxml_cc_flags}")
-  endforeach()
-
-  separate_arguments(_castxml_cc_flags)
-  if(MSVC)
-    set(_castxml_cc --castxml-cc-msvc ( "${CMAKE_CXX_COMPILER}" ${_castxml_cc_flags} ) -fexceptions)
-    if(MSVC90)
-      # needed for VS2008 64 bit
-      set(_castxml_cc ${_castxml_cc} "-D_HAS_TR1=0")
-    endif()
-  else()
-    set(_castxml_cc --castxml-cc-gnu ( "${CMAKE_CXX_COMPILER}" ${_castxml_cc_flags} ))
-  endif()
-  set(_target)
-  if(CMAKE_CROSSCOMPILING)
-    if(NOT CMAKE_CXX_COMPILER_TARGET)
-      message(FATAL_ERROR "Set the target triple in CMAKE_CXX_COMPILER_TARGET "
-      " as described in http://clang.llvm.org/docs/CrossCompilation.html")
-    endif()
-    set(_target "--target=${CMAKE_CXX_COMPILER_TARGET}")
-  endif()
-  set(_build_env)
-  if(APPLE)
-    # If building on OS X, make sure that CastXML's calls to the compiler have the
-    # settings that the output files will be compiled with.  This prevents headers
-    # from one version of OS X from being used when building for another version.
-    list(APPEND _build_env
-      env
-        "SDKROOT=${CMAKE_OSX_SYSROOT}"
-        "MACOSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}"
-    )
-  endif()
-
-  set(_include ${${WRAPPER_LIBRARY_NAME}_SOURCE_DIR}/include)
-  set(_hdrs )
-  set(glob_hdrs )
-  if(EXISTS ${_include})
-    file(GLOB_RECURSE glob_hdrs ${_include}/*.h)
-  endif()
-  foreach(header IN LISTS glob_hdrs)
-    get_filename_component(header_name ${header} NAME)
-    if(${header_name} IN_LIST WRAPPER_INCLUDE_FILES)
-      list(APPEND _hdrs ${header})
-    endif()
-  endforeach()
-
-  add_custom_command(
-    OUTPUT ${xml_file}
-    COMMAND ${_build_env} ${_ccache_cmd} ${CASTXML_EXECUTABLE}
-          -o ${xml_file}
-          --castxml-gccxml
-          ${_target}
-          --castxml-start _wrapping_
-          ${_castxml_cc}
-          -w
-          -c # needed for ccache to think we are not calling for link
-          @${castxml_inc_file}
-          ${cxx_file}
-          VERBATIM
-    DEPENDS ${_castxml_depends} ${cxx_file} ${castxml_inc_file} ${_hdrs}
-  )
-
-  list(APPEND CastXML_OUTPUT_FILES ${xml_file})
-
-endmacro()
-
-
-macro(itk_wrap_one_type_castxml  wrap_method wrap_class swig_name template_params)
-  # insert a blank line to separate the classes
-  set(CASTXML_TYPEDEFS "${CASTXML_TYPEDEFS}\n")
-  # add a piece of code for type instantiation
-  set(CASTXML_FORCE_INSTANTIATE "${CASTXML_FORCE_INSTANTIATE}\n")
-endmacro()
-
-macro(itk_wrap_module_castxml library_name)
-  # create the files used to pass the file to include to castxml
-  set(castxml_inc_file "${WRAPPER_LIBRARY_OUTPUT_DIR}/${library_name}.castxml.inc")
-  get_directory_property(include_dir_list INCLUDE_DIRECTORIES)
-  list(REMOVE_DUPLICATES include_dir_list)
-
-  # Get the compile_definitions of the module added with add_compile_definitions
-  # From the wrapping folder (current)
-  get_directory_property(compile_definition_list COMPILE_DEFINITIONS)
-  # And from the top module folder
-  set(module_folder "${WRAPPER_LIBRARY_SOURCE_DIR}/..")
-  get_directory_property(compile_definition_list_at_module
-    DIRECTORY "${module_folder}"
-    COMPILE_DEFINITIONS)
-  # Merge and remove duplicates
-  list(APPEND compile_definition_list ${compile_definition_list_at_module})
-  list(REMOVE_DUPLICATES compile_definition_list)
-
-  set(c)
-  foreach(dir ${include_dir_list})
-    set(c "${c}\"-I${dir}\"\n")
-  endforeach()
-  set(c "${c}-Qunused-arguments\n")
-  set(c "${c}-DITK_WRAPPING_PARSER\n")
-  set(c "${c}-DITK_MANUAL_INSTANTIATION\n")
-  foreach(def ${compile_definition_list})
-    set(c "${c}\"-D${def}\"\n")
-  endforeach()
-
-  set(CONFIG_CASTXML_INC_CONTENTS "${c}")
-  configure_file("${ITK_WRAP_CASTXML_SOURCE_DIR}/cast_xml.inc.in" "${castxml_inc_file}" @ONLY)
-
-  set(CastXML_OUTPUT_FILES )
-endmacro()
-
-macro(itk_end_wrap_module_castxml)
-  if(NOT TARGET ${WRAPPER_LIBRARY_NAME}CastXML)
-    add_custom_target(${WRAPPER_LIBRARY_NAME}CastXML DEPENDS ${CastXML_OUTPUT_FILES})
-    set(${WRAPPER_LIBRARY_NAME}XmlFiles ${CastXML_OUTPUT_FILES} CACHE INTERNAL "Internal ${WRAPPER_LIBRARY_NAME}Xml file list.")
-  endif()
-endmacro()

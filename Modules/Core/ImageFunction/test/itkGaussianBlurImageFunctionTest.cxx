@@ -18,6 +18,7 @@
 
 #include "itkMath.h"
 #include "itkGaussianBlurImageFunction.h"
+#include "itkTestingMacros.h"
 
 int
 itkGaussianBlurImageFunctionTest(int, char *[])
@@ -75,6 +76,9 @@ itkGaussianBlurImageFunctionTest(int, char *[])
   }
   std::cout << "[PASSED] " << std::endl;
 
+  gaussianFunction->SetSigma(sigma);
+  ITK_TEST_SET_GET_VALUE(sigma, gaussianFunction->GetSigma());
+
   // Testing Set/GetExtent()
   std::cout << "Testing Set/GetExtent(): ";
 
@@ -91,6 +95,9 @@ itkGaussianBlurImageFunctionTest(int, char *[])
   }
   std::cout << "[PASSED] " << std::endl;
 
+  gaussianFunction->SetExtent(ext);
+  ITK_TEST_SET_GET_VALUE(ext, gaussianFunction->GetExtent());
+
 
   // Testing Set/GetMaximumError()
   {
@@ -104,7 +111,7 @@ itkGaussianBlurImageFunctionTest(int, char *[])
 
     for (unsigned int i = 0; i < Dimension; ++i)
     {
-      if (std::fabs(setError[i] - readError[i]) > 1e-6)
+      if (itk::Math::abs(setError[i] - readError[i]) > 1e-6)
       {
         std::cerr << "[FAILED]" << std::endl;
         return EXIT_FAILURE;
@@ -188,7 +195,7 @@ itkGaussianBlurImageFunctionTest(int, char *[])
 
 
   std::cout << "Testing Evaluate(), EvaluateAtIndex() and EvaluateIndex: ";
-  if ((std::fabs(blurredvalue_index - blurredvalue_point) > 0.01) ||
+  if ((itk::Math::abs(blurredvalue_index - blurredvalue_point) > 0.01) ||
       itk::Math::NotAlmostEquals(blurredvalue_point, blurredvalue_continuousIndex))
   {
     std::cerr << "[FAILED] : " << blurredvalue_index << " : " << blurredvalue_point << " : "
@@ -200,7 +207,7 @@ itkGaussianBlurImageFunctionTest(int, char *[])
 
   std::cout << "Testing Evaluate() : ";
 
-  if (std::fabs(blurredvalue_point - 0.158) > 0.1)
+  if (itk::Math::abs(blurredvalue_point - 0.158) > 0.1)
   {
     std::cerr << "[FAILED]" << std::endl;
     return EXIT_FAILURE;

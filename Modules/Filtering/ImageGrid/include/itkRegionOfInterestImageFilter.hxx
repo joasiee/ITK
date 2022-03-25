@@ -18,7 +18,6 @@
 #ifndef itkRegionOfInterestImageFilter_hxx
 #define itkRegionOfInterestImageFilter_hxx
 
-#include "itkRegionOfInterestImageFilter.h"
 #include "itkImageAlgorithm.h"
 #include "itkObjectFactory.h"
 #include "itkTotalProgressReporter.h"
@@ -79,12 +78,7 @@ RegionOfInterestImageFilter<TInputImage, TOutputImage>::GenerateOutputInformatio
   }
 
   // Set the output image size to the same value as the region of interest.
-  RegionType region;
-  IndexType  start;
-  start.Fill(0);
-
-  region.SetSize(m_RegionOfInterest.GetSize());
-  region.SetIndex(start);
+  const RegionType region(m_RegionOfInterest.GetSize());
 
   // Copy Information without modification.
   outputPtr->CopyInformation(inputPtr);

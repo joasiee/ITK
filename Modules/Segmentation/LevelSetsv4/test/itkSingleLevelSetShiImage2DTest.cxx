@@ -26,13 +26,16 @@
 #include "itkLevelSetEvolution.h"
 #include "itkBinaryImageToLevelSetImageAdaptor.h"
 #include "itkLevelSetEvolutionNumberOfIterationsStoppingCriterion.h"
+#include "itkTestingMacros.h"
 
 int
 itkSingleLevelSetShiImage2DTest(int argc, char * argv[])
 {
   if (argc < 4)
   {
-    std::cerr << "Missing Arguments" << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage:" << std::endl;
+    std::cerr << itkNameOfTestExecutableMacro(argv) << " inputFilename numberOfIterations outputFilename" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -157,8 +160,16 @@ itkSingleLevelSetShiImage2DTest(int argc, char * argv[])
   criterion->SetNumberOfIterations(std::stoi(argv[2]));
 
   auto evolution = LevelSetEvolutionType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(evolution, LevelSetEvolution, LevelSetEvolutionBase);
+
+
   evolution->SetEquationContainer(equationContainer);
+  ITK_TEST_SET_GET_VALUE(equationContainer, evolution->GetEquationContainer());
+
   evolution->SetStoppingCriterion(criterion);
+  ITK_TEST_SET_GET_VALUE(criterion, evolution->GetStoppingCriterion());
+
   evolution->SetLevelSetContainer(lscontainer);
 
   try

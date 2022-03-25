@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkImageToMeshFilter_hxx
 #define itkImageToMeshFilter_hxx
-#include "itkImageToMeshFilter.h"
 
 namespace itk
 {
@@ -36,7 +35,7 @@ ImageToMeshFilter<TInputImage, TOutputMesh>::ImageToMeshFilter()
 }
 
 /**
- *   Make Ouput
+ *   Make Output
  */
 template <typename TInputImage, typename TOutputMesh>
 DataObject::Pointer ImageToMeshFilter<TInputImage, TOutputMesh>::MakeOutput(DataObjectPointerArraySizeType)

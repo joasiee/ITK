@@ -107,7 +107,7 @@ public:
     }
   }
 
-  /** Set the all the elements of the array to the specified value */
+  /** Set all the elements of the array to the specified value */
   void
   Fill(TValue const & v)
   {
@@ -115,10 +115,10 @@ public:
   }
 
   /** Copy operator */
-  const Self &
+  Self &
   operator=(const Self & rhs);
 
-  const Self &
+  Self &
   operator=(const VnlVectorType & rhs);
 
   /** Return the number of elements in the Array  */

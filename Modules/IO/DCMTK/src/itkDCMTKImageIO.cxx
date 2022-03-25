@@ -200,7 +200,7 @@ readNoPreambleDicom(std::ifstream & file) // NOTE: This file is duplicated in it
   std::ostringstream itkmsg;
   itkmsg << "No DICOM magic number found, but the file appears to be DICOM without a preamble.\n"
          << "Proceeding without caution.";
-  ::itk::OutputWindowDisplayDebugText(itkmsg.str().c_str());
+  itk::OutputWindowDisplayDebugText(itkmsg.str().c_str());
 #endif
   return true;
 }
@@ -356,8 +356,8 @@ DCMTKImageIO::ReadImageInformation()
   }
 
   // check for multiframe > 3D
-  ::itk::int32_t numPhases;
-  unsigned       numDim(3);
+  itk::int32_t numPhases;
+  unsigned int numDim(3);
 
   if (reader.GetElementSL(0x2001, 0x1017, numPhases, false) != EXIT_SUCCESS)
   {
@@ -411,7 +411,7 @@ DCMTKImageIO::ReadImageInformation()
   else
   {
     vnl_vector<double> rowDirection4(4), columnDirection4(4), sliceDirection4(4), phaseDirection4(4);
-    for (unsigned i = 0; i < 3; ++i)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       rowDirection4[i] = rowDirection[i];
       columnDirection4[i] = columnDirection[i];
@@ -437,7 +437,7 @@ DCMTKImageIO::ReadImageInformation()
   reader.GetOrigin(origin);
   this->m_Origin.resize(numDim);
 
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     this->m_Origin[i] = origin[i];
   }

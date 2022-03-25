@@ -17,6 +17,7 @@
  *=========================================================================*/
 #include <set>
 #include "itkFRPROptimizer.h"
+#include "itkTestingMacros.h"
 
 
 /**
@@ -113,9 +114,10 @@ itkFRPROptimizerTest(int, char *[])
 
   using OptimizerType = itk::FRPROptimizer;
 
-  // Declaration of a itkOptimizer
+  // Declaration of an itkOptimizer
   auto itkOptimizer = OptimizerType::New();
 
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(itkOptimizer, FRPROptimizer, PowellOptimizer);
 
   // Declaration of the CostFunction
   auto costFunction = FRPRGradientCostFunction::New();
@@ -137,6 +139,9 @@ itkFRPROptimizerTest(int, char *[])
   itkOptimizer->SetStepLength(0.01);
   itkOptimizer->SetMaximize(false);
   itkOptimizer->SetMaximumIteration(50);
+
+  bool useUnitLengthGradient = false;
+  ITK_TEST_SET_GET_BOOLEAN(itkOptimizer, UseUnitLengthGradient, useUnitLengthGradient);
 
   {
     // Exercise the methods that set the optimization mode

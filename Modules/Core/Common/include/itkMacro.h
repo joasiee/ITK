@@ -110,15 +110,15 @@ namespace itk
 #    define CLANG_SUPPRESS_Wfloat_equal
 #  endif
 #  if __has_warning("-Wc++14-extensions")
-#    define CLANG_SUPPRESS_Wc__14_extensions ITK_PRAGMA(clang diagnostic ignored "-Wc++14-extensions")
+#    define CLANG_SUPPRESS_Wcpp14_extensions ITK_PRAGMA(clang diagnostic ignored "-Wc++14-extensions")
 #  else
-#    define CLANG_SUPPRESS_Wc__14_extensions
+#    define CLANG_SUPPRESS_Wcpp14_extensions
 #  endif
 #else
 #  define CLANG_PRAGMA_PUSH
 #  define CLANG_PRAGMA_POP
 #  define CLANG_SUPPRESS_Wfloat_equal
-#  define CLANG_SUPPRESS_Wc__14_extensions
+#  define CLANG_SUPPRESS_Wcpp14_extensions
 #endif
 
 // Intel compiler convenience macros
@@ -313,26 +313,26 @@ namespace itk
   itkCloneMacro(x);         \
   ITK_MACROEND_NOOP_STATEMENT
 
-#define itkSimpleNewMacro(x)                              \
-  static Pointer New()                                    \
-  {                                                       \
-    Pointer smartPtr = ::itk::ObjectFactory<x>::Create(); \
-    if (smartPtr == nullptr)                              \
-    {                                                     \
-      smartPtr = new x;                                   \
-    }                                                     \
-    smartPtr->UnRegister();                               \
-    return smartPtr;                                      \
-  }                                                       \
+#define itkSimpleNewMacro(x)                            \
+  static Pointer New()                                  \
+  {                                                     \
+    Pointer smartPtr = itk::ObjectFactory<x>::Create(); \
+    if (smartPtr == nullptr)                            \
+    {                                                   \
+      smartPtr = new x;                                 \
+    }                                                   \
+    smartPtr->UnRegister();                             \
+    return smartPtr;                                    \
+  }                                                     \
   ITK_MACROEND_NOOP_STATEMENT
 
-#define itkCreateAnotherMacro(x)                             \
-  ::itk::LightObject::Pointer CreateAnother() const override \
-  {                                                          \
-    ::itk::LightObject::Pointer smartPtr;                    \
-    smartPtr = x::New().GetPointer();                        \
-    return smartPtr;                                         \
-  }                                                          \
+#define itkCreateAnotherMacro(x)                           \
+  itk::LightObject::Pointer CreateAnother() const override \
+  {                                                        \
+    itk::LightObject::Pointer smartPtr;                    \
+    smartPtr = x::New().GetPointer();                      \
+    return smartPtr;                                       \
+  }                                                        \
   ITK_MACROEND_NOOP_STATEMENT
 
 #define itkCloneMacro(x)                                                  \
@@ -341,6 +341,29 @@ namespace itk
     Pointer rval = dynamic_cast<x *>(this->InternalClone().GetPointer()); \
     return rval;                                                          \
   }                                                                       \
+  ITK_MACROEND_NOOP_STATEMENT
+
+/** Define an object creation method throwing an exception if the object
+ * is not created through the object factory, for use in base classes that
+ * do not fully implement a backend. */
+#define itkFactoryOnlyNewMacro(x)  \
+  itkSimpleFactoryOnlyNewMacro(x); \
+  itkCreateAnotherMacro(x);        \
+  itkCloneMacro(x);                \
+  ITK_MACROEND_NOOP_STATEMENT
+
+#define itkSimpleFactoryOnlyNewMacro(x)                                                                 \
+  static auto New()->Pointer                                                                            \
+  {                                                                                                     \
+    Pointer smartPtr = itk::ObjectFactory<x>::Create();                                                 \
+    if (smartPtr == nullptr)                                                                            \
+    {                                                                                                   \
+      itkSpecializedMessageExceptionMacro(ExceptionObject,                                              \
+                                          "Object factory failed to instantiate " << typeid(x).name()); \
+    }                                                                                                   \
+    smartPtr->UnRegister();                                                                             \
+    return smartPtr;                                                                                    \
+  }                                                                                                     \
   ITK_MACROEND_NOOP_STATEMENT
 
 /** Define two object creation methods.  The first method, New(),
@@ -355,21 +378,21 @@ namespace itk
  * UnRegister() on the rawPtr to compensate for LightObject's constructor
  * initializing an object's reference count to 1 (needed for proper
  * initialization of process objects and data objects cycles). */
-#define itkFactorylessNewMacro(x)                            \
-  static Pointer New()                                       \
-  {                                                          \
-    Pointer smartPtr;                                        \
-    x *     rawPtr = new x;                                  \
-    smartPtr = rawPtr;                                       \
-    rawPtr->UnRegister();                                    \
-    return smartPtr;                                         \
-  }                                                          \
-  ::itk::LightObject::Pointer CreateAnother() const override \
-  {                                                          \
-    ::itk::LightObject::Pointer smartPtr;                    \
-    smartPtr = x::New().GetPointer();                        \
-    return smartPtr;                                         \
-  }                                                          \
+#define itkFactorylessNewMacro(x)                          \
+  static Pointer New()                                     \
+  {                                                        \
+    Pointer smartPtr;                                      \
+    x *     rawPtr = new x;                                \
+    smartPtr = rawPtr;                                     \
+    rawPtr->UnRegister();                                  \
+    return smartPtr;                                       \
+  }                                                        \
+  itk::LightObject::Pointer CreateAnother() const override \
+  {                                                        \
+    itk::LightObject::Pointer smartPtr;                    \
+    smartPtr = x::New().GetPointer();                      \
+    return smartPtr;                                       \
+  }                                                        \
   ITK_MACROEND_NOOP_STATEMENT
 
 //
@@ -463,12 +486,12 @@ OutputWindowDisplayDebugText(const char *);
 #  define itkDebugMacro(x)                                                     \
     do                                                                         \
     {                                                                          \
-      if (this->GetDebug() && ::itk::Object::GetGlobalWarningDisplay())        \
+      if (this->GetDebug() && itk::Object::GetGlobalWarningDisplay())          \
       {                                                                        \
         std::ostringstream itkmsg;                                             \
         itkmsg << "Debug: In " __FILE__ ", line " << __LINE__ << "\n"          \
                << this->GetNameOfClass() << " (" << this << "): " x << "\n\n"; \
-        ::itk::OutputWindowDisplayDebugText(itkmsg.str().c_str());             \
+        itk::OutputWindowDisplayDebugText(itkmsg.str().c_str());               \
       }                                                                        \
     } while (0)
 
@@ -483,12 +506,12 @@ OutputWindowDisplayDebugText(const char *);
 #define itkWarningMacro(x)                                                   \
   do                                                                         \
   {                                                                          \
-    if (::itk::Object::GetGlobalWarningDisplay())                            \
+    if (itk::Object::GetGlobalWarningDisplay())                              \
     {                                                                        \
       std::ostringstream itkmsg;                                             \
       itkmsg << "WARNING: In " __FILE__ ", line " << __LINE__ << "\n"        \
              << this->GetNameOfClass() << " (" << this << "): " x << "\n\n"; \
-      ::itk::OutputWindowDisplayWarningText(itkmsg.str().c_str());           \
+      itk::OutputWindowDisplayWarningText(itkmsg.str().c_str());             \
     }                                                                        \
   } while (0)
 
@@ -526,13 +549,13 @@ OutputWindowDisplayDebugText(const char *);
   {                                                                                                                  \
     std::ostringstream exceptionDescriptionOutputStringStream;                                                       \
     exceptionDescriptionOutputStringStream << "ITK ERROR: " x;                                                       \
-    throw ::itk::ExceptionType(                                                                                      \
+    throw itk::ExceptionType(                                                                                        \
       std::string{ __FILE__ }, __LINE__, exceptionDescriptionOutputStringStream.str(), std::string{ ITK_LOCATION }); \
   }                                                                                                                  \
   ITK_MACROEND_NOOP_STATEMENT
 
 #define itkSpecializedExceptionMacro(ExceptionType) \
-  itkSpecializedMessageExceptionMacro(ExceptionType, << ::itk::ExceptionType::default_exception_message)
+  itkSpecializedMessageExceptionMacro(ExceptionType, << itk::ExceptionType::default_exception_message)
 
 /** The itkExceptionMacro macro is used to print error information (i.e., usually
  * a condition that results in program failure). Example usage looks like:
@@ -544,11 +567,11 @@ OutputWindowDisplayDebugText(const char *);
 
 #define itkGenericOutputMacro(x)                                                   \
   {                                                                                \
-    if (::itk::Object::GetGlobalWarningDisplay())                                  \
+    if (itk::Object::GetGlobalWarningDisplay())                                    \
     {                                                                              \
       std::ostringstream itkmsg;                                                   \
       itkmsg << "WARNING: In " __FILE__ ", line " << __LINE__ << "\n" x << "\n\n"; \
-      ::itk::OutputWindowDisplayGenericOutputText(itkmsg.str().c_str());           \
+      itk::OutputWindowDisplayGenericOutputText(itkmsg.str().c_str());             \
     }                                                                              \
   }                                                                                \
   ITK_MACROEND_NOOP_STATEMENT
@@ -556,22 +579,22 @@ OutputWindowDisplayDebugText(const char *);
 //----------------------------------------------------------------------------
 // Macros for simplifying the use of logging
 //
-#define itkLogMacro(x, y)                                \
-  {                                                      \
-    if (this->GetLogger())                               \
-    {                                                    \
-      this->GetLogger()->Write(::itk::LoggerBase::x, y); \
-    }                                                    \
-  }                                                      \
+#define itkLogMacro(x, y)                              \
+  {                                                    \
+    if (this->GetLogger())                             \
+    {                                                  \
+      this->GetLogger()->Write(itk::LoggerBase::x, y); \
+    }                                                  \
+  }                                                    \
   ITK_MACROEND_NOOP_STATEMENT
 
-#define itkLogMacroStatic(obj, x, y)                    \
-  {                                                     \
-    if (obj->GetLogger())                               \
-    {                                                   \
-      obj->GetLogger()->Write(::itk::LoggerBase::x, y); \
-    }                                                   \
-  }                                                     \
+#define itkLogMacroStatic(obj, x, y)                  \
+  {                                                   \
+    if (obj->GetLogger())                             \
+    {                                                 \
+      obj->GetLogger()->Write(itk::LoggerBase::x, y); \
+    }                                                 \
+  }                                                   \
   ITK_MACROEND_NOOP_STATEMENT
 
 //----------------------------------------------------------------------------
@@ -1047,20 +1070,20 @@ compilers.
 /** Set built-in type where value is constrained between min/max limits.
  * Create member Set"name"() (e.q., SetRadius()). \#defines are
  * convenience for clamping open-ended values. */
-#define itkSetClampMacro(name, type, min, max)                                \
-  virtual void Set##name(type _arg)                                           \
-  {                                                                           \
-    const type temp_extrema = (_arg < min ? min : (_arg > max ? max : _arg)); \
-    itkDebugMacro("setting " << #name " to " << _arg);                        \
-    CLANG_PRAGMA_PUSH                                                         \
-    CLANG_SUPPRESS_Wfloat_equal                                               \
-    if (this->m_##name != temp_extrema)                                       \
-    {                                                                         \
-      this->m_##name = temp_extrema;                                          \
-      this->Modified();                                                       \
-    }                                                                         \
-    CLANG_PRAGMA_POP                                                          \
-  }                                                                           \
+#define itkSetClampMacro(name, type, min, max)                                  \
+  virtual void Set##name(type _arg)                                             \
+  {                                                                             \
+    const type temp_extrema = (_arg <= min ? min : (_arg >= max ? max : _arg)); \
+    itkDebugMacro("setting " << #name " to " << _arg);                          \
+    CLANG_PRAGMA_PUSH                                                           \
+    CLANG_SUPPRESS_Wfloat_equal                                                 \
+    if (this->m_##name != temp_extrema)                                         \
+    {                                                                           \
+      this->m_##name = temp_extrema;                                            \
+      this->Modified();                                                         \
+    }                                                                           \
+    CLANG_PRAGMA_POP                                                            \
+  }                                                                             \
   ITK_MACROEND_NOOP_STATEMENT
 // clang-format on
 

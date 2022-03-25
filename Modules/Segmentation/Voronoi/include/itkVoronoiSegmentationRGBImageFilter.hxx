@@ -17,7 +17,6 @@
  *=========================================================================*/
 #ifndef itkVoronoiSegmentationRGBImageFilter_hxx
 #define itkVoronoiSegmentationRGBImageFilter_hxx
-#include "itkVoronoiSegmentationRGBImageFilter.h"
 
 #include "itkImageRegionIteratorWithIndex.h"
 #include <cmath>
@@ -56,7 +55,7 @@ VoronoiSegmentationRGBImageFilter<TInputImage, TOutputImage>::SetMeanPercentErro
   for (unsigned int i = 0; i < 6; ++i)
   {
     m_MeanPercentError[i] = x[i];
-    m_MeanTolerance[i] = std::fabs(x[i] * m_Mean[i]);
+    m_MeanTolerance[i] = itk::Math::abs(x[i] * m_Mean[i]);
   }
 }
 
@@ -88,11 +87,7 @@ VoronoiSegmentationRGBImageFilter<TInputImage, TOutputImage>::SetInput(const Inp
   this->Superclass::SetInput(input);
 
   this->SetSize(this->GetInput()->GetLargestPossibleRegion().GetSize());
-  IndexType index;
-  index.Fill(0);
-  RegionType region;
-  region.SetSize(this->GetSize());
-  region.SetIndex(index);
+  const RegionType region(this->GetSize());
 
   m_WorkingImage = RGBHCVImage::New();
   m_WorkingImage->SetLargestPossibleRegion(region);
@@ -366,7 +361,7 @@ VoronoiSegmentationRGBImageFilter<TInputImage, TOutputImage>::TakeAPrior(const B
     }
     else
     {
-      m_MeanTolerance[i] = std::fabs(m_Mean[i] * m_MeanPercentError[i]);
+      m_MeanTolerance[i] = itk::Math::abs(m_Mean[i] * m_MeanPercentError[i]);
     }
   }
 
@@ -382,7 +377,7 @@ VoronoiSegmentationRGBImageFilter<TInputImage, TOutputImage>::TakeAPrior(const B
 
   /*  Sorting. */
   unsigned char tmp[6] = { 0, 1, 2, 3, 4, 5 };
-  for (unsigned j = 0; j < 3; ++j)
+  for (unsigned int j = 0; j < 3; ++j)
   {
     k = 0;
     for (unsigned int i = 1; i < 6 - j; ++i)

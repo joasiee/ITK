@@ -18,7 +18,6 @@
 #ifndef itkCenteredTransformInitializer_hxx
 #define itkCenteredTransformInitializer_hxx
 
-#include "itkCenteredTransformInitializer.h"
 
 namespace itk
 {
@@ -30,17 +29,14 @@ CenteredTransformInitializer<TTransform, TFixedImage, TMovingImage>::InitializeT
   if (!m_FixedImage)
   {
     itkExceptionMacro("Fixed Image has not been set");
-    return;
   }
   if (!m_MovingImage)
   {
     itkExceptionMacro("Moving Image has not been set");
-    return;
   }
   if (!m_Transform)
   {
     itkExceptionMacro("Transform has not been set");
-    return;
   }
 
   // If images come from filters, then update those filters.

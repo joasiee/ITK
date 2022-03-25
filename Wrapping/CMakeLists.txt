@@ -15,23 +15,23 @@
 #   limitations under the License.
 #
 #==========================================================================*/
-
-cmake_minimum_required(VERSION 3.16.3 FATAL_ERROR)
-foreach(p
-    ## Only policies introduced after the cmake_minimum_required
-    ## version need to explicitly be set to NEW.
-    CMP0070 #3.10.0 Define ``file(GENERATE)`` behavior for relative paths.
-    CMP0071 #3.10.0 Let ``AUTOMOC`` and ``AUTOUIC`` process ``GENERATED`` files.
-    )
-  if(POLICY ${p})
-    cmake_policy(SET ${p} NEW)
-  endif()
-endforeach()
+cmake_minimum_required(VERSION 3.16.3...3.19.7 FATAL_ERROR)
 
 project(WrapITK)
 
-
 enable_testing()
+
+# Set the module prefix once upon loading this files
+# Case 1:  An external module is loading this file from
+#          ${ITK_SOURCE_DIR}/CMake/ITKModuleExternal.cmake
+# Case 2:  ITK is including this file from
+#          ${ITK_SOURCE_DIR}/CMakeLists.txt
+# module_prefix is a global variable
+if(EXTERNAL_WRAP_ITK_PROJECT)
+  set(module_prefix ${itk-module})
+else()
+  set(module_prefix ITK)
+endif()
 
 ###############################################################################
 # Configure installation
@@ -47,7 +47,6 @@ set(WRAP_ITK_INSTALL_PREFIX "${path}" CACHE INTERNAL "subpath where where most o
 # Output directories.
 set(WRAP_ITK_CONFIG_DIR "${WrapITK_SOURCE_DIR}/")
 set(WRAP_ITK_CMAKE_DIR "${WrapITK_SOURCE_DIR}")
-set(ITK_WRAP_JAVA_DIR "${WrapITK_BINARY_DIR}/Java")
 set(WRAPPER_MASTER_INDEX_OUTPUT_DIR "${ITK_DIR}/Wrapping/Typedefs" CACHE INTERNAL "typedefs dir")
 
 if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
@@ -107,12 +106,52 @@ itk_wrap_modules()
 # Configure specific wrapper modules
 ###############################################################################
 
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Modules" "${CMAKE_CURRENT_BINARY_DIR}/Modules")
+unset(WRAP_ITK_MODULES CACHE)
 
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Modules/)
+if(ITK_SOURCE_DIR)
+  foreach(_module_enabled ${ITK_CONFIG_MODULES_ENABLED})
+    if(EXISTS "${${_module_enabled}_SOURCE_DIR}/wrapping/CMakeLists.txt")
+      list(APPEND WRAP_ITK_MODULES ${_module_enabled})
+      set(itk-module_SOURCE_DIR ${${_module_enabled}_SOURCE_DIR})
+      add_subdirectory("${${_module_enabled}_SOURCE_DIR}/wrapping" ${CMAKE_CURRENT_BINARY_DIR}/Modules/${_module_enabled})
+      unset(itk-module_SOURCE_DIR)
+    endif()
+  endforeach()
+else() # Building a module externally so itk-module variable must have been previously set
+  if(EXISTS "${${itk-module}_SOURCE_DIR}/wrapping/CMakeLists.txt")
+    foreach(_module_depend ${ITK_MODULE_${itk-module}_DEPENDS})
+      if(EXISTS ${WRAPPER_MASTER_INDEX_OUTPUT_DIR}/${_module_depend}.mdx)
+        list(APPEND WRAP_ITK_MODULES ${_module_depend})
+      endif()
+    endforeach()
+    list(APPEND WRAP_ITK_MODULES ${itk-module})
+    add_subdirectory("${${itk-module}_SOURCE_DIR}/wrapping" ${CMAKE_CURRENT_BINARY_DIR}/Modules/${itk-module})
+  endif()
+endif()
+set(WRAP_ITK_MODULES ${WRAP_ITK_MODULES} CACHE INTERNAL "Internal library list.")
 
 ###############################################################################
 # let the different generators running some code after have parsed all the
 # modules
 ###############################################################################
 
-itk_end_wrap_modules()
+itk_end_wrap_modules_all_generators()
+
+
+###############################################################################
+# Generate Python typehints when wrapped
+###############################################################################
+if(ITK_WRAP_PYTHON)
+  # Generate __init__.pyi file with wrapped templates/interfaces
+  set(ITK_STUB_TEMPLATE_IMPORTS "$ENV{ITK_STUB_TEMPLATE_IMPORTS}")
+  list(SORT ITK_STUB_TEMPLATE_IMPORTS CASE INSENSITIVE)
+  list(JOIN ITK_STUB_TEMPLATE_IMPORTS "\n" ITK_STUB_TEMPLATE_IMPORTS)
+  configure_file(Generators/Python/itk/__init__.pyi.in Generators/Python/itk-stubs/__init__.pyi)
+
+  # Generate _proxies.pyi file with wrapped proxy classes and methods
+  set(ITK_STUB_PROXY_IMPORTS "$ENV{ITK_STUB_PROXY_IMPORTS}")
+  list(SORT ITK_STUB_PROXY_IMPORTS CASE INSENSITIVE)
+  list(JOIN ITK_STUB_PROXY_IMPORTS "\n" ITK_STUB_PROXY_IMPORTS)
+  configure_file(Generators/Python/itk/_proxies.pyi.in Generators/Python/itk-stubs/_proxies.pyi)
+endif()

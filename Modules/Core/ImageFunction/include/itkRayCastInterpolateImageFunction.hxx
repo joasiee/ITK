@@ -19,38 +19,8 @@
 #define itkRayCastInterpolateImageFunction_hxx
 
 #include "itkCompensatedSummation.h"
-#include "itkRayCastInterpolateImageFunction.h"
 
 #include "itkMath.h"
-
-/**\class RayCastHelperEnums
- * \brief Contains all enum classes used by RayCastHelper class.
- * \ingroup ITKImageFunction
- * @tparam TInputImage
- * @tparam TCoordRep
- */
-class RayCastHelperEnums
-{
-public:
-  /**
-   * \class TraversalDirection
-   * \ingroup ITKImageFunction
-   * The ray is traversed by stepping in the axial direction
-   * that enables the greatest number of planes in the volume to be
-   * intercepted.
-   *
-   * This enumeration is not exposed to the user, so no need to
-   * create an ostream operator<< for it.
-   */
-  enum class TraversalDirection : uint8_t
-  {
-    UNDEFINED_DIRECTION = 0, //!< Undefined
-    TRANSVERSE_IN_X,         //!< x
-    TRANSVERSE_IN_Y,         //!< y
-    TRANSVERSE_IN_Z,         //!< z
-    LAST_DIRECTION
-  };
-};
 
 // Put the helper class in an anonymous namespace so that it is not
 // exposed to the user
@@ -467,7 +437,7 @@ RayCastHelper<TInputImage, TCoordRep>::CalcPlanesAndCorners()
     m_BoundingPlane[j][2] = C / std::sqrt(A * A + B * B + C * C);
     m_BoundingPlane[j][3] = D / std::sqrt(A * A + B * B + C * C);
 
-    if (itk::Math::AlmostEquals((A * A + B * B + C * C), itk::NumericTraits<double>::ZeroValue()))
+    if (itk::Math::AlmostEquals((A * A + B * B + C * C), 0.0))
     {
       itk::ExceptionObject err(__FILE__, __LINE__);
       err.SetLocation(ITK_LOCATION);
@@ -793,9 +763,9 @@ RayCastHelper<TInputImage, TCoordRep>::CalcDirnVector()
 
   // Calculate the number of voxels in each direction
 
-  xNum = std::fabs(m_RayVoxelStartPosition[0] - m_RayVoxelEndPosition[0]);
-  yNum = std::fabs(m_RayVoxelStartPosition[1] - m_RayVoxelEndPosition[1]);
-  zNum = std::fabs(m_RayVoxelStartPosition[2] - m_RayVoxelEndPosition[2]);
+  xNum = itk::Math::abs(m_RayVoxelStartPosition[0] - m_RayVoxelEndPosition[0]);
+  yNum = itk::Math::abs(m_RayVoxelStartPosition[1] - m_RayVoxelEndPosition[1]);
+  zNum = itk::Math::abs(m_RayVoxelStartPosition[2] - m_RayVoxelEndPosition[2]);
 
   // The direction iterated in is that with the greatest number of voxels
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1197,7 +1167,6 @@ RayCastHelper<TInputImage, TCoordRep>::InitialiseVoxelPointers()
       err.SetDescription("The ray traversal direction is unset "
                          "- InitialiseVoxelPointers().");
       throw err;
-      return;
     }
   }
 }
@@ -1447,10 +1416,17 @@ RayCastInterpolateImageFunction<TInputImage, TCoordRep>::Evaluate(const PointTyp
   ray.ZeroState();
   ray.Initialise();
 
-  PointType origin = this->m_Image->GetOrigin();
-  for (unsigned int i = 0; i < origin.Length; ++i)
-    origin[i] -= 0.5 * this->m_Image->GetSpacing()[i];
-  ray.SetRay(point - origin, direction);
+  const PointType origin = this->m_Image->GetOrigin();
+  const auto      spacing = this->m_Image->GetSpacing();
+
+  PointType rayPosition = point;
+
+  for (unsigned int i = 0; i < PointType::Length; ++i)
+  {
+    rayPosition[i] -= origin[i] - 0.5 * spacing[i];
+  }
+
+  ray.SetRay(rayPosition, direction);
   ray.IntegrateAboveThreshold(integral, m_Threshold);
 
   return (static_cast<OutputType>(integral));

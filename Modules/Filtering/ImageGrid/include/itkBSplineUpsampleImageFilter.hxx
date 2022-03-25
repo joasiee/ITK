@@ -27,7 +27,6 @@
  *=========================================================================*/
 #ifndef itkBSplineUpsampleImageFilter_hxx
 #define itkBSplineUpsampleImageFilter_hxx
-#include "itkBSplineUpsampleImageFilter.h"
 
 namespace itk
 {
@@ -101,9 +100,7 @@ BSplineUpsampleImageFilter<TInputImage, TOutputImage, ResamplerType>::GenerateIn
     inputRequestedRegionStartIndex[i] = outputRequestedRegionStartIndex[i] / (int)2;
   }
 
-  typename TInputImage::RegionType inputRequestedRegion;
-  inputRequestedRegion.SetSize(inputRequestedRegionSize);
-  inputRequestedRegion.SetIndex(inputRequestedRegionStartIndex);
+  const typename TInputImage::RegionType inputRequestedRegion(inputRequestedRegionStartIndex, inputRequestedRegionSize);
 
   inputPtr->SetRequestedRegion(inputRequestedRegion);
 }
@@ -149,9 +146,7 @@ BSplineUpsampleImageFilter<TInputImage, TOutputImage, ResamplerType>::GenerateOu
 
   outputPtr->SetSpacing(outputSpacing);
 
-  typename TOutputImage::RegionType outputLargestPossibleRegion;
-  outputLargestPossibleRegion.SetSize(outputSize);
-  outputLargestPossibleRegion.SetIndex(outputStartIndex);
+  const typename TOutputImage::RegionType outputLargestPossibleRegion(outputStartIndex, outputSize);
 
   outputPtr->SetLargestPossibleRegion(outputLargestPossibleRegion);
 }

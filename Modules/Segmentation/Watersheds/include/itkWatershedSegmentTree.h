@@ -48,13 +48,15 @@ template <typename TScalar>
 class ITK_TEMPLATE_EXPORT SegmentTree : public DataObject
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(SegmentTree);
+
   /** Define itk Smart Pointers for this object */
   using Self = SegmentTree;
   using Superclass = DataObject;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
   itkNewMacro(Self);
-  itkTypeMacro(WatershedSegmentTree, DataObject);
+  itkTypeMacro(SegmentTree, DataObject);
   using ScalarType = TScalar;
 
   /** Elements of the list (nodes of the tree).  A record of a merge
@@ -212,10 +214,7 @@ public:
 protected:
   SegmentTree() = default;
   ~SegmentTree() override = default;
-  SegmentTree(const Self &) {}
-  void
-  operator=(const Self &)
-  {}
+
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 

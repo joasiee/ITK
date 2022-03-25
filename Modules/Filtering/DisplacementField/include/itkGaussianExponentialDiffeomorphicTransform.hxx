@@ -18,7 +18,6 @@
 #ifndef itkGaussianExponentialDiffeomorphicTransform_hxx
 #define itkGaussianExponentialDiffeomorphicTransform_hxx
 
-#include "itkGaussianExponentialDiffeomorphicTransform.h"
 
 #include "itkAddImageFilter.h"
 #include "itkImageDuplicator.h"
@@ -28,16 +27,15 @@
 namespace itk
 {
 
-template <typename TParametersValueType, unsigned int NDimensions>
-GaussianExponentialDiffeomorphicTransform<TParametersValueType,
-                                          NDimensions>::GaussianExponentialDiffeomorphicTransform()
+template <typename TParametersValueType, unsigned int VDimension>
+GaussianExponentialDiffeomorphicTransform<TParametersValueType, VDimension>::GaussianExponentialDiffeomorphicTransform()
   : m_GaussianSmoothingVarianceForTheUpdateField(0.5)
   , m_GaussianSmoothingVarianceForTheConstantVelocityField(0.5)
 {}
 
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 void
-GaussianExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::UpdateTransformParameters(
+GaussianExponentialDiffeomorphicTransform<TParametersValueType, VDimension>::UpdateTransformParameters(
   const DerivativeType & update,
   ScalarType             factor)
 {
@@ -63,7 +61,7 @@ GaussianExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Up
   auto * updateFieldPointer =
     reinterpret_cast<DisplacementVectorType *>(const_cast<DerivativeType &>(update).data_block());
 
-  using ImporterType = ImportImageFilter<DisplacementVectorType, NDimensions>;
+  using ImporterType = ImportImageFilter<DisplacementVectorType, VDimension>;
   const bool importFilterWillReleaseMemory = false;
 
   auto importer = ImporterType::New();
@@ -87,7 +85,7 @@ GaussianExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Up
     updateField = updateSmoothField;
   }
 
-  using RealImageType = Image<ScalarType, NDimensions>;
+  using RealImageType = Image<ScalarType, VDimension>;
 
   using MultiplierType = MultiplyImageFilter<ConstantVelocityFieldType, RealImageType, ConstantVelocityFieldType>;
   auto multiplier = MultiplierType::New();
@@ -134,9 +132,9 @@ GaussianExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Up
   this->IntegrateVelocityField();
 }
 
-template <typename TParametersValueType, unsigned int NDimensions>
-typename GaussianExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::ConstantVelocityFieldPointer
-GaussianExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::GaussianSmoothConstantVelocityField(
+template <typename TParametersValueType, unsigned int VDimension>
+typename GaussianExponentialDiffeomorphicTransform<TParametersValueType, VDimension>::ConstantVelocityFieldPointer
+GaussianExponentialDiffeomorphicTransform<TParametersValueType, VDimension>::GaussianSmoothConstantVelocityField(
   ConstantVelocityFieldType * field,
   ScalarType                  variance)
 {
@@ -182,7 +180,7 @@ GaussianExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Ga
     smoothField->DisconnectPipeline();
   }
 
-  const DisplacementVectorType zeroVector(0.0);
+  constexpr DisplacementVectorType zeroVector{};
 
   // make sure boundary does not move
   ScalarType weight1 = 1.0;
@@ -228,10 +226,10 @@ GaussianExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Ga
 /**
  * Standard "PrintSelf" method
  */
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 void
-GaussianExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::PrintSelf(std::ostream & os,
-                                                                                        Indent         indent) const
+GaussianExponentialDiffeomorphicTransform<TParametersValueType, VDimension>::PrintSelf(std::ostream & os,
+                                                                                       Indent         indent) const
 {
   Superclass::PrintSelf(os, indent);
 

@@ -18,7 +18,6 @@
 #ifndef itkConstNeighborhoodIteratorWithOnlyIndex_hxx
 #define itkConstNeighborhoodIteratorWithOnlyIndex_hxx
 
-#include "itkConstNeighborhoodIteratorWithOnlyIndex.h"
 
 namespace itk
 {
@@ -122,38 +121,11 @@ auto
 ConstNeighborhoodIteratorWithOnlyIndex<TImage>::GetBoundingBoxAsImageRegion() const -> RegionType
 {
   const IndexValueType zero = NumericTraits<IndexValueType>::ZeroValue();
-  RegionType           ans;
-  ans.SetIndex(this->GetIndex(zero));
-  ans.SetSize(this->GetSize());
+  const RegionType     ans(this->GetIndex(zero), this->GetSize());
 
   return ans;
 }
 
-template <typename TImage>
-ConstNeighborhoodIteratorWithOnlyIndex<TImage>::ConstNeighborhoodIteratorWithOnlyIndex()
-{
-  IndexType zeroIndex;
-  zeroIndex.Fill(0);
-
-  SizeType zeroSize;
-  zeroSize.Fill(0);
-
-  m_Bound.Fill(0);
-  m_BeginIndex.Fill(0);
-  m_EndIndex.Fill(0);
-  m_Loop.Fill(0);
-  m_Region.SetIndex(zeroIndex);
-  m_Region.SetSize(zeroSize);
-
-  for (DimensionValueType i = 0; i < Dimension; ++i)
-  {
-    m_InBounds[i] = false;
-  }
-
-  m_IsInBounds = false;
-  m_IsInBoundsValid = false;
-  m_NeedToUseBoundaryCondition = false;
-}
 
 template <typename TImage>
 ConstNeighborhoodIteratorWithOnlyIndex<TImage>::ConstNeighborhoodIteratorWithOnlyIndex(const Self & orig)
@@ -184,10 +156,6 @@ ConstNeighborhoodIteratorWithOnlyIndex<TImage>::ConstNeighborhoodIteratorWithOnl
                                                                                        const RegionType & region)
 {
   this->Initialize(radius, ptr, region);
-  for (unsigned int i = 0; i < Dimension; ++i)
-  {
-    m_InBounds[i] = false;
-  }
 }
 
 template <typename TImage>

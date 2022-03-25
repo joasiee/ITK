@@ -19,15 +19,16 @@
 #include <fstream>
 #include "itkImageFileReader.h"
 #include "itkNrrdImageIO.h"
+#include "itkTestingMacros.h"
 
 // Specific ImageIO test
 
 int
-itkNrrdCovariantVectorImageReadTest(int ac, char * av[])
+itkNrrdCovariantVectorImageReadTest(int argc, char * argv[])
 {
-  if (ac < 1)
+  if (argc < 1)
   {
-    std::cerr << "Usage: " << av[0] << " Input\n";
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " Input\n";
     return EXIT_FAILURE;
   }
 
@@ -40,7 +41,7 @@ itkNrrdCovariantVectorImageReadTest(int ac, char * av[])
 
   reader->SetImageIO(itk::NrrdImageIO::New());
 
-  reader->SetFileName(av[1]);
+  reader->SetFileName(argv[1]);
 
   try
   {
@@ -71,10 +72,10 @@ itkNrrdCovariantVectorImageReadTest(int ac, char * av[])
       {
         coord[0] = xi;
         sample = image->GetPixel(coord);
-        err += std::fabs(sample[0] - coord[0]);
-        err += std::fabs(sample[1] - coord[1]);
-        err += std::fabs(sample[2] - coord[2]);
-        err += std::fabs(sample[3] - idx);
+        err += itk::Math::abs(sample[0] - coord[0]);
+        err += itk::Math::abs(sample[1] - coord[1]);
+        err += itk::Math::abs(sample[2] - coord[2]);
+        err += itk::Math::abs(sample[3] - idx);
         idx++;
       }
     }

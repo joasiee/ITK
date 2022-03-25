@@ -19,6 +19,7 @@ itkZeroCrossingImageFilterTest.cxx
 itkCannyEdgeDetectionImageFilterTest2.cxx
 itkDerivativeImageFilterTest.cxx
 itkLaplacianRecursiveGaussianImageFilterTest.cxx
+itkLaplacianSharpeningImageFilterTest.cxx
 itkMaskFeaturePointSelectionFilterTest.cxx
 itkUnsharpMaskImageFilterTestSimple.cxx
 itkUnsharpMaskImageFilterTest.cxx
@@ -32,7 +33,7 @@ CreateTestDriver(ITKImageFeature  "${ITKImageFeature-Test_LIBRARIES}" "${ITKImag
 set(TEMP ${ITK_TEST_OUTPUT_DIR})
 
 itk_add_test(NAME itkZeroCrossingBasedEdgeDetectionImageFilterTest
-      COMMAND ITKImageFeatureTestDriver itkZeroCrossingBasedEdgeDetectionImageFilterTest 1.0 0.01)
+      COMMAND ITKImageFeatureTestDriver itkZeroCrossingBasedEdgeDetectionImageFilterTest 1.0 0.01 0 1)
 itk_add_test(NAME itkLaplacianImageFilterTest
       COMMAND ITKImageFeatureTestDriver
       --compare DATA{Baseline/itkLaplacianImageFilterTestBaseline.png}
@@ -50,7 +51,11 @@ itk_add_test(NAME itkLaplacianImageFilterWithSpacingTest
       ${ITK_TEST_OUTPUT_DIR}/itkLaplacianImageFilterWithSpacingTest.png
       1)
 itk_add_test(NAME itkSobelEdgeDetectionImageFilterTest
-      COMMAND ITKImageFeatureTestDriver itkSobelEdgeDetectionImageFilterTest)
+      COMMAND ITKImageFeatureTestDriver
+      --compare DATA{Baseline/itkSobelEdgeDetectionImageFilterTestBaseline.png}
+                ${ITK_TEST_OUTPUT_DIR}/itkSobelEdgeDetectionImageFilterTest.png
+      itkSobelEdgeDetectionImageFilterTest
+      DATA{Input/Swirled.png} ${ITK_TEST_OUTPUT_DIR}/itkSobelEdgeDetectionImageFilterTest.png)
 itk_add_test(NAME itkUnsharpMaskImageFilterTestSimple
       COMMAND ITKImageFeatureTestDriver itkUnsharpMaskImageFilterTestSimple)
 itk_add_test(NAME itkUnsharpMaskImageFilterTest_DefaultsUChar
@@ -84,7 +89,7 @@ itk_add_test(NAME itkUnsharpMaskImageFilterTest_3_3_15
   ${TEMP}/SwirledUSM_3-3-15.nrrd.nrrd
   3.0 3.0 15)
 itk_add_test(NAME itkHessian3DToVesselnessMeasureImageFilterTest
-      COMMAND ITKImageFeatureTestDriver itkHessian3DToVesselnessMeasureImageFilterTest)
+      COMMAND ITKImageFeatureTestDriver itkHessian3DToVesselnessMeasureImageFilterTest 0.5 0.5 2.0)
 itk_add_test(NAME itkHessianToObjectnessMeasureImageFilterTest
       COMMAND ITKImageFeatureTestDriver
   --compare DATA{${ITK_DATA_ROOT}/Baseline/Filtering/itkHessianToObjectnessMeasureImageFilterTest.mha}
@@ -108,7 +113,7 @@ itk_add_test(NAME itkHessianRecursiveGaussianFilterScaleSpaceTest
 
 itk_add_test(NAME itkHessianRecursiveGaussianFilterTest
       COMMAND ITKImageFeatureTestDriver --redirectOutput ${TEMP}/itkHessianRecursiveGaussianFilterTest.txt
-          itkHessianRecursiveGaussianFilterTest)
+          itkHessianRecursiveGaussianFilterTest 2.5 0)
 set_tests_properties(itkHessianRecursiveGaussianFilterTest PROPERTIES ATTACHED_FILES_ON_FAIL ${TEMP}/itkHessianRecursiveGaussianFilterTest.txt)
 
 itk_add_test(NAME itkHoughTransform2DCirclesImageTest
@@ -171,12 +176,23 @@ itk_add_test(NAME itkLaplacianRecursiveGaussianImageFilterTest
     --compare DATA{${ITK_DATA_ROOT}/Baseline/BasicFilters/LaplacianRecursiveGaussianImageFilterTest.png,:}
               ${ITK_TEST_OUTPUT_DIR}/LaplacianRecursiveGaussianImageFilterTest.png
     itkLaplacianRecursiveGaussianImageFilterTest DATA{${ITK_DATA_ROOT}/Input/cthead1.png} ${ITK_TEST_OUTPUT_DIR}/LaplacianRecursiveGaussianImageFilterTest.png)
+itk_add_test(NAME itkLaplacianSharpeningImageFilterTest
+      COMMAND ITKImageFeatureTestDriver
+    --compare DATA{Baseline/itkLaplacianSharpeningImageFilterTest.png}
+              ${ITK_TEST_OUTPUT_DIR}/itkLaplacianSharpeningImageFilterTest.png
+    itkLaplacianSharpeningImageFilterTest DATA{${ITK_DATA_ROOT}/Input/sf4.png} ${ITK_TEST_OUTPUT_DIR}/itkLaplacianSharpeningImageFilterTest.png 1)
 itk_add_test(NAME itkMaskFeaturePointSelectionFilterTest
       COMMAND ITKImageFeatureTestDriver
     --compare DATA{Baseline/itkMaskFeaturePointSelectionFilterTest.mha}
               ${ITK_TEST_OUTPUT_DIR}/itkMaskFeaturePointSelectionFilterTest.mha
     itkMaskFeaturePointSelectionFilterTest
-DATA{${ITK_DATA_ROOT}/Input/HeadMRVolume.mha} ${ITK_TEST_OUTPUT_DIR}/itkMaskFeaturePointSelectionFilterTest.mha)
+DATA{${ITK_DATA_ROOT}/Input/HeadMRVolume.mha} ${ITK_TEST_OUTPUT_DIR}/itkMaskFeaturePointSelectionFilterTest.mha 0 2 0 0.01)
+itk_add_test(NAME itkMaskFeaturePointSelectionFilterTestTensors
+      COMMAND ITKImageFeatureTestDriver
+    --compare DATA{Baseline/itkMaskFeaturePointSelectionFilterTestTensors.mha}
+              ${ITK_TEST_OUTPUT_DIR}/itkMaskFeaturePointSelectionFilterTestTensors.mha
+    itkMaskFeaturePointSelectionFilterTest
+DATA{${ITK_DATA_ROOT}/Input/HeadMRVolume.mha} ${ITK_TEST_OUTPUT_DIR}/itkMaskFeaturePointSelectionFilterTestTensors.mha 0 2 1 0.01)
 itk_add_test(NAME itkDiscreteGaussianDerivativeImageFilterScaleSpaceTest
       COMMAND ITKImageFeatureTestDriver itkDiscreteGaussianDerivativeImageFilterScaleSpaceTest)
 itk_add_test(NAME itkDiscreteGaussianDerivativeImageFilterTest01

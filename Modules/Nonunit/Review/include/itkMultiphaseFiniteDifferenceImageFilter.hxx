@@ -18,7 +18,6 @@
 #ifndef itkMultiphaseFiniteDifferenceImageFilter_hxx
 #define itkMultiphaseFiniteDifferenceImageFilter_hxx
 
-#include "itkMultiphaseFiniteDifferenceImageFilter.h"
 #include "itkImageRegionConstIterator.h"
 #include "itkEventObject.h"
 
@@ -202,7 +201,7 @@ typename MultiphaseFiniteDifferenceImageFilter<TInputImage,
                                                TFiniteDifferenceFunction,
                                                TIdCell>::TimeStepType
 MultiphaseFiniteDifferenceImageFilter<TInputImage, TFeatureImage, TOutputImage, TFiniteDifferenceFunction, TIdCell>::
-  ResolveTimeStep(const TimeStepVectorType & timeStepList, const std::vector<bool> & valid)
+  ResolveTimeStep(const TimeStepVectorType & timeStepList, const std::vector<uint8_t> & valid)
 {
   TimeStepType        oMin = NumericTraits<TimeStepType>::ZeroValue();
   const SizeValueType size = timeStepList.size();

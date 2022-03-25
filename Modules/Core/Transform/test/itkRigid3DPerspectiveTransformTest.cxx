@@ -19,7 +19,7 @@
 #include <iostream>
 
 #include "itkRigid3DPerspectiveTransform.h"
-
+#include "itkTestingMacros.h"
 
 int
 itkRigid3DPerspectiveTransformTest(int, char *[])
@@ -35,6 +35,44 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
 
   bool Ok = true;
 
+  // Test exceptions
+  {
+    auto transform = TransformType::New();
+
+    typename TransformType::InputVectorType vector = itk::MakeVector(1.0, 4.0, 9.0);
+    ITK_TRY_EXPECT_EXCEPTION(transform->TransformVector(vector));
+
+    typename TransformType::InputVnlVectorType vnlVector;
+    vnlVector.fill(1.0);
+    ITK_TRY_EXPECT_EXCEPTION(transform->TransformVector(vnlVector));
+
+    typename TransformType::InputCovariantVectorType covVector;
+    covVector.Fill(1.0);
+    ITK_TRY_EXPECT_EXCEPTION(transform->TransformCovariantVector(covVector));
+
+    auto                                         point = itk::MakeFilled<typename TransformType::InputPointType>(1.0);
+    typename TransformType::JacobianPositionType jacobianPosition;
+    ITK_TRY_EXPECT_EXCEPTION(transform->ComputeJacobianWithRespectToPosition(point, jacobianPosition));
+  }
+
+  // Exercise basic object methods and test Set/Get macros
+  {
+    auto transform = TransformType::New();
+
+    ITK_EXERCISE_BASIC_OBJECT_METHODS(transform, Rigid3DPerspectiveTransform, Transform);
+
+
+    typename TransformType::OffsetType fixedOffset;
+    fixedOffset.Fill(0);
+
+    transform->SetFixedOffset(fixedOffset);
+    ITK_TEST_SET_GET_VALUE(fixedOffset, transform->GetFixedOffset());
+
+    typename TransformType::InputPointType centerOfRotation;
+    centerOfRotation.Fill(0);
+    transform->SetCenterOfRotation(centerOfRotation);
+    ITK_TEST_SET_GET_VALUE(centerOfRotation, transform->GetCenterOfRotation());
+  }
 
   /* Create a 3D identity transformation and show its parameters */
   {
@@ -47,7 +85,7 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
 
     for (unsigned int i = 0; i < N; ++i)
     {
-      if (std::fabs(offset[i] - 0.0) > epsilon)
+      if (itk::Math::abs(offset[i] - 0.0) > epsilon)
       {
         Ok = false;
         break;
@@ -76,7 +114,7 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
 
     for (unsigned int i = 0; i < N; ++i)
     {
-      if (std::fabs(offset[i] - ioffset[i]) > epsilon)
+      if (itk::Math::abs(offset[i] - ioffset[i]) > epsilon)
       {
         Ok = false;
         break;
@@ -102,7 +140,7 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
       r = translation->TransformPoint(p);
       for (unsigned int i = 0; i < N - 1; ++i)
       {
-        if (std::fabs(s[i] - r[i]) > epsilon)
+        if (itk::Math::abs(s[i] - r[i]) > epsilon)
         {
           Ok = false;
           break;
@@ -161,7 +199,7 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
       r = rigid->TransformPoint(p);
       for (unsigned int i = 0; i < N - 1; ++i)
       {
-        if (std::fabs(s[i] - r[i]) > epsilon)
+        if (itk::Math::abs(s[i] - r[i]) > epsilon)
         {
           Ok = false;
           break;

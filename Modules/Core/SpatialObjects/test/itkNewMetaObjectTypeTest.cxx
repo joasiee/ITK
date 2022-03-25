@@ -130,15 +130,15 @@ private:
  *\class MetaConverterBase
  *  Dummy converter class
  */
-template <unsigned int NDimensions = 3>
-class MetaDummyConverter : public MetaConverterBase<NDimensions>
+template <unsigned int VDimension = 3>
+class MetaDummyConverter : public MetaConverterBase<VDimension>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(MetaDummyConverter);
 
   /** Standard class type aliases */
   using Self = MetaDummyConverter;
-  using Superclass = MetaConverterBase<NDimensions>;
+  using Superclass = MetaConverterBase<VDimension>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -153,7 +153,7 @@ public:
   using typename Superclass::MetaObjectType;
 
   /** Specific class types for conversion */
-  using DummySpatialObjectType = DummySpatialObject<NDimensions>;
+  using DummySpatialObjectType = DummySpatialObject<VDimension>;
   using DummySpatialObjectPointer = typename DummySpatialObjectType::Pointer;
   using DummySpatialObjectConstPointer = typename DummySpatialObjectType::ConstPointer;
   using DummyMetaObjectType = MetaDummy;
@@ -244,6 +244,16 @@ itkNewMetaObjectTypeTest(int, char *[])
   ITK_EXERCISE_BASIC_OBJECT_METHODS(converter, MetaSceneConverter, Object);
 
 
+  auto binaryPoints = false;
+  ITK_TEST_SET_GET_BOOLEAN(converter, BinaryPoints, binaryPoints);
+
+  unsigned int transformPrecision = 6;
+  converter->SetTransformPrecision(transformPrecision);
+  ITK_TEST_SET_GET_VALUE(transformPrecision, converter->GetTransformPrecision());
+
+  auto writeImagesInSeparateFile = false;
+  ITK_TEST_SET_GET_BOOLEAN(converter, WriteImagesInSeparateFile, writeImagesInSeparateFile);
+
   converter->RegisterMetaConverter("Dummy", "DummySpatialObject", dummyConverter);
 
   MetaScene * metaScene = converter->CreateMetaScene(group);
@@ -289,7 +299,7 @@ itkNewMetaObjectTypeTest(int, char *[])
       return EXIT_FAILURE;
     }
     float value = p->GetValue();
-    if (std::fabs(value - Pi) > 0.00001)
+    if (itk::Math::abs(value - Pi) > 0.00001)
     {
       std::cout << "Expected value " << Pi << "but found " << value << std::endl;
       delete metaScene;

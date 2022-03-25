@@ -71,8 +71,8 @@ itkConnectedComponentImageFilterTestRGB(int argc, char * argv[])
   threshold_hi = std::stoi(argv[4]);
 
   threshold->SetInput(reader->GetOutput());
-  threshold->SetInsideValue(itk::NumericTraits<InternalPixelType>::OneValue());
-  threshold->SetOutsideValue(itk::NumericTraits<InternalPixelType>::ZeroValue());
+  threshold->SetInsideValue(itk::NumericTraits<RGBPixelType>::OneValue());
+  threshold->SetOutsideValue(itk::NumericTraits<RGBPixelType>::ZeroValue());
   threshold->SetLowerThreshold(threshold_low);
   threshold->SetUpperThreshold(threshold_hi);
   threshold->Update();
@@ -121,7 +121,7 @@ itkConnectedComponentImageFilterTestRGB(int argc, char * argv[])
   {
     if (it.Get() == 0)
     {
-      cit.Set(RGBPixelType(itk::NumericTraits<unsigned char>::ZeroValue()));
+      cit.Set(RGBPixelType());
     }
     else
     {

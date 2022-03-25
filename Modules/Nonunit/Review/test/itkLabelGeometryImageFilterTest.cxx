@@ -26,7 +26,7 @@
 #include "itkTestingMacros.h"
 
 // Helper function declaration.
-template <const unsigned int NDimension>
+template <const unsigned int VDimension>
 int
 LabelGeometryImageFilterTest(std::string labelImageName,
                              std::string intensityImageName,
@@ -83,7 +83,7 @@ itkLabelGeometryImageFilterTest(int argc, char * argv[])
   return EXIT_SUCCESS;
 }
 
-template <const unsigned int NDimension>
+template <const unsigned int VDimension>
 int
 LabelGeometryImageFilterTest(std::string labelImageName,
                              std::string intensityImageName,
@@ -97,8 +97,8 @@ LabelGeometryImageFilterTest(std::string labelImageName,
   using LabelPixelType = unsigned short;
   using IntensityPixelType = unsigned char;
 
-  using LabelImageType = itk::Image<LabelPixelType, NDimension>;
-  using IntensityImageType = itk::Image<IntensityPixelType, NDimension>;
+  using LabelImageType = itk::Image<LabelPixelType, VDimension>;
+  using IntensityImageType = itk::Image<IntensityPixelType, VDimension>;
 
   // Read the label image.
   using LabelReaderType = itk::ImageFileReader<LabelImageType>;
@@ -121,10 +121,17 @@ LabelGeometryImageFilterTest(std::string labelImageName,
   labelGeometryFilter->SetIntensityInput(intensityReader->GetOutput());
 
   // These generate optional outputs.
-  labelGeometryFilter->CalculatePixelIndicesOn();
-  labelGeometryFilter->CalculateOrientedBoundingBoxOn();
-  labelGeometryFilter->CalculateOrientedLabelRegionsOn();
-  labelGeometryFilter->CalculateOrientedIntensityRegionsOn();
+  auto calculatePixelIndices = true;
+  ITK_TEST_SET_GET_BOOLEAN(labelGeometryFilter, CalculatePixelIndices, calculatePixelIndices);
+
+  auto calculateOrientedBoundingBox = true;
+  ITK_TEST_SET_GET_BOOLEAN(labelGeometryFilter, CalculateOrientedBoundingBox, calculateOrientedBoundingBox);
+
+  auto calculateOrientedLabelRegions = true;
+  ITK_TEST_SET_GET_BOOLEAN(labelGeometryFilter, CalculateOrientedLabelRegions, calculateOrientedLabelRegions);
+
+  auto calculateOrientedIntensityRegions = true;
+  ITK_TEST_SET_GET_BOOLEAN(labelGeometryFilter, CalculateOrientedIntensityRegions, calculateOrientedIntensityRegions);
 
   ITK_TRY_EXPECT_NO_EXCEPTION(labelGeometryFilter->Update());
 
@@ -159,7 +166,7 @@ LabelGeometryImageFilterTest(std::string labelImageName,
 
     matrix(rowIndex, columnIndex++) = labelGeometryFilter->GetCentroid(labelValue)[0];
     matrix(rowIndex, columnIndex++) = labelGeometryFilter->GetCentroid(labelValue)[1];
-    if (NDimension == 3)
+    if (VDimension == 3)
     {
       matrix(rowIndex, columnIndex++) = labelGeometryFilter->GetCentroid(labelValue)[2];
     }
@@ -169,7 +176,7 @@ LabelGeometryImageFilterTest(std::string labelImageName,
     }
     matrix(rowIndex, columnIndex++) = labelGeometryFilter->GetWeightedCentroid(labelValue)[0];
     matrix(rowIndex, columnIndex++) = labelGeometryFilter->GetWeightedCentroid(labelValue)[1];
-    if (NDimension == 3)
+    if (VDimension == 3)
     {
       matrix(rowIndex, columnIndex++) = labelGeometryFilter->GetWeightedCentroid(labelValue)[2];
     }
@@ -184,7 +191,7 @@ LabelGeometryImageFilterTest(std::string labelImageName,
 
     typename LabelGeometryType::RealType orientation = labelGeometryFilter->GetOrientation(labelValue);
     // If the orientation is very close pi, we set it to 0.
-    orientation = std::fabs(itk::Math::pi - orientation) < epsilon ? 0 : orientation;
+    orientation = itk::Math::abs(itk::Math::pi - orientation) < epsilon ? 0 : orientation;
     matrix(rowIndex, columnIndex++) = orientation;
 
     rowIndex++;
@@ -301,11 +308,11 @@ compareMatrices(const MatrixType & m1, const MatrixType & m2, double epsilon)
         pass = false;
         return pass;
       }
-      if (std::fabs(m1[i][j] - m2[i][j]) > epsilon)
+      if (itk::Math::abs(m1[i][j] - m2[i][j]) > epsilon)
       {
         std::cout << "Matrix difference:"
-                  << "abs(m2[" << i << "][" << j << "] - m1[" << i << "][" << j
-                  << "]): " << std::fabs(m1[i][j] - m2[i][j]) << std::endl;
+                  << "itk::Math::abs(m2[" << i << "][" << j << "] - m1[" << i << "][" << j
+                  << "]): " << itk::Math::abs(m1[i][j] - m2[i][j]) << std::endl;
         pass = false;
         return pass;
       }

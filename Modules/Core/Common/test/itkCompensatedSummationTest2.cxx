@@ -74,7 +74,7 @@ public:
       itk::CompensatedSummation<double> compensatedSum;
       for (DomainType::IndexValueType i = subdomain[0]; i <= subdomain[1]; ++i)
       {
-        double value = itk::NumericTraits<double>::OneValue() / 7;
+        double value = 1.0 / 7;
         this->m_PerThreadCompensatedSum[threadId].AddElement(value);
       }
     }
@@ -82,7 +82,7 @@ public:
     void
     AfterThreadedExecution() override
     {
-      this->m_Associate->m_UncompensatedSumOfThreads = itk::NumericTraits<double>::ZeroValue();
+      this->m_Associate->m_UncompensatedSumOfThreads = 0.0;
       this->m_Associate->m_CompensatedSumOfThreads.ResetToZero();
 
       for (itk::ThreadIdType i = 0, numWorkUnitsUsed = this->GetNumberOfWorkUnitsUsed(); i < numWorkUnitsUsed; ++i)
@@ -218,8 +218,8 @@ itkCompensatedSummationTest2(int, char *[])
      * optimizations that were not handled by the CompensatedSummation class
      * pragmas, or perhaps because of differences in math coprocessors, or
      * something else. It's not clear. */
-    if (std::fabs(referenceSum - enclosingClass.GetCompensatedSumOfThreads()) >
-        std::fabs(referenceSum - enclosingClass.GetUncompensatedSumOfThreads()))
+    if (itk::Math::abs(referenceSum - enclosingClass.GetCompensatedSumOfThreads()) >
+        itk::Math::abs(referenceSum - enclosingClass.GetUncompensatedSumOfThreads()))
     {
       std::cerr << "Error. Expected the compensated sum of threads to be closer "
                 << "to reference than the uncompensated sum, or the same value. " << std::endl;

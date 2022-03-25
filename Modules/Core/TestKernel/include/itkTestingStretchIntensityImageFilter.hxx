@@ -28,7 +28,6 @@
 #ifndef itkTestingStretchIntensityImageFilter_hxx
 #define itkTestingStretchIntensityImageFilter_hxx
 
-#include "itkTestingStretchIntensityImageFilter.h"
 #include "itkImageBufferRange.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageRegionConstIterator.h"
@@ -60,7 +59,6 @@ StretchIntensityImageFilter<TInputImage, TOutputImage>::BeforeThreadedGenerateDa
   if (m_OutputMinimum > m_OutputMaximum)
   {
     itkExceptionMacro(<< "Minimum output value cannot be greater than Maximum output value.");
-    return;
   }
 
   const TInputImage * inputImage = this->GetInput();

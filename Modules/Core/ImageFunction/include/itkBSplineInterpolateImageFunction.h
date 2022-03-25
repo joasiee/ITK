@@ -28,14 +28,15 @@
 #ifndef itkBSplineInterpolateImageFunction_h
 #define itkBSplineInterpolateImageFunction_h
 
-#include <vector>
-
 #include "itkInterpolateImageFunction.h"
 #include "vnl/vnl_matrix.h"
 
 #include "itkBSplineDecompositionImageFilter.h"
 #include "itkConceptChecking.h"
 #include "itkCovariantVector.h"
+
+#include <memory> // For unique_ptr.
+#include <vector>
 
 namespace itk
 {
@@ -142,9 +143,8 @@ public:
   OutputType
   Evaluate(const PointType & point) const override
   {
-    ContinuousIndexType index;
-
-    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
+    const ContinuousIndexType index =
+      this->GetInputImage()->template TransformPhysicalPointToContinuousIndex<TCoordRep>(point);
     // No thread info passed in, so call method that doesn't need thread ID.
     return (this->EvaluateAtContinuousIndex(index));
   }
@@ -152,9 +152,8 @@ public:
   virtual OutputType
   Evaluate(const PointType & point, ThreadIdType threadId) const
   {
-    ContinuousIndexType index;
-
-    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
+    const ContinuousIndexType index =
+      this->GetInputImage()->template TransformPhysicalPointToContinuousIndex<TCoordRep>(point);
     return (this->EvaluateAtContinuousIndex(index, threadId));
   }
 
@@ -172,7 +171,11 @@ public:
   }
 
   virtual OutputType
-  EvaluateAtContinuousIndex(const ContinuousIndexType & x, ThreadIdType threadId) const;
+  EvaluateAtContinuousIndex(const ContinuousIndexType & x, ThreadIdType threadId) const
+  {
+    // Pass evaluateIndex, weights by reference. Different threadIDs get different instances.
+    return this->EvaluateAtContinuousIndexInternal(x, m_ThreadedEvaluateIndex[threadId], m_ThreadedWeights[threadId]);
+  }
 
   CovariantVectorType
   EvaluateDerivative(const PointType & point) const
@@ -187,9 +190,8 @@ public:
   CovariantVectorType
   EvaluateDerivative(const PointType & point, ThreadIdType threadId) const
   {
-    ContinuousIndexType index;
-
-    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
+    const ContinuousIndexType index =
+      this->GetInputImage()->template TransformPhysicalPointToContinuousIndex<TCoordRep>(point);
     return (this->EvaluateDerivativeAtContinuousIndex(index, threadId));
   }
 
@@ -211,7 +213,11 @@ public:
   }
 
   CovariantVectorType
-  EvaluateDerivativeAtContinuousIndex(const ContinuousIndexType & x, ThreadIdType threadId) const;
+  EvaluateDerivativeAtContinuousIndex(const ContinuousIndexType & x, ThreadIdType threadId) const
+  {
+    return this->EvaluateDerivativeAtContinuousIndexInternal(
+      x, m_ThreadedEvaluateIndex[threadId], m_ThreadedWeights[threadId], m_ThreadedWeightsDerivative[threadId]);
+  }
 
   void
   EvaluateValueAndDerivative(const PointType & point, OutputType & value, CovariantVectorType & deriv) const
@@ -230,9 +236,8 @@ public:
                              CovariantVectorType & deriv,
                              ThreadIdType          threadId) const
   {
-    ContinuousIndexType index;
-
-    this->GetInputImage()->TransformPhysicalPointToContinuousIndex(point, index);
+    const ContinuousIndexType index =
+      this->GetInputImage()->template TransformPhysicalPointToContinuousIndex<TCoordRep>(point);
     this->EvaluateValueAndDerivativeAtContinuousIndex(index, value, deriv, threadId);
   }
 
@@ -260,14 +265,22 @@ public:
   EvaluateValueAndDerivativeAtContinuousIndex(const ContinuousIndexType & x,
                                               OutputType &                value,
                                               CovariantVectorType &       derivativeValue,
-                                              ThreadIdType                threadId) const;
+                                              ThreadIdType                threadId) const
+  {
+    this->EvaluateValueAndDerivativeAtContinuousIndexInternal(x,
+                                                              value,
+                                                              derivativeValue,
+                                                              m_ThreadedEvaluateIndex[threadId],
+                                                              m_ThreadedWeights[threadId],
+                                                              m_ThreadedWeightsDerivative[threadId]);
+  }
 
   /** Get/Sets the Spline Order, supports 0th - 5th order splines. The default
    *  is a 3rd order spline. */
   void
   SetSplineOrder(unsigned int SplineOrder);
 
-  itkGetConstMacro(SplineOrder, int);
+  itkGetConstMacro(SplineOrder, unsigned int);
 
   void
   SetNumberOfWorkUnits(ThreadIdType numThreads);
@@ -337,7 +350,7 @@ protected:
                                               vnl_matrix<double> &        weightsDerivative) const;
 
   BSplineInterpolateImageFunction();
-  ~BSplineInterpolateImageFunction() override;
+  ~BSplineInterpolateImageFunction() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
@@ -401,10 +414,10 @@ private:
   // derivatives.
   bool m_UseImageDirection;
 
-  ThreadIdType         m_NumberOfWorkUnits;
-  vnl_matrix<long> *   m_ThreadedEvaluateIndex;
-  vnl_matrix<double> * m_ThreadedWeights;
-  vnl_matrix<double> * m_ThreadedWeightsDerivative;
+  ThreadIdType                          m_NumberOfWorkUnits;
+  std::unique_ptr<vnl_matrix<long>[]>   m_ThreadedEvaluateIndex;
+  std::unique_ptr<vnl_matrix<double>[]> m_ThreadedWeights;
+  std::unique_ptr<vnl_matrix<double>[]> m_ThreadedWeightsDerivative;
 };
 } // namespace itk
 

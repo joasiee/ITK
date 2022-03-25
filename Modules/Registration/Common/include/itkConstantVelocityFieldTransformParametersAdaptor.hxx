@@ -18,7 +18,6 @@
 #ifndef itkConstantVelocityFieldTransformParametersAdaptor_hxx
 #define itkConstantVelocityFieldTransformParametersAdaptor_hxx
 
-#include "itkConstantVelocityFieldTransformParametersAdaptor.h"
 
 #include "itkIdentityTransform.h"
 #include "itkResampleImageFilter.h"
@@ -185,7 +184,6 @@ ConstantVelocityFieldTransformParametersAdaptor<TTransform>::AdaptTransformParam
   if (!this->m_Transform)
   {
     itkExceptionMacro("Transform has not been set.");
-    return;
   }
 
   if (this->m_RequiredFixedParameters == this->m_Transform->GetFixedParameters())

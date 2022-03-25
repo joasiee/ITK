@@ -17,10 +17,17 @@
  *=========================================================================*/
 #include "itkHessianRecursiveGaussianImageFilter.h"
 #include "itkSimpleFilterWatcher.h"
+#include "itkTestingMacros.h"
 
 int
-itkHessianRecursiveGaussianFilterTest(int, char *[])
+itkHessianRecursiveGaussianFilterTest(int argc, char * argv[])
 {
+  if (argc != 3)
+  {
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " sigma normalizeAcrossScale" << std::endl;
+    return EXIT_FAILURE;
+  }
 
   // Define the dimension of the images
   constexpr unsigned int myDimension = 3;
@@ -100,16 +107,20 @@ itkHessianRecursiveGaussianFilterTest(int, char *[])
 
 
   // Create a  Filter
-  auto                     filter = myFilterType::New();
-  itk::SimpleFilterWatcher watcher(filter);
+  auto filter = myFilterType::New();
 
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(filter, HessianRecursiveGaussianImageFilter, ImageToImageFilter);
+
+
+  auto sigma = static_cast<typename myFilterType::RealType>(std::stod(argv[1]));
+  filter->SetSigma(sigma);
+  ITK_TEST_SET_GET_VALUE(sigma, filter->GetSigma());
+
+  auto normalizeAcrossScale = static_cast<bool>(std::stoi(argv[2]));
+  ITK_TEST_SET_GET_BOOLEAN(filter, NormalizeAcrossScale, normalizeAcrossScale);
 
   // Connect the input images
   filter->SetInput(inputImage);
-
-  // Select the value of Sigma
-  filter->SetSigma(2.5);
-
 
   // Execute the filter
   filter->Update();

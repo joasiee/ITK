@@ -43,7 +43,7 @@ const unsigned int WIDTH = (256);
 
 // Distance transform function for circle
 float
-circle(unsigned x, unsigned y)
+circle(unsigned int x, unsigned int y)
 {
   float dis;
   dis = (x - (float)WIDTH / 2.0) * (x - (float)WIDTH / 2.0) + (y - (float)HEIGHT / 2.0) * (y - (float)HEIGHT / 2.0);
@@ -53,11 +53,11 @@ circle(unsigned x, unsigned y)
 
 // Distance transform function for square
 float
-square(unsigned x, unsigned y)
+square(unsigned int x, unsigned int y)
 {
   float X, Y;
-  X = std::fabs(x - (float)WIDTH / 2.0);
-  Y = std::fabs(y - (float)HEIGHT / 2.0);
+  X = itk::Math::abs(x - (float)WIDTH / 2.0);
+  Y = itk::Math::abs(y - (float)HEIGHT / 2.0);
   float dis;
   if (!((X > RADIUS) && (Y > RADIUS)))
     dis = RADIUS - std::max(X, Y);
@@ -68,10 +68,10 @@ square(unsigned x, unsigned y)
 
 // Evaluates a function at each pixel in the itk image
 void
-evaluate_function(::itk::Image<float, 2> * im, float (*f)(unsigned int, unsigned int))
+evaluate_function(itk::Image<float, 2> * im, float (*f)(unsigned int, unsigned int))
 
 {
-  ::itk::Image<float, 2>::IndexType idx;
+  itk::Image<float, 2>::IndexType idx;
   for (unsigned int x = 0; x < WIDTH; ++x)
   {
     idx[0] = x;
@@ -90,26 +90,26 @@ evaluate_function(::itk::Image<float, 2> * im, float (*f)(unsigned int, unsigned
  *
  * See LevelSetFunction for more information.
  */
-class MorphFunction : public ::itk::LevelSetFunction<::itk::Image<float, 2>>
+class MorphFunction : public itk::LevelSetFunction<itk::Image<float, 2>>
 {
 public:
   void
-  SetDistanceTransform(::itk::Image<float, 2> * d)
+  SetDistanceTransform(itk::Image<float, 2> * d)
   {
     m_DistanceTransform = d;
   }
 
   using Self = MorphFunction;
 
-  using Superclass = ::itk::LevelSetFunction<::itk::Image<float, 2>>;
+  using Superclass = itk::LevelSetFunction<itk::Image<float, 2>>;
   using RadiusType = Superclass::RadiusType;
   using GlobalDataStruct = Superclass::GlobalDataStruct;
 
   /**
    * Smart pointer support for this class.
    */
-  using Pointer = ::itk::SmartPointer<Self>;
-  using ConstPointer = ::itk::SmartPointer<const Self>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /**
    * Run-time type information (and related methods)
@@ -132,17 +132,17 @@ protected:
   }
 
 private:
-  ::itk::Image<float, 2>::Pointer m_DistanceTransform;
+  itk::Image<float, 2>::Pointer m_DistanceTransform;
   ScalarValueType
   PropagationSpeed(const NeighborhoodType & neighborhood, const FloatOffsetType &, GlobalDataStruct *) const override
   {
-    ::itk::Index<2> idx = neighborhood.GetIndex();
+    itk::Index<2> idx = neighborhood.GetIndex();
     return m_DistanceTransform->GetPixel(idx);
   }
 };
 
 
-class MorphFilter : public ::itk::DenseFiniteDifferenceImageFilter<::itk::Image<float, 2>, ::itk::Image<float, 2>>
+class MorphFilter : public itk::DenseFiniteDifferenceImageFilter<itk::Image<float, 2>, itk::Image<float, 2>>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(MorphFilter);
@@ -152,8 +152,8 @@ public:
   /**
    * Smart pointer support for this class.
    */
-  using Pointer = ::itk::SmartPointer<Self>;
-  using ConstPointer = ::itk::SmartPointer<const Self>;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
 
   /**
    * Run-time type information (and related methods)
@@ -168,7 +168,7 @@ public:
   itkSetMacro(Iterations, unsigned int);
 
   void
-  SetDistanceTransform(::itk::Image<float, 2> * im)
+  SetDistanceTransform(itk::Image<float, 2> * im)
   {
     auto * func = dynamic_cast<MorphFunction *>(this->GetDifferenceFunction().GetPointer());
     if (func == nullptr)
@@ -208,7 +208,7 @@ private:
 int
 itkLevelSetFunctionTest(int, char *[])
 {
-  using ImageType = ::itk::Image<float, 2>;
+  using ImageType = itk::Image<float, 2>;
 
   constexpr int n = 100; // Number of iterations
 
