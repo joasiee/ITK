@@ -63,6 +63,14 @@ public:
   virtual MeasureType
   GetValue(const ParametersType & parameters) const = 0;
 
+  /** This method returns the value of the cost function when it is evaluated partially. */
+  virtual MeasureType
+  GetValue(const ParametersType & parameters, const int fosIndex) const;
+
+  /** Initializes partial evaluations data structures. */
+  virtual void
+  InitPartialEvaluations(int ** sets, int * set_length, int length);
+
   /** This method returns the derivative of the cost function corresponding
    * to the specified parameters.   */
   virtual void

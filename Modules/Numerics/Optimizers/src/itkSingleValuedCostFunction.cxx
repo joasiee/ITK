@@ -28,5 +28,23 @@ SingleValuedCostFunction::GetValueAndDerivative(const ParametersType & parameter
   this->GetDerivative(parameters, derivative);
 }
 
+
+SingleValuedCostFunction::MeasureType
+SingleValuedCostFunction::GetValue(const ParametersType & parameters, const int fosIndex) const
+{
+  (void)fosIndex;
+  itkWarningMacro(<< Self::GetNameOfClass() << ": Missing partial evaluations implementation.");
+  return this->GetValue(parameters);
+}
+
+void
+SingleValuedCostFunction::InitPartialEvaluations(int ** sets, int * set_length, int length)
+{
+  (void)sets;
+  (void)set_length;
+  (void)length;
+  itkWarningMacro(<< Self::GetNameOfClass() << ": Missing partial evaluations implementation.");
+}
+
 SingleValuedCostFunction::~SingleValuedCostFunction() = default;
 } // namespace itk

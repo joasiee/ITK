@@ -76,6 +76,10 @@ public:
   MeasureType
   GetValue(const ParametersType & parameters) const;
 
+  /** Get the cost function value at the given parameters using partial evaluations. */
+  MeasureType
+  GetValue(const ParametersType & parameters, const int fosIndex) const;
+
 protected:
   SingleValuedNonLinearOptimizer();
   ~SingleValuedNonLinearOptimizer() override = default;
