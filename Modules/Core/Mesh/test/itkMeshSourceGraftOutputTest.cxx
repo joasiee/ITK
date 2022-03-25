@@ -119,7 +119,7 @@ MeshSourceGraftOutputFilter<TInputMesh, TOutputMesh, TTransform>::GenerateData()
 
 
   // Create a Filter
-  typename FilterType::Pointer filter = FilterType::New();
+  auto filter = FilterType::New();
 
   // Connect the inputs
   filter->SetInput(inputMesh);
@@ -204,7 +204,7 @@ itkMeshSourceGraftOutputTest(int, char *[])
   using PointType = MeshType::PointType;
 
   // Create an input Mesh
-  MeshType::Pointer inputMesh = MeshType::New();
+  auto inputMesh = MeshType::New();
 
   // Insert data on the Mesh
   PointsContainerPointer points = inputMesh->GetPoints();
@@ -213,11 +213,11 @@ itkMeshSourceGraftOutputTest(int, char *[])
   int                                    n = 1;     // let's start with a few of them
   PointsContainerType::ElementIdentifier count = 0; // count them
 
-  for (int x = -n; x <= n; x++)
+  for (int x = -n; x <= n; ++x)
   {
-    for (int y = -n; y <= n; y++)
+    for (int y = -n; y <= n; ++y)
     {
-      for (int z = -n; z <= n; z++)
+      for (int z = -n; z <= n; ++z)
       {
         PointType p;
         p[0] = x;
@@ -251,11 +251,11 @@ itkMeshSourceGraftOutputTest(int, char *[])
 
 
   // Create a Filter
-  FilterType::Pointer filter = FilterType::New();
+  auto filter = FilterType::New();
 
   // Create an  Transform
   // (it doesn't use smart pointers)
-  TransformType::Pointer affineTransform = TransformType::New();
+  auto affineTransform = TransformType::New();
   affineTransform->Scale(3.5);
   TransformType::OffsetType::ValueType tInit[3] = { 100, 200, 300 };
   TransformType::OffsetType            translation = tInit;

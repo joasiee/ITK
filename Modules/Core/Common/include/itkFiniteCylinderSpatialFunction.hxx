@@ -67,8 +67,8 @@ FiniteCylinderSpatialFunction<VDimension, TInput>::SetOrientation(const InputTyp
 }
 
 template <unsigned int VDimension, typename TInput>
-typename FiniteCylinderSpatialFunction<VDimension, TInput>::OutputType
-FiniteCylinderSpatialFunction<VDimension, TInput>::Evaluate(const InputType & position) const
+auto
+FiniteCylinderSpatialFunction<VDimension, TInput>::Evaluate(const InputType & position) const -> OutputType
 {
   const double halfAxisLength = 0.5 * m_AxisLength;
 
@@ -125,13 +125,13 @@ FiniteCylinderSpatialFunction<VDimension, TInput>::PrintSelf(std::ostream & os, 
   os << indent << "Radius: " << m_Radius << std::endl;
   os << indent << "Origin of Cylinder: " << m_Center << std::endl;
   os << indent << "Orientation: " << std::endl;
-  for (i = 0; i < VDimension; i++)
+  for (i = 0; i < VDimension; ++i)
   {
     os << indent << indent << m_Orientation[i] << " ";
   }
   os << std::endl;
   os << indent << "Normalized Orientation: " << std::endl;
-  for (i = 0; i < VDimension; i++)
+  for (i = 0; i < VDimension; ++i)
   {
     os << indent << indent << m_NormalizedOrientation[i] << " ";
   }

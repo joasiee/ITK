@@ -23,8 +23,8 @@
 namespace itk
 {
 template <typename TMesh, typename TQEType>
-typename QuadEdgeMeshEulerOperatorCreateCenterVertexFunction<TMesh, TQEType>::OutputType
-QuadEdgeMeshEulerOperatorCreateCenterVertexFunction<TMesh, TQEType>::Evaluate(QEType * e)
+auto
+QuadEdgeMeshEulerOperatorCreateCenterVertexFunction<TMesh, TQEType>::Evaluate(QEType * e) -> OutputType
 {
   // Is there any input ?
 #ifndef NDEBUG
@@ -70,7 +70,7 @@ QuadEdgeMeshEulerOperatorCreateCenterVertexFunction<TMesh, TQEType>::Evaluate(QE
   } // rof
   vec /= CoordRepType(sum);
   PointType p;
-  for (unsigned int i = 0; i < 3; i++)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     p[i] = vec[i];
   }

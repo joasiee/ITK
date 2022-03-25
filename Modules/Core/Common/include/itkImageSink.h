@@ -79,10 +79,10 @@ public:
   using SplitterType = ImageRegionSplitterBase;
   using RegionSplitterPointer = typename SplitterType::Pointer;
 
-  using DataObjectIdentifierType = typename Superclass::DataObjectIdentifierType;
+  using typename Superclass::DataObjectIdentifierType;
 
   /** Dimension of input images. */
-  itkStaticConstMacro(InputImageDimension, unsigned int, InputImageType::ImageDimension);
+  static constexpr unsigned int InputImageDimension = InputImageType::ImageDimension;
 
 
   using Superclass::SetInput;

@@ -52,8 +52,8 @@ GrayscaleGeodesicDilateImageFilter<TInputImage, TOutputImage>::SetMarkerImage(co
 }
 
 template <typename TInputImage, typename TOutputImage>
-const typename GrayscaleGeodesicDilateImageFilter<TInputImage, TOutputImage>::MarkerImageType *
-GrayscaleGeodesicDilateImageFilter<TInputImage, TOutputImage>::GetMarkerImage()
+auto
+GrayscaleGeodesicDilateImageFilter<TInputImage, TOutputImage>::GetMarkerImage() -> const MarkerImageType *
 {
   return this->GetInput(0);
 }
@@ -67,8 +67,8 @@ GrayscaleGeodesicDilateImageFilter<TInputImage, TOutputImage>::SetMaskImage(cons
 }
 
 template <typename TInputImage, typename TOutputImage>
-const typename GrayscaleGeodesicDilateImageFilter<TInputImage, TOutputImage>::MaskImageType *
-GrayscaleGeodesicDilateImageFilter<TInputImage, TOutputImage>::GetMaskImage()
+auto
+GrayscaleGeodesicDilateImageFilter<TInputImage, TOutputImage>::GetMaskImage() -> const MaskImageType *
 {
   return this->GetInput(1);
 }
@@ -193,7 +193,7 @@ GrayscaleGeodesicDilateImageFilter<TInputImage, TOutputImage>::GenerateData()
   singleIteration->GetOutput()->SetRequestedRegion(this->GetOutput()->GetRequestedRegion());
 
   // Create a process accumulator for tracking the progress of this minipipeline
-  ProgressAccumulator::Pointer progress = ProgressAccumulator::New();
+  auto progress = ProgressAccumulator::New();
   progress->SetMiniPipelineFilter(this);
   progress->RegisterInternalFilter(singleIteration, 1.0f);
 
@@ -345,7 +345,7 @@ GrayscaleGeodesicDilateImageFilter<TInputImage, TOutputImage>::DynamicThreadedGe
 
       // Dilate by checking the face connected neighbors (and center pixel)
       typename NeighborhoodIteratorType::ConstIterator sIt;
-      for (sIt = markerIt.Begin(); !sIt.IsAtEnd(); sIt++)
+      for (sIt = markerIt.Begin(); !sIt.IsAtEnd(); ++sIt)
       {
         // a pixel in the neighborhood
         value = sIt.Get();

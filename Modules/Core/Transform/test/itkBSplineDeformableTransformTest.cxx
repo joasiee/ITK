@@ -77,7 +77,7 @@ itkBSplineDeformableTransformTest1()
   /**
    * Instantiate a transform
    */
-  TransformType::Pointer transform = TransformType::New();
+  auto transform = TransformType::New();
 
   transform->SetGridSpacing(spacing);
   transform->SetGridOrigin(origin);
@@ -102,7 +102,7 @@ itkBSplineDeformableTransformTest1()
   CoefficientImageType::Pointer coeffImage[SpaceDimension];
   unsigned int                  numberOfControlPoints = region.GetNumberOfPixels();
   CoefficientType *             dataPointer = parameters.data_block();
-  for (j = 0; j < SpaceDimension; j++)
+  for (j = 0; j < SpaceDimension; ++j)
   {
     coeffImage[j] = CoefficientImageType::New();
     coeffImage[j]->SetRegions(region);
@@ -133,7 +133,7 @@ itkBSplineDeformableTransformTest1()
    * Set a bulk transform
    */
   using BulkTransformType = itk::VersorRigid3DTransform<CoordinateRepType>;
-  BulkTransformType::Pointer bulkTransform = BulkTransformType::New();
+  auto bulkTransform = BulkTransformType::New();
 
   // optional: set bulk transform parameters
 
@@ -203,8 +203,8 @@ itkBSplineDeformableTransformTest1()
   using WeightsType = TransformType::WeightsType;
   using IndexArrayType = TransformType::ParameterIndexArrayType;
 
-  WeightsType    weights(transform->GetNumberOfWeights());
-  IndexArrayType indices(transform->GetNumberOfWeights());
+  WeightsType    weights;
+  IndexArrayType indices;
   bool           inside;
 
   inputPoint.Fill(8.3);
@@ -221,7 +221,7 @@ itkBSplineDeformableTransformTest1()
 
   // cycling through all the parameters and weights used in the previous
   // transformation
-  unsigned int numberOfCoefficientInSupportRegion = transform->GetNumberOfWeights();
+  unsigned int numberOfCoefficientInSupportRegion = TransformType::NumberOfWeights;
   unsigned int numberOfParametersPerDimension = transform->GetNumberOfParametersPerDimension();
   unsigned int linearIndex;
   unsigned int baseIndex;
@@ -231,10 +231,10 @@ itkBSplineDeformableTransformTest1()
             << "Value"
             << "\t"
             << "Weight" << std::endl;
-  for (j = 0; j < SpaceDimension; j++)
+  for (j = 0; j < SpaceDimension; ++j)
   {
     baseIndex = j * numberOfParametersPerDimension;
-    for (unsigned int k = 0; k < numberOfCoefficientInSupportRegion; k++)
+    for (unsigned int k = 0; k < numberOfCoefficientInSupportRegion; ++k)
     {
       linearIndex = indices[k] + baseIndex;
       std::cout << linearIndex << "\t";
@@ -253,9 +253,9 @@ itkBSplineDeformableTransformTest1()
    */
   using JacobianType = TransformType::JacobianType;
 
-#define PRINT_VALUE(R, C)                                                                                              \
-  std::cout << "Jacobian[" #R "," #C "] = ";                                                                           \
-  std::cout << jacobian[R][C] << std::endl;                                                                            \
+#define PRINT_VALUE(R, C)                    \
+  std::cout << "Jacobian[" #R "," #C "] = "; \
+  std::cout << jacobian[R][C] << std::endl;  \
   ITK_MACROEND_NOOP_STATEMENT
 
   {
@@ -391,7 +391,7 @@ itkBSplineDeformableTransformTest1()
   std::cout << transform->GetValidRegion() << std::endl;
 
   using EvenOrderTransformType = itk::BSplineDeformableTransform<CoordinateRepType, SpaceDimension, 2>;
-  EvenOrderTransformType::Pointer evenOrderTransform = EvenOrderTransformType::New();
+  auto evenOrderTransform = EvenOrderTransformType::New();
   if (evenOrderTransform.IsNull())
   {
     return EXIT_FAILURE;
@@ -415,7 +415,7 @@ itkBSplineDeformableTransformTest1()
    */
   {
     std::cout << "Exercising SetIdentity() " << std::endl;
-    TransformType::Pointer transform2 = TransformType::New();
+    auto transform2 = TransformType::New();
     transform2->SetGridSpacing(spacing);
     transform2->SetGridOrigin(origin);
     transform2->SetGridRegion(region);
@@ -424,7 +424,7 @@ itkBSplineDeformableTransformTest1()
     TransformType::ParametersType parameters2 = transform2->GetParameters();
     const unsigned int            numberOfParameters2 = transform2->GetNumberOfParameters();
     std::cout << "numberOfParameters =  " << numberOfParameters2 << std::endl;
-    for (unsigned int i = 0; i < numberOfParameters2; i++)
+    for (unsigned int i = 0; i < numberOfParameters2; ++i)
     {
       if (std::fabs(parameters2[i]) > 1e-10)
       {
@@ -462,14 +462,14 @@ itkBSplineDeformableTransformTest2()
   TransformType::InputPointType  inputPoint;
   TransformType::OutputPointType outputPoint;
 
-  TransformType::Pointer transform = TransformType::New();
+  auto transform = TransformType::New();
 
   // Set up field spacing, origin, region
   double                spacing[Dimension];
   double                origin[Dimension];
   ImageType::SizeType   size;
   ImageType::RegionType region;
-  for (j = 0; j < Dimension; j++)
+  for (j = 0; j < Dimension; ++j)
   {
     spacing[j] = 10.0;
     origin[j] = -10.0;
@@ -481,7 +481,7 @@ itkBSplineDeformableTransformTest2()
   region.SetSize(size);
 
   TransformType::CoefficientImageArray field;
-  for (j = 0; j < Dimension; j++)
+  for (j = 0; j < Dimension; ++j)
   {
     field[j] = ImageType::New();
     field[j]->SetSpacing(spacing);
@@ -494,7 +494,7 @@ itkBSplineDeformableTransformTest2()
   itk::Vector<double, Dimension> v;
   v[0] = 5;
   v[1] = 7;
-  for (j = 0; j < Dimension; j++)
+  for (j = 0; j < Dimension; ++j)
   {
     field[j]->FillBuffer(v[j]);
   }
@@ -612,7 +612,7 @@ itkBSplineDeformableTransformTest3()
   /**
    * Instantiate a transform
    */
-  TransformType::Pointer transform = TransformType::New();
+  auto transform = TransformType::New();
 
   transform->SetGridSpacing(spacing);
   transform->SetGridOrigin(origin);
@@ -636,7 +636,7 @@ itkBSplineDeformableTransformTest3()
   CoefficientImageType::Pointer coeffImage[SpaceDimension];
   unsigned int                  numberOfControlPoints = region.GetNumberOfPixels();
   CoefficientType *             dataPointer = parameters.data_block();
-  for (j = 0; j < SpaceDimension; j++)
+  for (j = 0; j < SpaceDimension; ++j)
   {
     coeffImage[j] = CoefficientImageType::New();
     coeffImage[j]->SetRegions(region);

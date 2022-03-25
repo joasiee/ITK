@@ -61,7 +61,8 @@ namespace itk
  *
  */
 template <typename TImage>
-class FrequencyImageRegionIteratorWithIndex : public FrequencyImageRegionConstIteratorWithIndex<TImage>
+class ITK_TEMPLATE_EXPORT FrequencyImageRegionIteratorWithIndex
+  : public FrequencyImageRegionConstIteratorWithIndex<TImage>
 {
 public:
   /** Standard class type alias. */
@@ -69,16 +70,16 @@ public:
   using Superclass = ImageRegionIteratorWithIndex<TImage>;
 
   /** Types inherited from the Superclass */
-  using IndexType = typename Superclass::IndexType;
-  using SizeType = typename Superclass::SizeType;
-  using OffsetType = typename Superclass::OffsetType;
-  using RegionType = typename Superclass::RegionType;
-  using ImageType = typename Superclass::ImageType;
-  using PixelContainer = typename Superclass::PixelContainer;
-  using PixelContainerPointer = typename Superclass::PixelContainerPointer;
-  using InternalPixelType = typename Superclass::InternalPixelType;
-  using PixelType = typename Superclass::PixelType;
-  using AccessorType = typename Superclass::AccessorType;
+  using typename Superclass::IndexType;
+  using typename Superclass::SizeType;
+  using typename Superclass::OffsetType;
+  using typename Superclass::RegionType;
+  using typename Superclass::ImageType;
+  using typename Superclass::PixelContainer;
+  using typename Superclass::PixelContainerPointer;
+  using typename Superclass::InternalPixelType;
+  using typename Superclass::PixelType;
+  using typename Superclass::AccessorType;
 
   using FrequencyType = typename ImageType::SpacingType;
   using FrequencyValueType = typename ImageType::SpacingValueType;

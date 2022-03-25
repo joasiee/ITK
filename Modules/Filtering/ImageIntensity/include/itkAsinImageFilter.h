@@ -37,16 +37,12 @@ public:
   Asin() = default;
   ~Asin() = default;
   bool
-  operator!=(const Asin &) const
+  operator==(const Asin &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Asin & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Asin);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -80,7 +76,7 @@ public:
  * \ingroup ITKImageIntensity
  */
 template <typename TInputImage, typename TOutputImage>
-class AsinImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT AsinImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(AsinImageFilter);

@@ -33,8 +33,8 @@ CompositeTransform<TParametersValueType, NDimensions>::CompositeTransform()
 }
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename CompositeTransform<TParametersValueType, NDimensions>::TransformCategoryEnum
-CompositeTransform<TParametersValueType, NDimensions>::GetTransformCategory() const
+auto
+CompositeTransform<TParametersValueType, NDimensions>::GetTransformCategory() const -> TransformCategoryEnum
 {
   // Check if linear
   bool isLinearTransform = this->IsLinear();
@@ -67,8 +67,9 @@ CompositeTransform<TParametersValueType, NDimensions>::GetTransformCategory() co
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename CompositeTransform<TParametersValueType, NDimensions>::OutputPointType
+auto
 CompositeTransform<TParametersValueType, NDimensions>::TransformPoint(const InputPointType & inputPoint) const
+  -> OutputPointType
 {
 
   /* Apply in reverse queue order.  */
@@ -82,8 +83,9 @@ CompositeTransform<TParametersValueType, NDimensions>::TransformPoint(const Inpu
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename CompositeTransform<TParametersValueType, NDimensions>::OutputVectorType
+auto
 CompositeTransform<TParametersValueType, NDimensions>::TransformVector(const InputVectorType & inputVector) const
+  -> OutputVectorType
 {
   OutputVectorType outputVector(inputVector);
 
@@ -137,8 +139,9 @@ CompositeTransform<TParametersValueType, NDimensions>::TransformVector(const Inp
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename CompositeTransform<TParametersValueType, NDimensions>::OutputVnlVectorType
+auto
 CompositeTransform<TParametersValueType, NDimensions>::TransformVector(const InputVnlVectorType & inputVector) const
+  -> OutputVnlVectorType
 {
   OutputVnlVectorType outputVector(inputVector);
 
@@ -153,8 +156,9 @@ CompositeTransform<TParametersValueType, NDimensions>::TransformVector(const Inp
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename CompositeTransform<TParametersValueType, NDimensions>::OutputVectorPixelType
+auto
 CompositeTransform<TParametersValueType, NDimensions>::TransformVector(const InputVectorPixelType & inputVector) const
+  -> OutputVectorPixelType
 {
   OutputVectorPixelType outputVector(inputVector);
 
@@ -436,7 +440,7 @@ CompositeTransform<TParametersValueType, NDimensions>::GetInverse(Self * inverse
 
   /* Copy the optimization flags */
   inverse->m_TransformsToOptimizeFlags.clear();
-  for (auto ofit = this->m_TransformsToOptimizeFlags.begin(); ofit != this->m_TransformsToOptimizeFlags.end(); ofit++)
+  for (auto ofit = this->m_TransformsToOptimizeFlags.begin(); ofit != this->m_TransformsToOptimizeFlags.end(); ++ofit)
   {
     inverse->m_TransformsToOptimizeFlags.push_front(*ofit);
   }
@@ -446,8 +450,8 @@ CompositeTransform<TParametersValueType, NDimensions>::GetInverse(Self * inverse
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename CompositeTransform<TParametersValueType, NDimensions>::InverseTransformBasePointer
-CompositeTransform<TParametersValueType, NDimensions>::GetInverseTransform() const
+auto
+CompositeTransform<TParametersValueType, NDimensions>::GetInverseTransform() const -> InverseTransformBasePointer
 {
   /* This method can't be defined in Superclass because of the call to New() */
   Pointer inverseTransform = New();
@@ -610,8 +614,8 @@ CompositeTransform<TParametersValueType, NDimensions>::ComputeJacobianWithRespec
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-const typename CompositeTransform<TParametersValueType, NDimensions>::ParametersType &
-CompositeTransform<TParametersValueType, NDimensions>::GetParameters() const
+auto
+CompositeTransform<TParametersValueType, NDimensions>::GetParameters() const -> const ParametersType &
 {
   const TransformQueueType & transforms = this->GetTransformsToOptimizeQueue();
   if (transforms.size() == 1)
@@ -703,8 +707,8 @@ CompositeTransform<TParametersValueType, NDimensions>::SetParameters(const Param
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-const typename CompositeTransform<TParametersValueType, NDimensions>::FixedParametersType &
-CompositeTransform<TParametersValueType, NDimensions>::GetFixedParameters() const
+auto
+CompositeTransform<TParametersValueType, NDimensions>::GetFixedParameters() const -> const FixedParametersType &
 {
   TransformQueueType transforms = this->GetTransformsToOptimizeQueue();
   /* Resize destructively. But if it's already this size, nothing is done so
@@ -755,8 +759,8 @@ CompositeTransform<TParametersValueType, NDimensions>::SetFixedParameters(const 
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename CompositeTransform<TParametersValueType, NDimensions>::NumberOfParametersType
-CompositeTransform<TParametersValueType, NDimensions>::GetNumberOfParameters() const
+auto
+CompositeTransform<TParametersValueType, NDimensions>::GetNumberOfParameters() const -> NumberOfParametersType
 {
   /* Returns to total number of params in all transforms currently
    * set to be used for optimized.
@@ -781,8 +785,8 @@ CompositeTransform<TParametersValueType, NDimensions>::GetNumberOfParameters() c
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename CompositeTransform<TParametersValueType, NDimensions>::NumberOfParametersType
-CompositeTransform<TParametersValueType, NDimensions>::GetNumberOfLocalParameters() const
+auto
+CompositeTransform<TParametersValueType, NDimensions>::GetNumberOfLocalParameters() const -> NumberOfParametersType
 {
   if (this->GetMTime() == this->m_LocalParametersUpdateTime)
   {
@@ -811,8 +815,8 @@ CompositeTransform<TParametersValueType, NDimensions>::GetNumberOfLocalParameter
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename CompositeTransform<TParametersValueType, NDimensions>::NumberOfParametersType
-CompositeTransform<TParametersValueType, NDimensions>::GetNumberOfFixedParameters() const
+auto
+CompositeTransform<TParametersValueType, NDimensions>::GetNumberOfFixedParameters() const -> NumberOfParametersType
 {
   /* Returns to total number of params in all transforms currently
    * set to be used for optimized.
@@ -885,15 +889,16 @@ CompositeTransform<TParametersValueType, NDimensions>::UpdateTransformParameters
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename CompositeTransform<TParametersValueType, NDimensions>::TransformQueueType &
+auto
 CompositeTransform<TParametersValueType, NDimensions>::GetTransformsToOptimizeQueue() const
+  -> const TransformQueueType &
 {
   /* Update the list of transforms to use for optimization only if
    the selection of transforms to optimize may have changed */
   if (this->GetMTime() > this->m_PreviousTransformsToOptimizeUpdateTime)
   {
     this->m_TransformsToOptimizeQueue.clear();
-    for (size_t n = 0; n < this->m_TransformQueue.size(); n++)
+    for (size_t n = 0; n < this->m_TransformQueue.size(); ++n)
     {
       /* Return them in the same order as they're found in the main list */
       if (this->GetNthTransformToOptimize(static_cast<SizeValueType>(n)))
@@ -916,13 +921,13 @@ CompositeTransform<TParametersValueType, NDimensions>::FlattenTransformQueue()
   TransformQueueType            transformsToOptimizeQueue;
   TransformsToOptimizeFlagsType transformsToOptimizeFlags;
 
-  for (SizeValueType m = 0; m < this->GetNumberOfTransforms(); m++)
+  for (SizeValueType m = 0; m < this->GetNumberOfTransforms(); ++m)
   {
     auto * nestedCompositeTransform = dynamic_cast<Self *>(this->m_TransformQueue[m].GetPointer());
     if (nestedCompositeTransform)
     {
       nestedCompositeTransform->FlattenTransformQueue();
-      for (SizeValueType n = 0; n < nestedCompositeTransform->GetNumberOfTransforms(); n++)
+      for (SizeValueType n = 0; n < nestedCompositeTransform->GetNumberOfTransforms(); ++n)
       {
         transformQueue.push_back(nestedCompositeTransform->GetNthTransformModifiablePointer(n));
         if (nestedCompositeTransform->GetNthTransformToOptimize(n))
@@ -969,7 +974,7 @@ CompositeTransform<TParametersValueType, NDimensions>::PrintSelf(std::ostream & 
   }
 
   os << indent << "TransformsToOptimizeFlags, begin() to end(): " << std::endl << indent << indent;
-  for (auto it = this->m_TransformsToOptimizeFlags.begin(); it != this->m_TransformsToOptimizeFlags.end(); it++)
+  for (auto it = this->m_TransformsToOptimizeFlags.begin(); it != this->m_TransformsToOptimizeFlags.end(); ++it)
   {
     os << *it << " ";
   }

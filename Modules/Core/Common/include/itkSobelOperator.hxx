@@ -38,11 +38,11 @@ SobelOperator<TPixel, VDimension, TAllocator>::Fill(const CoefficientVector & co
   if (VDimension == 3)
   {
     i = 0;
-    for (z = -1; z <= 1; z++)
+    for (z = -1; z <= 1; ++z)
     {
-      for (y = -1; y <= 1; y++)
+      for (y = -1; y <= 1; ++y)
       {
-        for (x = -1; x <= 1; x++)
+        for (x = -1; x <= 1; ++x)
         {
           pos = center + z * this->GetStride(2) + y * this->GetStride(1) + x * this->GetStride(0);
           this->operator[](pos) = static_cast<TPixel>(coeff[i]);
@@ -55,9 +55,9 @@ SobelOperator<TPixel, VDimension, TAllocator>::Fill(const CoefficientVector & co
   else if (VDimension == 2)
   {
     i = 0;
-    for (y = -1; y <= 1; y++)
+    for (y = -1; y <= 1; ++y)
     {
-      for (x = -1; x <= 1; x++)
+      for (x = -1; x <= 1; ++x)
       {
         pos = center + y * this->GetStride(1) + x * this->GetStride(0);
         this->operator[](pos) = static_cast<TPixel>(coeff[i]);
@@ -74,8 +74,8 @@ SobelOperator<TPixel, VDimension, TAllocator>::Fill(const CoefficientVector & co
 }
 
 template <typename TPixel, unsigned int VDimension, typename TAllocator>
-typename SobelOperator<TPixel, VDimension, TAllocator>::CoefficientVector
-SobelOperator<TPixel, VDimension, TAllocator>::GenerateCoefficients()
+auto
+SobelOperator<TPixel, VDimension, TAllocator>::GenerateCoefficients() -> CoefficientVector
 {
   std::vector<double> coeff;
   if (VDimension == 2 && this->GetDirection() == 0)

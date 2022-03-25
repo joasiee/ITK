@@ -45,16 +45,12 @@ public:
   }
   ~MaskInput() = default;
   bool
-  operator!=(const MaskInput &) const
+  operator==(const MaskInput &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const MaskInput & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(MaskInput);
 
   inline TOutput
   operator()(const TInput & A, const TMask & B) const
@@ -152,7 +148,7 @@ private:
  * \endsphinx
  */
 template <typename TInputImage, typename TMaskImage, typename TOutputImage = TInputImage>
-class MaskImageFilter : public BinaryGeneratorImageFilter<TInputImage, TMaskImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT MaskImageFilter : public BinaryGeneratorImageFilter<TInputImage, TMaskImage, TOutputImage>
 
 {
 public:

@@ -19,6 +19,7 @@
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkListSample.h"
 #include "itkWeightedCentroidKdTreeGenerator.h"
+#include "itkTestingMacros.h"
 #include <fstream>
 
 // Testing the weighed centroid Kd tree generator using varaiable length vector
@@ -28,16 +29,16 @@ itkWeightedCentroidKdTreeGeneratorTest9(int argc, char * argv[])
 {
   if (argc < 4)
   {
-    std::cerr << "Missing parameters" << std::endl;
-    std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << " numberOfDataPoints numberOfTestPoints bucketSize [graphvizDotOutputFile]" << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cerr << " numberOfDataPoints numberOfTestPoints bucketSize [graphvizDotOutputFile]" << std::endl;
     return EXIT_FAILURE;
   }
 
   // Random number generator
   using NumberGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
 
-  NumberGeneratorType::Pointer randomNumberGenerator = NumberGeneratorType::New();
+  auto randomNumberGenerator = NumberGeneratorType::New();
   randomNumberGenerator->Initialize();
 
   using MeasurementVectorType = itk::VariableLengthVector<double>;
@@ -45,7 +46,7 @@ itkWeightedCentroidKdTreeGeneratorTest9(int argc, char * argv[])
 
   constexpr SampleType::MeasurementVectorSizeType measurementVectorSize = 2;
 
-  SampleType::Pointer sample = SampleType::New();
+  auto sample = SampleType::New();
   sample->SetMeasurementVectorSize(measurementVectorSize);
 
   //
@@ -61,7 +62,7 @@ itkWeightedCentroidKdTreeGeneratorTest9(int argc, char * argv[])
   }
 
   using TreeGeneratorType = itk::Statistics::WeightedCentroidKdTreeGenerator<SampleType>;
-  TreeGeneratorType::Pointer treeGenerator = TreeGeneratorType::New();
+  auto treeGenerator = TreeGeneratorType::New();
   std::cout << treeGenerator->GetNameOfClass() << std::endl;
   treeGenerator->Print(std::cout);
 
@@ -94,11 +95,11 @@ itkWeightedCentroidKdTreeGeneratorTest9(int argc, char * argv[])
   using DistanceMetricType = itk::Statistics::EuclideanDistanceMetric<MeasurementVectorType>;
   DistanceMetricType::OriginType origin;
   ::itk::NumericTraits<DistanceMetricType::OriginType>::SetLength(origin, measurementVectorSize);
-  DistanceMetricType::Pointer distanceMetric = DistanceMetricType::New();
+  auto distanceMetric = DistanceMetricType::New();
 
   bool testFailed = false;
 
-  for (unsigned int k = 0; k < sample->Size(); k++)
+  for (unsigned int k = 0; k < sample->Size(); ++k)
   {
 
     queryPoint = sample->GetMeasurementVector(k);

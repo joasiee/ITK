@@ -69,7 +69,7 @@ itkGaussianMixtureModelComponentTest(int argc, char * argv[])
   initialProportions[1] = 0.5;
 
   /* Loading point data */
-  PointSetType::Pointer                pointSet = PointSetType::New();
+  auto                                 pointSet = PointSetType::New();
   PointSetType::PointsContainerPointer pointsContainer = PointSetType::PointsContainer::New();
   pointsContainer->Reserve(dataSize);
   pointSet->SetPoints(pointsContainer);
@@ -86,7 +86,7 @@ itkGaussianMixtureModelComponentTest(int argc, char * argv[])
 
   while (p_iter != pointsContainer->End())
   {
-    for (unsigned int i = 0; i < PointSetType::PointDimension; i++)
+    for (unsigned int i = 0; i < PointSetType::PointDimension; ++i)
     {
       dataStream >> temp;
       point[i] = temp;
@@ -98,14 +98,14 @@ itkGaussianMixtureModelComponentTest(int argc, char * argv[])
   dataStream.close();
 
   /* Importing the point set to the sample */
-  DataSampleType::Pointer sample = DataSampleType::New();
+  auto sample = DataSampleType::New();
 
   sample->SetPointSet(pointSet);
 
   /* Preparing the gaussian mixture components */
   using ComponentPointer = ComponentType::Pointer;
   std::vector<ComponentPointer> components;
-  for (unsigned int i = 0; i < numberOfClasses; i++)
+  for (unsigned int i = 0; i < numberOfClasses; ++i)
   {
     components.push_back(ComponentType::New());
     (components[i])->SetSample(sample);

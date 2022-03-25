@@ -45,8 +45,8 @@ runGPUGradientAnisotropicDiffusionImageFilterTest(const std::string & inFile, co
   using ReaderType = itk::ImageFileReader<InputImageType>;
   using WriterType = itk::ImageFileWriter<OutputImageType>;
 
-  typename ReaderType::Pointer reader = ReaderType::New();
-  typename WriterType::Pointer writer = WriterType::New();
+  auto reader = ReaderType::New();
+  auto writer = WriterType::New();
 
   reader->SetFileName(inFile);
   writer->SetFileName(outFile);
@@ -55,8 +55,8 @@ runGPUGradientAnisotropicDiffusionImageFilterTest(const std::string & inFile, co
   using CPUAnisoDiffFilterType = itk::GradientAnisotropicDiffusionImageFilter<InputImageType, OutputImageType>;
   using GPUAnisoDiffFilterType = itk::GPUGradientAnisotropicDiffusionImageFilter<InputImageType, OutputImageType>;
 
-  typename CPUAnisoDiffFilterType::Pointer CPUFilter = CPUAnisoDiffFilterType::New();
-  typename GPUAnisoDiffFilterType::Pointer GPUFilter = GPUAnisoDiffFilterType::New();
+  auto CPUFilter = CPUAnisoDiffFilterType::New();
+  auto GPUFilter = GPUAnisoDiffFilterType::New();
 
   reader->Update();
 
@@ -70,13 +70,13 @@ runGPUGradientAnisotropicDiffusionImageFilterTest(const std::string & inFile, co
   nThreadVec.push_back(8);
   nThreadVec.push_back(128);
 
-  for (unsigned int idx = 0; idx < nThreadVec.size(); idx++)
+  for (unsigned int idx = 0; idx < nThreadVec.size(); ++idx)
   {
-    int            nThreads = nThreadVec[idx];
+    int            numberOfWorkUnits = nThreadVec[idx];
     itk::TimeProbe cputimer;
     cputimer.Start();
 
-    CPUFilter->SetNumberOfWorkUnits(nThreads);
+    CPUFilter->SetNumberOfWorkUnits(numberOfWorkUnits);
 
     CPUFilter->SetInput(reader->GetOutput());
     CPUFilter->SetNumberOfIterations(10);
@@ -88,7 +88,7 @@ runGPUGradientAnisotropicDiffusionImageFilterTest(const std::string & inFile, co
     cputimer.Stop();
 
     std::cout << "CPU Anisotropic diffusion took " << cputimer.GetMean() << " seconds with "
-              << CPUFilter->GetNumberOfWorkUnits() << " threads.\n"
+              << CPUFilter->GetNumberOfWorkUnits() << " work units.\n"
               << std::endl;
 
     // -------

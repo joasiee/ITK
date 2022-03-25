@@ -69,7 +69,7 @@ RGBImageTotalAbsDifference(const itk::Image<itk::RGBPixel<TPixelValue>, VDimensi
 
     TPixelValue localDiff = itk::NumericTraits<TPixelValue>::ZeroValue();
 
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       localDiff += itk::Math::abs(validPx[i] - testPx[i]);
     }
@@ -158,7 +158,7 @@ itkOpenCVImageBridgeTestTemplatedRGB(char * argv0, char * argv1)
   //
   // Read the image directly
   //
-  typename ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   reader->SetFileName(argv1);
   try
   {

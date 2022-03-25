@@ -92,14 +92,14 @@ QuaternionRigidTransform<TParametersValueType>::SetParameters(const ParametersTy
 
   // Transfer the quaternion part
   unsigned int par = 0;
-  for (unsigned int j = 0; j < 4; j++)
+  for (unsigned int j = 0; j < 4; ++j)
   {
     m_Rotation[j] = parameters[par];
     ++par;
   }
   this->ComputeMatrix();
   // Transfer the constant part
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     translation[i] = parameters[par];
     ++par;
@@ -114,21 +114,21 @@ QuaternionRigidTransform<TParametersValueType>::SetParameters(const ParametersTy
 
 // Set Parameters
 template <typename TParametersValueType>
-const typename QuaternionRigidTransform<TParametersValueType>::ParametersType &
-QuaternionRigidTransform<TParametersValueType>::GetParameters() const
+auto
+QuaternionRigidTransform<TParametersValueType>::GetParameters() const -> const ParametersType &
 {
   VnlQuaternionType quaternion = this->GetRotation();
   OutputVectorType  translation = this->GetTranslation();
 
   // Transfer the quaternion part
   unsigned int par = 0;
-  for (unsigned int j = 0; j < 4; j++)
+  for (unsigned int j = 0; j < 4; ++j)
   {
     this->m_Parameters[par] = quaternion[j];
     ++par;
   }
   // Transfer the constant part
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     this->m_Parameters[par] = translation[i];
     ++par;
@@ -168,15 +168,15 @@ QuaternionRigidTransform<TParametersValueType>::ComputeJacobianWithRespectToPara
 
   // compute derivatives for the translation part
   unsigned int blockOffset = 4;
-  for (unsigned int dim = 0; dim < SpaceDimension; dim++)
+  for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
     jacobian[dim][blockOffset + dim] = 1.0;
   }
 }
 
 template <typename TParametersValueType>
-const typename QuaternionRigidTransform<TParametersValueType>::InverseMatrixType &
-QuaternionRigidTransform<TParametersValueType>::GetInverseMatrix() const
+auto
+QuaternionRigidTransform<TParametersValueType>::GetInverseMatrix() const -> const InverseMatrixType &
 {
   // If the transform has been modified we recompute the inverse
   if (this->InverseMatrixIsOld())

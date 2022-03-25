@@ -30,12 +30,12 @@ itkVoronoiSegmentationImageFilterTest(int, char *[])
   using PriorImage = itk::Image<unsigned char, 2>;
   using VoronoiSegmentationImageFilterType = itk::VoronoiSegmentationImageFilter<UShortImage, UShortImage, PriorImage>;
 
-  VoronoiSegmentationImageFilterType::Pointer voronoiSegmenter = VoronoiSegmentationImageFilterType::New();
+  auto voronoiSegmenter = VoronoiSegmentationImageFilterType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(
     voronoiSegmenter, VoronoiSegmentationImageFilter, VoronoiSegmentationImageFilterBase);
 
-  UShortImage::Pointer   inputImage = UShortImage::New();
+  auto                   inputImage = UShortImage::New();
   UShortImage::SizeType  size = { { width, height } };
   UShortImage::IndexType index;
   index.Fill(0);
@@ -66,20 +66,20 @@ itkVoronoiSegmentationImageFilterTest(int, char *[])
   std::cout << "Defining object #2" << std::endl;
   unsigned int i;
   unsigned int j;
-  for (i = 30; i < 94; i++)
+  for (i = 30; i < 94; ++i)
   {
     index[0] = i;
-    for (j = 30; j < 94; j++)
+    for (j = 30; j < 94; ++j)
     {
       index[1] = j;
       inputImage->SetPixel(index, (unsigned short)(vnl_sample_uniform(500, 540)));
     }
   }
 
-  for (i = 150; i < 214; i++)
+  for (i = 150; i < 214; ++i)
   {
     index[0] = i;
-    for (j = 150; j < 214; j++)
+    for (j = 150; j < 214; ++j)
     {
       index[1] = j;
       inputImage->SetPixel(index, (unsigned short)(vnl_sample_uniform(500, 540)));

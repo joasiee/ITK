@@ -50,7 +50,7 @@ DTITubeSpatialObjectPoint<TPointDimension>::DTITubeSpatialObjectPoint(const DTIT
     this->AddField((*it).first.c_str(), (*it).second);
     it++;
   }
-  for (unsigned int i = 0; i < 6; i++)
+  for (unsigned int i = 0; i < 6; ++i)
   {
     m_TensorMatrix[i] = other.m_TensorMatrix[i];
   }
@@ -179,8 +179,8 @@ DTITubeSpatialObjectPoint<TPointDimension>::GetField(DTITubeSpatialObjectPointFi
 }
 
 template <unsigned int TPointDimension>
-typename DTITubeSpatialObjectPoint<TPointDimension>::Self &
-DTITubeSpatialObjectPoint<TPointDimension>::operator=(const DTITubeSpatialObjectPoint & rhs)
+auto
+DTITubeSpatialObjectPoint<TPointDimension>::operator=(const DTITubeSpatialObjectPoint & rhs) -> Self &
 {
   if (this != &rhs)
   {
@@ -193,7 +193,7 @@ DTITubeSpatialObjectPoint<TPointDimension>::operator=(const DTITubeSpatialObject
       this->AddField((*it).first.c_str(), (*it).second);
       it++;
     }
-    for (unsigned int i = 0; i < 6; i++)
+    for (unsigned int i = 0; i < 6; ++i)
     {
       m_TensorMatrix[i] = rhs.m_TensorMatrix[i];
     }

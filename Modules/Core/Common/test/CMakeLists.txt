@@ -119,10 +119,9 @@ itkMultiThreaderTypeFromEnvironmentTest.cxx
 itkMultiThreadingEnvironmentTest.cxx
 itkMultiThreaderParallelizeArrayTest.cxx
 itkMultithreadingTest.cxx
+itkMultiThreaderExceptionsTest.cxx
 
 itkMetaProgrammingLibraryTest.cxx
-itkIsConvertible.cxx
-itkIsBaseOf.cxx
 itkPromoteType.cxx
 itkMetaDataDictionaryTest.cxx
 itkStdStreamLogOutputTest.cxx
@@ -173,7 +172,6 @@ itkOptimizerParametersTest.cxx
 itkImageVectorOptimizerParametersHelperTest.cxx
 itkCompensatedSummationTest.cxx
 itkCompensatedSummationTest2.cxx
-itkEnableIfTest.cxx
 itkImageRegionConstIteratorWithOnlyIndexTest.cxx
 itkImageRandomConstIteratorWithOnlyIndexTest.cxx
 itkConstNeighborhoodIteratorWithOnlyIndexTest.cxx
@@ -577,6 +575,8 @@ itk_add_test(NAME itkMetaDataObjectTest COMMAND ITKCommon2TestDriver itkMetaData
 
 itk_add_test(NAME itkMultithreadingTest COMMAND ITKCommon2TestDriver itkMultithreadingTest 100)
 
+itk_add_test(NAME itkMultiThreaderExceptionsTest COMMAND ITKCommon2TestDriver itkMultiThreaderExceptionsTest)
+
 if(ITK_BUILD_SHARED_LIBS AND ITK_DYNAMIC_LOADING)
   macro(BuildClientTestLibrary _name _type)
     add_library(ClientTestLibrary${_name} ${_type} ClientTestLibrary${_name}.cxx)
@@ -626,9 +626,11 @@ set(ITKCommonGTests
       itkSizeGTest.cxx
       itkSmartPointerGTest.cxx
       itkVectorContainerGTest.cxx
+      itkVectorGTest.cxx
       itkWeakPointerGTest.cxx
       itkCommonTypeTraitsGTest.cxx
       itkMetaDataDictionaryGTest.cxx
+      itkSpatialOrientationAdaptorGTest.cxx
 )
 CreateGoogleTestDriver(ITKCommon "${ITKCommon-Test_LIBRARIES}" "${ITKCommonGTests}")
 # If `-static` was passed to CMAKE_EXE_LINKER_FLAGS, compilation fails. No need to

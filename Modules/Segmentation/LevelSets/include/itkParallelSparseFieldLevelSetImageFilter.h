@@ -265,10 +265,10 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /**Typedefs from the superclass */
-  using TimeStepType = typename Superclass::TimeStepType;
-  using FiniteDifferenceFunctionType = typename Superclass::FiniteDifferenceFunctionType;
-  using RadiusType = typename Superclass::RadiusType;
-  using NeighborhoodScalesType = typename Superclass::NeighborhoodScalesType;
+  using typename Superclass::TimeStepType;
+  using typename Superclass::FiniteDifferenceFunctionType;
+  using typename Superclass::RadiusType;
+  using typename Superclass::NeighborhoodScalesType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -715,8 +715,8 @@ protected:
   std::vector<bool>         m_ValidTimeStepList;
   TimeStepType              m_TimeStep;
 
-  /** The number of threads to use. */
-  ThreadIdType m_NumOfThreads{ 0 };
+  /** The number of work units to use. */
+  ThreadIdType m_NumOfWorkUnits{ 0 };
 
   /** The dimension along which to distribute the load. */
   unsigned int m_SplitAxis{ 0 };

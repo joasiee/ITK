@@ -42,7 +42,7 @@ public:
   {
     AccumulatorType sum = NumericTraits<TOutput>::ZeroValue();
 
-    for (unsigned int i = 0; i < B.size(); i++)
+    for (unsigned int i = 0; i < B.size(); ++i)
     {
       sum += static_cast<AccumulatorType>(B[i]);
     }
@@ -55,11 +55,7 @@ public:
     return true;
   }
 
-  bool
-  operator!=(const Add1 &) const
-  {
-    return false;
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Add1);
 };
 } // namespace Functor
 

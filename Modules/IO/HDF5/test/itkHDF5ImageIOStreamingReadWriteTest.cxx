@@ -102,9 +102,9 @@ HDF5ReadWriteTest2(const char * fileName)
 
   // Write image with streaming.
   using WriterType = typename itk::ImageFileWriter<ImageType>;
-  typename WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   using MonitorFilterType = typename itk::PipelineMonitorImageFilter<ImageType>;
-  typename MonitorFilterType::Pointer writerMonitor = MonitorFilterType::New();
+  auto writerMonitor = MonitorFilterType::New();
   writerMonitor->SetInput(imageSource->GetOutput());
   writer->SetFileName(fileName);
   writer->SetInput(writerMonitor->GetOutput());
@@ -130,7 +130,7 @@ HDF5ReadWriteTest2(const char * fileName)
   expectedRegion.SetSize(2, 1);
   typename MonitorFilterType::RegionVectorType   writerRegionVector = writerMonitor->GetUpdatedBufferedRegions();
   typename ImageType::RegionType::IndexValueType iRegion;
-  for (iRegion = 0; iRegion < 5; iRegion++)
+  for (iRegion = 0; iRegion < 5; ++iRegion)
   {
     expectedRegion.SetIndex(2, iRegion);
     if (writerRegionVector[iRegion] != expectedRegion)
@@ -146,13 +146,13 @@ HDF5ReadWriteTest2(const char * fileName)
 
   // Read image with streaming.
   using ReaderType = typename itk::ImageFileReader<ImageType>;
-  typename ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   reader->SetFileName(fileName);
   reader->SetUseStreaming(true);
-  typename MonitorFilterType::Pointer readerMonitor = MonitorFilterType::New();
+  auto readerMonitor = MonitorFilterType::New();
   readerMonitor->SetInput(reader->GetOutput());
   using StreamingFilter = typename itk::StreamingImageFilter<ImageType, ImageType>;
-  typename StreamingFilter::Pointer streamer = StreamingFilter::New();
+  auto streamer = StreamingFilter::New();
   streamer->SetInput(readerMonitor->GetOutput());
   streamer->SetNumberOfStreamDivisions(5);
   typename ImageType::Pointer image;
@@ -211,7 +211,7 @@ HDF5ReadWriteTest2(const char * fileName)
   expectedRegion.SetSize(0, 5);
   expectedRegion.SetSize(1, 5);
   expectedRegion.SetSize(2, 1);
-  for (iRegion = 0; iRegion < 5; iRegion++)
+  for (iRegion = 0; iRegion < 5; ++iRegion)
   {
     expectedRegion.SetIndex(2, iRegion);
     if (readerRegionVector[iRegion] != expectedRegion)

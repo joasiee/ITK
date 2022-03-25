@@ -42,21 +42,14 @@ public:
     , m_Beta(0.0)
   {}
   ~WeightedAdd2() = default;
-  bool
-  operator!=(const WeightedAdd2 & other) const
-  {
-    if (Math::NotExactlyEquals(m_Alpha, other.m_Alpha))
-    {
-      return true;
-    }
-    return false;
-  }
 
   bool
   operator==(const WeightedAdd2 & other) const
   {
-    return !(*this != other);
+    return Math::ExactlyEquals(m_Alpha, other.m_Alpha);
   }
+
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(WeightedAdd2);
 
   inline TOutput
   operator()(const TInput1 & A, const TInput2 & B) const
@@ -120,7 +113,8 @@ private:
  * \ingroup ITKImageIntensity
  */
 template <typename TInputImage1, typename TInputImage2, typename TOutputImage>
-class WeightedAddImageFilter : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
+class ITK_TEMPLATE_EXPORT WeightedAddImageFilter
+  : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
 
 {
 public:

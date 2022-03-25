@@ -23,15 +23,15 @@
 namespace itk
 {
 template <typename TTreeType>
-class RootTreeIterator : public TreeIteratorBase<TTreeType>
+class ITK_TEMPLATE_EXPORT RootTreeIterator : public TreeIteratorBase<TTreeType>
 {
 public:
   /** Typedefs */
   using Superclass = TreeIteratorBase<TTreeType>;
   using TreeType = TTreeType;
   using ValueType = typename TTreeType::ValueType;
-  using TreeNodeType = typename Superclass::TreeNodeType;
-  using NodeType = typename Superclass::NodeType;
+  using typename Superclass::TreeNodeType;
+  using typename Superclass::NodeType;
 
   /** Constructor */
   RootTreeIterator(TreeType * tree, const TreeNodeType * start = nullptr);

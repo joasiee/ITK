@@ -35,7 +35,7 @@ itkWarpMeshFilterTest(int, char *[])
   using PointType = SphereMeshSourceType::PointType;
   using VectorType = SphereMeshSourceType::VectorType;
 
-  SphereMeshSourceType::Pointer sphereMeshSource = SphereMeshSourceType::New();
+  auto sphereMeshSource = SphereMeshSourceType::New();
 
   PointType center;
   center[0] = 25.0;
@@ -56,7 +56,7 @@ itkWarpMeshFilterTest(int, char *[])
   using VectorType = itk::Vector<double, Dimension>;
   using DisplacementFieldType = itk::Image<VectorType, Dimension>;
 
-  DisplacementFieldType::Pointer deformationField = DisplacementFieldType::New();
+  auto deformationField = DisplacementFieldType::New();
 
   DisplacementFieldType::IndexType start;
   start[0] = 0;
@@ -100,7 +100,7 @@ itkWarpMeshFilterTest(int, char *[])
   // Declare the Warping filter
   using WarpFilterType = itk::WarpMeshFilter<MeshType, MeshType, DisplacementFieldType>;
 
-  WarpFilterType::Pointer warpFilter = WarpFilterType::New();
+  auto warpFilter = WarpFilterType::New();
 
   warpFilter->SetInput(sphereMeshSource->GetOutput());
 
@@ -132,7 +132,7 @@ itkWarpMeshFilterTest(int, char *[])
 
   while (inputPoint != lastInputPoint && outputPoint != lastOutputPoint)
   {
-    for (unsigned int i = 0; i < Dimension; i++)
+    for (unsigned int i = 0; i < Dimension; ++i)
     {
       const double distance = outputPoint.Value()[i] - inputPoint.Value()[i];
       if (std::fabs(distance - simpleVector[i]) > tolerance)

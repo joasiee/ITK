@@ -181,11 +181,7 @@ public:
             m_MethodType == other.GetMethodType());
   }
 
-  bool
-  operator!=(const CallRecord & other) const
-  {
-    return !(*this == other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(CallRecord);
 
 protected:
   SizeValueType  m_CallerId;
@@ -512,7 +508,7 @@ protected:
   DummyTemporalProcessObject()
 
   {
-    DummyTemporalDataObject::Pointer po = DummyTemporalDataObject::New();
+    auto po = DummyTemporalDataObject::New();
 
     this->SetNthOutput(0, po.GetPointer());
   }
@@ -540,11 +536,11 @@ itkTemporalProcessObjectTest(int, char *[])
 
   // Create 3 new DummyTemporalProcessObjects
   using TPOType = itk::TemporalProcessObjectTest::DummyTemporalProcessObject;
-  TPOType::Pointer tpo1 = TPOType::New();
+  auto tpo1 = TPOType::New();
   tpo1->SetIdNumber(1);
-  TPOType::Pointer tpo2 = TPOType::New();
+  auto tpo2 = TPOType::New();
   tpo2->SetIdNumber(2);
-  TPOType::Pointer tpo3 = TPOType::New();
+  auto tpo3 = TPOType::New();
   tpo3->SetIdNumber(3);
 
   // Set up the Process Objects in a pipeline
@@ -571,7 +567,7 @@ itkTemporalProcessObjectTest(int, char *[])
 
   // Create a new TemporalDataObject to pass through the pipeline
   using TDOType = itk::TemporalProcessObjectTest::DummyTemporalDataObject;
-  TDOType::Pointer tdo = TDOType::New();
+  auto tdo = TDOType::New();
   tpo1->SetInput(tdo);
 
   // Set up regions for TemporalDataObject

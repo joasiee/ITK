@@ -33,7 +33,7 @@ itkReflectiveImageRegionIteratorTest(int, char *[])
   using IteratorType = itk::ImageRegionIteratorWithIndex<ImageType>;
   using IteratorVisitsType = itk::ImageRegionIteratorWithIndex<ImageVisitsType>;
 
-  ImageType::Pointer myImage = ImageType::New();
+  auto myImage = ImageType::New();
 
   ImageType::SizeType size = { { 4, 4, 4, 4 } };
 
@@ -49,7 +49,7 @@ itkReflectiveImageRegionIteratorTest(int, char *[])
   myImage->SetRequestedRegion(region);
   myImage->Allocate();
 
-  ImageVisitsType::Pointer visitImage = ImageVisitsType::New();
+  auto visitImage = ImageVisitsType::New();
 
   visitImage->SetLargestPossibleRegion(region);
   visitImage->SetRequestedRegion(region);
@@ -124,7 +124,7 @@ itkReflectiveImageRegionIteratorTest(int, char *[])
   // to by the iterator.  These should obviously always be the same.
   // But this test exposes a bug in the code that has been fixed.
   ImageType::OffsetType voffset;
-  for (unsigned int dim = 0; dim < Dimension; dim++)
+  for (unsigned int dim = 0; dim < Dimension; ++dim)
   {
     if (region.GetSize()[dim] > 1)
     {

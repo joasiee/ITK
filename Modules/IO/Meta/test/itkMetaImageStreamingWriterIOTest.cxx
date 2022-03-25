@@ -42,7 +42,7 @@ itkMetaImageStreamingWriterIOTest(int argc, char * argv[])
   using ReaderType = itk::ImageFileReader<ImageType>;
   using WriterType = itk::ImageFileWriter<ImageType>;
 
-  ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   reader->SetImageIO(metaImageIO);
   reader->SetFileName(argv[1]);
   reader->SetUseStreaming(true);
@@ -72,10 +72,10 @@ itkMetaImageStreamingWriterIOTest(int argc, char * argv[])
   unsigned int zsize = fullsize[2] / numberOfPieces;
 
   // Setup the writer
-  WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   writer->SetFileName(argv[2]);
 
-  for (unsigned int i = 0; i < numberOfPieces; i++)
+  for (unsigned int i = 0; i < numberOfPieces; ++i)
   {
     std::cout << "Reading piece " << i + 1 << " of " << numberOfPieces << std::endl;
 

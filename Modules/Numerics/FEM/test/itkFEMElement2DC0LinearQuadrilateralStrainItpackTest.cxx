@@ -37,7 +37,7 @@ itkFEMElement2DC0LinearQuadrilateralStrainItpackTest(int argc, char * argv[])
   itk::FEMFactoryBase::GetFactory()->RegisterDefaultTypes();
 
   using Solver2DType = itk::fem::Solver<2>;
-  Solver2DType::Pointer solver = Solver2DType::New();
+  auto solver = Solver2DType::New();
 
   using SpatialObjectType = itk::SpatialObject<2>;
   using SpatialObjectPointer = SpatialObjectType::Pointer;
@@ -97,7 +97,7 @@ itkFEMElement2DC0LinearQuadrilateralStrainItpackTest(int argc, char * argv[])
   float expectedResult[8] = { 0.0f, 0.0f, 4.11808e-07f, 3.47237e-08f, 5.54107e-07f, -1.65448e-07f, 0.0f, 0.0f };
 
   bool foundError = false;
-  for (int i = 0; i < numDOF; i++)
+  for (int i = 0; i < numDOF; ++i)
   {
     soln[i] = solver->GetSolution(i);
     // std::cout << "Solution[" << i << "]:" << soln[i] << std::endl;
@@ -115,7 +115,7 @@ itkFEMElement2DC0LinearQuadrilateralStrainItpackTest(int argc, char * argv[])
   }
 
   // to write the deformed mesh
-  FEMObjectSpatialObjectType::Pointer femSODef = FEMObjectSpatialObjectType::New();
+  auto femSODef = FEMObjectSpatialObjectType::New();
   femSODef->SetFEMObject(solver->GetOutput());
   using FEMSpatialObjectWriterType = itk::FEMSpatialObjectWriter<2>;
   using FEMSpatialObjectWriterPointer = FEMSpatialObjectWriterType::Pointer;

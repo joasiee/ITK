@@ -63,14 +63,19 @@ struct Dispatch_C2R_New<TSelfPointer, TInputImage, TOutputImage, float>
 #endif
 
 template <typename TInputImage, typename TOutputImage>
-typename HalfHermitianToRealInverseFFTImageFilter<TInputImage, TOutputImage>::Pointer
-HalfHermitianToRealInverseFFTImageFilter<TInputImage, TOutputImage>::New()
+auto
+HalfHermitianToRealInverseFFTImageFilter<TInputImage, TOutputImage>::New() -> Pointer
 {
   Pointer smartPtr = ::itk::ObjectFactory<Self>::Create();
 
   if (smartPtr.IsNull())
   {
     smartPtr = Dispatch_C2R_New<Pointer, TInputImage, TOutputImage, OutputPixelType>::Apply();
+  }
+  else
+  {
+    // Correct extra reference count from ::itk::ObjectFactory<Self>::Create()
+    smartPtr->UnRegister();
   }
 
   return smartPtr;
@@ -125,7 +130,7 @@ HalfHermitianToRealInverseFFTImageFilter<TInputImage, TOutputImage>::GenerateOut
 
   outputStartIndex[0] = inputStartIndex[0];
 
-  for (unsigned int i = 1; i < OutputImageType::ImageDimension; i++)
+  for (unsigned int i = 1; i < OutputImageType::ImageDimension; ++i)
   {
     outputSize[i] = inputSize[i];
     outputStartIndex[i] = inputStartIndex[i];

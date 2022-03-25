@@ -70,7 +70,7 @@ Similarity2DTransform<TParametersValueType>::SetParameters(const ParametersType 
 
   // Set translation
   OffsetType translation;
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     translation[i] = parameters[i + 2];
   }
@@ -88,8 +88,8 @@ Similarity2DTransform<TParametersValueType>::SetParameters(const ParametersType 
 
 
 template <typename TParametersValueType>
-const typename Similarity2DTransform<TParametersValueType>::ParametersType &
-Similarity2DTransform<TParametersValueType>::GetParameters() const
+auto
+Similarity2DTransform<TParametersValueType>::GetParameters() const -> const ParametersType &
 {
   itkDebugMacro(<< "Getting parameters ");
 
@@ -98,7 +98,7 @@ Similarity2DTransform<TParametersValueType>::GetParameters() const
 
   // Get the translation
   OffsetType translation = this->GetTranslation();
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     this->m_Parameters[i + 2] = translation[i];
   }
@@ -257,8 +257,8 @@ Similarity2DTransform<TParametersValueType>::GetInverse(Self * inverse) const
 
 
 template <typename TParametersValueType>
-typename Similarity2DTransform<TParametersValueType>::InverseTransformBasePointer
-Similarity2DTransform<TParametersValueType>::GetInverseTransform() const
+auto
+Similarity2DTransform<TParametersValueType>::GetInverseTransform() const -> InverseTransformBasePointer
 {
   Pointer inv = New();
 

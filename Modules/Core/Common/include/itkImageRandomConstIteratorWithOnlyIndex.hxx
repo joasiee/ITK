@@ -56,8 +56,8 @@ ImageRandomConstIteratorWithOnlyIndex<TImage>::SetNumberOfSamples(SizeValueType 
 
 /**  Set the number of samples to extract from the region */
 template <typename TImage>
-typename ImageRandomConstIteratorWithOnlyIndex<TImage>::SizeValueType
-ImageRandomConstIteratorWithOnlyIndex<TImage>::GetNumberOfSamples() const
+auto
+ImageRandomConstIteratorWithOnlyIndex<TImage>::GetNumberOfSamples() const -> SizeValueType
 {
   return m_NumberOfSamplesRequested;
 }
@@ -89,7 +89,7 @@ ImageRandomConstIteratorWithOnlyIndex<TImage>::RandomJump()
   PositionValueType position = randomPosition;
   PositionValueType residual;
 
-  for (unsigned int dim = 0; dim < TImage::ImageDimension; dim++)
+  for (unsigned int dim = 0; dim < TImage::ImageDimension; ++dim)
   {
     const SizeValueType sizeInThisDimension = this->m_Region.GetSize()[dim];
     residual = position % sizeInThisDimension;

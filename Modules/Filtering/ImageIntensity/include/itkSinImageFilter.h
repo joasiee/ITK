@@ -37,16 +37,12 @@ public:
   Sin() = default;
   ~Sin() = default;
   bool
-  operator!=(const Sin &) const
+  operator==(const Sin &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Sin & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Sin);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -70,7 +66,7 @@ public:
  * \endsphinx
  */
 template <typename TInputImage, typename TOutputImage>
-class SinImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT SinImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(SinImageFilter);

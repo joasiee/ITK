@@ -79,7 +79,7 @@ ConnectedComponentImageFilter<TInputImage, TOutputImage, TMaskImage>::GenerateDa
   typename TMaskImage::ConstPointer  mask = this->GetMaskImage();
 
   using MaskFilterType = MaskImageFilter<TInputImage, TMaskImage, TInputImage>;
-  typename MaskFilterType::Pointer maskFilter = MaskFilterType::New();
+  auto maskFilter = MaskFilterType::New();
   if (mask)
   {
     maskFilter->SetInput(input);
@@ -233,7 +233,7 @@ ConnectedComponentImageFilter<TInputImage, TOutputImage, TMaskImage>::ThreadedWr
 
   WorkUnitData workUnitData = this->CreateWorkUnitData(outputRegionForThread);
 
-  for (SizeValueType thisIdx = workUnitData.firstLine; thisIdx <= workUnitData.lastLine; thisIdx++)
+  for (SizeValueType thisIdx = workUnitData.firstLine; thisIdx <= workUnitData.lastLine; ++thisIdx)
   {
     for (LineEncodingConstIterator cIt = this->m_LineMap[thisIdx].begin(); cIt != this->m_LineMap[thisIdx].end(); ++cIt)
     {

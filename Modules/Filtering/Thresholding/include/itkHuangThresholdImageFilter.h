@@ -49,7 +49,8 @@ namespace itk
  */
 
 template <typename TInputImage, typename TOutputImage, typename TMaskImage = TOutputImage>
-class HuangThresholdImageFilter : public HistogramThresholdImageFilter<TInputImage, TOutputImage, TMaskImage>
+class ITK_TEMPLATE_EXPORT HuangThresholdImageFilter
+  : public HistogramThresholdImageFilter<TInputImage, TOutputImage, TMaskImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(HuangThresholdImageFilter);
@@ -89,7 +90,7 @@ public:
   using MaskIndexType = typename MaskImageType::IndexType;
   using MaskImageRegionType = typename MaskImageType::RegionType;
 
-  using HistogramType = typename Superclass::HistogramType;
+  using typename Superclass::HistogramType;
   using CalculatorType = HuangThresholdCalculator<HistogramType, InputPixelType>;
 
   /** Image related type alias. */

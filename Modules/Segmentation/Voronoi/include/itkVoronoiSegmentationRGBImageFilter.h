@@ -70,13 +70,13 @@ public:
   itkNewMacro(Self);
 
   /** Convenient type alias. */
-  using BinaryObjectImage = typename Superclass::BinaryObjectImage;
-  using IndexList = typename Superclass::IndexList;
-  using IndexType = typename Superclass::IndexType;
-  using RegionType = typename Superclass::RegionType;
-  using PixelType = typename Superclass::PixelType;
-  using InputImagePointer = typename Superclass::InputImagePointer;
-  using InputImageType = typename Superclass::InputImageType;
+  using typename Superclass::BinaryObjectImage;
+  using typename Superclass::IndexList;
+  using typename Superclass::IndexType;
+  using typename Superclass::RegionType;
+  using typename Superclass::PixelType;
+  using typename Superclass::InputImagePointer;
+  using typename Superclass::InputImageType;
   using RGBHCVPixel = Vector<float, 6>;
   using RGBHCVImage = Image<RGBHCVPixel>;
 
@@ -88,7 +88,7 @@ public:
   void
   GetMeanPercentError(double x[6])
   {
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 6; ++i)
     {
       x[i] = m_MeanPercentError[i];
     }
@@ -96,7 +96,7 @@ public:
   void
   GetSTDPercentError(double x[6])
   {
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 6; ++i)
     {
       x[i] = m_STDPercentError[i];
     }
@@ -104,7 +104,7 @@ public:
   void
   GetMean(double x[6])
   {
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 6; ++i)
     {
       x[i] = m_Mean[i];
     }
@@ -112,7 +112,7 @@ public:
   void
   GetSTD(double x[6])
   {
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 6; ++i)
     {
       x[i] = m_STD[i];
     }
@@ -120,7 +120,7 @@ public:
   void
   SetMean(const double x[6])
   {
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 6; ++i)
     {
       m_Mean[i] = x[i];
     }
@@ -128,7 +128,7 @@ public:
   void
   SetSTD(const double x[6])
   {
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 6; ++i)
     {
       m_STD[i] = x[i];
     }
@@ -136,7 +136,7 @@ public:
   void
   GetMeanTolerance(double x[6])
   {
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 6; ++i)
     {
       x[i] = m_MeanTolerance[i];
     }
@@ -144,7 +144,7 @@ public:
   void
   GetSTDTolerance(double x[6])
   {
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 6; ++i)
     {
       x[i] = m_STDTolerance[i];
     }

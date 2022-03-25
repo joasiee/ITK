@@ -72,7 +72,7 @@ itkQuadEdgeMeshEulerOperatorDeleteCenterVertexTest(int argc, char * argv[])
   MeshPointer mesh = MeshType::New();
   CreateSquareTriangularMesh<MeshType>(mesh);
 
-  DeleteCenterVertex::Pointer deleteCenterVertex = DeleteCenterVertex::New();
+  auto deleteCenterVertex = DeleteCenterVertex::New();
   std::cout << "     "
             << "Test No Mesh Input";
   if (deleteCenterVertex->Evaluate((QEType *)1))
@@ -119,7 +119,7 @@ itkQuadEdgeMeshEulerOperatorDeleteCenterVertexTest(int argc, char * argv[])
     pts3[3][0] = 0.0;
     pts3[3][1] = 0.0;
     pts3[3][2] = 1.0;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; ++i)
     {
       specialmesh->SetPoint(i, pts3[i]);
     }
@@ -128,7 +128,7 @@ itkQuadEdgeMeshEulerOperatorDeleteCenterVertexTest(int argc, char * argv[])
     CellType::CellAutoPointer cellpointer;
     using QEPolygonCellType = itk::QuadEdgeMeshPolygonCell<CellType>;
     QEPolygonCellType * poly;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; ++i)
     {
       poly = new QEPolygonCellType(3);
       cellpointer.TakeOwnership(poly);
@@ -246,7 +246,7 @@ itkQuadEdgeMeshEulerOperatorDeleteCenterVertexTest(int argc, char * argv[])
 
   std::cout << "Checking DeleteCenterVertex( CreateCenterVertex()) Invariance.";
 
-  CreateCenterVertex::Pointer createCenterVertex = CreateCenterVertex::New();
+  auto createCenterVertex = CreateCenterVertex::New();
   createCenterVertex->SetInput(mesh);
 
   CreateSquareTriangularMesh<MeshType>(mesh);

@@ -34,14 +34,14 @@ MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::MultiTransfor
 }
 
 template <typename TParametersValueType, unsigned int NDimensions, unsigned int NSubDimensions>
-typename MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::TransformCategoryEnum
-MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::GetTransformCategory() const
+auto
+MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::GetTransformCategory() const -> TransformCategoryEnum
 {
   // If all sub-transforms are the same, return that type. Otherwise
   // return Unknown.
   TransformCategoryEnum result = Self::TransformCategoryEnum::UnknownTransformCategory;
 
-  for (SizeValueType tind = 0; tind < this->GetNumberOfTransforms(); tind++)
+  for (SizeValueType tind = 0; tind < this->GetNumberOfTransforms(); ++tind)
   {
     const TransformCategoryEnum type = this->GetNthTransformConstPointer(tind)->GetTransformCategory();
     if (tind == 0)
@@ -67,7 +67,7 @@ bool
 MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::IsLinear() const
 {
   // If all sub-transforms are linear, return true.
-  for (SizeValueType tind = 0; tind < this->GetNumberOfTransforms(); tind++)
+  for (SizeValueType tind = 0; tind < this->GetNumberOfTransforms(); ++tind)
   {
     if (!this->GetNthTransformConstPointer(tind)->IsLinear())
     {
@@ -79,8 +79,8 @@ MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::IsLinear() co
 
 
 template <typename TParametersValueType, unsigned int NDimensions, unsigned int NSubDimensions>
-const typename MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::ParametersType &
-MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::GetParameters() const
+auto
+MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::GetParameters() const -> const ParametersType &
 {
   /* Resize destructively. But if it's already this size, nothing is done so
    * it's efficient. */
@@ -148,8 +148,9 @@ MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::SetParameters
 
 
 template <typename TParametersValueType, unsigned int NDimensions, unsigned int NSubDimensions>
-const typename MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::FixedParametersType &
+auto
 MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::GetFixedParameters() const
+  -> const FixedParametersType &
 {
   /* Resize destructively. But if it's already this size, nothing is done so
    * it's efficient. */
@@ -207,8 +208,9 @@ MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::SetFixedParam
 
 
 template <typename TParametersValueType, unsigned int NDimensions, unsigned int NSubDimensions>
-typename MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::NumberOfParametersType
+auto
 MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::GetNumberOfParameters() const
+  -> NumberOfParametersType
 {
   /* Returns to total number of params in all transforms currently
    * set to be used for optimized.
@@ -220,7 +222,7 @@ MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::GetNumberOfPa
   NumberOfParametersType result = NumericTraits<NumberOfParametersType>::ZeroValue();
 
 
-  for (SizeValueType tind = 0; tind < this->GetNumberOfTransforms(); tind++)
+  for (SizeValueType tind = 0; tind < this->GetNumberOfTransforms(); ++tind)
   {
     /* Use raw pointer for efficiency */
     const TransformType * transform = this->GetNthTransformConstPointer(tind);
@@ -231,8 +233,9 @@ MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::GetNumberOfPa
 
 
 template <typename TParametersValueType, unsigned int NDimensions, unsigned int NSubDimensions>
-typename MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::NumberOfParametersType
+auto
 MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::GetNumberOfLocalParameters() const
+  -> NumberOfParametersType
 {
   if (this->GetMTime() == this->m_LocalParametersUpdateTime)
   {
@@ -246,7 +249,7 @@ MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::GetNumberOfLo
    * the value. */
   NumberOfParametersType result = NumericTraits<NumberOfParametersType>::ZeroValue();
 
-  for (SizeValueType tind = 0; tind < this->GetNumberOfTransforms(); tind++)
+  for (SizeValueType tind = 0; tind < this->GetNumberOfTransforms(); ++tind)
   {
     const TransformType * transform = this->GetNthTransformConstPointer(tind);
     result += transform->GetNumberOfLocalParameters();
@@ -257,12 +260,13 @@ MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::GetNumberOfLo
 
 
 template <typename TParametersValueType, unsigned int NDimensions, unsigned int NSubDimensions>
-typename MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::NumberOfParametersType
+auto
 MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::GetNumberOfFixedParameters() const
+  -> NumberOfParametersType
 {
   NumberOfParametersType result = NumericTraits<NumberOfParametersType>::ZeroValue();
 
-  for (SizeValueType tind = 0; tind < this->GetNumberOfTransforms(); tind++)
+  for (SizeValueType tind = 0; tind < this->GetNumberOfTransforms(); ++tind)
   {
     const TransformType * transform = this->GetNthTransformConstPointer(tind);
     result += transform->GetFixedParameters().Size();
@@ -298,7 +302,7 @@ MultiTransform<TParametersValueType, NDimensions, NSubDimensions>::UpdateTransfo
 
   NumberOfParametersType offset = NumericTraits<NumberOfParametersType>::ZeroValue();
 
-  for (SizeValueType tind = 0; tind < this->GetNumberOfTransforms(); tind++)
+  for (SizeValueType tind = 0; tind < this->GetNumberOfTransforms(); ++tind)
   {
     // HACK:  The following line looks wrong.  We should not need to const_cast
     TransformType * subtransform = this->GetNthTransformModifiablePointer(tind);

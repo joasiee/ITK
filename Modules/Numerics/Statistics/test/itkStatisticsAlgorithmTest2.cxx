@@ -43,15 +43,15 @@ void resetData(::itk::Image<PixelType, 3>::Pointer image, std::vector<int> & ref
   PixelType     temp;
 
   // fill the image with random values
-  for (z = 0; z < size[2]; z++)
+  for (z = 0; z < size[2]; ++z)
   {
     index[2] = z;
     temp[2] = rand();
-    for (y = 0; y < size[1]; y++)
+    for (y = 0; y < size[1]; ++y)
     {
       index[1] = y;
       temp[1] = rand();
-      for (x = 0; x < size[0]; x++)
+      for (x = 0; x < size[0]; ++x)
       {
         index[0] = x;
         temp[0] = rand();
@@ -106,7 +106,7 @@ itkStatisticsAlgorithmTest2(int, char *[])
   std::string whereFail = "";
 
   // creats an image and allocate memory
-  ImageType::Pointer image = ImageType::New();
+  auto image = ImageType::New();
 
   ImageType::SizeType size;
   size.Fill(5);
@@ -123,11 +123,11 @@ itkStatisticsAlgorithmTest2(int, char *[])
   image->Allocate();
 
   // creates an ImageToListSampleAdaptor object
-  SampleType::Pointer sample = SampleType::New();
+  auto sample = SampleType::New();
   sample->SetImage(image);
 
   // creates a Subsample obeject using the ImageToListSampleAdaptor object
-  SubsampleType::Pointer subsample = SubsampleType::New();
+  auto subsample = SubsampleType::New();
   subsample->SetSample(sample);
 
   // each algorithm test will be compared with the sorted

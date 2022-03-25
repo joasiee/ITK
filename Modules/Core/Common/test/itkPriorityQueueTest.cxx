@@ -28,12 +28,12 @@ itkPriorityQueueTest(int, char *[])
   using MaxPQElementType = itk::MaxPriorityQueueElementWrapper<size_t, double, ElementIdentifier>;
 
   using MinPQType = itk::PriorityQueueContainer<MinPQElementType, MinPQElementType, double, ElementIdentifier>;
-  MinPQType::Pointer min_priority_queue = MinPQType::New();
+  auto min_priority_queue = MinPQType::New();
 
   std::cout << min_priority_queue->GetNameOfClass() << std::endl;
 
   using MaxPQType = itk::PriorityQueueContainer<MaxPQElementType, MaxPQElementType, double, ElementIdentifier>;
-  MaxPQType::Pointer max_priority_queue = MaxPQType::New();
+  auto max_priority_queue = MaxPQType::New();
 
   std::list<double> sequence;
   sequence.push_back(-0.1);
@@ -52,7 +52,7 @@ itkPriorityQueueTest(int, char *[])
 
   std::list<double>::const_iterator it = sequence.begin();
   size_t                            i = 0;
-  for (; it != sequence.end(); ++it, i++)
+  for (; it != sequence.end(); ++it, ++i)
   {
     min_priority_queue->Push(MinPQElementType(i, *it));
     max_priority_queue->Push(MaxPQElementType(i, *it));

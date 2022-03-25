@@ -47,7 +47,8 @@ namespace itk
  * \ingroup ITKOptimizersv4
  */
 template <typename TInternalComputationValueType>
-class SingleValuedCostFunctionv4Template : public CostFunctionTemplate<TInternalComputationValueType>
+class ITK_TEMPLATE_EXPORT SingleValuedCostFunctionv4Template
+  : public CostFunctionTemplate<TInternalComputationValueType>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(SingleValuedCostFunctionv4Template);
@@ -67,7 +68,7 @@ public:
 
   /**  ParametersType type alias.
    *  It defines a position in the optimization search space. */
-  using ParametersType = typename Superclass::ParametersType;
+  using typename Superclass::ParametersType;
 
   /** DerivativeType type alias.
    *  It defines a type used to return the cost function derivative.  */

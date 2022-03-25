@@ -35,10 +35,10 @@ itkQuadEdgeMeshAddFaceTest1(int argc, char * argv[])
 
   using BEFunctionType = itk::QuadEdgeMeshBoundaryEdgesMeshFunction<MeshType>;
 
-  BEFunctionType::Pointer BoundaryEdges = BEFunctionType::New();
+  auto BoundaryEdges = BEFunctionType::New();
   std::cout << BoundaryEdges->GetNameOfClass() << std::endl;
 
-  MeshType::Pointer mesh = MeshType::New();
+  auto mesh = MeshType::New();
 
   //                                                  //
   //                    p3--------------p2            //
@@ -71,12 +71,12 @@ itkQuadEdgeMeshAddFaceTest1(int argc, char * argv[])
                                                  { 0.5, -a, 0.0 } };
 
   PointType points[NumPoints];
-  for (int j = 0; j < NumPoints; j++)
+  for (int j = 0; j < NumPoints; ++j)
   {
     points[j] = pointCoordinates[j];
   }
 
-  for (int i = 0; i < NumPoints; i++)
+  for (int i = 0; i < NumPoints; ++i)
   {
     pid[i] = mesh->AddPoint(points[i]);
   }
@@ -397,7 +397,7 @@ itkQuadEdgeMeshAddFaceTest1(int argc, char * argv[])
                  "should return false"
               << std::endl;
 
-    //   MeshType::Pointer inconsistentMesh = MeshType::New();
+    //   auto inconsistentMesh = MeshType::New();
 
     //   for(int i=0; i < NumPoints; i++)
     //     {
@@ -473,7 +473,7 @@ itkQuadEdgeMeshAddFaceTest1(int argc, char * argv[])
 
 
     std::cout << "Adding a quadrangle where pid4 != pid3 + 1" << std::endl;
-    for (int i = 0; i < NumPoints; i++)
+    for (int i = 0; i < NumPoints; ++i)
     {
       pid[i] = mesh->AddPoint(points[i]);
     }
@@ -575,7 +575,7 @@ itkQuadEdgeMeshAddFaceTest1(int argc, char * argv[])
     //
     //
 
-    MeshType::Pointer moebiusMesh = MeshType::New();
+    auto moebiusMesh = MeshType::New();
 
     constexpr int   moebNumPoints = 6;
     PointIdentifier moebPid[moebNumPoints];
@@ -585,12 +585,12 @@ itkQuadEdgeMeshAddFaceTest1(int argc, char * argv[])
 
 
     PointType moebPoints[moebNumPoints];
-    for (int j = 0; j < moebNumPoints; j++)
+    for (int j = 0; j < moebNumPoints; ++j)
     {
       moebPoints[j] = moebPointCoordinates[j];
     }
 
-    for (int i = 0; i < moebNumPoints; i++)
+    for (int i = 0; i < moebNumPoints; ++i)
     {
       moebPid[i] = moebiusMesh->AddPoint(moebPoints[i]);
     }

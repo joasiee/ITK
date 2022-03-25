@@ -39,8 +39,11 @@ class MultiphaseSparseFiniteDifferenceImageFilterTestHelper
 public:
   /** Standard class type aliases. */
   using Self = MultiphaseSparseFiniteDifferenceImageFilterTestHelper;
-  using Superclass =
-    MultiphaseSparseFiniteDifferenceImageFilter<TInputImage, TFeatureImage, TOutputImage, TFiniteDifferenceFunction>;
+  using Superclass = MultiphaseSparseFiniteDifferenceImageFilter<TInputImage,
+                                                                 TFeatureImage,
+                                                                 TOutputImage,
+                                                                 TFiniteDifferenceFunction,
+                                                                 TIdCell>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -53,7 +56,7 @@ public:
   AllocateUpdateBuffer() override
   {}
 
-  using TimeStepType = typename Superclass::TimeStepType;
+  using typename Superclass::TimeStepType;
 
   void
   ApplyUpdate(TimeStepType itkNotUsed(dt)) override
@@ -89,7 +92,7 @@ itkMultiphaseSparseFiniteDifferenceImageFilterTest(int, char *[])
   using RegionBasedLevelSetFunctionType =
     itk::ScalarChanAndVeseLevelSetFunction<LevelSetImageType, FeatureImageType, SharedDataHelperType>;
 
-  RegionBasedLevelSetFunctionType::Pointer function = RegionBasedLevelSetFunctionType::New();
+  auto function = RegionBasedLevelSetFunctionType::New();
   if (function.IsNull())
   {
     return EXIT_FAILURE;
@@ -103,7 +106,7 @@ itkMultiphaseSparseFiniteDifferenceImageFilterTest(int, char *[])
                                                                                 RegionBasedLevelSetFunctionType,
                                                                                 IdCellType>;
 
-  FilterType::Pointer filter = FilterType::New();
+  auto filter = FilterType::New();
 
   // Instantiate the filter of interest to exercise its basic object methods
   typename FilterType::Superclass::Pointer multiphaseSparseFiniteDiffFilter = FilterType::Superclass::New();

@@ -62,8 +62,8 @@ public:
   itkTypeMacro(GPUMeanImageFilter, GPUBoxImageFilter);
 
   /** Superclass type alias. */
-  using OutputImageRegionType = typename Superclass::OutputImageRegionType;
-  using OutputImagePixelType = typename Superclass::OutputImagePixelType;
+  using typename Superclass::OutputImageRegionType;
+  using typename Superclass::OutputImagePixelType;
 
   /** Some convenient type alias. */
   using InputImageType = TInputImage;
@@ -131,22 +131,22 @@ public:
   static void
   RegisterOneFactory()
   {
-    GPUMeanImageFilterFactory::Pointer factory = GPUMeanImageFilterFactory::New();
+    auto factory = GPUMeanImageFilterFactory::New();
 
     ObjectFactoryBase::RegisterFactory(factory);
   }
 
 private:
-#define OverrideMeanFilterTypeMacro(ipt, opt, dm)                                                                      \
-  {                                                                                                                    \
-    using InputImageType = Image<ipt, dm>;                                                                             \
-    using OutputImageType = Image<opt, dm>;                                                                            \
-    this->RegisterOverride(typeid(MeanImageFilter<InputImageType, OutputImageType>).name(),                            \
-                           typeid(GPUMeanImageFilter<InputImageType, OutputImageType>).name(),                         \
-                           "GPU Mean Image Filter Override",                                                           \
-                           true,                                                                                       \
-                           CreateObjectFunction<GPUMeanImageFilter<InputImageType, OutputImageType>>::New());          \
-  }                                                                                                                    \
+#define OverrideMeanFilterTypeMacro(ipt, opt, dm)                                                             \
+  {                                                                                                           \
+    using InputImageType = Image<ipt, dm>;                                                                    \
+    using OutputImageType = Image<opt, dm>;                                                                   \
+    this->RegisterOverride(typeid(MeanImageFilter<InputImageType, OutputImageType>).name(),                   \
+                           typeid(GPUMeanImageFilter<InputImageType, OutputImageType>).name(),                \
+                           "GPU Mean Image Filter Override",                                                  \
+                           true,                                                                              \
+                           CreateObjectFunction<GPUMeanImageFilter<InputImageType, OutputImageType>>::New()); \
+  }                                                                                                           \
   ITK_MACROEND_NOOP_STATEMENT
 
   GPUMeanImageFilterFactory()

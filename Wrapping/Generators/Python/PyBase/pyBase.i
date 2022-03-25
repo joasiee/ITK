@@ -5,8 +5,8 @@ from . import _ITKPyBasePython
 import collections
 
 from sys import version_info as _version_info
-if _version_info < (3, 6, 0):
-    raise RuntimeError("Python 3.6 or later required")
+if _version_info < (3, 7, 0):
+    raise RuntimeError("Python 3.7 or later required")
 %}
 
 //By including pyabc.i and using the -py3 command line option when calling SWIG,
@@ -554,6 +554,21 @@ str = str
                 vnl_reference = self.__GetVnlMatrix_orig__()
                 vnl_copy = type(vnl_reference)(vnl_reference)
                 return vnl_copy
+
+            def __repr__(self):
+                vnl_mat = self.GetVnlMatrix()
+                python_list_mat = [
+                  [vnl_mat.get(i, j) for j in range(vnl_mat.cols())]
+                  for i in range(vnl_mat.rows())
+                ]
+                return type(self).__name__ + " (" + repr(python_list_mat) + ")"
+
+            def __array__(self, dtype=None):
+                import itk
+                import numpy as np
+                array = itk.array_from_matrix(self)
+                return np.asarray(array, dtype=dtype)
+
             %}
         }
 
@@ -603,9 +618,11 @@ str = str
                     } else if (PyFloat_Check(o)) {
                         itks[i] = (type)PyFloat_AsDouble(o);
                     } else {
+                        Py_DECREF(o);
                         PyErr_SetString(PyExc_ValueError,"Expecting a sequence of int or float");
                         return NULL;
                     }
+                    Py_DECREF(o);
                 }
                 $1 = &itks;
             }else if (PyInt_Check($input)) {
@@ -649,9 +666,11 @@ str = str
                     } else if (PyFloat_Check(o)) {
                         itks[i] = (type)PyFloat_AsDouble(o);
                     } else {
+                        Py_DECREF(o);
                         PyErr_SetString(PyExc_ValueError,"Expecting a sequence of int or float");
                         return NULL;
                     }
+                    Py_DECREF(o);
                 }
                 $1 = itks;
             }else if (PyInt_Check($input)) {
@@ -723,9 +742,11 @@ str = str
                 } else if (PyFloat_Check(o)) {
                     itks[i] = (value_type)PyFloat_AsDouble(o);
                 } else {
+                    Py_DECREF(o);
                     PyErr_SetString(PyExc_ValueError,"Expecting a sequence of int or float");
                     return NULL;
                 }
+                Py_DECREF(o);
             }
             $1 = &itks;
         }
@@ -754,9 +775,11 @@ str = str
             } else if (PyFloat_Check(o)) {
                 itks[i] = (value_type)PyFloat_AsDouble(o);
             } else {
+                Py_DECREF(o);
                 PyErr_SetString(PyExc_ValueError,"Expecting a sequence of int or float");
                 return NULL;
             }
+            Py_DECREF(o);
         }
         $1 = itks;
     }
@@ -806,9 +829,11 @@ str = str
                     if (PyInt_Check(o) || PyLong_Check(o)) {
                         itks[i] = PyInt_AsLong(o);
                     } else {
+                        Py_DECREF(o);
                         PyErr_SetString(PyExc_ValueError,"Expecting a sequence of int (or long)");
                         return NULL;
                     }
+                    Py_DECREF(o);
                 }
                 $1 = &itks;
             }else if (PyInt_Check($input) || PyLong_Check($input)) {
@@ -845,9 +870,11 @@ str = str
                     if (PyInt_Check(o) || PyLong_Check(o)) {
                         itks[i] = PyInt_AsLong(o);
                     } else {
+                        Py_DECREF(o);
                         PyErr_SetString(PyExc_ValueError,"Expecting a sequence of int (or long)");
                         return NULL;
                     }
+                    Py_DECREF(o);
                 }
                 $1 = itks;
             }else if (PyInt_Check($input) || PyLong_Check($input)) {
@@ -932,9 +959,11 @@ str = str
                     if(SWIG_ConvertPtr(o,(void **)(&raw_ptr),$descriptor(swig_name *), 0) == 0) {
                         vec_smartptr.push_back(raw_ptr);
                     } else {
+                        Py_DECREF(o);
                         PyErr_SetString(PyExc_ValueError,"Expecting a sequence of raw pointers (" #swig_name ")." );
                         SWIG_fail;
                     }
+                    Py_DECREF(o);
                 }
                 $1 = vec_smartptr;
             }

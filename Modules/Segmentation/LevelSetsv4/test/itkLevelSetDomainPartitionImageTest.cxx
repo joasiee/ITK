@@ -56,7 +56,7 @@ itkLevelSetDomainPartitionImageTest(int, char *[])
   region.SetSize(size);
 
   // Binary initialization
-  InputImageType::Pointer binary = InputImageType::New();
+  auto binary = InputImageType::New();
   binary->SetRegions(region);
   binary->SetSpacing(spacing);
   binary->SetOrigin(origin);
@@ -70,10 +70,15 @@ itkLevelSetDomainPartitionImageTest(int, char *[])
   regionVector[0] = region;
   regionVector[1] = region;
 
-  DomainPartitionSourceType::Pointer partitionSource = DomainPartitionSourceType::New();
+  auto partitionSource = DomainPartitionSourceType::New();
   partitionSource->SetNumberOfLevelSetFunctions(numberOfLevelSetFunctions);
-  partitionSource->SetImage(binary);
+
   partitionSource->SetLevelSetDomainRegionVector(regionVector);
+
+  // Exercise exceptions
+  ITK_TRY_EXPECT_EXCEPTION(partitionSource->PopulateListDomain());
+
+  partitionSource->SetImage(binary);
   partitionSource->PopulateListDomain();
 
 

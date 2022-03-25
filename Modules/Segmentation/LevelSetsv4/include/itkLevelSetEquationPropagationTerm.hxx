@@ -41,7 +41,7 @@ LevelSetEquationPropagationTerm<TInput, TLevelSetContainer, TPropagationImage>::
   if (this->m_PropagationImage.IsNull())
   {
     using CastFilterType = CastImageFilter<TInput, TPropagationImage>;
-    typename CastFilterType::Pointer castFilter = CastFilterType::New();
+    auto castFilter = CastFilterType::New();
     castFilter->SetInput(this->m_Input);
     castFilter->Update();
 
@@ -77,8 +77,9 @@ LevelSetEquationPropagationTerm<TInput, TLevelSetContainer, TPropagationImage>::
 }
 
 template <typename TInput, typename TLevelSetContainer, typename TPropagationImage>
-typename LevelSetEquationPropagationTerm<TInput, TLevelSetContainer, TPropagationImage>::LevelSetOutputRealType
+auto
 LevelSetEquationPropagationTerm<TInput, TLevelSetContainer, TPropagationImage>::Value(const LevelSetInputIndexType & iP)
+  -> LevelSetOutputRealType
 {
   LevelSetGradientType backwardGradient = this->m_CurrentLevelSetPointer->EvaluateBackwardGradient(iP);
   LevelSetGradientType forwardGradient = this->m_CurrentLevelSetPointer->EvaluateForwardGradient(iP);
@@ -94,7 +95,7 @@ LevelSetEquationPropagationTerm<TInput, TLevelSetContainer, TPropagationImage>::
   //
   LevelSetOutputRealType propagation_gradient = zero;
 
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     propagation_gradient +=
       itk::Math::sqr(std::max(backwardGradient[i], zero)) + itk::Math::sqr(std::min(forwardGradient[i], zero));
@@ -113,7 +114,7 @@ LevelSetEquationPropagationTerm<TInput, TLevelSetContainer, TPropagationImage>::
   const LevelSetOutputRealType zero = NumericTraits<LevelSetOutputRealType>::ZeroValue();
   LevelSetOutputRealType       propagation_gradient = zero;
 
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     propagation_gradient += itk::Math::sqr(std::max(iData.BackwardGradient.m_Value[i], zero)) +
                             itk::Math::sqr(std::min(iData.ForwardGradient.m_Value[i], zero));

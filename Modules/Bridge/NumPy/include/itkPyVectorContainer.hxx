@@ -57,8 +57,9 @@ PyVectorContainer<TElementIdentifier, TElement>::_array_view_from_vector_contain
 }
 
 template <typename TElementIdentifier, typename TElement>
-const typename PyVectorContainer<TElementIdentifier, TElement>::VectorContainerType::Pointer
-PyVectorContainer<TElementIdentifier, TElement>::_vector_container_from_array(PyObject * arr, PyObject * shape)
+auto
+PyVectorContainer<TElementIdentifier, TElement>::_vector_container_from_array(PyObject * arr, PyObject * shape) -> const
+  typename VectorContainerType::Pointer
 {
   PyObject * obj = NULL;
   PyObject * shapeseq = NULL;
@@ -104,8 +105,8 @@ PyVectorContainer<TElementIdentifier, TElement>::_vector_container_from_array(Py
     PyBuffer_Release(&pyBuffer);
     return nullptr;
   }
-  DataType *                            data = (DataType *)buffer;
-  typename VectorContainerType::Pointer output = VectorContainerType::New();
+  DataType * data = (DataType *)buffer;
+  auto       output = VectorContainerType::New();
   output->resize(numberOfElements);
   for (size_t ii = 0; ii < numberOfElements; ++ii)
   {

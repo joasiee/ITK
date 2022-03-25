@@ -32,7 +32,7 @@ namespace itk
  * \ingroup ITKQuadEdgeMesh
  */
 template <typename TMesh, typename TQEType>
-class QuadEdgeMeshEulerOperatorSplitEdgeFunction : public QuadEdgeMeshFunctionBase<TMesh, TQEType *>
+class ITK_TEMPLATE_EXPORT QuadEdgeMeshEulerOperatorSplitEdgeFunction : public QuadEdgeMeshFunctionBase<TMesh, TQEType *>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(QuadEdgeMeshEulerOperatorSplitEdgeFunction);
@@ -50,8 +50,8 @@ public:
   /** Type of QuadEdge with which to apply slicing. */
   using QEType = TQEType;
 
-  using MeshType = typename Superclass::MeshType;
-  using OutputType = typename Superclass::OutputType;
+  using typename Superclass::MeshType;
+  using typename Superclass::OutputType;
   using PointIdentifier = typename MeshType::PointIdentifier;
 
   using SplitVertex = QuadEdgeMeshEulerOperatorSplitVertexFunction<MeshType, QEType>;

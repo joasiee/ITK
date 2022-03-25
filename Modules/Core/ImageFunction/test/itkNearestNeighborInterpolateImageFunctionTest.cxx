@@ -53,9 +53,9 @@ itkNearestNeighborInterpolateImageFunctionTest(int, char *[])
   using InterpolatedVectorType = VectorInterpolatorType::OutputType;
   using InterpolatedVariableVectorType = VariableVectorInterpolatorType::OutputType;
 
-  ImageType::Pointer               image = ImageType::New();
-  VectorImageType::Pointer         vectorimage = VectorImageType::New();
-  VariableVectorImageType::Pointer variablevectorimage = VariableVectorImageType::New();
+  auto image = ImageType::New();
+  auto vectorimage = VectorImageType::New();
+  auto variablevectorimage = VariableVectorImageType::New();
   variablevectorimage->SetVectorLength(VectorDimension);
 
   IndexType start;
@@ -103,9 +103,9 @@ itkNearestNeighborInterpolateImageFunctionTest(int, char *[])
   //   Intensity = f(x,y) = x + 3 * y
   //
   //
-  for (unsigned int y = 0; y < maxy; y++)
+  for (unsigned int y = 0; y < maxy; ++y)
   {
-    for (unsigned int x = 0; x < maxx; x++)
+    for (unsigned int x = 0; x < maxx; ++x)
     {
       IndexType index;
       index[0] = x;
@@ -125,7 +125,7 @@ itkNearestNeighborInterpolateImageFunctionTest(int, char *[])
     std::cout << std::endl;
   }
 
-  InterpolatorType::Pointer interpolator = InterpolatorType::New();
+  auto interpolator = InterpolatorType::New();
   interpolator->SetInputImage(image);
 
   typename ImageType::SizeType radius;
@@ -135,18 +135,18 @@ itkNearestNeighborInterpolateImageFunctionTest(int, char *[])
     ITK_TEST_SET_GET_VALUE(radius[d], interpolator->GetRadius()[d]);
   }
 
-  VectorInterpolatorType::Pointer vectorinterpolator = VectorInterpolatorType::New();
+  auto vectorinterpolator = VectorInterpolatorType::New();
   vectorinterpolator->SetInputImage(vectorimage);
 
-  VariableVectorInterpolatorType::Pointer variablevectorinterpolator = VariableVectorInterpolatorType::New();
+  auto variablevectorinterpolator = VariableVectorInterpolatorType::New();
   variablevectorinterpolator->SetInputImage(variablevectorimage);
 
   constexpr double incr = 0.1;
   PointType        point;
 
-  for (double yy = 0; yy < static_cast<double>(maxy - 1); yy++)
+  for (double yy = 0; yy < static_cast<double>(maxy - 1); ++yy)
   {
-    for (double xx = 0; xx < static_cast<double>(maxx - 1); xx++)
+    for (double xx = 0; xx < static_cast<double>(maxx - 1); ++xx)
     {
       for (double yyy = yy; yyy < yy + 1.01; yyy += incr)
       {

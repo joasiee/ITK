@@ -110,10 +110,10 @@ itkSPSAOptimizerTest(int, char *[])
   using ScalesType = OptimizerType::ScalesType;
 
   // Declaration of a itkOptimizer
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
 
   // Declaration of the CostFunction
-  SPSACostFunction::Pointer costFunction = SPSACostFunction::New();
+  auto costFunction = SPSACostFunction::New();
   itkOptimizer->SetCostFunction(costFunction);
 
   using ParametersType = SPSACostFunction::ParametersType;
@@ -187,7 +187,7 @@ itkSPSAOptimizerTest(int, char *[])
   //
   bool   pass = true;
   double trueParameters[2] = { 2, -2 };
-  for (unsigned int j = 0; j < 2; j++)
+  for (unsigned int j = 0; j < 2; ++j)
   {
     if (itk::Math::abs(finalPosition[j] - trueParameters[j]) > 0.01)
       pass = false;

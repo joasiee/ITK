@@ -24,16 +24,16 @@ namespace itk
 {
 
 template <unsigned int NDimensions>
-typename MetaBlobConverter<NDimensions>::MetaObjectType *
-MetaBlobConverter<NDimensions>::CreateMetaObject()
+auto
+MetaBlobConverter<NDimensions>::CreateMetaObject() -> MetaObjectType *
 {
   return dynamic_cast<MetaObjectType *>(new BlobMetaObjectType);
 }
 
 /** Convert a metaBlob into an Blob SpatialObject  */
 template <unsigned int NDimensions>
-typename MetaBlobConverter<NDimensions>::SpatialObjectPointer
-MetaBlobConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectType * mo)
+auto
+MetaBlobConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectType * mo) -> SpatialObjectPointer
 {
   const auto * Blob = dynamic_cast<const BlobMetaObjectType *>(mo);
   if (Blob == nullptr)
@@ -41,7 +41,7 @@ MetaBlobConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectType *
     itkExceptionMacro(<< "Can't downcast MetaObject to BlobMetaObject");
   }
 
-  typename BlobSpatialObjectType::Pointer blob = BlobSpatialObjectType::New();
+  auto blob = BlobSpatialObjectType::New();
 
   blob->GetProperty().SetName(Blob->Name());
   blob->SetId(Blob->ID());
@@ -57,14 +57,14 @@ MetaBlobConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectType *
 
   vnl_vector<double> v(NDimensions);
 
-  for (unsigned int identifier = 0; identifier < Blob->GetPoints().size(); identifier++)
+  for (unsigned int identifier = 0; identifier < Blob->GetPoints().size(); ++identifier)
   {
     BlobPointType pnt;
 
     using PointType = typename BlobSpatialObjectType::PointType;
     PointType point;
 
-    for (unsigned int ii = 0; ii < NDimensions; ii++)
+    for (unsigned int ii = 0; ii < NDimensions; ++ii)
     {
       point[ii] = (*it2)->m_X[ii] * Blob->ElementSpacing(ii);
     }
@@ -85,8 +85,8 @@ MetaBlobConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectType *
 
 /** Convert a Blob SpatialObject into a metaBlob */
 template <unsigned int NDimensions>
-typename MetaBlobConverter<NDimensions>::MetaObjectType *
-MetaBlobConverter<NDimensions>::SpatialObjectToMetaObject(const SpatialObjectType * spatialObject)
+auto
+MetaBlobConverter<NDimensions>::SpatialObjectToMetaObject(const SpatialObjectType * spatialObject) -> MetaObjectType *
 {
   BlobSpatialObjectConstPointer blobSO = dynamic_cast<const BlobSpatialObjectType *>(spatialObject);
   if (blobSO.IsNull())
@@ -98,11 +98,11 @@ MetaBlobConverter<NDimensions>::SpatialObjectToMetaObject(const SpatialObjectTyp
 
   // fill in the Blob information
   typename BlobSpatialObjectType::BlobPointListType::const_iterator it;
-  for (it = blobSO->GetPoints().begin(); it != blobSO->GetPoints().end(); it++)
+  for (it = blobSO->GetPoints().begin(); it != blobSO->GetPoints().end(); ++it)
   {
     auto * pnt = new BlobPnt(NDimensions);
 
-    for (unsigned int d = 0; d < NDimensions; d++)
+    for (unsigned int d = 0; d < NDimensions; ++d)
     {
       pnt->m_X[d] = (*it).GetPositionInObjectSpace()[d];
     }
@@ -125,7 +125,7 @@ MetaBlobConverter<NDimensions>::SpatialObjectToMetaObject(const SpatialObjectTyp
   }
 
   float color[4];
-  for (unsigned int ii = 0; ii < 4; ii++)
+  for (unsigned int ii = 0; ii < 4; ++ii)
   {
     color[ii] = spatialObject->GetProperty().GetColor()[ii];
   }

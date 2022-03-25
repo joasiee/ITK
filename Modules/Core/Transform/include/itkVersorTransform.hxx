@@ -73,6 +73,7 @@ VersorTransform<TParametersValueType>::SetParameters(const ParametersType & para
   itkDebugMacro(<< "Versor is now " << m_Versor);
 
   this->ComputeMatrix();
+  this->ComputeOffset();
 
   // Modified is always called since we just have a pointer to the
   // parameters and cannot know if the parameters have changed.
@@ -83,8 +84,8 @@ VersorTransform<TParametersValueType>::SetParameters(const ParametersType & para
 
 /** Set Parameters */
 template <typename TParametersValueType>
-const typename VersorTransform<TParametersValueType>::ParametersType &
-VersorTransform<TParametersValueType>::GetParameters() const
+auto
+VersorTransform<TParametersValueType>::GetParameters() const -> const ParametersType &
 {
   this->m_Parameters[0] = this->m_Versor.GetRight()[0];
   this->m_Parameters[1] = this->m_Versor.GetRight()[1];

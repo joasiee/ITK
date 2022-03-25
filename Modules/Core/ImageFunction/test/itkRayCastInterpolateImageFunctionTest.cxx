@@ -42,8 +42,8 @@ itkRayCastInterpolateImageFunctionTest(int itkNotUsed(argc), char * itkNotUsed(a
   using RegionType = ImageType::RegionType;
 
   /* Allocate a simple test image */
-  ImageType::Pointer image = ImageType::New();
-  IndexType          start;
+  auto      image = ImageType::New();
+  IndexType start;
   start.Fill(0);
   SizeType size;
   size[0] = 30;
@@ -68,13 +68,13 @@ itkRayCastInterpolateImageFunctionTest(int itkNotUsed(argc), char * itkNotUsed(a
 
   /* Initialize the image contents */
   IndexType index;
-  for (unsigned int slice = 0; slice < size[2]; slice++)
+  for (unsigned int slice = 0; slice < size[2]; ++slice)
   {
     index[2] = slice;
-    for (unsigned int row = 0; row < size[1]; row++)
+    for (unsigned int row = 0; row < size[1]; ++row)
     {
       index[1] = row;
-      for (unsigned int col = 0; col < size[0]; col++)
+      for (unsigned int col = 0; col < size[0]; ++col)
       {
         index[0] = col;
         auto value = (PixelType)(slice + row + col);
@@ -86,7 +86,7 @@ itkRayCastInterpolateImageFunctionTest(int itkNotUsed(argc), char * itkNotUsed(a
   using RayCastInterpolatorType = itk::RayCastInterpolateImageFunction<ImageType, double>;
 
   /* Create and initialize the interpolator */
-  RayCastInterpolatorType::Pointer interp = RayCastInterpolatorType::New();
+  auto interp = RayCastInterpolatorType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(interp, RayCastInterpolateImageFunction, InterpolateImageFunction);
 
@@ -105,7 +105,7 @@ itkRayCastInterpolateImageFunctionTest(int itkNotUsed(argc), char * itkNotUsed(a
   /* Create the transform */
   using TransformType = itk::TranslationTransform<double, ImageDimension>;
 
-  TransformType::Pointer transform = TransformType::New();
+  auto transform = TransformType::New();
 
   interp->SetTransform(transform);
   ITK_TEST_SET_GET_VALUE(transform, interp->GetTransform());
@@ -113,7 +113,7 @@ itkRayCastInterpolateImageFunctionTest(int itkNotUsed(argc), char * itkNotUsed(a
   /* Create the auxiliary interpolator */
   using InterpolatorType = itk::LinearInterpolateImageFunction<ImageType, double>;
 
-  InterpolatorType::Pointer auxInterpolator = InterpolatorType::New();
+  auto auxInterpolator = InterpolatorType::New();
 
   interp->SetInterpolator(auxInterpolator);
   ITK_TEST_SET_GET_VALUE(auxInterpolator, interp->GetInterpolator());

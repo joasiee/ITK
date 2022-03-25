@@ -61,11 +61,11 @@ itkImagePCAShapeModelEstimatorTest(int, char *[])
   using InputImageIterator = itk::ImageRegionIterator<InputImageType>;
   using OutputImageIterator = itk::ImageRegionIterator<OutputImageType>;
 
-  InputImageType::Pointer image1 = InputImageType::New();
+  auto image1 = InputImageType::New();
 
-  InputImageType::Pointer image2 = InputImageType::New();
+  auto image2 = InputImageType::New();
 
-  InputImageType::Pointer image3 = InputImageType::New();
+  auto image3 = InputImageType::New();
 
   InputImageType::SizeType inputImageSize = { { IMGWIDTH, IMGHEIGHT } };
 
@@ -106,7 +106,7 @@ itkImagePCAShapeModelEstimatorTest(int, char *[])
   // Manually create and store each vector
 
   // Image no. 1
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < 4; ++i)
   {
     image1It.Set(1);
     ++image1It;
@@ -136,7 +136,7 @@ itkImagePCAShapeModelEstimatorTest(int, char *[])
   // Set the image model estimator
   using ImagePCAShapeModelEstimatorType = itk::ImagePCAShapeModelEstimator<InputImageType, OutputImageType>;
 
-  ImagePCAShapeModelEstimatorType::Pointer applyPCAShapeEstimator = ImagePCAShapeModelEstimatorType::New();
+  auto applyPCAShapeEstimator = ImagePCAShapeModelEstimatorType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(applyPCAShapeEstimator, ImagePCAShapeModelEstimator, ImageShapeModelEstimatorBase);
 
@@ -166,7 +166,7 @@ itkImagePCAShapeModelEstimatorTest(int, char *[])
   std::cout << "The " << applyPCAShapeEstimator->GetNumberOfPrincipalComponentsRequired()
             << " largest eigen values are:" << std::endl;
 
-  for (unsigned int i = 0; i < std::min(numEigVal, NUMLARGESTPC); i++)
+  for (unsigned int i = 0; i < std::min(numEigVal, NUMLARGESTPC); ++i)
   {
     std::cout << eigenValues[i] << std::endl;
   }
@@ -188,7 +188,7 @@ itkImagePCAShapeModelEstimatorTest(int, char *[])
   std::cout << "  " << std::endl;
 
   // Print the largest two eigen vectors
-  for (unsigned int j = 1; j < NUMLARGESTPC + 1; j++)
+  for (unsigned int j = 1; j < NUMLARGESTPC + 1; ++j)
   {
     OutputImageType::Pointer outImage2 = applyPCAShapeEstimator->GetOutput(j);
     OutputImageIterator      outImage2It(outImage2, outImage2->GetBufferedRegion());

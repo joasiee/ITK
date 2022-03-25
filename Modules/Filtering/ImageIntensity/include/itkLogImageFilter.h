@@ -37,16 +37,12 @@ public:
   Log() = default;
   ~Log() = default;
   bool
-  operator!=(const Log &) const
+  operator==(const Log &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Log & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Log);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -65,7 +61,7 @@ public:
  * \ingroup ITKImageIntensity
  */
 template <typename TInputImage, typename TOutputImage>
-class LogImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT LogImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(LogImageFilter);

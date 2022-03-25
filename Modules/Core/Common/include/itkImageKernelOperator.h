@@ -54,9 +54,8 @@ public:
   using Superclass = NeighborhoodOperator<TPixel, VDimension, TAllocator>;
 
   using ImageType = Image<TPixel, VDimension>;
-  using SizeType = typename Superclass::SizeType;
-  using CoefficientVector = typename Superclass::CoefficientVector;
 
+  /** Run-time type information (and related methods). */
   itkTypeMacro(ImageKernelOperator, NeighborhoodOperator);
 
   /** Set the image kernel. Only images with odd size in all
@@ -69,15 +68,16 @@ public:
   const ImageType *
   GetImageKernel() const;
 
-  /** Prints information about the object. */
   void
-  PrintSelf(std::ostream & os, Indent i) const override
+  PrintSelf(std::ostream & os, Indent indent) const override
   {
-    os << i << "ImageKernelOperator { this=" << this << "} " << std::endl;
-    Superclass::PrintSelf(os, i.GetNextIndent());
+    Superclass::PrintSelf(os, indent);
   }
 
 protected:
+  /** Type alias support for coefficient vector type.*/
+  using typename Superclass::CoefficientVector;
+
   /** Calculates operator coefficients. */
   CoefficientVector
   GenerateCoefficients() override;

@@ -61,15 +61,13 @@ public:
   BinaryNot() = default;
   ~BinaryNot() = default;
   bool
-  operator!=(const BinaryNot &) const
+  operator==(const BinaryNot &) const
   {
-    return false;
+    return true;
   }
-  bool
-  operator==(const BinaryNot & other) const
-  {
-    return !(*this != other);
-  }
+
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(BinaryNot);
+
   inline TPixel
   operator()(const TPixel & A) const
   {
@@ -112,12 +110,9 @@ public:
   itkSetMacro(ForegroundValue, PixelType);
   itkGetConstMacro(ForegroundValue, PixelType);
 
-  /** Set the value used as "background". Defaults to
+  /** Set/Get the value used as "background". Defaults to
    * NumericTraits<PixelType>::NonpositiveMin(). */
   itkSetMacro(BackgroundValue, PixelType);
-
-  /** Get the value used as "background". Defaults to
-   * NumericTraits<PixelType>::NonpositiveMin(). */
   itkGetConstMacro(BackgroundValue, PixelType);
 
 protected:

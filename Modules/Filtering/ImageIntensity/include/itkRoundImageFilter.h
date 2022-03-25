@@ -37,16 +37,12 @@ public:
   Round() = default;
   ~Round() = default;
   bool
-  operator!=(const Round &) const
+  operator==(const Round &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Round & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Round);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -66,7 +62,7 @@ public:
  * \ingroup ITKImageIntensity
  */
 template <typename TInputImage, typename TOutputImage>
-class RoundImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT RoundImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(RoundImageFilter);

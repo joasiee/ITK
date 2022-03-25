@@ -25,14 +25,14 @@ itkEllipseSpatialObjectTest(int, char *[])
 {
   using EllipseType = itk::EllipseSpatialObject<4>;
 
-  EllipseType::Pointer myEllipse = EllipseType::New();
+  auto myEllipse = EllipseType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(myEllipse, EllipseSpatialObject, SpatialObject);
 
 
   EllipseType::ArrayType radii;
 
-  for (unsigned int i = 0; i < 4; i++)
+  for (unsigned int i = 0; i < 4; ++i)
   {
     radii[i] = i;
   }
@@ -81,7 +81,7 @@ itkEllipseSpatialObjectTest(int, char *[])
   std::cout << "ObjectToWorldTransform : ";
 
   // Create myEllipse2 as a child of myEllipse
-  EllipseType::Pointer myEllipse2 = EllipseType::New();
+  auto myEllipse2 = EllipseType::New();
   myEllipse2->SetRadiusInObjectSpace(1);
   myEllipse->AddChild(myEllipse2);
 
@@ -113,7 +113,7 @@ itkEllipseSpatialObjectTest(int, char *[])
   std::cout << "Bounds = " << boundingBox->GetBounds() << std::endl;
 
   std::cout << "Update(): ";
-  for (unsigned int i = 0; i < 3; i++)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     const EllipseType::BoundingBoxType::BoundsArrayType bounds = boundingBox->GetBounds();
     if (itk::Math::NotAlmostEquals(bounds[2 * i], 7) ||

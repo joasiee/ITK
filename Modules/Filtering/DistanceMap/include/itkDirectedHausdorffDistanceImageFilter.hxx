@@ -53,15 +53,15 @@ DirectedHausdorffDistanceImageFilter<TInputImage1, TInputImage2>::SetInput2(cons
 }
 
 template <typename TInputImage1, typename TInputImage2>
-const typename DirectedHausdorffDistanceImageFilter<TInputImage1, TInputImage2>::InputImage1Type *
-DirectedHausdorffDistanceImageFilter<TInputImage1, TInputImage2>::GetInput1()
+auto
+DirectedHausdorffDistanceImageFilter<TInputImage1, TInputImage2>::GetInput1() -> const InputImage1Type *
 {
   return this->GetInput();
 }
 
 template <typename TInputImage1, typename TInputImage2>
-const typename DirectedHausdorffDistanceImageFilter<TInputImage1, TInputImage2>::InputImage2Type *
-DirectedHausdorffDistanceImageFilter<TInputImage1, TInputImage2>::GetInput2()
+auto
+DirectedHausdorffDistanceImageFilter<TInputImage1, TInputImage2>::GetInput2() -> const InputImage2Type *
 {
   return itkDynamicCastInDebugMode<const TInputImage2 *>(this->ProcessObject::GetInput(1));
 }
@@ -118,7 +118,7 @@ DirectedHausdorffDistanceImageFilter<TInputImage1, TInputImage2>::BeforeThreaded
 
   // Compute distance from non-zero pixels in the second image
   using FilterType = itk::SignedMaurerDistanceMapImageFilter<InputImage2Type, DistanceMapType>;
-  typename FilterType::Pointer filter = FilterType::New();
+  auto filter = FilterType::New();
 
   auto input2 = InputImage2Type::New();
   input2->Graft(const_cast<InputImage2Type *>(this->GetInput2()));

@@ -35,10 +35,10 @@ itkMembershipSampleTest1(int, char *[])
 
   using MembershipSampleType = itk::Statistics::MembershipSample<SampleType>;
 
-  SampleType::Pointer sample = SampleType::New();
+  auto sample = SampleType::New();
 
 
-  MembershipSampleType::Pointer membershipSample = MembershipSampleType::New();
+  auto membershipSample = MembershipSampleType::New();
 
   membershipSample->SetSample(sample);
 
@@ -65,9 +65,9 @@ itkMembershipSampleTest1(int, char *[])
   std::cout << "Sample length = " << sample->GetMeasurementVectorSize() << std::endl;
   std::cout << "Vector length = " << itk::NumericTraits<MeasurementVectorType>::GetLength(mv) << std::endl;
 
-  for (unsigned int i = 0; i < sampleSize; i++)
+  for (unsigned int i = 0; i < sampleSize; ++i)
   {
-    for (unsigned int j = 0; j < MeasurementVectorSize; j++)
+    for (unsigned int j = 0; j < MeasurementVectorSize; ++j)
     {
       mv[j] = rand() / (RAND_MAX + 1.0);
     }

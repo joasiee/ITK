@@ -40,10 +40,10 @@ DisplacementFieldTransform<TParametersValueType, NDimensions>::DisplacementField
 
   // Setup and assign default interpolator
   using DefaultInterpolatorType = VectorLinearInterpolateImageFunction<DisplacementFieldType, ScalarType>;
-  typename DefaultInterpolatorType::Pointer interpolator = DefaultInterpolatorType::New();
+  auto interpolator = DefaultInterpolatorType::New();
   this->m_Interpolator = interpolator;
 
-  typename DefaultInterpolatorType::Pointer inverseInterpolator = DefaultInterpolatorType::New();
+  auto inverseInterpolator = DefaultInterpolatorType::New();
   this->m_InverseInterpolator = inverseInterpolator;
 
   // Setup and assign parameter helper. This will hold the displacement field
@@ -56,15 +56,16 @@ DisplacementFieldTransform<TParametersValueType, NDimensions>::DisplacementField
   /* Initialize the identity jacobian. */
   m_IdentityJacobian.SetSize(NDimensions, NDimensions);
   m_IdentityJacobian.Fill(0.0);
-  for (unsigned int dim = 0; dim < NDimensions; dim++)
+  for (unsigned int dim = 0; dim < NDimensions; ++dim)
   {
     m_IdentityJacobian[dim][dim] = 1.0;
   }
 }
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename DisplacementFieldTransform<TParametersValueType, NDimensions>::OutputPointType
+auto
 DisplacementFieldTransform<TParametersValueType, NDimensions>::TransformPoint(const InputPointType & inputPoint) const
+  -> OutputPointType
 {
   if (!this->m_DisplacementField)
   {
@@ -118,8 +119,9 @@ DisplacementFieldTransform<TParametersValueType, NDimensions>::GetInverse(Self *
 }
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename DisplacementFieldTransform<TParametersValueType, NDimensions>::InverseTransformBasePointer
+auto
 DisplacementFieldTransform<TParametersValueType, NDimensions>::GetInverseTransform() const
+  -> InverseTransformBasePointer
 {
   Pointer inverseTransform = New();
 
@@ -198,9 +200,9 @@ DisplacementFieldTransform<TParametersValueType, NDimensions>::GetInverseJacobia
   {
     this->ComputeJacobianWithRespectToPositionInternal(index, jacobian, false);
     vnl_svd<typename JacobianPositionType::element_type> svd{ jacobian.as_ref() };
-    for (unsigned int i = 0; i < jacobian.rows(); i++)
+    for (unsigned int i = 0; i < jacobian.rows(); ++i)
     {
-      for (unsigned int j = 0; j < jacobian.cols(); j++)
+      for (unsigned int j = 0; j < jacobian.cols(); ++j)
       {
         jacobian(i, j) = svd.inverse()(i, j);
       }
@@ -242,7 +244,7 @@ DisplacementFieldTransform<TParametersValueType, NDimensions>::ComputeJacobianWi
   // Multiplier for getting inverse Jacobian
   TParametersValueType dPixSign = NumericTraits<TParametersValueType>::OneValue();
   dPixSign = doInverseJacobian ? -dPixSign : dPixSign;
-  for (unsigned int row = 0; row < NDimensions; row++)
+  for (unsigned int row = 0; row < NDimensions; ++row)
   {
     TParametersValueType dist = fabs((float)index[row]);
     if (dist < mindist)
@@ -260,7 +262,7 @@ DisplacementFieldTransform<TParametersValueType, NDimensions>::ComputeJacobianWi
   {
     // itkCentralDifferenceImageFunction does not support 4th order so
     // do manually here
-    for (unsigned int row = 0; row < NDimensions; row++)
+    for (unsigned int row = 0; row < NDimensions; ++row)
     {
       difIndex[row][0] = index;
       difIndex[row][1] = index;
@@ -297,7 +299,7 @@ DisplacementFieldTransform<TParametersValueType, NDimensions>::ComputeJacobianWi
 
       // typename DisplacementFieldType::PixelType dPix=
       //      ( lpix - rpix )*space/(2.0*h); //2nd order centered difference
-      for (unsigned int col = 0; col < NDimensions; col++)
+      for (unsigned int col = 0; col < NDimensions; ++col)
       {
         TParametersValueType val = dPix[col] / spacing[col];
         if (row == col)
@@ -500,27 +502,27 @@ DisplacementFieldTransform<TParametersValueType, NDimensions>::SetFixedParameter
   }
 
   SizeType size;
-  for (unsigned int d = 0; d < NDimensions; d++)
+  for (unsigned int d = 0; d < NDimensions; ++d)
   {
     size[d] = static_cast<SizeValueType>(fixedParameters[d]);
   }
 
   PointType origin;
-  for (unsigned int d = 0; d < NDimensions; d++)
+  for (unsigned int d = 0; d < NDimensions; ++d)
   {
     origin[d] = fixedParameters[d + NDimensions];
   }
 
   SpacingType spacing;
-  for (unsigned int d = 0; d < NDimensions; d++)
+  for (unsigned int d = 0; d < NDimensions; ++d)
   {
     spacing[d] = fixedParameters[d + 2 * NDimensions];
   }
 
   DirectionType direction;
-  for (unsigned int di = 0; di < NDimensions; di++)
+  for (unsigned int di = 0; di < NDimensions; ++di)
   {
-    for (unsigned int dj = 0; dj < NDimensions; dj++)
+    for (unsigned int dj = 0; dj < NDimensions; ++dj)
     {
       direction[di][dj] = fixedParameters[3 * NDimensions + (di * NDimensions + dj)];
     }
@@ -529,7 +531,7 @@ DisplacementFieldTransform<TParametersValueType, NDimensions>::SetFixedParameter
   PixelType zeroDisplacement;
   zeroDisplacement.Fill(0.0);
 
-  typename DisplacementFieldType::Pointer displacementField = DisplacementFieldType::New();
+  auto displacementField = DisplacementFieldType::New();
   displacementField->SetSpacing(spacing);
   displacementField->SetOrigin(origin);
   displacementField->SetDirection(direction);
@@ -541,7 +543,7 @@ DisplacementFieldTransform<TParametersValueType, NDimensions>::SetFixedParameter
 
   if (!this->m_InverseDisplacementField.IsNull())
   {
-    typename DisplacementFieldType::Pointer inverseDisplacementField = DisplacementFieldType::New();
+    auto inverseDisplacementField = DisplacementFieldType::New();
     inverseDisplacementField->SetSpacing(spacing);
     inverseDisplacementField->SetOrigin(origin);
     inverseDisplacementField->SetDirection(direction);
@@ -570,30 +572,30 @@ DisplacementFieldTransform<TParametersValueType, NDimensions>::SetFixedParameter
 
   // Set the field size parameters
   SizeType fieldSize = fieldRegion.GetSize();
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     this->m_FixedParameters[i] = static_cast<FixedParametersValueType>(fieldSize[i]);
   }
 
   // Set the origin parameters
   PointType fieldOrigin = this->m_DisplacementField->GetOrigin();
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     this->m_FixedParameters[NDimensions + i] = fieldOrigin[i];
   }
 
   // Set the spacing parameters
   SpacingType fieldSpacing = this->m_DisplacementField->GetSpacing();
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     this->m_FixedParameters[2 * NDimensions + i] = static_cast<FixedParametersValueType>(fieldSpacing[i]);
   }
 
   // Set the direction parameters
   DirectionType fieldDirection = this->m_DisplacementField->GetDirection();
-  for (unsigned int di = 0; di < NDimensions; di++)
+  for (unsigned int di = 0; di < NDimensions; ++di)
   {
-    for (unsigned int dj = 0; dj < NDimensions; dj++)
+    for (unsigned int dj = 0; dj < NDimensions; ++dj)
     {
       this->m_FixedParameters[3 * NDimensions + (di * NDimensions + dj)] =
         static_cast<FixedParametersValueType>(fieldDirection[di][dj]);

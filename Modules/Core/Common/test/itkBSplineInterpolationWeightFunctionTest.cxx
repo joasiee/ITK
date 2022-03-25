@@ -26,6 +26,15 @@
 // compiler bug.
 template class itk::BSplineInterpolationWeightFunction<float, 2U, 1U>;
 
+
+// Test NumberOfWeights:
+static_assert((itk::BSplineInterpolationWeightFunction<float, 2, 1>::NumberOfWeights == 4) &&
+                (itk::BSplineInterpolationWeightFunction<float, 2, 2>::NumberOfWeights == 9) &&
+                (itk::BSplineInterpolationWeightFunction<float, 2, 3>::NumberOfWeights == 16) &&
+                (itk::BSplineInterpolationWeightFunction<float, 3, 3>::NumberOfWeights == 64),
+              "NumberOfWeights must be (SplineOrder+1) ^ SpaceDimension");
+
+
 /*
  * This test exercises methods in the
  * BSplineInterpolationWeightFunction class.
@@ -47,13 +56,10 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
     using IndexType = FunctionType::IndexType;
     using WeightsType = FunctionType::WeightsType;
 
-    FunctionType::Pointer function = FunctionType::New();
+    auto function = FunctionType::New();
 
     WeightsType weights1;
     WeightsType weights2;
-
-    weights1.SetSize(SplineOrder + 1);
-    weights2.SetSize(SplineOrder + 1);
 
     ContinuousIndexType position1;
     ContinuousIndexType position2;
@@ -80,7 +86,7 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
       const double tolerance = 1e-6;
       bool         symmetryForXBroken = false;
 
-      for (unsigned int nw = 0; nw < numberOfWeigts - indexDifference; nw++)
+      for (unsigned int nw = 0; nw < numberOfWeigts - indexDifference; ++nw)
       {
         if (itk::Math::abs(weights1[nw] - weights2[numberOfWeigts - nw - 1 - indexDifference]) > tolerance)
         {
@@ -94,22 +100,22 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
         std::cerr << "Error in weights symmetry for X = " << x << std::endl;
         testFailed = true;
         std::cerr << "indexDifference= " << indexDifference << std::endl;
-        for (unsigned int nw = 0; nw < numberOfWeigts; nw++)
+        for (unsigned int nw = 0; nw < numberOfWeigts; ++nw)
         {
           std::cerr << weights1[nw] << "\t";
         }
         std::cerr << std::endl;
-        for (unsigned int nw = 0; nw < numberOfWeigts; nw++)
+        for (unsigned int nw = 0; nw < numberOfWeigts; ++nw)
         {
           std::cerr << weights2[nw] << "\t";
         }
         std::cerr << std::endl;
-        for (unsigned int sd = 0; sd < SpaceDimension; sd++)
+        for (unsigned int sd = 0; sd < SpaceDimension; ++sd)
         {
           std::cerr << startIndex1[sd] << "\t";
         }
         std::cerr << std::endl;
-        for (unsigned int sd = 0; sd < SpaceDimension; sd++)
+        for (unsigned int sd = 0; sd < SpaceDimension; ++sd)
         {
           std::cerr << startIndex2[sd] << "\t";
         }
@@ -137,13 +143,10 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
     using IndexType = FunctionType::IndexType;
     using WeightsType = FunctionType::WeightsType;
 
-    FunctionType::Pointer function = FunctionType::New();
+    auto function = FunctionType::New();
 
     WeightsType weights1;
     WeightsType weights2;
-
-    weights1.SetSize(SplineOrder + 1);
-    weights2.SetSize(SplineOrder + 1);
 
     ContinuousIndexType position1;
     ContinuousIndexType position2;
@@ -170,7 +173,7 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
       const double tolerance = 1e-6;
       bool         symmetryForXBroken = false;
 
-      for (unsigned int nw = 0; nw < numberOfWeigts - indexDifference; nw++)
+      for (unsigned int nw = 0; nw < numberOfWeigts - indexDifference; ++nw)
       {
         if (itk::Math::abs(weights1[nw] - weights2[numberOfWeigts - nw - 1 - indexDifference]) > tolerance)
         {
@@ -184,22 +187,22 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
         std::cerr << "Error in weights symmetry for X = " << x << std::endl;
         testFailed = true;
         std::cerr << "indexDifference= " << indexDifference << std::endl;
-        for (unsigned int nw = 0; nw < numberOfWeigts; nw++)
+        for (unsigned int nw = 0; nw < numberOfWeigts; ++nw)
         {
           std::cerr << weights1[nw] << "\t";
         }
         std::cerr << std::endl;
-        for (unsigned int nw = 0; nw < numberOfWeigts; nw++)
+        for (unsigned int nw = 0; nw < numberOfWeigts; ++nw)
         {
           std::cerr << weights2[nw] << "\t";
         }
         std::cerr << std::endl;
-        for (unsigned int sd = 0; sd < SpaceDimension; sd++)
+        for (unsigned int sd = 0; sd < SpaceDimension; ++sd)
         {
           std::cerr << startIndex1[sd] << "\t";
         }
         std::cerr << std::endl;
-        for (unsigned int sd = 0; sd < SpaceDimension; sd++)
+        for (unsigned int sd = 0; sd < SpaceDimension; ++sd)
         {
           std::cerr << startIndex2[sd] << "\t";
         }
@@ -228,11 +231,11 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
     using WeightsType = FunctionType::WeightsType;
     using SizeType = FunctionType::SizeType;
 
-    FunctionType::Pointer function = FunctionType::New();
+    auto function = FunctionType::New();
     function->Print(std::cout);
 
-    SizeType      size = function->GetSupportSize();
-    unsigned long numberOfWeights = function->GetNumberOfWeights();
+    SizeType      size = FunctionType::SupportSize;
+    unsigned long numberOfWeights = FunctionType::NumberOfWeights;
 
     std::cout << "Number Of Weights: " << numberOfWeights << std::endl;
 
@@ -254,10 +257,10 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
 
     // Check for accuracy
     using KernelType = itk::BSplineKernelFunction<SplineOrder>;
-    KernelType::Pointer kernel = KernelType::New();
+    auto kernel = KernelType::New();
 
     using ImageType = itk::Image<char, SpaceDimension>;
-    ImageType::Pointer    image = ImageType::New();
+    auto                  image = ImageType::New();
     ImageType::RegionType region;
     region.SetIndex(startIndex);
     region.SetSize(size);
@@ -273,7 +276,7 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
     {
 
       double value = 1.0;
-      for (unsigned int j = 0; j < SpaceDimension; j++)
+      for (unsigned int j = 0; j < SpaceDimension; ++j)
       {
         value *= kernel->Evaluate(static_cast<double>(iter.GetIndex()[j]) - position[j]);
       }

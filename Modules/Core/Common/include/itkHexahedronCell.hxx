@@ -71,8 +71,8 @@ HexahedronCell<TCellInterface>::GetNumberOfPoints() const
  * Get the number of boundary features of the given dimension.
  */
 template <typename TCellInterface>
-typename HexahedronCell<TCellInterface>::CellFeatureCount
-HexahedronCell<TCellInterface>::GetNumberOfBoundaryFeatures(int dimension) const
+auto
+HexahedronCell<TCellInterface>::GetNumberOfBoundaryFeatures(int dimension) const -> CellFeatureCount
 {
   switch (dimension)
   {
@@ -192,8 +192,8 @@ HexahedronCell<TCellInterface>::SetPointId(int localId, PointIdentifier ptId)
  * Get a begin iterator to the list of point identifiers used by the cell.
  */
 template <typename TCellInterface>
-typename HexahedronCell<TCellInterface>::PointIdIterator
-HexahedronCell<TCellInterface>::PointIdsBegin()
+auto
+HexahedronCell<TCellInterface>::PointIdsBegin() -> PointIdIterator
 {
   return &m_PointIds[0];
 }
@@ -204,8 +204,8 @@ HexahedronCell<TCellInterface>::PointIdsBegin()
  * by the cell.
  */
 template <typename TCellInterface>
-typename HexahedronCell<TCellInterface>::PointIdConstIterator
-HexahedronCell<TCellInterface>::PointIdsBegin() const
+auto
+HexahedronCell<TCellInterface>::PointIdsBegin() const -> PointIdConstIterator
 {
   return &m_PointIds[0];
 }
@@ -215,8 +215,8 @@ HexahedronCell<TCellInterface>::PointIdsBegin() const
  * Get an end iterator to the list of point identifiers used by the cell.
  */
 template <typename TCellInterface>
-typename HexahedronCell<TCellInterface>::PointIdIterator
-HexahedronCell<TCellInterface>::PointIdsEnd()
+auto
+HexahedronCell<TCellInterface>::PointIdsEnd() -> PointIdIterator
 {
   return &m_PointIds[Self::NumberOfPoints - 1] + 1;
 }
@@ -227,8 +227,8 @@ HexahedronCell<TCellInterface>::PointIdsEnd()
  * by the cell.
  */
 template <typename TCellInterface>
-typename HexahedronCell<TCellInterface>::PointIdConstIterator
-HexahedronCell<TCellInterface>::PointIdsEnd() const
+auto
+HexahedronCell<TCellInterface>::PointIdsEnd() const -> PointIdConstIterator
 {
   return &m_PointIds[Self::NumberOfPoints - 1] + 1;
 }
@@ -238,8 +238,8 @@ HexahedronCell<TCellInterface>::PointIdsEnd() const
  * Get the number of vertices defining the hexahedron.
  */
 template <typename TCellInterface>
-typename HexahedronCell<TCellInterface>::CellFeatureCount
-HexahedronCell<TCellInterface>::GetNumberOfVertices() const
+auto
+HexahedronCell<TCellInterface>::GetNumberOfVertices() const -> CellFeatureCount
 {
   return Self::NumberOfVertices;
 }
@@ -249,8 +249,8 @@ HexahedronCell<TCellInterface>::GetNumberOfVertices() const
  * Get the number of edges defined for the hexahedron.
  */
 template <typename TCellInterface>
-typename HexahedronCell<TCellInterface>::CellFeatureCount
-HexahedronCell<TCellInterface>::GetNumberOfEdges() const
+auto
+HexahedronCell<TCellInterface>::GetNumberOfEdges() const -> CellFeatureCount
 {
   return Self::NumberOfEdges;
 }
@@ -260,8 +260,8 @@ HexahedronCell<TCellInterface>::GetNumberOfEdges() const
  * Get the number of faces defined for the hexahedron.
  */
 template <typename TCellInterface>
-typename HexahedronCell<TCellInterface>::CellFeatureCount
-HexahedronCell<TCellInterface>::GetNumberOfFaces() const
+auto
+HexahedronCell<TCellInterface>::GetNumberOfFaces() const -> CellFeatureCount
 {
   return Self::NumberOfFaces;
 }
@@ -386,7 +386,7 @@ HexahedronCell<TCellInterface>::EvaluatePosition(CoordRepType *            x,
       }
     }
 
-    for (unsigned int i = 0; i < Self::PointDimension3D; i++)
+    for (unsigned int i = 0; i < Self::PointDimension3D; ++i)
     {
       fcol[i] -= x[i];
     }
@@ -680,11 +680,11 @@ HexahedronCell<TCellInterface>::EvaluateLocation(int &                     itkNo
     // NOTE: Avoid compiler warning.  The code below only runs if PointType::Dimension == Self::PointDimension3D
     constexpr unsigned int PREVENT_OVERRUN_OF_INVALID_INSTANTIATIONS =
       hexahedron_constexpr_min(PointType::Dimension, Self::PointDimension3D);
-    for (unsigned int i = 0; i < Self::NumberOfPoints; i++)
+    for (unsigned int i = 0; i < Self::NumberOfPoints; ++i)
     {
       const PointType pt{ points->GetElement(m_PointIds[i]) };
 
-      for (unsigned int j = 0; j < PREVENT_OVERRUN_OF_INVALID_INSTANTIATIONS; j++)
+      for (unsigned int j = 0; j < PREVENT_OVERRUN_OF_INVALID_INSTANTIATIONS; ++j)
       {
         const CoordRepType t = pt[j] * weights[i];
         x[j] += t;

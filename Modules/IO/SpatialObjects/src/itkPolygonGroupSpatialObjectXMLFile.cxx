@@ -20,12 +20,12 @@
 #include "itksys/SystemTools.hxx"
 #include "itkMetaDataObject.h"
 #include "itkIOCommon.h"
-#define RAISE_EXCEPTION(s)                                                                                             \
-  {                                                                                                                    \
-    ExceptionObject exception(__FILE__, __LINE__);                                                                     \
-    exception.SetDescription(s);                                                                                       \
-    throw exception;                                                                                                   \
-  }                                                                                                                    \
+#define RAISE_EXCEPTION(s)                         \
+  {                                                \
+    ExceptionObject exception(__FILE__, __LINE__); \
+    exception.SetDescription(s);                   \
+    throw exception;                               \
+  }                                                \
   ITK_MACROEND_NOOP_STATEMENT
 
 namespace itk
@@ -142,7 +142,7 @@ void
 PolygonGroupSpatialObjectXMLFileReader::CharacterDataHandler(const char * inData, int inLength)
 {
   m_CurCharacterData = "";
-  for (int i = 0; i < inLength; i++)
+  for (int i = 0; i < inLength; ++i)
   {
     m_CurCharacterData = m_CurCharacterData + inData[i];
   }

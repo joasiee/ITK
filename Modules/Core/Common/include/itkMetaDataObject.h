@@ -130,11 +130,33 @@ public:
   void
   Print(std::ostream & os) const override;
 
+  /** Returns (metaDataObject1 == metaDataObject2). */
+  friend bool
+  operator==(const Self & lhs, const Self & rhs)
+  {
+    return lhs.m_MetaDataObjectValue == rhs.m_MetaDataObjectValue;
+  }
+
+  /** Returns (metaDataObject1 != metaDataObject2). */
+  friend bool
+  operator!=(const Self & lhs, const Self & rhs)
+  {
+    return !(lhs == rhs);
+  }
+
 protected:
   MetaDataObject() = default;
   ~MetaDataObject() override = default;
 
 private:
+  /** Internal helper function used to implement operator== for MetaDataObjectBase. */
+  bool
+  Equal(const MetaDataObjectBase & metaDataObjectBase) const override
+  {
+    const auto metaDataObject = dynamic_cast<const Self *>(&metaDataObjectBase);
+    return (metaDataObject != nullptr) && (*this == *metaDataObject);
+  }
+
   /**
    * A variable to store this derived type.
    * \author Hans J. Johnson
@@ -205,11 +227,11 @@ ExposeMetaData(const MetaDataDictionary & Dictionary, const std::string key, T &
  * have operator<< defined.
  * \param TYPE_NAME the native type parameter type
  */
-#define ITK_NATIVE_TYPE_METADATAPRINT(TYPE_NAME)                                                                       \
-  template <>                                                                                                          \
-  void ::itk::MetaDataObject<TYPE_NAME>::Print(std::ostream & os) const                                                \
-  {                                                                                                                    \
-    os << this->m_MetaDataObjectValue << std::endl;                                                                    \
+#define ITK_NATIVE_TYPE_METADATAPRINT(TYPE_NAME)                        \
+  template <>                                                           \
+  void ::itk::MetaDataObject<TYPE_NAME>::Print(std::ostream & os) const \
+  {                                                                     \
+    os << this->m_MetaDataObjectValue << std::endl;                     \
   }
 
 /**
@@ -220,11 +242,11 @@ ExposeMetaData(const MetaDataDictionary & Dictionary, const std::string key, T &
  * \param TYPE_NAME_PART1
  * \param TYPE_NAME_PART2
  */
-#define ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(TYPE_NAME_PART1, TYPE_NAME_PART2)                                         \
-  template <>                                                                                                          \
-  void itk::MetaDataObject<TYPE_NAME_PART1, TYPE_NAME_PART2>::Print(std::ostream & os) const                           \
-  {                                                                                                                    \
-    this->m_MetaDataObjectValue->Print(os);                                                                            \
+#define ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(TYPE_NAME_PART1, TYPE_NAME_PART2)               \
+  template <>                                                                                \
+  void itk::MetaDataObject<TYPE_NAME_PART1, TYPE_NAME_PART2>::Print(std::ostream & os) const \
+  {                                                                                          \
+    this->m_MetaDataObjectValue->Print(os);                                                  \
   }
 
 /**
@@ -234,14 +256,14 @@ ExposeMetaData(const MetaDataDictionary & Dictionary, const std::string key, T &
  * itk::Image\<STORAGE_TYPE,[1-8]\>\::Pointer
  * \param STORAGE_TYPE The storage type of the image type to print.
  */
-#define ITK_IMAGE_TYPE_METADATAPRINT(STORAGE_TYPE)                                                                     \
-  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 1>::Pointer)                                           \
-  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 2>::Pointer)                                           \
-  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 3>::Pointer)                                           \
-  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 4>::Pointer)                                           \
-  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 5>::Pointer)                                           \
-  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 6>::Pointer)                                           \
-  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 7>::Pointer)                                           \
+#define ITK_IMAGE_TYPE_METADATAPRINT(STORAGE_TYPE)                           \
+  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 1>::Pointer) \
+  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 2>::Pointer) \
+  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 3>::Pointer) \
+  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 4>::Pointer) \
+  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 5>::Pointer) \
+  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 6>::Pointer) \
+  ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 7>::Pointer) \
   ITK_OBJECT_TYPE_METADATAPRINT_1COMMA(itk::Image<STORAGE_TYPE, 8>::Pointer)
 
 #ifndef ITK_MANUAL_INSTANTIATION

@@ -157,14 +157,14 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::UpdateTra
 
   if (factor == 1.0)
   {
-    for (NumberOfParametersType k = 0; k < numberOfParameters; k++)
+    for (NumberOfParametersType k = 0; k < numberOfParameters; ++k)
     {
       this->m_InternalParametersBuffer[k] += update[k];
     }
   }
   else
   {
-    for (NumberOfParametersType k = 0; k < numberOfParameters; k++)
+    for (NumberOfParametersType k = 0; k < numberOfParameters; ++k)
     {
       this->m_InternalParametersBuffer[k] += update[k] * factor;
     }
@@ -198,7 +198,7 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::WrapAsIma
   auto *                       dataPointer = const_cast<PixelType *>(this->m_InternalParametersBuffer.data_block());
   const NumberOfParametersType numberOfPixels = this->GetNumberOfParametersPerDimension();
 
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     this->m_CoefficientImages[j]->GetPixelContainer()->SetImportPointer(dataPointer + j * numberOfPixels,
                                                                         numberOfPixels);
@@ -207,16 +207,17 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::WrapAsIma
 
 // Get the parameters
 template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
-const typename BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::ParametersType &
-BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::GetParameters() const
+auto
+BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::GetParameters() const -> const ParametersType &
 {
   return this->m_InternalParametersBuffer;
 }
 
 // Get the parameters
 template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
-const typename BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::FixedParametersType &
+auto
 BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::GetFixedParameters() const
+  -> const FixedParametersType &
 {
   // HACK:  This should not be necessary if the
   //       class is kept in a consistent state
@@ -232,7 +233,7 @@ BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::PrintSelf
   this->Superclass::PrintSelf(os, indent);
 
   os << indent << "CoefficientImage: [ ";
-  for (unsigned int j = 0; j < SpaceDimension - 1; j++)
+  for (unsigned int j = 0; j < SpaceDimension - 1; ++j)
   {
     os << this->m_CoefficientImages[j].GetPointer() << ", ";
   }
@@ -291,18 +292,19 @@ template <typename TParametersValueType, unsigned int NDimensions, unsigned int 
 unsigned int
 BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::GetNumberOfAffectedWeights() const
 {
-  return this->m_WeightsFunction->GetNumberOfWeights();
+  return WeightsFunctionType::NumberOfWeights;
 }
 
 // This helper class is used to work around a race condition where the dynamically
 // generated images must exist before the references to the sub-sections are created.
 template <typename TParametersValueType, unsigned int NDimensions, unsigned int VSplineOrder>
-typename BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::CoefficientImageArray
+auto
 BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::ArrayOfImagePointerGeneratorHelper()
+  -> CoefficientImageArray
 {
   CoefficientImageArray tempArrayOfPointers;
 
-  for (unsigned int j = 0; j < SpaceDimension; j++)
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     tempArrayOfPointers[j] = ImageType::New();
   }
@@ -315,8 +317,8 @@ typename BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::
 BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>::TransformPoint(
   const InputPointType & point) const
 {
-  WeightsType             weights(this->m_WeightsFunction->GetNumberOfWeights());
-  ParameterIndexArrayType indices(this->m_WeightsFunction->GetNumberOfWeights());
+  WeightsType             weights;
+  ParameterIndexArrayType indices;
   OutputPointType         outputPoint;
   bool                    inside;
 

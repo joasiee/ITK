@@ -39,16 +39,12 @@ public:
   ComplexToImaginary() = default;
   ~ComplexToImaginary() = default;
   bool
-  operator!=(const ComplexToImaginary &) const
+  operator==(const ComplexToImaginary &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const ComplexToImaginary & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ComplexToImaginary);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -59,7 +55,7 @@ public:
 } // namespace Functor
 
 template <typename TInputImage, typename TOutputImage>
-class ComplexToImaginaryImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT ComplexToImaginaryImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ComplexToImaginaryImageFilter);

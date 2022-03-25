@@ -39,7 +39,7 @@ itkMeshSpatialObjectIOTest(int argc, char * argv[])
 
   // Create an itkMesh
   std::cout << "Creating Mesh File: ";
-  MeshType::Pointer mesh = MeshType::New();
+  auto mesh = MeshType::New();
 
   MeshType::CoordRepType testPointCoords[8][3] = { { 0, 1, 2 }, { 1, 2, 3 }, { 2, 3, 4 }, { 3, 4, 5 },
                                                    { 4, 5, 6 }, { 5, 6, 7 }, { 6, 7, 8 }, { 7, 8, 9 } };
@@ -69,12 +69,12 @@ itkMeshSpatialObjectIOTest(int argc, char * argv[])
 
   // Add cell links
   using CellLinksContainerType = MeshType::CellLinksContainer;
-  CellLinksContainerType::Pointer   linkContainer = CellLinksContainerType::New();
+  auto                              linkContainer = CellLinksContainerType::New();
   MeshType::PointCellLinksContainer pcl;
 
-  for (j = 0; j < 3; j++)
+  for (j = 0; j < 3; ++j)
   {
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < 5; ++i)
     {
       pcl.insert(j + i);
     }
@@ -85,10 +85,10 @@ itkMeshSpatialObjectIOTest(int argc, char * argv[])
 
   // Add point data
   using PointDataContainer = MeshType::PointDataContainer;
-  PointDataContainer::Pointer pointData = PointDataContainer::New();
+  auto pointData = PointDataContainer::New();
 
   float data = 0.1;
-  for (j = 0; j < 2; j++)
+  for (j = 0; j < 2; ++j)
   {
     pointData->SetElement(j, data);
     data += (float)0.1;
@@ -97,10 +97,10 @@ itkMeshSpatialObjectIOTest(int argc, char * argv[])
 
   // Add cell data
   using CellDataContainer = MeshType::CellDataContainer;
-  CellDataContainer::Pointer cellData = CellDataContainer::New();
+  auto cellData = CellDataContainer::New();
 
   data = 0.9;
-  for (j = 0; j < 3; j++)
+  for (j = 0; j < 3; ++j)
   {
     cellData->SetElement(j, data);
     data -= (float)0.2;
@@ -108,7 +108,7 @@ itkMeshSpatialObjectIOTest(int argc, char * argv[])
   mesh->SetCellData(cellData);
 
   // Create the mesh Spatial Object
-  MeshSpatialObjectType::Pointer meshSO = MeshSpatialObjectType::New();
+  auto meshSO = MeshSpatialObjectType::New();
   meshSO->SetMesh(mesh);
   meshSO->SetId(3);
   std::cout << "[PASSED]" << std::endl;
@@ -116,7 +116,7 @@ itkMeshSpatialObjectIOTest(int argc, char * argv[])
   // Writing the file
   std::cout << "Testing Writing MeshSpatialObject: ";
   using WriterType = itk::SpatialObjectWriter<3, float, MeshTrait>;
-  WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   writer->SetInput(meshSO);
   if ((argc > 2) && (!strcmp(argv[2], "binary")))
   {
@@ -130,7 +130,7 @@ itkMeshSpatialObjectIOTest(int argc, char * argv[])
   // Reading the file
   std::cout << "Testing Reading MeshSpatialObject: ";
   using ReaderType = itk::SpatialObjectReader<3, float, MeshTrait>;
-  ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   if ((argc > 2) && (strcmp(argv[2], "binary")))
   {
     reader->SetFileName(argv[2]);
@@ -181,7 +181,7 @@ itkMeshSpatialObjectIOTest(int argc, char * argv[])
       std::cout << "Index = " << (*it_points)->Index() << " v.s. " << j << std::endl;
       return EXIT_FAILURE;
     }
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
       if (itk::Math::NotExactlyEquals(((*it_points)->Value())[i], j + i))
       {

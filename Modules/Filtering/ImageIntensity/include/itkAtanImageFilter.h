@@ -37,16 +37,12 @@ public:
   Atan() = default;
   ~Atan() = default;
   bool
-  operator!=(const Atan &) const
+  operator==(const Atan &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Atan & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Atan);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -76,7 +72,7 @@ public:
  * \ingroup ITKImageIntensity
  */
 template <typename TInputImage, typename TOutputImage>
-class AtanImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT AtanImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(AtanImageFilter);

@@ -16,6 +16,7 @@
  *
  *=========================================================================*/
 
+#define ITK_LEGACY_TEST
 #include "itkGTest.h"
 #include "itkBSplineTransform.h"
 
@@ -86,8 +87,8 @@ TEST(ITKBSplineTransform, Construction)
 
   using BSplineType = itk::BSplineTransform<double, 3, 3>;
 
-  BSplineType::Pointer bspline1 = BSplineType::New();
-  BSplineType::Pointer bspline2 = BSplineType::New();
+  auto bspline1 = BSplineType::New();
+  auto bspline2 = BSplineType::New();
 
   bspline_eq(bspline1.GetPointer(), bspline1.GetPointer());
   bspline_eq(bspline2.GetPointer(), bspline2.GetPointer());
@@ -111,14 +112,14 @@ TEST(ITKBSplineTransform, Copying_Clone)
 
   ASSERT_EQ(coeffImageArray.Size(), 2);
 
-  SizeType      imageSize = MakeSize(10, 10);
+  SizeType      imageSize = itk::MakeSize(10, 10);
   DirectionType imageDirection; // filled with zeros
   imageDirection(0, 1) = -1;
   imageDirection(1, 0) = 1;
 
-  VectorType imageSpacing = MakeVector(1.1, 1.2);
+  VectorType imageSpacing = itk::MakeVector(1.1, 1.2);
 
-  PointType imageOrigin = MakePoint(0.9, 0.8);
+  PointType imageOrigin = itk::MakePoint(0.9, 0.8);
 
   coeffImageArray[0] = ImageType::New();
 
@@ -148,17 +149,17 @@ TEST(ITKBSplineTransform, Copying_Clone)
     }
   }
 
-  BSplineType::Pointer bspline1 = BSplineType::New();
+  auto bspline1 = BSplineType::New();
   bspline1->SetCoefficientImages(coeffImageArray);
 
   bspline_eq(bspline1.GetPointer(), bspline1.GetPointer(), "Check after initialization by coefficient images.");
 
-  ITK_EXPECT_VECTOR_NEAR(bspline1->GetTransformDomainOrigin(), MakePoint(-0.3, 1.9), 1e-15);
+  ITK_EXPECT_VECTOR_NEAR(bspline1->GetTransformDomainOrigin(), itk::MakePoint(-0.3, 1.9), 1e-15);
   EXPECT_EQ(bspline1->GetTransformDomainDirection(), imageDirection);
-  EXPECT_EQ(bspline1->GetTransformDomainMeshSize(), MakeSize(7, 7));
-  ITK_EXPECT_VECTOR_NEAR(bspline1->GetTransformDomainPhysicalDimensions(), MakeVector(7.7, 8.4), 1e-15);
+  EXPECT_EQ(bspline1->GetTransformDomainMeshSize(), itk::MakeSize(7, 7));
+  ITK_EXPECT_VECTOR_NEAR(bspline1->GetTransformDomainPhysicalDimensions(), itk::MakeVector(7.7, 8.4), 1e-15);
 
-  BSplineType::Pointer bspline2 = BSplineType::New();
+  auto bspline2 = BSplineType::New();
   bspline2->SetFixedParameters(bspline1->GetFixedParameters());
   bspline2->SetParameters(bspline1->GetParameters());
 
@@ -177,4 +178,30 @@ TEST(ITKBSplineTransform, Copying_Clone)
 
   bspline2 = bspline1->Clone();
   bspline_eq(bspline1.GetPointer(), bspline2.GetPointer(), "Clone");
+}
+
+
+TEST(ITKBSplineTransform, NumberOfWeights)
+{
+  const auto testNumberOfWeights = [](const auto & bsplineTransform) {
+    using BSplineTransformType = std::remove_reference_t<decltype(bsplineTransform)>;
+
+    constexpr auto actualNumberOfWeights = BSplineTransformType::NumberOfWeights;
+
+#ifndef ITK_LEGACY_REMOVE
+    EXPECT_EQ(actualNumberOfWeights, bsplineTransform.GetNumberOfWeights());
+#endif
+
+    // Expect the actual value of `NumberOfWeights` to be equal to the value of `m_NumberOfWeights` from ITK 5.2 (before
+    // the introduction of `BSplineTransform::NumberOfWeights`), as was originally initialized at
+    // https://github.com/InsightSoftwareConsortium/ITK/blob/v5.2.0/Modules/Core/Common/include/itkBSplineInterpolationWeightFunction.hxx#L35
+    EXPECT_EQ(actualNumberOfWeights,
+              static_cast<unsigned int>(std::pow(static_cast<double>(BSplineTransformType::SplineOrder + 1),
+                                                 static_cast<double>(BSplineTransformType::SpaceDimension))));
+  };
+
+  testNumberOfWeights(*itk::BSplineTransform<>::New());
+  testNumberOfWeights(*itk::BSplineTransform<float>::New());
+  testNumberOfWeights(*itk::BSplineTransform<float, 2>::New());
+  testNumberOfWeights(*itk::BSplineTransform<float, 2, 2>::New());
 }

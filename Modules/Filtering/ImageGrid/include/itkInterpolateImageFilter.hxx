@@ -33,7 +33,7 @@ InterpolateImageFilter<TInputImage, TOutputImage>::InterpolateImageFilter()
 
   // Set default interpolator to linear
   using LinearInterpolatorType = LinearInterpolateImageFunction<IntermediateImageType>;
-  typename LinearInterpolatorType::Pointer interpolator = LinearInterpolatorType::New();
+  auto interpolator = LinearInterpolatorType::New();
 
   m_Interpolator = static_cast<InterpolatorType *>(interpolator.GetPointer());
 
@@ -56,8 +56,8 @@ InterpolateImageFilter<TInputImage, TOutputImage>::SetInput2(const InputImageTyp
 
 
 template <typename TInputImage, typename TOutputImage>
-const typename InterpolateImageFilter<TInputImage, TOutputImage>::InputImageType *
-InterpolateImageFilter<TInputImage, TOutputImage>::GetInput2()
+auto
+InterpolateImageFilter<TInputImage, TOutputImage>::GetInput2() -> const InputImageType *
 {
   return static_cast<const TInputImage *>(this->ProcessObject::GetInput(1));
 }

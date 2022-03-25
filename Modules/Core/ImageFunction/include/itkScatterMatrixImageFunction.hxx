@@ -47,8 +47,8 @@ ScatterMatrixImageFunction<TInputImage, TCoordRep>::PrintSelf(std::ostream & os,
  *
  */
 template <typename TInputImage, typename TCoordRep>
-typename ScatterMatrixImageFunction<TInputImage, TCoordRep>::RealType
-ScatterMatrixImageFunction<TInputImage, TCoordRep>::EvaluateAtIndex(const IndexType & index) const
+auto
+ScatterMatrixImageFunction<TInputImage, TCoordRep>::EvaluateAtIndex(const IndexType & index) const -> RealType
 {
   RealType covariance;
 
@@ -88,18 +88,18 @@ ScatterMatrixImageFunction<TInputImage, TCoordRep>::EvaluateAtIndex(const IndexT
   const unsigned int size = it.Size();
   for (unsigned int i = 0; i < size; ++i)
   {
-    for (unsigned int dimx = 0; dimx < VectorDimension; dimx++)
+    for (unsigned int dimx = 0; dimx < VectorDimension; ++dimx)
     {
-      for (unsigned int dimy = 0; dimy < VectorDimension; dimy++)
+      for (unsigned int dimy = 0; dimy < VectorDimension; ++dimy)
       {
         covariance[dimx][dimy] += static_cast<PixelComponentRealType>(it.GetPixel(i)[dimx]) *
                                   static_cast<PixelComponentRealType>(it.GetPixel(i)[dimy]);
       }
     }
   }
-  for (unsigned int dimx = 0; dimx < VectorDimension; dimx++)
+  for (unsigned int dimx = 0; dimx < VectorDimension; ++dimx)
   {
-    for (unsigned int dimy = 0; dimy < VectorDimension; dimy++)
+    for (unsigned int dimy = 0; dimy < VectorDimension; ++dimy)
     {
       covariance[dimx][dimy] /= double(size);
     }

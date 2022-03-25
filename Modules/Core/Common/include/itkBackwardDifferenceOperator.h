@@ -52,12 +52,15 @@ public:
   using Self = BackwardDifferenceOperator;
   using Superclass = NeighborhoodOperator<TPixel, TDimension, TAllocator>;
 
-  /** From Superclass */
-  using PixelType = typename Superclass::PixelType;
+  /** Run-time type information (and related methods). */
+  itkTypeMacro(BackwardDifferenceOperator, NeighborhoodOperator);
+
+  /** Type alias support for pixel type. */
+  using PixelType = TPixel;
 
 protected:
-  /** Necessary to work around a compiler bug in VC++. */
-  using CoefficientVector = typename Superclass::CoefficientVector;
+  /** Type alias support for coefficient vector type.*/
+  using typename Superclass::CoefficientVector;
 
   /** Calculates operator coefficients. */
   CoefficientVector

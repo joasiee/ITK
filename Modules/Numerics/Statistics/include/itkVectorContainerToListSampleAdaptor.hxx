@@ -36,21 +36,12 @@ VectorContainerToListSampleAdaptor<TVectorContainer>::PrintSelf(std::ostream & o
 {
   Superclass::PrintSelf(os, indent);
 
-  os << indent << "VectorContainer: ";
-  if (this->m_VectorContainer.IsNotNull())
-  {
-    os << this->m_VectorContainer << std::endl;
-  }
-  else
-  {
-    os << "not set." << std::endl;
-  }
+  itkPrintSelfObjectMacro(VectorContainer);
 }
 
-/** returns the number of measurement vectors in this container*/
 template <typename TVectorContainer>
-typename VectorContainerToListSampleAdaptor<TVectorContainer>::InstanceIdentifier
-VectorContainerToListSampleAdaptor<TVectorContainer>::Size() const
+auto
+VectorContainerToListSampleAdaptor<TVectorContainer>::Size() const -> InstanceIdentifier
 {
   if (this->m_VectorContainer.IsNull())
   {
@@ -85,8 +76,8 @@ inline typename VectorContainerToListSampleAdaptor<TVectorContainer>::AbsoluteFr
 }
 
 template <typename TVectorContainer>
-typename VectorContainerToListSampleAdaptor<TVectorContainer>::TotalAbsoluteFrequencyType
-VectorContainerToListSampleAdaptor<TVectorContainer>::GetTotalFrequency() const
+auto
+VectorContainerToListSampleAdaptor<TVectorContainer>::GetTotalFrequency() const -> TotalAbsoluteFrequencyType
 {
   if (this->m_VectorContainer.IsNull())
   {

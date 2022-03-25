@@ -99,8 +99,8 @@ CenteredEuler3DTransform<TParametersValueType>::SetParameters(const ParametersTy
 //
 
 template <typename TParametersValueType>
-const typename CenteredEuler3DTransform<TParametersValueType>::ParametersType &
-CenteredEuler3DTransform<TParametersValueType>::GetParameters() const
+auto
+CenteredEuler3DTransform<TParametersValueType>::GetParameters() const -> const ParametersType &
 {
   ParametersType parameters;
 
@@ -170,13 +170,13 @@ CenteredEuler3DTransform<TParametersValueType>::ComputeJacobianWithRespectToPara
 
   // compute derivatives for the center of rotation part
   unsigned int blockOffset = 3;
-  for (unsigned int dim = 0; dim < SpaceDimension; dim++)
+  for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
     jacobian[dim][blockOffset + dim] = 1.0;
   }
   blockOffset += SpaceDimension;
   // compute derivatives for the translation part
-  for (unsigned int dim = 0; dim < SpaceDimension; dim++)
+  for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
     jacobian[dim][blockOffset + dim] = 1.0;
   }
@@ -192,8 +192,8 @@ CenteredEuler3DTransform<TParametersValueType>::GetInverse(Self * inverse) const
 
 // Return an inverse of this transform
 template <typename TParametersValueType>
-typename CenteredEuler3DTransform<TParametersValueType>::InverseTransformBasePointer
-CenteredEuler3DTransform<TParametersValueType>::GetInverseTransform() const
+auto
+CenteredEuler3DTransform<TParametersValueType>::GetInverseTransform() const -> InverseTransformBasePointer
 {
   Pointer inv = New();
 

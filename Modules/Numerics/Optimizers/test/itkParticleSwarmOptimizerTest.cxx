@@ -70,7 +70,7 @@ itkParticleSwarmOptimizerTest(int argc, char * argv[])
   std::cout << "Particle Swarm Optimizer Test \n \n";
 
   success1 = success2 = success3 = 0;
-  for (i = 0; i < allIterations; i++)
+  for (i = 0; i < allIterations; ++i)
   {
     if (EXIT_SUCCESS == PSOTest1())
     {
@@ -111,7 +111,7 @@ PSOTest1()
   // the function we want to optimize
   itk::ParticleSwarmTestF1::Pointer costFunction = itk::ParticleSwarmTestF1::New();
 
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
   itkOptimizer->UseSeedOn();
   itkOptimizer->SetSeed(8775070 + seedOffset++);
 
@@ -209,7 +209,7 @@ PSOTest2()
   // the function we want to optimize
   itk::ParticleSwarmTestF2::Pointer costFunction = itk::ParticleSwarmTestF2::New();
 
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
   itkOptimizer->UseSeedOn();
   itkOptimizer->SetSeed(8775070 + seedOffset++);
 
@@ -288,7 +288,7 @@ PSOTest3()
   // the function we want to optimize
   itk::ParticleSwarmTestF3::Pointer costFunction = itk::ParticleSwarmTestF3::New();
 
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
   itkOptimizer->UseSeedOn();
   itkOptimizer->SetSeed(8775070 + seedOffset++);
 

@@ -36,7 +36,7 @@ NarrowBandImageFilterBase<TInputImage, TOutputImage>::CopyInputToOutput()
 {
   //   First need to subtract the iso-surface value from the input image.
   using ShiftScaleFilterType = ShiftScaleImageFilter<InputImageType, OutputImageType>;
-  typename ShiftScaleFilterType::Pointer shiftScaleFilter = ShiftScaleFilterType::New();
+  auto shiftScaleFilter = ShiftScaleFilterType::New();
   shiftScaleFilter->SetInput(this->GetInput());
   shiftScaleFilter->SetShift(-m_IsoSurfaceValue);
   shiftScaleFilter->Update();
@@ -198,7 +198,7 @@ void
 NarrowBandImageFilterBase<TInputImage, TOutputImage>::InitializeIteration()
 {
   // Set m_Touched flag from threads information
-  for (ThreadIdType i = 0; i < this->GetNumberOfWorkUnits(); i++)
+  for (ThreadIdType i = 0; i < this->GetNumberOfWorkUnits(); ++i)
   {
     m_Touched = (m_Touched || m_TouchedForThread[i]);
     m_TouchedForThread[i] = false;
@@ -242,8 +242,9 @@ NarrowBandImageFilterBase<TInputImage, TOutputImage>::ThreadedApplyUpdate(const 
 }
 
 template <typename TInputImage, typename TOutputImage>
-typename NarrowBandImageFilterBase<TInputImage, TOutputImage>::TimeStepType
+auto
 NarrowBandImageFilterBase<TInputImage, TOutputImage>::ThreadedCalculateChange(const ThreadRegionType & regionToProcess)
+  -> TimeStepType
 {
   using OutputSizeType = typename OutputImageType::SizeType;
 

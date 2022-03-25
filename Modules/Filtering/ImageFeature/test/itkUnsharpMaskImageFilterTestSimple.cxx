@@ -42,7 +42,7 @@ itkUnsharpMaskImageFilterTestSimple(int, char *[])
   using RegionType = itk::ImageRegion<Dimension>;
 
   // Create the input image
-  InputImageType::Pointer inputImage = InputImageType::New();
+  auto inputImage = InputImageType::New();
 
   // Define its size, and start index
   SizeType size;
@@ -89,7 +89,7 @@ itkUnsharpMaskImageFilterTestSimple(int, char *[])
   using GradientImageType = UnsharpMaskImageFilterFilterType::OutputImageType;
 
   // Create the filter
-  UnsharpMaskImageFilterFilterType::Pointer filter = UnsharpMaskImageFilterFilterType::New();
+  auto filter = UnsharpMaskImageFilterFilterType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(filter, UnsharpMaskImageFilter, ImageToImageFilter);
 
@@ -162,7 +162,7 @@ itkUnsharpMaskImageFilterTestSimple(int, char *[])
   start[0] = 9;
   float mins[4] = { -0.21f, -0.33f, 1.32f, 1.20f };
   float maxs[4] = { -0.20f, -0.32f, 1.33f, 1.21f };
-  for (unsigned int i = 0; i < 4; i++)
+  for (unsigned int i = 0; i < 4; ++i)
   {
     if (outputImage->GetPixel(start) < mins[i] || outputImage->GetPixel(start) > maxs[i])
     {

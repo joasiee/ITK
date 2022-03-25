@@ -23,7 +23,7 @@ itkNormalVariateGeneratorTest1(int, char *[])
 {
   using NormalGeneratorType = itk::Statistics::NormalVariateGenerator;
 
-  NormalGeneratorType::Pointer normalGenerator = NormalGeneratorType::New();
+  auto normalGenerator = NormalGeneratorType::New();
 
   normalGenerator->Initialize(101);
 
@@ -36,7 +36,7 @@ itkNormalVariateGeneratorTest1(int, char *[])
   double sum = 0.0;
   double sum2 = 0.0;
 
-  for (unsigned int i = 0; i < numberOfSamples; i++)
+  for (unsigned int i = 0; i < numberOfSamples; ++i)
   {
     const double value = normalGenerator->GetVariate();
     sum += value;

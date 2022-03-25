@@ -36,9 +36,9 @@ testMatrix(const TMatrix & m1, const TMatrix & m2)
   unsigned int i, j;
   bool         pass = true;
 
-  for (i = 0; i < TMatrix::RowDimensions; i++)
+  for (i = 0; i < TMatrix::RowDimensions; ++i)
   {
-    for (j = 0; j < TMatrix::ColumnDimensions; j++)
+    for (j = 0; j < TMatrix::ColumnDimensions; ++j)
     {
       if (std::fabs(m1[i][j] - m2[i][j]) > epsilon)
       {
@@ -55,7 +55,7 @@ testVectorArray(const TVector & v1, const TVector & v2)
 {
   bool pass = true;
 
-  for (unsigned int i = 0; i < v1.Size(); i++)
+  for (unsigned int i = 0; i < v1.Size(); ++i)
   {
     if (std::fabs(v1[i] - v2[i]) > epsilon)
     {
@@ -91,11 +91,11 @@ public:
 
   /** Sub transform type **/
   using TransformType = typename Superclass::TransformType;
-  using TransformTypePointer = typename Superclass::TransformTypePointer;
+  using typename Superclass::TransformTypePointer;
   /** InverseTransform type. */
-  using InverseTransformBasePointer = typename Superclass::InverseTransformBasePointer;
-  using InputPointType = typename Superclass::InputPointType;
-  using JacobianType = typename Superclass::JacobianType;
+  using typename Superclass::InverseTransformBasePointer;
+  using typename Superclass::InputPointType;
+  using typename Superclass::JacobianType;
 
   typename Superclass::OutputPointType
   TransformPoint(const InputPointType & point) const override
@@ -129,7 +129,7 @@ itkMultiTransformTest(int, char *[])
   using Superclass = MultiTransformType::Superclass;
   using ScalarType = Superclass::ScalarType;
 
-  MultiTransformType::Pointer multiTransform = MultiTransformType::New();
+  auto multiTransform = MultiTransformType::New();
 
   /* Test obects */
   using Matrix2Type = itk::Matrix<ScalarType, NDimensions, NDimensions>;
@@ -150,9 +150,9 @@ itkMultiTransformTest(int, char *[])
 
   /* Add an affine transform */
   using AffineType = itk::AffineTransform<ScalarType, NDimensions>;
-  AffineType::Pointer affine = AffineType::New();
-  Matrix2Type         matrix2;
-  Vector2Type         vector2;
+  auto        affine = AffineType::New();
+  Matrix2Type matrix2;
+  Vector2Type vector2;
   matrix2[0][0] = 0;
   matrix2[0][1] = -1;
   matrix2[1][0] = 1;
@@ -281,13 +281,13 @@ itkMultiTransformTest(int, char *[])
   multiTransform->AddTransform(affine);
 
   /* Test inverse */
-  MultiTransformType::Pointer inverseMultiTransform = MultiTransformType::New();
+  auto inverseMultiTransform = MultiTransformType::New();
   if (!multiTransform->GetInverse(inverseMultiTransform))
   {
     std::cout << "ERROR: GetInverse() failed." << std::endl;
     return EXIT_FAILURE;
   }
-  AffineType::Pointer inverseAffine = AffineType::New();
+  auto inverseAffine = AffineType::New();
   if (!affine->GetInverse(inverseAffine))
   {
     std::cout << "FAILED getting inverse of affine." << std::endl;
@@ -321,9 +321,9 @@ itkMultiTransformTest(int, char *[])
 
   /* Create a displacement field transform */
   using DisplacementTransformType = itk::DisplacementFieldTransform<double, NDimensions>;
-  DisplacementTransformType::Pointer displacementTransform = DisplacementTransformType::New();
+  auto displacementTransform = DisplacementTransformType::New();
   using FieldType = DisplacementTransformType::DisplacementFieldType;
-  FieldType::Pointer field = FieldType::New(); // This is based on itk::Image
+  auto field = FieldType::New(); // This is based on itk::Image
 
   FieldType::SizeType   size;
   FieldType::IndexType  start;
@@ -344,7 +344,7 @@ itkMultiTransformTest(int, char *[])
   displacementTransform->SetDisplacementField(field);
 
   /* set inverse field */
-  FieldType::Pointer inverseField = FieldType::New(); // This is based on itk::Image
+  auto inverseField = FieldType::New(); // This is based on itk::Image
   inverseField->SetRegions(region);
   inverseField->Allocate();
   DisplacementTransformType::OutputVectorType inverseVector;
@@ -397,7 +397,7 @@ itkMultiTransformTest(int, char *[])
     return EXIT_FAILURE;
   }
 
-  DisplacementTransformType::Pointer inverseDisplacement = DisplacementTransformType::New();
+  auto inverseDisplacement = DisplacementTransformType::New();
   if (!displacementTransform->GetInverse(inverseDisplacement))
   {
     std::cout << "FAILED getting inverse of displacementTransform." << std::endl;
@@ -447,11 +447,11 @@ itkMultiTransformTest(int, char *[])
   parametersTest = multiTransform->GetParameters();
   parametersTruth.SetSize(displacementParamsN + affineParamsN);
   /* Fill using different method than is used in the class. */
-  for (unsigned int n = 0; n < affineParamsN; n++)
+  for (unsigned int n = 0; n < affineParamsN; ++n)
   {
     parametersTruth.SetElement(n, affine->GetParameters().GetElement(n));
   }
-  for (unsigned int n = 0; n < displacementParamsN; n++)
+  for (unsigned int n = 0; n < displacementParamsN; ++n)
   {
     parametersTruth.SetElement(n + affineParamsN, displacementTransform->GetParameters().GetElement(n));
   }
@@ -494,11 +494,11 @@ itkMultiTransformTest(int, char *[])
   displacementParamsN = displacementTransform->GetFixedParameters().Size();
   parametersTruth.SetSize(displacementParamsN + affineParamsN);
   parametersTruth.Fill(0); // Try this to quiet valgrind
-  for (unsigned int n = 0; n < affineParamsN; n++)
+  for (unsigned int n = 0; n < affineParamsN; ++n)
   {
     parametersTruth.SetElement(n, affine->GetFixedParameters().GetElement(n));
   }
-  for (unsigned int n = 0; n < displacementParamsN; n++)
+  for (unsigned int n = 0; n < displacementParamsN; ++n)
   {
     parametersTruth.SetElement(n + affineParamsN, displacementTransform->GetFixedParameters().GetElement(n));
   }
@@ -548,7 +548,7 @@ itkMultiTransformTest(int, char *[])
   /*
    * Add a third transform
    */
-  AffineType::Pointer affine3 = AffineType::New();
+  auto affine3 = AffineType::New();
   matrix2[0][0] = 0;
   matrix2[0][1] = -1;
   matrix2[1][0] = 1;
@@ -576,7 +576,7 @@ itkMultiTransformTest(int, char *[])
   std::cout << "MultiTransform with 3 transforms: " << std::endl << multiTransform << std::endl;
 
   /* Get inverse */
-  MultiTransformType::Pointer inverseTransform3 = MultiTransformType::New();
+  auto inverseTransform3 = MultiTransformType::New();
   if (!multiTransform->GetInverse(inverseTransform3))
   {
     std::cout << "Failed calling GetInverse() (3)." << std::endl;

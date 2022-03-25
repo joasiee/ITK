@@ -19,16 +19,11 @@
 #include <iostream>
 #include "itkLabelMap.h"
 #include "itkLabelObject.h"
+#include "itkTestingMacros.h"
 
 int
-itkLabelMapTest2(int argc, char * argv[])
+itkLabelMapTest2(int, char *[])
 {
-  if (argc != 1)
-  {
-    std::cerr << "usage: " << argv[0] << "" << std::endl;
-    return EXIT_FAILURE;
-  }
-
   constexpr unsigned int dim = 3;
 
   using LabelObjectType = itk::LabelObject<unsigned long, dim>;
@@ -37,7 +32,7 @@ itkLabelMapTest2(int argc, char * argv[])
   using RegionType = LabelMapType::RegionType;
   using SizeType = LabelMapType::SizeType;
 
-  LabelMapType::Pointer map = LabelMapType::New();
+  auto map = LabelMapType::New();
 
   SizeType sizeIn;
   sizeIn[0] = 10;
@@ -70,7 +65,7 @@ itkLabelMapTest2(int argc, char * argv[])
 
   map->SetBackgroundValue(255);
 
-  LabelObjectType::Pointer lo = LabelObjectType::New();
+  auto lo = LabelObjectType::New();
   lo->SetLabel(1);
 
   IndexType idx;
@@ -109,7 +104,7 @@ itkLabelMapTest2(int argc, char * argv[])
 
   map->AddLabelObject(lo);
 
-  LabelObjectType::Pointer lo2 = LabelObjectType::New();
+  auto lo2 = LabelObjectType::New();
 
   idx[0] = 1;
   idx[1] = 21;

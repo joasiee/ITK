@@ -26,6 +26,8 @@
 
 #include "itkImageMomentsCalculator.h"
 #include "itkStdStreamStateSave.h"
+#include "itkTestingMacros.h"
+
 
 template <typename ImageType>
 int
@@ -42,9 +44,9 @@ test_image_moments(const char * input_image,
 
   using MomentsCalculatorType = itk::ImageMomentsCalculator<ImageType>;
 
-  typename ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
 
-  typename MomentsCalculatorType::Pointer calculator = MomentsCalculatorType::New();
+  auto calculator = MomentsCalculatorType::New();
 
   reader->SetFileName(input_image);
 
@@ -77,7 +79,7 @@ test_image_moments(const char * input_image,
 
   if (output_image)
   {
-    typename WriterType::Pointer writer = WriterType::New();
+    auto writer = WriterType::New();
     writer->SetFileName(output_image);
     writer->SetInput(reader->GetOutput());
     writer->Update();
@@ -97,9 +99,8 @@ itkMINCImageIOTest_2D(int argc, char * argv[])
 
   if (argc < 3)
   {
-    std::cerr << "Missing Arguments " << std::endl;
-    std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << " inputfile outputfile [sum mx my ]" << std::endl;
+    std::cerr << "Missing Parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " inputfile outputfile [sum mx my]" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -122,9 +123,8 @@ itkMINCImageIOTest_2D(int argc, char * argv[])
     }
     else
     {
-      std::cerr << "Incorrecte number of additional arguments " << std::endl;
-      std::cerr << "Usage: " << std::endl;
-      std::cerr << argv[0] << " inputfile outputfile [sum mx my ]" << std::endl;
+      std::cerr << "Incorrect number of additional parameters " << std::endl;
+      std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " inputfile outputfile [sum mx my]" << std::endl;
       return EXIT_FAILURE;
     }
   }
@@ -154,5 +154,7 @@ itkMINCImageIOTest_2D(int argc, char * argv[])
     return EXIT_FAILURE;
   }
 
+
+  std::cout << "Test finished." << std::endl;
   return EXIT_SUCCESS;
 }

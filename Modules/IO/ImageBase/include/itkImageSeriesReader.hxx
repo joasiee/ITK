@@ -123,8 +123,8 @@ ImageSeriesReader<TOutputImage>::GenerateOutputInformation()
   const int firstFileName = (m_ReverseOrder ? numberOfFiles - 1 : 0);
   const int lastFileName = (m_ReverseOrder ? 0 : numberOfFiles - 1);
 
-  typename ReaderType::Pointer firstReader = ReaderType::New();
-  typename ReaderType::Pointer lastReader = ReaderType::New();
+  auto firstReader = ReaderType::New();
+  auto lastReader = ReaderType::New();
   firstReader->SetFileName(m_FileNames[firstFileName].c_str());
   lastReader->SetFileName(m_FileNames[lastFileName].c_str());
   if (m_ImageIO)
@@ -175,7 +175,7 @@ ImageSeriesReader<TOutputImage>::GenerateOutputInformation()
 
     // Initialize the position to the origin returned by the reader
     unsigned int j;
-    for (j = 0; j < TOutputImage::ImageDimension; j++)
+    for (j = 0; j < TOutputImage::ImageDimension; ++j)
     {
       position1[j] = static_cast<SpacingScalarType>(origin[j]);
     }
@@ -188,7 +188,7 @@ ImageSeriesReader<TOutputImage>::GenerateOutputInformation()
     const TOutputImage * last = lastReader->GetOutput();
 
     // Initialize the position to the origin returned by the reader
-    for (j = 0; j < TOutputImage::ImageDimension; j++)
+    for (j = 0; j < TOutputImage::ImageDimension; ++j)
     {
       positionN[j] = static_cast<SpacingScalarType>(last->GetOrigin()[j]);
     }
@@ -321,7 +321,7 @@ ImageSeriesReader<TOutputImage>::GenerateData()
     }
 
     // configure reader
-    typename ReaderType::Pointer reader = ReaderType::New();
+    auto reader = ReaderType::New();
     reader->SetFileName(m_FileNames[iFileName].c_str());
 
     TOutputImage * readerOutput = reader->GetOutput();
@@ -495,8 +495,8 @@ ImageSeriesReader<TOutputImage>::GenerateData()
 }
 
 template <typename TOutputImage>
-typename ImageSeriesReader<TOutputImage>::DictionaryArrayRawPointer
-ImageSeriesReader<TOutputImage>::GetMetaDataDictionaryArray() const
+auto
+ImageSeriesReader<TOutputImage>::GetMetaDataDictionaryArray() const -> DictionaryArrayRawPointer
 {
   // this warning has been introduced in 3.17 due to a change in
   // behavior. It may be removed in the future.

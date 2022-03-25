@@ -32,7 +32,7 @@ namespace
 int
 TestUnknowMetaDataBug(const std::string & fname)
 {
-  std::cout << "Testing for unknow meta data entry bug." << std::endl;
+  std::cout << "Testing for unknown meta data entry bug." << std::endl;
 
   try
   {
@@ -43,7 +43,7 @@ TestUnknowMetaDataBug(const std::string & fname)
     ImageType::SizeType   size = { { 32, 32 } };
     region.SetSize(size);
 
-    ImageType::Pointer image = ImageType::New();
+    auto image = ImageType::New();
     image->SetRegions(region);
     image->Allocate();
     image->FillBuffer(0);
@@ -55,7 +55,7 @@ TestUnknowMetaDataBug(const std::string & fname)
       dict, "AnUnsuportedComplexInitalized", std::complex<float>(1.234560F));
 
     using Hasher = itk::Testing::HashImageFilter<ImageType>;
-    Hasher::Pointer hasher = Hasher::New();
+    auto hasher = Hasher::New();
     hasher->SetInput(image);
     hasher->InPlaceOff();
     hasher->Update();
@@ -98,7 +98,8 @@ itkMetaImageIOTest2(int argc, char * argv[])
 {
   if (argc < 2)
   {
-    std::cerr << "Usage: " << argv[0] << " Output\n";
+    std::cerr << "Missing Parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " outputFileName" << std::endl;
     return EXIT_FAILURE;
   }
 

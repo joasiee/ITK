@@ -32,7 +32,7 @@ itkSimplexMeshTest(int, char *[])
   using SimplexMeshType = itk::SimplexMesh<double, 3, MeshTraits>;
   using SimplexMeshGeometryType = itk::SimplexMeshGeometry;
 
-  SimplexMeshType::Pointer simplexMesh = SimplexMeshType::New();
+  auto simplexMesh = SimplexMeshType::New();
 
   using NeighborsListType = SimplexMeshType::NeighborListType;
 
@@ -119,10 +119,10 @@ itkSimplexMeshTest(int, char *[])
 
   itk::TimeProbe timeProbe;
 
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
     timeProbe.Start();
-    for (unsigned int pointIndex = 0; pointIndex < simplexMesh->GetPoints()->Size(); pointIndex++)
+    for (unsigned int pointIndex = 0; pointIndex < simplexMesh->GetPoints()->Size(); ++pointIndex)
     {
       neighbors = simplexMesh->GetNeighbors(pointIndex, i, neighbors);
     }

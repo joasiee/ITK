@@ -23,14 +23,15 @@
 
 #include "itkGrayscaleGrindPeakImageFilter.h"
 #include "itkXorImageFilter.h"
+#include "itkTestingMacros.h"
 
 int
 itkRemoveBoundaryObjectsTest2(int argc, char * argv[])
 {
   if (argc < 3)
   {
-    std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << "  inputImageFile  ";
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
     std::cerr << " outputImageFile  " << std::endl;
     return EXIT_FAILURE;
   }
@@ -62,14 +63,14 @@ itkRemoveBoundaryObjectsTest2(int argc, char * argv[])
   using XorFilterType = itk::XorImageFilter<InputImageType, InputImageType, OutputImageType>;
 
   // Creation of Reader and Writer filters
-  ReaderType::Pointer reader = ReaderType::New();
-  WriterType::Pointer writer = WriterType::New();
+  auto reader = ReaderType::New();
+  auto writer = WriterType::New();
 
   // Create the filter
-  GrindPeakFilterType::Pointer grindpeak = GrindPeakFilterType::New();
+  auto grindpeak = GrindPeakFilterType::New();
 
   // Create the xor and not filter
-  XorFilterType::Pointer xorfilter = XorFilterType::New();
+  auto xorfilter = XorFilterType::New();
 
   // Setup the input and output files
   reader->SetFileName(argv[1]);
@@ -84,7 +85,9 @@ itkRemoveBoundaryObjectsTest2(int argc, char * argv[])
 
   // Run the filter
   writer->SetInput(xorfilter->GetOutput());
-  writer->Update();
+
+  ITK_TRY_EXPECT_NO_EXCEPTION(writer->Update());
+
 
   return EXIT_SUCCESS;
 }

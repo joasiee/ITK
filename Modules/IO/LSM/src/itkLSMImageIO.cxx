@@ -273,15 +273,15 @@ LSMImageIO::Write(const void * buffer)
     return;
   }
 
-  uint32 w = width;
-  uint32 h = height;
+  uint32_t w = width;
+  uint32_t h = height;
 
   TIFFSetTagExtender(TagExtender);
   if (m_NumberOfDimensions == 3)
   {
     TIFFCreateDirectory(tif);
   }
-  for (page = 0; page < pages; page++)
+  for (page = 0; page < pages; ++page)
   {
     TIFFSetDirectory(tif, page);
     TIFFSetField(tif, TIFFTAG_IMAGEWIDTH, w);
@@ -302,11 +302,11 @@ LSMImageIO::Write(const void * buffer)
     {
       // if number of scalar components is greater than 3, that means we assume
       // there is alpha.
-      uint16 extra_samples = scomponents - 3;
-      auto * sample_info = new uint16[scomponents - 3];
+      uint16_t extra_samples = scomponents - 3;
+      auto *   sample_info = new uint16_t[scomponents - 3];
       sample_info[0] = EXTRASAMPLE_ASSOCALPHA;
       int cc;
-      for (cc = 1; cc < scomponents - 3; cc++)
+      for (cc = 1; cc < scomponents - 3; ++cc)
       {
         sample_info[cc] = EXTRASAMPLE_UNSPECIFIED;
       }
@@ -343,7 +343,7 @@ LSMImageIO::Write(const void * buffer)
 
     TIFFSetField(tif, TIFFTAG_COMPRESSION, compression); // Fix for compression
 
-    uint16 photometric = (scomponents == 1) ? PHOTOMETRIC_MINISBLACK : PHOTOMETRIC_RGB;
+    uint16_t photometric = (scomponents == 1) ? PHOTOMETRIC_MINISBLACK : PHOTOMETRIC_RGB;
 
     if (compression == COMPRESSION_JPEG)
     {
@@ -395,7 +395,7 @@ LSMImageIO::Write(const void * buffer)
     rowLength *= width;
 
     int row = 0;
-    for (unsigned int idx2 = 0; idx2 < height; idx2++)
+    for (unsigned int idx2 = 0; idx2 < height; ++idx2)
     {
       if (TIFFWriteScanline(tif, const_cast<unsigned char *>(outPtr), row, 0) < 0)
       {

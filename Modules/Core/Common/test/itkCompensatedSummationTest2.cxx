@@ -60,9 +60,9 @@ public:
     void
     BeforeThreadedExecution() override
     {
-      const itk::ThreadIdType numThreadsUsed = this->GetNumberOfWorkUnitsUsed();
-      this->m_PerThreadCompensatedSum.resize(numThreadsUsed);
-      for (itk::ThreadIdType i = 0; i < numThreadsUsed; ++i)
+      const itk::ThreadIdType numWorkUnitsUsed = this->GetNumberOfWorkUnitsUsed();
+      this->m_PerThreadCompensatedSum.resize(numWorkUnitsUsed);
+      for (itk::ThreadIdType i = 0; i < numWorkUnitsUsed; ++i)
       {
         this->m_PerThreadCompensatedSum[i].ResetToZero();
       }
@@ -72,7 +72,7 @@ public:
     ThreadedExecution(const DomainType & subdomain, const itk::ThreadIdType threadId) override
     {
       itk::CompensatedSummation<double> compensatedSum;
-      for (DomainType::IndexValueType i = subdomain[0]; i <= subdomain[1]; i++)
+      for (DomainType::IndexValueType i = subdomain[0]; i <= subdomain[1]; ++i)
       {
         double value = itk::NumericTraits<double>::OneValue() / 7;
         this->m_PerThreadCompensatedSum[threadId].AddElement(value);
@@ -85,7 +85,7 @@ public:
       this->m_Associate->m_UncompensatedSumOfThreads = itk::NumericTraits<double>::ZeroValue();
       this->m_Associate->m_CompensatedSumOfThreads.ResetToZero();
 
-      for (itk::ThreadIdType i = 0, numThreadsUsed = this->GetNumberOfWorkUnitsUsed(); i < numThreadsUsed; ++i)
+      for (itk::ThreadIdType i = 0, numWorkUnitsUsed = this->GetNumberOfWorkUnitsUsed(); i < numWorkUnitsUsed; ++i)
       {
         double sum = this->m_PerThreadCompensatedSum[i].GetSum();
         std::cout << i << ": " << sum << std::endl;

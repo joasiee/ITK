@@ -48,7 +48,7 @@ protected:
   {
 
     using HashFilter = itk::Testing::HashImageFilter<TImageType>;
-    typename HashFilter::Pointer hasher = HashFilter::New();
+    auto hasher = HashFilter::New();
     hasher->SetInput(image);
     hasher->Update();
     return hasher->GetHash();
@@ -71,7 +71,7 @@ protected:
     static typename InputImageType::Pointer
     CreateImage(unsigned int size = 100)
     {
-      typename InputImageType::Pointer image = InputImageType::New();
+      auto image = InputImageType::New();
 
       typename InputImageType::SizeType imageSize;
       imageSize.Fill(size);
@@ -118,7 +118,7 @@ TEST_F(TileImageFixture, VectorImage)
 
   auto image = ImageType::New();
 
-  typename ImageType::SizeType imageSize = MakeSize(10, 10);
+  typename ImageType::SizeType imageSize = itk::MakeSize(10, 10);
 
   const unsigned int numberOfComponents = 5;
 

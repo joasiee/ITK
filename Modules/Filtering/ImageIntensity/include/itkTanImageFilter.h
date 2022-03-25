@@ -37,16 +37,12 @@ public:
   Tan() = default;
   ~Tan() = default;
   bool
-  operator!=(const Tan &) const
+  operator==(const Tan &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Tan & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Tan);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -67,7 +63,7 @@ public:
  * \ingroup ITKImageIntensity
  */
 template <typename TInputImage, typename TOutputImage>
-class TanImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT TanImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(TanImageFilter);

@@ -35,8 +35,9 @@ GaussianDerivativeSpatialFunction<TOutput, VImageDimension, TInput>::GaussianDer
 }
 
 template <typename TOutput, unsigned int VImageDimension, typename TInput>
-typename GaussianDerivativeSpatialFunction<TOutput, VImageDimension, TInput>::OutputType
+auto
 GaussianDerivativeSpatialFunction<TOutput, VImageDimension, TInput>::Evaluate(const TInput & position) const
+  -> OutputType
 {
   // Normalizing the Gaussian is important for statistical applications
   // but is generally not desirable for creating images because of the
@@ -47,7 +48,7 @@ GaussianDerivativeSpatialFunction<TOutput, VImageDimension, TInput>::Evaluate(co
   {
     prefixDenom = m_Sigma[m_Direction] * m_Sigma[m_Direction];
 
-    for (unsigned int i = 0; i < VImageDimension; i++)
+    for (unsigned int i = 0; i < VImageDimension; ++i)
     {
       prefixDenom *= m_Sigma[i];
     }
@@ -61,7 +62,7 @@ GaussianDerivativeSpatialFunction<TOutput, VImageDimension, TInput>::Evaluate(co
 
   double suffixExp = 0;
 
-  for (unsigned int i = 0; i < VImageDimension; i++)
+  for (unsigned int i = 0; i < VImageDimension; ++i)
   {
     suffixExp += (position[m_Direction] - m_Mean[m_Direction]) * (position[m_Direction] - m_Mean[m_Direction]) /
                  (2 * m_Sigma[m_Direction] * m_Sigma[m_Direction]);
@@ -75,12 +76,13 @@ GaussianDerivativeSpatialFunction<TOutput, VImageDimension, TInput>::Evaluate(co
 
 /** Evaluate the function at a given position and return a vector */
 template <typename TOutput, unsigned int VImageDimension, typename TInput>
-typename GaussianDerivativeSpatialFunction<TOutput, VImageDimension, TInput>::VectorType
+auto
 GaussianDerivativeSpatialFunction<TOutput, VImageDimension, TInput>::EvaluateVector(const TInput & position) const
+  -> VectorType
 {
   VectorType gradient;
 
-  for (unsigned int i = 0; i < VImageDimension; i++)
+  for (unsigned int i = 0; i < VImageDimension; ++i)
   {
     m_Direction = i;
     gradient[i] = this->Evaluate(position);

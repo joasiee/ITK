@@ -27,7 +27,9 @@ itkVoronoiDiagram2DTest(int argc, char * argv[])
 
   if (argc != 2)
   {
-    std::cerr << "Usage: itkVoronoiDiagram2DTest outputFileName" << std::endl;
+    std::cerr << "Missing Parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cerr << " outputFileName" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -44,9 +46,9 @@ itkVoronoiDiagram2DTest(int argc, char * argv[])
   using PointIdIterator = CellType::PointIdIterator;
   using NeighborIdIterator = VoronoiDiagram::NeighborIdIterator;
 
-  VoronoiDiagram::Pointer voronoiDiagram = VoronoiDiagram::New();
+  auto voronoiDiagram = VoronoiDiagram::New();
 
-  VoronoiDiagramGenerator::Pointer voronoiDiagramGenerator = VoronoiDiagramGenerator::New();
+  auto voronoiDiagramGenerator = VoronoiDiagramGenerator::New();
   ITK_EXERCISE_BASIC_OBJECT_METHODS(voronoiDiagramGenerator, VoronoiDiagram2DGenerator, MeshSource);
 
   PointType insize;
@@ -94,19 +96,13 @@ itkVoronoiDiagram2DTest(int argc, char * argv[])
   }
 
   using WriterType = itk::MeshFileWriter<VoronoiDiagram>;
-  WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   writer->SetInput(voronoiDiagram);
   writer->SetFileName(argv[1]);
 
-  try
-  {
-    writer->Update();
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    std::cout << excp << std::endl;
-    return EXIT_FAILURE;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(writer->Update());
 
+
+  std::cout << "Test finished" << std::endl;
   return EXIT_SUCCESS;
 }

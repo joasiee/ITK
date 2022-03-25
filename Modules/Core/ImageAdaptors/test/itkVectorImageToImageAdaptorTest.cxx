@@ -40,11 +40,11 @@ itkVectorImageToImageAdaptorTest(int, char *[])
   using VectorImageToImageAdaptorType = itk::VectorImageToImageAdaptor<PixelType, Dimension>;
 
   // initialize a vector image
-  VectorImageType::Pointer             vectorImage = VectorImageType::New();
+  auto                                 vectorImage = VectorImageType::New();
   VectorImageType::IndexType           start;
   itk::VariableLengthVector<PixelType> f(VectorLength);
   VectorImageType::SizeType            size;
-  for (unsigned int i = 0; i < VectorLength; i++)
+  for (unsigned int i = 0; i < VectorLength; ++i)
   {
     f[i] = PixelType(i);
   }
@@ -61,7 +61,7 @@ itkVectorImageToImageAdaptorTest(int, char *[])
 
 
   // run the adaptor
-  VectorImageToImageAdaptorType::Pointer vectorImageToImageAdaptor = VectorImageToImageAdaptorType::New();
+  auto vectorImageToImageAdaptor = VectorImageToImageAdaptorType::New();
   vectorImageToImageAdaptor->SetExtractComponentIndex(componentToExtract);
 
   vectorImageToImageAdaptor->SetImage(vectorImage);

@@ -80,7 +80,7 @@ itkJoinSeriesImageFilterTest(int, char *[])
   std::vector<InputImageType::Pointer> inputs;
 
   PixelType counter1 = 0;
-  for (int i = 0; i < numInputs; i++)
+  for (int i = 0; i < numInputs; ++i)
   {
     inputs.push_back(InputImageType::New());
     inputs[i]->SetLargestPossibleRegion(region);
@@ -102,7 +102,7 @@ itkJoinSeriesImageFilterTest(int, char *[])
   // Create the filter
   using JoinSeriesImageType = itk::JoinSeriesImageFilter<InputImageType, OutputImageType>;
 
-  JoinSeriesImageType::Pointer joinSeriesImage = JoinSeriesImageType::New();
+  auto joinSeriesImage = JoinSeriesImageType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(joinSeriesImage, JoinSeriesImageFilter, ImageToImageFilter);
 
@@ -125,7 +125,7 @@ itkJoinSeriesImageFilterTest(int, char *[])
   joinSeriesImage->SetOrigin(originValue);
   ITK_TEST_SET_GET_VALUE(originValue, joinSeriesImage->GetOrigin());
 
-  for (int i = 0; i < numInputs; i++)
+  for (int i = 0; i < numInputs; ++i)
   {
     joinSeriesImage->SetInput(i, inputs[i]);
   }
@@ -133,13 +133,13 @@ itkJoinSeriesImageFilterTest(int, char *[])
   // Test the ProgressReporter
   ShowProgressObject progressWatch(joinSeriesImage);
   using CommandType = itk::SimpleMemberCommand<ShowProgressObject>;
-  CommandType::Pointer command = CommandType::New();
+  auto command = CommandType::New();
   command->SetCallbackFunction(&progressWatch, &ShowProgressObject::ShowProgress);
   joinSeriesImage->AddObserver(itk::ProgressEvent(), command);
 
   // Test streaming
   using StreamingImageType = itk::StreamingImageFilter<OutputImageType, OutputImageType>;
-  StreamingImageType::Pointer streamingImage = StreamingImageType::New();
+  auto streamingImage = StreamingImageType::New();
   streamingImage->SetInput(joinSeriesImage->GetOutput());
   streamingImage->SetNumberOfStreamDivisions(streamDivisions);
 

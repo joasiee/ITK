@@ -158,7 +158,7 @@ itkImageAdaptorInterpolateImageFunctionTest(int, char *[])
 
 
   // Create a test image
-  ImageType::Pointer    image = ImageType::New();
+  auto                  image = ImageType::New();
   ImageType::RegionType region;
   region.SetSize(size);
 
@@ -182,12 +182,12 @@ itkImageAdaptorInterpolateImageFunctionTest(int, char *[])
     index = iter.GetIndex();
     value = 0;
 
-    for (unsigned int j = 0; j < ImageDimension; j++)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       value += index[j];
     }
 
-    for (unsigned int k = 0; k < ImageDimension; k++)
+    for (unsigned int k = 0; k < ImageDimension; ++k)
     {
       pixel[k] = (k + 1) * value;
     }
@@ -197,12 +197,12 @@ itkImageAdaptorInterpolateImageFunctionTest(int, char *[])
 
   // Create the image adaptor
   using ImageAdaptorType = ImageAdaptorInterpolate::ImageAdaptorType;
-  ImageAdaptorType::Pointer adaptor = ImageAdaptorType::New();
+  auto adaptor = ImageAdaptorType::New();
 
   adaptor->SetImage(image);
 
   // Create the interpolator
-  InterpolatorType::Pointer interp = InterpolatorType::New();
+  auto interp = InterpolatorType::New();
   interp->SetInputImage(adaptor);
   interp->Print(std::cout);
 

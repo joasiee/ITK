@@ -50,7 +50,7 @@ itkFEMGenerateMeshTest(int, char *[])
   MeshOriginV.set_size(2);
   MeshSizeV.set_size(2);
   ElementsPerDim.set_size(2);
-  for (unsigned int j = 0; j < 2; j++)
+  for (unsigned int j = 0; j < 2; ++j)
   {
     MeshOriginV[j] = 0.0;
     MeshSizeV[j] = 10;
@@ -59,7 +59,7 @@ itkFEMGenerateMeshTest(int, char *[])
 
   using ElasticityType = itk::fem::MaterialLinearElasticity;
   // Create the material
-  ElasticityType::Pointer m = ElasticityType::New();
+  auto m = ElasticityType::New();
 
   m->SetGlobalNumber(0);
   m->SetYoungsModulus(1000.);
@@ -71,7 +71,7 @@ itkFEMGenerateMeshTest(int, char *[])
 
   // Create the element type
   using StrainType = itk::fem::Element2DC0LinearQuadrilateralStrain;
-  StrainType::Pointer e1 = StrainType::New();
+  auto e1 = StrainType::New();
 
   e1->SetMaterial(dynamic_cast<ElasticityType *>(m));
 
@@ -89,7 +89,7 @@ itkFEMGenerateMeshTest(int, char *[])
   MeshOriginV.set_size(3);
   MeshSizeV.set_size(3);
   ElementsPerDim.set_size(3);
-  for (unsigned int j = 0; j < 3; j++)
+  for (unsigned int j = 0; j < 3; ++j)
   {
     MeshOriginV[j] = 0.;
     MeshSizeV[j] = 10;

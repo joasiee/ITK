@@ -45,7 +45,7 @@ KappaSigmaThresholdImageCalculator<TInputImage, TMaskImage>::Compute()
                                                                    // pixels
                                                                    // to begin
 
-  for (unsigned int iteration = 0; iteration < this->m_NumberOfIterations; iteration++)
+  for (unsigned int iteration = 0; iteration < this->m_NumberOfIterations; ++iteration)
   {
     ImageRegionConstIteratorWithIndex<InputImageType> iIt(this->m_Image, this->m_Image->GetRequestedRegion());
 
@@ -101,8 +101,8 @@ KappaSigmaThresholdImageCalculator<TInputImage, TMaskImage>::Compute()
 }
 
 template <typename TInputImage, typename TMaskImage>
-const typename KappaSigmaThresholdImageCalculator<TInputImage, TMaskImage>::InputPixelType &
-KappaSigmaThresholdImageCalculator<TInputImage, TMaskImage>::GetOutput() const
+auto
+KappaSigmaThresholdImageCalculator<TInputImage, TMaskImage>::GetOutput() const -> const InputPixelType &
 {
   if (!this->m_Valid)
   {

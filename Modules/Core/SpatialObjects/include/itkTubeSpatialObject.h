@@ -54,14 +54,14 @@ public:
   using TubePointType = TSpatialObjectPointType;
   using TubePointListType = std::vector<TubePointType>;
 
-  using PointType = typename Superclass::PointType;
-  using TransformType = typename Superclass::TransformType;
-  using SpatialObjectPointType = typename Superclass::SpatialObjectPointType;
+  using typename Superclass::PointType;
+  using typename Superclass::TransformType;
+  using typename Superclass::SpatialObjectPointType;
   using PointContainerType = VectorContainer<IdentifierType, PointType>;
   using PointContainerPointer = SmartPointer<PointContainerType>;
-  using VectorType = typename Superclass::VectorType;
-  using CovariantVectorType = typename Superclass::CovariantVectorType;
-  using BoundingBoxType = typename Superclass::BoundingBoxType;
+  using typename Superclass::VectorType;
+  using typename Superclass::CovariantVectorType;
+  using typename Superclass::BoundingBoxType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -117,6 +117,9 @@ public:
   /* Avoid hiding the overload that supports depth and name arguments */
   using Superclass::IsInsideInObjectSpace;
 
+  void
+  CopyInformation(const DataObject * data) override;
+
 protected:
   /** Compute the boundaries of the tube. */
   void
@@ -129,7 +132,7 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  typename LightObject::Pointer
+  virtual typename LightObject::Pointer
   InternalClone() const override;
 
 private:

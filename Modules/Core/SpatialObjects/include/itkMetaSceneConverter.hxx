@@ -61,15 +61,15 @@ MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::SetTransform(MetaObject
   typename SpatialObjectType::TransformType::OffsetType     offset = transform->GetOffset();
 
   unsigned int p = 0;
-  for (unsigned int row = 0; row < NDimensions; row++)
+  for (unsigned int row = 0; row < NDimensions; ++row)
   {
-    for (unsigned int col = 0; col < NDimensions; col++)
+    for (unsigned int col = 0; col < NDimensions; ++col)
     {
       m_Orientation[p++] = matrix[row][col];
     }
   }
 
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     m_Position[i] = offset[i];
     m_CenterOfRotation[i] = center[i];
@@ -90,15 +90,15 @@ MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::SetTransform(SpatialObj
   typename SpatialObjectType::TransformType::OffsetType     offset;
 
   unsigned int p = 0;
-  for (unsigned int row = 0; row < NDimensions; row++)
+  for (unsigned int row = 0; row < NDimensions; ++row)
   {
-    for (unsigned int col = 0; col < NDimensions; col++)
+    for (unsigned int col = 0; col < NDimensions; ++col)
     {
       matrix[row][col] = (meta->Orientation())[p++];
     }
   }
 
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     offset[i] = (meta->Position())[i];
     center[i] = (meta->CenterOfRotation())[i];
@@ -112,8 +112,9 @@ MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::SetTransform(SpatialObj
 /** Convert a metaScene into a Composite Spatial Object
  *  Also Managed Composite Spatial Object to keep a hierarchy */
 template <unsigned int NDimensions, typename PixelType, typename TMeshTraits>
-typename MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::SpatialObjectPointer
+auto
 MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::CreateSpatialObjectScene(MetaScene * mScene)
+  -> SpatialObjectPointer
 {
   SpatialObjectPointer soScene = nullptr;
 
@@ -232,8 +233,8 @@ MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::CreateSpatialObjectScen
 
 /** Read a meta file give the type */
 template <unsigned int NDimensions, typename PixelType, typename TMeshTraits>
-typename MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::SpatialObjectPointer
-MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::ReadMeta(const std::string & name)
+auto
+MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::ReadMeta(const std::string & name) -> SpatialObjectPointer
 {
   auto * mScene = new MetaScene;
 
@@ -250,25 +251,25 @@ MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::ReadMeta(const std::str
 /** Write a meta file give the type */
 template <unsigned int NDimensions, typename PixelType, typename TMeshTraits>
 MetaScene *
-MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::CreateMetaScene(SpatialObjectType * soScene,
-                                                                         unsigned int        depth,
-                                                                         const std::string & name)
+MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::CreateMetaScene(const SpatialObjectType * soScene,
+                                                                         unsigned int              depth,
+                                                                         const std::string &       name)
 {
   auto * metaScene = new MetaScene(NDimensions);
 
   metaScene->BinaryData(m_BinaryPoints);
 
   auto * spacing = new float[NDimensions];
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     spacing[i] = 1;
   }
   metaScene->ElementSpacing(spacing);
   delete[] spacing;
 
-  using ListType = typename SpatialObjectType::ChildrenListType;
+  using ListType = typename SpatialObjectType::ChildrenConstListType;
 
-  ListType * childrenList = soScene->GetChildren(depth, name);
+  ListType * childrenList = soScene->GetConstChildren(depth, name);
   childrenList->push_front(soScene); // add the top level object to the list
                                      //   to be processed.
 
@@ -355,6 +356,11 @@ MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::CreateMetaScene(Spatial
       currentMeta->ParentID((*it)->GetParent()->GetId());
     }
     currentMeta->Name((*it)->GetProperty().GetName().c_str());
+    currentMeta->Color((*it)->GetProperty().GetRed(),
+                       (*it)->GetProperty().GetGreen(),
+                       (*it)->GetProperty().GetBlue(),
+                       (*it)->GetProperty().GetAlpha());
+
     this->SetTransform(currentMeta, (*it)->GetObjectToParentTransform());
     metaScene->AddObject(currentMeta);
     it++;
@@ -368,10 +374,10 @@ MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::CreateMetaScene(Spatial
 /** Write a meta file give the type */
 template <unsigned int NDimensions, typename PixelType, typename TMeshTraits>
 bool
-MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::WriteMeta(SpatialObjectType * soScene,
-                                                                   const std::string & fileName,
-                                                                   unsigned int        depth,
-                                                                   const std::string & soName)
+MetaSceneConverter<NDimensions, PixelType, TMeshTraits>::WriteMeta(const SpatialObjectType * soScene,
+                                                                   const std::string &       fileName,
+                                                                   unsigned int              depth,
+                                                                   const std::string &       soName)
 {
   MetaScene * metaScene = this->CreateMetaScene(soScene, depth, soName);
 

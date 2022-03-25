@@ -45,9 +45,9 @@ itkSampleToHistogramFilterTest(int, char *[])
   using InputHistogramMeasurementObjectType = FilterType::InputHistogramMeasurementObjectType;
   using InputHistogramMeasurementVectorObjectType = FilterType::InputHistogramMeasurementVectorObjectType;
 
-  FilterType::Pointer filter = FilterType::New();
+  auto filter = FilterType::New();
 
-  SampleType::Pointer sample = SampleType::New();
+  auto sample = SampleType::New();
 
   // Test GetInput() before setting the input
   if (filter->GetInput() != nullptr)
@@ -154,7 +154,7 @@ itkSampleToHistogramFilterTest(int, char *[])
 
   HistogramSizeType returnedHistogramSize = returnedHistogramSizeObject->Get();
 
-  for (unsigned int k1 = 0; k1 < numberOfComponents; k1++)
+  for (unsigned int k1 = 0; k1 < numberOfComponents; ++k1)
   {
     if (returnedHistogramSize[k1] != histogramSize1[k1])
     {
@@ -169,7 +169,7 @@ itkSampleToHistogramFilterTest(int, char *[])
 
   returnedHistogramSize = returnedHistogramSizeObject->Get();
 
-  for (unsigned int k2 = 0; k2 < numberOfComponents; k2++)
+  for (unsigned int k2 = 0; k2 < numberOfComponents; ++k2)
   {
     if (returnedHistogramSize[k2] != histogramSize2[k2])
     {
@@ -179,7 +179,7 @@ itkSampleToHistogramFilterTest(int, char *[])
   }
 
 
-  InputHistogramSizeObjectType::Pointer histogramSizeObject = InputHistogramSizeObjectType::New();
+  auto histogramSizeObject = InputHistogramSizeObjectType::New();
 
   histogramSizeObject->Set(histogramSize1);
 
@@ -195,7 +195,7 @@ itkSampleToHistogramFilterTest(int, char *[])
 
   returnedHistogramSize = returnedHistogramSizeObject->Get();
 
-  for (unsigned int k3 = 0; k3 < numberOfComponents; k3++)
+  for (unsigned int k3 = 0; k3 < numberOfComponents; ++k3)
   {
     if (returnedHistogramSize[k3] != histogramSize1[k3])
     {
@@ -218,7 +218,7 @@ itkSampleToHistogramFilterTest(int, char *[])
 
   returnedHistogramSize = returnedHistogramSizeObject->Get();
 
-  for (unsigned int k4 = 0; k4 < numberOfComponents; k4++)
+  for (unsigned int k4 = 0; k4 < numberOfComponents; ++k4)
   {
     if (returnedHistogramSize[k4] != histogramSize2[k4])
     {
@@ -285,7 +285,7 @@ itkSampleToHistogramFilterTest(int, char *[])
   }
 
 
-  InputHistogramMeasurementObjectType::Pointer marginalScaleObject1 = InputHistogramMeasurementObjectType::New();
+  auto marginalScaleObject1 = InputHistogramMeasurementObjectType::New();
 
   marginalScaleObject1->Set(marginalScale1);
 
@@ -305,7 +305,7 @@ itkSampleToHistogramFilterTest(int, char *[])
     return EXIT_FAILURE;
   }
 
-  InputHistogramMeasurementObjectType::Pointer marginalScaleObject2 = InputHistogramMeasurementObjectType::New();
+  auto marginalScaleObject2 = InputHistogramMeasurementObjectType::New();
 
   marginalScaleObject2->Set(marginalScale2);
 
@@ -367,7 +367,7 @@ itkSampleToHistogramFilterTest(int, char *[])
 
   HistogramMeasurementVectorType returnedHistogramBinMinimum = returnedHistogramBinMinimumObject->Get();
 
-  for (unsigned int k1 = 0; k1 < numberOfComponents; k1++)
+  for (unsigned int k1 = 0; k1 < numberOfComponents; ++k1)
   {
     if (itk::Math::NotExactlyEquals(returnedHistogramBinMinimum[k1], histogramBinMinimum1[k1]))
     {
@@ -383,7 +383,7 @@ itkSampleToHistogramFilterTest(int, char *[])
 
   returnedHistogramBinMinimum = returnedHistogramBinMinimumObject->Get();
 
-  for (unsigned int k2 = 0; k2 < numberOfComponents; k2++)
+  for (unsigned int k2 = 0; k2 < numberOfComponents; ++k2)
   {
     if (itk::Math::NotExactlyEquals(returnedHistogramBinMinimum[k2], histogramBinMinimum2[k2]))
     {
@@ -410,7 +410,7 @@ itkSampleToHistogramFilterTest(int, char *[])
 
   returnedHistogramBinMinimum = returnedHistogramBinMinimumObject->Get();
 
-  for (unsigned int k3 = 0; k3 < numberOfComponents; k3++)
+  for (unsigned int k3 = 0; k3 < numberOfComponents; ++k3)
   {
     if (itk::Math::NotExactlyEquals(returnedHistogramBinMinimum[k3], histogramBinMinimum1[k3]))
     {
@@ -433,7 +433,7 @@ itkSampleToHistogramFilterTest(int, char *[])
 
   returnedHistogramBinMinimum = returnedHistogramBinMinimumObject->Get();
 
-  for (unsigned int k4 = 0; k4 < numberOfComponents; k4++)
+  for (unsigned int k4 = 0; k4 < numberOfComponents; ++k4)
   {
     if (itk::Math::NotExactlyEquals(returnedHistogramBinMinimum[k4], histogramBinMinimum2[k4]))
     {
@@ -487,7 +487,7 @@ itkSampleToHistogramFilterTest(int, char *[])
 
   HistogramMeasurementVectorType returnedHistogramBinMaximum = returnedHistogramBinMaximumObject->Get();
 
-  for (unsigned int k1 = 0; k1 < numberOfComponents; k1++)
+  for (unsigned int k1 = 0; k1 < numberOfComponents; ++k1)
   {
     if (itk::Math::NotExactlyEquals(returnedHistogramBinMaximum[k1], histogramBinMaximum1[k1]))
     {
@@ -503,7 +503,7 @@ itkSampleToHistogramFilterTest(int, char *[])
 
   returnedHistogramBinMaximum = returnedHistogramBinMaximumObject->Get();
 
-  for (unsigned int k2 = 0; k2 < numberOfComponents; k2++)
+  for (unsigned int k2 = 0; k2 < numberOfComponents; ++k2)
   {
     if (itk::Math::NotExactlyEquals(returnedHistogramBinMaximum[k2], histogramBinMaximum2[k2]))
     {
@@ -530,7 +530,7 @@ itkSampleToHistogramFilterTest(int, char *[])
 
   returnedHistogramBinMaximum = returnedHistogramBinMaximumObject->Get();
 
-  for (unsigned int k3 = 0; k3 < numberOfComponents; k3++)
+  for (unsigned int k3 = 0; k3 < numberOfComponents; ++k3)
   {
     if (itk::Math::NotExactlyEquals(returnedHistogramBinMaximum[k3], histogramBinMaximum1[k3]))
     {
@@ -553,7 +553,7 @@ itkSampleToHistogramFilterTest(int, char *[])
 
   returnedHistogramBinMaximum = returnedHistogramBinMaximumObject->Get();
 
-  for (unsigned int k4 = 0; k4 < numberOfComponents; k4++)
+  for (unsigned int k4 = 0; k4 < numberOfComponents; ++k4)
   {
     if (itk::Math::NotExactlyEquals(returnedHistogramBinMaximum[k4], histogramBinMaximum2[k4]))
     {
@@ -621,7 +621,7 @@ itkSampleToHistogramFilterTest(int, char *[])
   }
 
 
-  InputBooleanObjectType::Pointer autoMinimumMaximumObject1 = InputBooleanObjectType::New();
+  auto autoMinimumMaximumObject1 = InputBooleanObjectType::New();
 
   autoMinimumMaximumObject1->Set(autoMinimumMaximum1);
 
@@ -641,7 +641,7 @@ itkSampleToHistogramFilterTest(int, char *[])
     return EXIT_FAILURE;
   }
 
-  InputBooleanObjectType::Pointer autoMinimumMaximumObject2 = InputBooleanObjectType::New();
+  auto autoMinimumMaximumObject2 = InputBooleanObjectType::New();
 
   autoMinimumMaximumObject2->Set(autoMinimumMaximum2);
 

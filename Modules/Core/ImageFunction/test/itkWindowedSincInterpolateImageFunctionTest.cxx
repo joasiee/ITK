@@ -151,7 +151,7 @@ itkWindowedSincInterpolateImageFunctionTest(int, char *[])
 
 
   // Create a test image
-  ImageType::Pointer    image = ImageType::New();
+  auto                  image = ImageType::New();
   ImageType::RegionType region;
   region.SetSize(size);
 
@@ -174,7 +174,7 @@ itkWindowedSincInterpolateImageFunctionTest(int, char *[])
     index = iter.GetIndex();
     value = 0;
 
-    for (unsigned int j = 0; j < ImageDimension; j++)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       value += index[j];
     }
@@ -185,7 +185,7 @@ itkWindowedSincInterpolateImageFunctionTest(int, char *[])
   }
 
   // Create the interpolator
-  InterpolatorType::Pointer interp = InterpolatorType::New();
+  auto interp = InterpolatorType::New();
   interp->SetInputImage(image);
   interp->Print(std::cout);
 

@@ -66,7 +66,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
   {
     std::cout << "Test default constructor... ";
 
-    TransformType::Pointer transform = TransformType::New();
+    auto transform = TransformType::New();
 
     VectorType axis(1.5);
 
@@ -99,8 +99,8 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
 
   {
     std::cout << "Test initial rotation matrix " << std::endl;
-    TransformType::Pointer transform = TransformType::New();
-    MatrixType             matrix = transform->GetMatrix();
+    auto       transform = TransformType::New();
+    MatrixType matrix = transform->GetMatrix();
     std::cout << "Matrix = " << std::endl;
     std::cout << matrix << std::endl;
   }
@@ -110,7 +110,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
   {
     bool Ok = true;
 
-    TransformType::Pointer rotation = TransformType::New();
+    auto rotation = TransformType::New();
 
     itk::Vector<double, 3> axis(1);
 
@@ -122,7 +122,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
     TransformType::OffsetType offset = rotation->GetOffset();
     std::cout << "pure Rotation test:  ";
     std::cout << offset << std::endl;
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       if (std::fabs(offset[i] - 0.0) > epsilon)
       {
@@ -149,7 +149,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
 
       TransformType::OutputPointType r;
       r = rotation->TransformPoint(p);
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -179,7 +179,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
 
       TransformType::OutputVectorType r;
       r = rotation->TransformVector(p);
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -209,7 +209,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
 
       TransformType::OutputCovariantVectorType r;
       r = rotation->TransformCovariantVector(p);
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -242,7 +242,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
 
       TransformType::OutputVnlVectorType r;
       r = rotation->TransformVector(p);
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -268,7 +268,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
   {
     bool Ok = true;
 
-    TransformType::Pointer transform = TransformType::New();
+    auto transform = TransformType::New();
 
     itk::Vector<double, 3> axis(1);
 
@@ -285,7 +285,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
 
     TransformType::OutputPointType transformedPoint;
     transformedPoint = transform->TransformPoint(center);
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       if (std::fabs(center[i] - transformedPoint[i]) > epsilon)
       {
@@ -328,7 +328,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
     ParametersType parameters2 = transform->GetParameters();
 
     const double tolerance = 1e-8;
-    for (unsigned int p = 0; p < np; p++)
+    for (unsigned int p = 0; p < np; ++p)
     {
       if (std::fabs(parameters[p] - parameters2[p]) > tolerance)
       {
@@ -386,9 +386,9 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
     TheoreticalJacobian[0][8] = 0.0;
     TheoreticalJacobian[1][8] = 0.0;
     TheoreticalJacobian[2][8] = -103.0;
-    for (unsigned int ii = 0; ii < 3; ii++)
+    for (unsigned int ii = 0; ii < 3; ++ii)
     {
-      for (unsigned int jj = 0; jj < 15; jj++)
+      for (unsigned int jj = 0; jj < 15; ++jj)
       {
         if (itk::Math::abs(TheoreticalJacobian[ii][jj] - jacobian[ii][jj]) > 1e-5)
         {
@@ -407,7 +407,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
 
   {
     std::cout << " Exercise the SetIdentity() method " << std::endl;
-    TransformType::Pointer transform = TransformType::New();
+    auto transform = TransformType::New();
 
     itk::Vector<double, 3> axis(1);
 
@@ -449,7 +449,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
     ParametersType parameters2 = transform->GetParameters();
 
     const double tolerance = 1e-8;
-    for (unsigned int p = 0; p < np; p++)
+    for (unsigned int p = 0; p < np; ++p)
     {
       if (std::fabs(parameters[p] - parameters2[p]) > tolerance)
       {
@@ -462,7 +462,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
 
   {
     std::cout << " Exercise the Scaling methods " << std::endl;
-    TransformType::Pointer transform = TransformType::New();
+    auto transform = TransformType::New();
 
     itk::Vector<double, 3> axis(1);
 
@@ -492,7 +492,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
     TransformType::ScaleVectorType rscale = transform->GetScale();
 
     const double tolerance = 1e-8;
-    for (unsigned int j = 0; j < 3; j++)
+    for (unsigned int j = 0; j < 3; ++j)
     {
       if (std::fabs(rscale[j] - scale[j]) > tolerance)
       {
@@ -522,7 +522,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
     parameters[8] = scale[2];
 
     ParametersType parameters2 = transform->GetParameters();
-    for (unsigned int p = 0; p < np; p++)
+    for (unsigned int p = 0; p < np; ++p)
     {
       if (std::fabs(parameters[p] - parameters2[p]) > tolerance)
       {
@@ -533,7 +533,7 @@ itkScaleSkewVersor3DTransformTest(int, char *[])
     std::cout << "Input/Output parameter check Passed !" << std::endl;
 #if 0 // TODO: Need to instrument inverse of ScaleVersor3DTransform
       {
-      TransformType::Pointer tInverse = TransformType::New();
+      auto tInverse = TransformType::New();
       if(!transform->GetInverse(tInverse))
         {
         std::cout << "Cannot create inverse transform" << std::endl;

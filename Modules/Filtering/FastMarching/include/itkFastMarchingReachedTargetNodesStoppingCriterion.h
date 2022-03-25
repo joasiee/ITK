@@ -56,7 +56,8 @@ extern ITKFastMarching_EXPORT std::ostream &
  * \ingroup ITKFastMarching
  */
 template <typename TInput, typename TOutput>
-class FastMarchingReachedTargetNodesStoppingCriterion : public FastMarchingStoppingCriterionBase<TInput, TOutput>
+class ITK_TEMPLATE_EXPORT FastMarchingReachedTargetNodesStoppingCriterion
+  : public FastMarchingStoppingCriterionBase<TInput, TOutput>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(FastMarchingReachedTargetNodesStoppingCriterion);
@@ -65,7 +66,7 @@ public:
   using Superclass = FastMarchingStoppingCriterionBase<TInput, TOutput>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
-  using Traits = typename Superclass::Traits;
+  using typename Superclass::Traits;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -73,8 +74,8 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(FastMarchingReachedTargetNodesStoppingCriterion, FastMarchingStoppingCriterionBase);
 
-  using OutputPixelType = typename Superclass::OutputPixelType;
-  using NodeType = typename Superclass::NodeType;
+  using typename Superclass::OutputPixelType;
+  using typename Superclass::NodeType;
 
   using TargetConditionEnum = FastMarchingReachedTargetNodesStoppingCriterionEnums::TargetCondition;
 #if !defined(ITK_LEGACY_REMOVE)

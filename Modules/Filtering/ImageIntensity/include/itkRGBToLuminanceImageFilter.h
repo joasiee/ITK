@@ -46,16 +46,12 @@ public:
   RGBToLuminance() = default;
   ~RGBToLuminance() = default;
   bool
-  operator!=(const RGBToLuminance &) const
+  operator==(const RGBToLuminance &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const RGBToLuminance & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(RGBToLuminance);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -66,7 +62,7 @@ public:
 } // namespace Functor
 
 template <typename TInputImage, typename TOutputImage>
-class RGBToLuminanceImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT RGBToLuminanceImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(RGBToLuminanceImageFilter);

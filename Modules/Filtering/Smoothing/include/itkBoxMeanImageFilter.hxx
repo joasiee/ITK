@@ -50,7 +50,7 @@ BoxMeanImageFilter<TInputImage, TOutputImage>::DynamicThreadedGenerateData(
   using AccumImageType = Image<AccPixType, TInputImage::ImageDimension>;
 
   typename TInputImage::SizeType internalRadius;
-  for (unsigned int i = 0; i < TInputImage::ImageDimension; i++)
+  for (unsigned int i = 0; i < TInputImage::ImageDimension; ++i)
   {
     internalRadius[i] = this->GetRadius()[i] + 1;
   }
@@ -61,7 +61,7 @@ BoxMeanImageFilter<TInputImage, TOutputImage>::DynamicThreadedGenerateData(
   accumRegion.PadByRadius(internalRadius);
   accumRegion.Crop(inputImage->GetRequestedRegion());
 
-  typename AccumImageType::Pointer accImage = AccumImageType::New();
+  auto accImage = AccumImageType::New();
   accImage->SetRegions(accumRegion);
   accImage->Allocate();
 

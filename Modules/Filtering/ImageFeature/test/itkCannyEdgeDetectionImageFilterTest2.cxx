@@ -29,7 +29,9 @@ itkCannyEdgeDetectionImageFilterTest2(int argc, char * argv[])
 {
   if (argc < 4)
   {
-    std::cerr << "Usage: " << argv[0] << " InputImage OutputImage1 OutputImage2" << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cerr << " InputImage OutputImage1 OutputImage2" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -44,7 +46,7 @@ itkCannyEdgeDetectionImageFilterTest2(int argc, char * argv[])
   reader->SetFileName(argv[1]);
 
   // Set up the filter
-  CannyEdgeDetectionImageFilterType::Pointer filter = CannyEdgeDetectionImageFilterType::New();
+  auto filter = CannyEdgeDetectionImageFilterType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(filter, CannyEdgeDetectionImageFilter, ImageToImageFilter);
 

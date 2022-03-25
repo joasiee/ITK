@@ -36,7 +36,7 @@ DisplacementFieldJacobianDeterminantFilter<TInputImage, TRealType, TOutputImage>
   DisplacementFieldJacobianDeterminantFilter()
 {
   m_UseImageSpacing = true;
-  m_RequestedNumberOfThreads = this->GetNumberOfWorkUnits();
+  m_RequestedNumberOfWorkUnits = this->GetNumberOfWorkUnits();
   m_NeighborhoodRadius.Fill(1);
   m_DerivativeWeights.Fill(1.0);
   m_HalfDerivativeWeights.Fill(0.5);
@@ -148,7 +148,7 @@ DisplacementFieldJacobianDeterminantFilter<TInputImage, TRealType, TOutputImage>
   // in case our input image has changed.
   if (m_UseImageSpacing == true)
   {
-    for (unsigned int i = 0; i < ImageDimension; i++)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       if (static_cast<TRealType>(this->GetInput()->GetSpacing()[i]) == 0.0)
       {
@@ -242,7 +242,7 @@ DisplacementFieldJacobianDeterminantFilter<TInputImage, TRealType, TOutputImage>
   os << indent << "HalfDerivativeWeights: " << m_HalfDerivativeWeights << std::endl;
   os << indent << "UseImageSpacing: " << m_UseImageSpacing << std::endl;
   os << indent << "RequestedNumberOfThreads: "
-     << static_cast<typename NumericTraits<ThreadIdType>::PrintType>(m_RequestedNumberOfThreads) << std::endl;
+     << static_cast<typename NumericTraits<ThreadIdType>::PrintType>(m_RequestedNumberOfWorkUnits) << std::endl;
   os << indent << "RealValuedInputImage: " << m_RealValuedInputImage.GetPointer() << std::endl;
   os << indent
      << "NeighborhoodRadius: " << static_cast<typename NumericTraits<RadiusType>::PrintType>(m_NeighborhoodRadius)

@@ -34,7 +34,7 @@ MeanSquareRegistrationFunction<TFixedImage, TMovingImage, TDisplacementField>::M
   RadiusType   r;
   unsigned int j;
 
-  for (j = 0; j < ImageDimension; j++)
+  for (j = 0; j < ImageDimension; ++j)
   {
     r[j] = 0;
   }
@@ -48,7 +48,7 @@ MeanSquareRegistrationFunction<TFixedImage, TMovingImage, TDisplacementField>::M
   this->SetFixedImage(nullptr);
   m_FixedImageGradientCalculator = GradientCalculatorType::New();
 
-  typename DefaultInterpolatorType::Pointer interp = DefaultInterpolatorType::New();
+  auto interp = DefaultInterpolatorType::New();
 
   m_MovingImageInterpolator = itkDynamicCastInDebugMode<InterpolatorType *>(interp.GetPointer());
 }
@@ -116,7 +116,7 @@ MeanSquareRegistrationFunction<TFixedImage, TMovingImage, TDisplacementField>::C
   const CovariantVectorType fixedGradient = m_FixedImageGradientCalculator->EvaluateAtIndex(index);
   double                    fixedGradientSquaredMagnitude = 0;
 
-  for (unsigned int j = 0; j < ImageDimension; j++)
+  for (unsigned int j = 0; j < ImageDimension; ++j)
   {
     fixedGradientSquaredMagnitude += itk::Math::sqr(fixedGradient[j]) * m_FixedImageSpacing[j];
   }
@@ -125,7 +125,7 @@ MeanSquareRegistrationFunction<TFixedImage, TMovingImage, TDisplacementField>::C
   const DisplacementFieldPixelType itvec = this->GetDisplacementField()->GetPixel(index);
   PointType                        mappedPoint;
   this->GetFixedImage()->TransformIndexToPhysicalPoint(index, mappedPoint);
-  for (unsigned int j = 0; j < ImageDimension; j++)
+  for (unsigned int j = 0; j < ImageDimension; ++j)
   {
     mappedPoint[j] += itvec[j];
   }
@@ -157,7 +157,7 @@ MeanSquareRegistrationFunction<TFixedImage, TMovingImage, TDisplacementField>::C
     return update;
   }
 
-  for (unsigned int j = 0; j < ImageDimension; j++)
+  for (unsigned int j = 0; j < ImageDimension; ++j)
   {
     update[j] =
       speedValue * fixedGradient[j] * itk::Math::sqr(m_FixedImageSpacing[j]) / denominator * this->m_GradientStep;

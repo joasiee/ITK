@@ -42,16 +42,12 @@ public:
   Cast() = default;
   virtual ~Cast() = default;
   bool
-  operator!=(const Cast &) const
+  operator==(const Cast &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Cast & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Cast);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -115,7 +111,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
 
-  using OutputImageRegionType = typename Superclass::OutputImageRegionType;
+  using typename Superclass::OutputImageRegionType;
 
   using InputPixelType = typename TInputImage::PixelType;
   using OutputPixelType = typename TOutputImage::PixelType;
@@ -141,13 +137,13 @@ protected:
 
   template <typename TInputPixelType,
             typename TOutputPixelType,
-            typename std::enable_if<mpl::is_static_castable<TInputPixelType, TOutputPixelType>::value, int>::type = 0>
+            std::enable_if_t<mpl::is_static_castable<TInputPixelType, TOutputPixelType>::value, int> = 0>
   void
   DynamicThreadedGenerateDataDispatched(const OutputImageRegionType & outputRegionForThread);
 
   template <typename TInputPixelType,
             typename TOutputPixelType,
-            typename std::enable_if<!mpl::is_static_castable<TInputPixelType, TOutputPixelType>::value, int>::type = 0>
+            std::enable_if_t<!mpl::is_static_castable<TInputPixelType, TOutputPixelType>::value, int> = 0>
   void
   DynamicThreadedGenerateDataDispatched(const OutputImageRegionType & outputRegionForThread);
 

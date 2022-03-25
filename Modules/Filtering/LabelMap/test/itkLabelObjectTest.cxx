@@ -37,7 +37,7 @@ itkLabelObjectTest(int argc, char * argv[])
 
   // testing AddLine(), GetNumberOfLines(), GetLineContainer() const and Optimize()
 
-  LabelObjectType::Pointer lo = LabelObjectType::New();
+  auto lo = LabelObjectType::New();
 
   IndexType idx;
   idx[0] = 1;
@@ -77,7 +77,7 @@ itkLabelObjectTest(int argc, char * argv[])
   lo->Optimize();
 
   // the expected result after Optimize()
-  LabelObjectType::Pointer ref = LabelObjectType::New();
+  auto ref = LabelObjectType::New();
 
   idx[0] = 5;
   idx[1] = 0;
@@ -179,7 +179,7 @@ itkLabelObjectTest(int argc, char * argv[])
     return EXIT_FAILURE;
   }
 
-  for (unsigned int i = 0; i < lo->Size(); i++)
+  for (unsigned int i = 0; i < lo->Size(); ++i)
   {
     if (lo->GetIndex(i) != idxs[i])
     {

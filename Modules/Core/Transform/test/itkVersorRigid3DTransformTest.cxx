@@ -63,7 +63,7 @@ itkVersorRigid3DTransformTest(int, char *[])
   {
     std::cout << "Test default constructor... ";
 
-    TransformType::Pointer transform = TransformType::New();
+    auto transform = TransformType::New();
 
     VectorType axis(1.5);
 
@@ -93,8 +93,8 @@ itkVersorRigid3DTransformTest(int, char *[])
 
   {
     std::cout << "Test initial rotation matrix " << std::endl;
-    TransformType::Pointer transform = TransformType::New();
-    MatrixType             matrix = transform->GetMatrix();
+    auto       transform = TransformType::New();
+    MatrixType matrix = transform->GetMatrix();
     std::cout << "Matrix = " << std::endl;
     std::cout << matrix << std::endl;
   }
@@ -104,7 +104,7 @@ itkVersorRigid3DTransformTest(int, char *[])
   {
     bool Ok = true;
 
-    TransformType::Pointer rotation = TransformType::New();
+    auto rotation = TransformType::New();
 
     itk::Vector<double, 3> axis(1);
 
@@ -116,7 +116,7 @@ itkVersorRigid3DTransformTest(int, char *[])
     TransformType::OffsetType offset = rotation->GetOffset();
     std::cout << "pure Rotation test:  ";
     std::cout << offset << std::endl;
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       if (std::fabs(offset[i] - 0.0) > epsilon)
       {
@@ -143,7 +143,7 @@ itkVersorRigid3DTransformTest(int, char *[])
 
       TransformType::OutputPointType r;
       r = rotation->TransformPoint(p);
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -173,7 +173,7 @@ itkVersorRigid3DTransformTest(int, char *[])
 
       TransformType::OutputVectorType r;
       r = rotation->TransformVector(p);
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -203,7 +203,7 @@ itkVersorRigid3DTransformTest(int, char *[])
 
       TransformType::OutputCovariantVectorType r;
       r = rotation->TransformCovariantVector(p);
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -236,7 +236,7 @@ itkVersorRigid3DTransformTest(int, char *[])
 
       TransformType::OutputVnlVectorType r;
       r = rotation->TransformVector(p);
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -262,7 +262,7 @@ itkVersorRigid3DTransformTest(int, char *[])
   {
     bool Ok = true;
 
-    TransformType::Pointer transform = TransformType::New();
+    auto transform = TransformType::New();
 
     itk::Vector<double, 3> axis(1);
 
@@ -279,7 +279,7 @@ itkVersorRigid3DTransformTest(int, char *[])
 
     TransformType::OutputPointType transformedPoint;
     transformedPoint = transform->TransformPoint(center);
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       if (std::fabs(center[i] - transformedPoint[i]) > epsilon)
       {
@@ -316,7 +316,7 @@ itkVersorRigid3DTransformTest(int, char *[])
     ParametersType parameters2 = transform->GetParameters();
 
     const double tolerance = 1e-8;
-    for (unsigned int p = 0; p < np; p++)
+    for (unsigned int p = 0; p < np; ++p)
     {
       if (std::fabs(parameters[p] - parameters2[p]) > tolerance)
       {
@@ -362,9 +362,9 @@ itkVersorRigid3DTransformTest(int, char *[])
     TheoreticalJacobian[0][5] = 0.0;
     TheoreticalJacobian[1][5] = 0.0;
     TheoreticalJacobian[2][5] = 1.0;
-    for (unsigned int ii = 0; ii < 3; ii++)
+    for (unsigned int ii = 0; ii < 3; ++ii)
     {
-      for (unsigned int jj = 0; jj < 6; jj++)
+      for (unsigned int jj = 0; jj < 6; ++jj)
       {
         if (itk::Math::abs(TheoreticalJacobian[ii][jj] - jacobian[ii][jj]) > 1e-5)
         {
@@ -383,7 +383,7 @@ itkVersorRigid3DTransformTest(int, char *[])
 
   {
     std::cout << " Exercise the SetIdentity() method " << std::endl;
-    TransformType::Pointer transform = TransformType::New();
+    auto transform = TransformType::New();
 
     itk::Vector<double, 3> axis(1);
 
@@ -416,7 +416,7 @@ itkVersorRigid3DTransformTest(int, char *[])
     ParametersType parameters2 = transform->GetParameters();
 
     const double tolerance = 1e-8;
-    for (unsigned int p = 0; p < np; p++)
+    for (unsigned int p = 0; p < np; ++p)
     {
       if (std::fabs(parameters[p] - parameters2[p]) > tolerance)
       {
@@ -435,13 +435,13 @@ itkVersorRigid3DTransformTest(int, char *[])
 
     MatrixType matrix;
 
-    TransformType::Pointer t = TransformType::New();
+    auto t = TransformType::New();
 
     // attempt to set an non-orthogonal matrix
     par = 0;
-    for (unsigned int row = 0; row < 3; row++)
+    for (unsigned int row = 0; row < 3; ++row)
     {
-      for (unsigned int col = 0; col < 3; col++)
+      for (unsigned int col = 0; col < 3; ++col)
       {
         matrix[row][col] = static_cast<double>(par + 1);
         ++par;
@@ -511,11 +511,11 @@ itkVersorRigid3DTransformTest(int, char *[])
     t = TransformType::New();
     t->SetParameters(e);
 
-    TransformType::Pointer t2 = TransformType::New();
+    auto t2 = TransformType::New();
     t2->SetMatrix(t->GetMatrix());
 
     ParametersType p = t2->GetParameters();
-    for (unsigned int k = 0; k < e.GetSize(); k++)
+    for (unsigned int k = 0; k < e.GetSize(); ++k)
     {
       if (std::fabs(e[k] - p[k]) > epsilon)
       {
@@ -526,7 +526,7 @@ itkVersorRigid3DTransformTest(int, char *[])
       }
     }
     {
-      TransformType::Pointer tInverse = TransformType::New();
+      auto tInverse = TransformType::New();
       if (!t->GetInverse(tInverse))
       {
         std::cout << "Cannot create inverse transform" << std::endl;

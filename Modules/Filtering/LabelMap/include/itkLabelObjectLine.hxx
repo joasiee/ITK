@@ -43,8 +43,8 @@ LabelObjectLine<VImageDimension>::SetIndex(const IndexType & idx)
 }
 
 template <unsigned int VImageDimension>
-const typename LabelObjectLine<VImageDimension>::IndexType &
-LabelObjectLine<VImageDimension>::GetIndex() const
+auto
+LabelObjectLine<VImageDimension>::GetIndex() const -> const IndexType &
 {
   return m_Index;
 }
@@ -57,8 +57,8 @@ LabelObjectLine<VImageDimension>::SetLength(const LengthType length)
 }
 
 template <unsigned int VImageDimension>
-const typename LabelObjectLine<VImageDimension>::LengthType &
-LabelObjectLine<VImageDimension>::GetLength() const
+auto
+LabelObjectLine<VImageDimension>::GetLength() const -> const LengthType &
 {
   return m_Length;
 }
@@ -68,7 +68,7 @@ bool
 LabelObjectLine<VImageDimension>::HasIndex(const IndexType idx) const
 {
   // are we talking about the right line ?
-  for (unsigned int i = 1; i < ImageDimension; i++)
+  for (unsigned int i = 1; i < ImageDimension; ++i)
   {
     if (m_Index[i] != idx[i])
     {
@@ -83,7 +83,7 @@ bool
 LabelObjectLine<VImageDimension>::IsNextIndex(const IndexType & idx) const
 {
   // are we talking about the right line ?
-  for (unsigned int i = 1; i < ImageDimension; i++)
+  for (unsigned int i = 1; i < ImageDimension; ++i)
   {
     if (m_Index[i] != idx[i])
     {

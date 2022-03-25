@@ -48,7 +48,7 @@ itkBSplineResampleImageFunctionTest(int, char *[])
   ImageType::ConstPointer randImage = interpolator->GetInputImage();
 
   using FilterType = itk::BSplineDecompositionImageFilter<ImageType, ImageType>;
-  FilterType::Pointer      filter = FilterType::New();
+  auto                     filter = FilterType::New();
   itk::SimpleFilterWatcher watcher(filter, "filter");
 
   filter->SetSplineOrder(interpolator->GetSplineOrder());
@@ -59,7 +59,7 @@ itkBSplineResampleImageFunctionTest(int, char *[])
 
   /** Set up a BSplineResampleImageFunction. */
   using ResampleFunctionType = itk::BSplineResampleImageFunction<ImageType, double>;
-  ResampleFunctionType::Pointer resample = ResampleFunctionType::New();
+  auto resample = ResampleFunctionType::New();
 
   resample->SetSplineOrder(interpolator->GetSplineOrder());
   resample->SetInputImage(filter->GetOutput());
@@ -75,10 +75,10 @@ itkBSplineResampleImageFunctionTest(int, char *[])
   const double minValue = randImage->GetOrigin()[0];
   const double maxValue = LastPhysicalLocation[0];
 
-  for (unsigned int k = 0; k < 10; k++)
+  for (unsigned int k = 0; k < 10; ++k)
   {
     ResampleFunctionType::PointType point;
-    for (unsigned int j = 0; j < ImageDimension; j++)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       point[j] = vnl_sample_uniform(minValue, maxValue);
     }

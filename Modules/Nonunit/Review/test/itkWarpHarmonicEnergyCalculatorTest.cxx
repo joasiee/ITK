@@ -28,7 +28,8 @@ itkWarpHarmonicEnergyCalculatorTest(int argc, char * argv[])
   if (argc != 4)
   {
     std::cerr << "Missing parameters." << std::endl;
-    std::cerr << "Usage: " << argv[0] << " useImageSpacing"
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cerr << " useImageSpacing"
               << " derivativeWeights"
               << " expectedEnergy" << std::endl;
     return EXIT_FAILURE;
@@ -52,7 +53,7 @@ itkWarpHarmonicEnergyCalculatorTest(int argc, char * argv[])
   using RegionType = itk::ImageRegion<ImageDimension>;
 
   // Create the input image
-  DisplacementFieldType::Pointer inputDisplacementField = DisplacementFieldType::New();
+  auto inputDisplacementField = DisplacementFieldType::New();
 
   // Define its size, and start index
   SizeType size;
@@ -85,7 +86,7 @@ itkWarpHarmonicEnergyCalculatorTest(int argc, char * argv[])
 
 
   // Create the calculator
-  CalculatorType::Pointer calculator = CalculatorType::New();
+  auto calculator = CalculatorType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(calculator, WarpHarmonicEnergyCalculator, Object);
 

@@ -85,7 +85,7 @@ public:
   {
 
     VectorType v(parameters.Size());
-    for (unsigned int i = 0; i < SpaceDimension; i++)
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
       v[i] = parameters[i];
     }
@@ -104,7 +104,7 @@ public:
   {
 
     VectorType v(parameters.Size());
-    for (unsigned int i = 0; i < SpaceDimension; i++)
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
       v[i] = parameters[i];
     }
@@ -112,7 +112,7 @@ public:
     VectorType gradient = m_A * v - m_B;
     std::cout << gradient << std::endl;
     derivative = DerivativeType(SpaceDimension);
-    for (unsigned int i = 0; i < SpaceDimension; i++)
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
       if (!m_Negate)
       {
@@ -272,7 +272,7 @@ AmoebaTest1()
   using OptimizerType = itk::AmoebaOptimizer;
 
   // Declaration of a itkOptimizer
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
 
   // set optimizer parameters
   itkOptimizer->SetMaximumNumberOfIterations(10);
@@ -283,7 +283,7 @@ AmoebaTest1()
   double fTolerance = 0.001;
   itkOptimizer->SetFunctionConvergenceTolerance(fTolerance);
 
-  amoebaTestF1::Pointer costFunction = amoebaTestF1::New();
+  auto costFunction = amoebaTestF1::New();
   itkOptimizer->SetCostFunction(costFunction);
   std::cout << "itkOptimizer->GetCostFunction(): " << itkOptimizer->GetCostFunction() << std::endl;
 
@@ -340,7 +340,7 @@ AmoebaTest1()
   std::cout << "Right answer   = " << trueParameters[0] << " , " << trueParameters[1] << std::endl;
   std::cout << "Final position = " << finalPosition << std::endl;
 
-  for (unsigned int j = 0; j < 2; j++)
+  for (unsigned int j = 0; j < 2; ++j)
   {
     if (itk::Math::abs(finalPosition[j] - trueParameters[j]) > xTolerance)
       pass = false;
@@ -376,7 +376,7 @@ AmoebaTest1()
 
     itkOptimizer->SetInitialPosition(currentValue);
 
-    CommandIterationUpdateAmoeba::Pointer observer = CommandIterationUpdateAmoeba::New();
+    auto observer = CommandIterationUpdateAmoeba::New();
     itkOptimizer->AddObserver(itk::FunctionEvaluationIterationEvent(), observer);
 
     try
@@ -413,7 +413,7 @@ AmoebaTest1()
     std::cout << "Right answer   = " << trueParameters[0] << " , " << trueParameters[1] << std::endl;
     std::cout << "Final position = " << finalPosition << std::endl;
 
-    for (unsigned int j = 0; j < 2; j++)
+    for (unsigned int j = 0; j < 2; ++j)
     {
       if (itk::Math::abs(finalPosition[j] - trueParameters[j]) > xTolerance)
         pass = false;
@@ -449,7 +449,7 @@ AmoebaTest2()
   std::cout << "Amoeba Optimizer Test 2\n \n";
 
   using OptimizerType = itk::AmoebaOptimizer;
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
 
   // set optimizer parameters
   unsigned int maxIterations = 100;
@@ -476,11 +476,11 @@ AmoebaTest2()
   itkOptimizer->SetInitialPosition(initialParameters);
 
   // the function we want to optimize
-  amoebaTestF2::Pointer costFunction = amoebaTestF2::New();
+  auto costFunction = amoebaTestF2::New();
   itkOptimizer->SetCostFunction(costFunction);
 
   // observe the iterations
-  CommandIterationUpdateAmoeba::Pointer observer = CommandIterationUpdateAmoeba::New();
+  auto observer = CommandIterationUpdateAmoeba::New();
   itkOptimizer->AddObserver(itk::IterationEvent(), observer);
 
   try

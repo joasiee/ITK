@@ -52,16 +52,12 @@ public:
   ~VectorMagnitude() = default;
 
   bool
-  operator!=(const VectorMagnitude &) const
+  operator==(const VectorMagnitude &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const VectorMagnitude & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(VectorMagnitude);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -72,7 +68,7 @@ public:
 } // namespace Functor
 
 template <typename TInputImage, typename TOutputImage>
-class VectorMagnitudeImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT VectorMagnitudeImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(VectorMagnitudeImageFilter);

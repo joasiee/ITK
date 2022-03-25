@@ -24,7 +24,6 @@
 namespace itk
 {
 
-/** Constructor */
 template <unsigned int TDimension>
 FEMObjectSpatialObject<TDimension>::FEMObjectSpatialObject()
 {
@@ -32,11 +31,9 @@ FEMObjectSpatialObject<TDimension>::FEMObjectSpatialObject()
   m_FEMObject = FEMObjectType::New();
 }
 
-/** Destructor */
 template <unsigned int TDimension>
 FEMObjectSpatialObject<TDimension>::~FEMObjectSpatialObject() = default;
 
-/** Set the femobject in the spatial object */
 template <unsigned int TDimension>
 void
 FEMObjectSpatialObject<TDimension>::SetFEMObject(FEMObjectType * femobject)
@@ -49,17 +46,15 @@ FEMObjectSpatialObject<TDimension>::SetFEMObject(FEMObjectType * femobject)
   m_FEMObject = femobject;
 }
 
-/** Print the object */
 template <unsigned int TDimension>
 void
 FEMObjectSpatialObject<TDimension>::PrintSelf(std::ostream & os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
-  os << "FEMObject: " << std::endl;
-  os << indent << m_FEMObject << std::endl;
+
+  itkPrintSelfObjectMacro(FEMObject);
 }
 
-/** Get the modification time */
 template <unsigned int TDimension>
 ModifiedTimeType
 FEMObjectSpatialObject<TDimension>::GetMTime() const

@@ -57,8 +57,8 @@ AnnulusOperator<TPixel, TDimension, TAllocator>::Fill(const CoefficientVector & 
 }
 
 template <typename TPixel, unsigned int TDimension, typename TAllocator>
-typename AnnulusOperator<TPixel, TDimension, TAllocator>::CoefficientVector
-AnnulusOperator<TPixel, TDimension, TAllocator>::GenerateCoefficients()
+auto
+AnnulusOperator<TPixel, TDimension, TAllocator>::GenerateCoefficients() -> CoefficientVector
 {
   // Determine the initial kernel values...
   double interiorV, annulusV, exteriorV;
@@ -92,8 +92,8 @@ AnnulusOperator<TPixel, TDimension, TAllocator>::GenerateCoefficients()
 
   // Use a couple of sphere spatial functions...
   using SphereType = SphereSpatialFunction<TDimension>;
-  typename SphereType::Pointer innerS = SphereType::New();
-  typename SphereType::Pointer outerS = SphereType::New();
+  auto innerS = SphereType::New();
+  auto outerS = SphereType::New();
 
   innerS->SetRadius(m_InnerRadius);
   outerS->SetRadius(m_InnerRadius + m_Thickness);

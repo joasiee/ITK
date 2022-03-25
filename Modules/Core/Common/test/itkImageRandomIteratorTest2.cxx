@@ -22,6 +22,7 @@
 #include "itkImageFileWriter.h"
 #include "itkImageFileReader.h"
 #include "itkTestingComparisonImageFilter.h"
+#include "itkTestingMacros.h"
 
 
 int
@@ -29,9 +30,9 @@ itkImageRandomIteratorTest2(int argc, char * argv[])
 {
   if (argc < 2)
   {
-    std::cerr << "Missing arguments " << std::endl;
-    std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << "  outputImageFile" << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cerr << "  outputImageFile" << std::endl;
     std::cerr << "[baselineImage  differenceImage]" << std::endl;
     return EXIT_FAILURE;
   }
@@ -42,7 +43,7 @@ itkImageRandomIteratorTest2(int argc, char * argv[])
 
   using ImageType = itk::Image<PixelType, ImageDimension>;
 
-  ImageType::Pointer image = ImageType::New();
+  auto image = ImageType::New();
 
   ImageType::SizeType size;
 
@@ -91,7 +92,7 @@ itkImageRandomIteratorTest2(int argc, char * argv[])
 
     using DifferenceFilterType = itk::Testing::ComparisonImageFilter<ImageType, DifferenceImageType>;
 
-    DifferenceFilterType::Pointer difference = DifferenceFilterType::New();
+    auto difference = DifferenceFilterType::New();
 
     difference->SetValidInput(image);
     difference->SetTestInput(itk::ReadImage<ImageType>(argv[2]));
@@ -99,19 +100,12 @@ itkImageRandomIteratorTest2(int argc, char * argv[])
     difference->SetDifferenceThreshold(0);
 
     using DifferenceWriterType = itk::ImageFileWriter<DifferenceImageType>;
-    DifferenceWriterType::Pointer writer2 = DifferenceWriterType::New();
+    auto writer2 = DifferenceWriterType::New();
 
     writer2->SetInput(difference->GetOutput());
 
-    try
-    {
-      writer2->Update();
-    }
-    catch (const itk::ExceptionObject & excp)
-    {
-      std::cerr << excp << std::endl;
-      return EXIT_FAILURE;
-    }
+    ITK_TRY_EXPECT_NO_EXCEPTION(writer2->Update());
+
 
     std::cout << "Number of pixels with differences = ";
     std::cout << difference->GetNumberOfPixelsWithDifferences() << std::endl;

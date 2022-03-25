@@ -51,42 +51,35 @@ transformImage(const char * inputImageFileName, const char * outputImageFileName
   using ComplexImageType = itk::Image<ComplexPixelType, Dimension>;
 
   using ReaderType = itk::ImageFileReader<RealImageType>;
-  typename ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   reader->SetFileName(inputImageFileName);
 
   using ForwardFilterType = itk::ForwardFFTImageFilter<RealImageType, ComplexImageType>;
-  typename ForwardFilterType::Pointer forwardFilter = ForwardFilterType::New();
+  auto forwardFilter = ForwardFilterType::New();
   forwardFilter->SetInput(reader->GetOutput());
 
   using ComplexFilterType = itk::ComplexToComplexFFTImageFilter<ComplexImageType>;
-  typename ComplexFilterType::Pointer inverseComplexFilter = ComplexFilterType::New();
+  auto inverseComplexFilter = ComplexFilterType::New();
   inverseComplexFilter->SetInput(forwardFilter->GetOutput());
   inverseComplexFilter->SetTransformDirection(ComplexFilterType::TransformDirectionEnum::INVERSE);
 
-  typename ComplexFilterType::Pointer forwardComplexFilter = ComplexFilterType::New();
+  auto forwardComplexFilter = ComplexFilterType::New();
   forwardComplexFilter->SetInput(inverseComplexFilter->GetOutput());
   forwardComplexFilter->SetTransformDirection(ComplexFilterType::TransformDirectionEnum::FORWARD);
   // This tests the CanUseDestructiveAlgorithm state with the FFTW version.
   forwardComplexFilter->ReleaseDataFlagOn();
 
   using InverseFilterType = itk::InverseFFTImageFilter<ComplexImageType, RealImageType>;
-  typename InverseFilterType::Pointer inverseFilter = InverseFilterType::New();
+  auto inverseFilter = InverseFilterType::New();
   inverseFilter->SetInput(forwardComplexFilter->GetOutput());
 
   using WriterType = itk::ImageFileWriter<RealImageType>;
-  typename WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   writer->SetFileName(outputImageFileName);
   writer->SetInput(inverseFilter->GetOutput());
 
-  try
-  {
-    writer->Update();
-  }
-  catch (const itk::ExceptionObject & error)
-  {
-    std::cerr << error << std::endl;
-    return EXIT_FAILURE;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(writer->Update());
+
 
   return EXIT_SUCCESS;
 }
@@ -96,7 +89,8 @@ itkComplexToComplexFFTImageFilterTest(int argc, char * argv[])
 {
   if (argc < 4)
   {
-    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " <InputImage> <OutputImage> <float|double>"
+    std::cerr << "Missing Parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " InputImage OutputImage <float|double>"
               << std::endl;
     return EXIT_FAILURE;
   }

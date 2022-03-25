@@ -23,6 +23,7 @@
 #include "itkStreamingImageFilter.h"
 #include "itkImageRegionSplitterMultidimensional.h"
 #include "itkPipelineMonitorImageFilter.h"
+#include "itkTestingMacros.h"
 
 
 int
@@ -30,8 +31,9 @@ itkStreamingImageFilterTest3(int argc, char * argv[])
 {
   if (argc < 3)
   {
-    std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << "  inputImageFile outputImageFile numberOfStreamDivisions" << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cerr << "  inputImageFile outputImageFile numberOfStreamDivisions" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -43,11 +45,11 @@ itkStreamingImageFilterTest3(int argc, char * argv[])
   using ImageType = itk::Image<PixelType, 2>;
 
   using ReaderType = itk::ImageFileReader<ImageType>;
-  ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   reader->SetFileName(inputFilename);
 
   using SomeFilter = itk::ShiftScaleImageFilter<ImageType, ImageType>;
-  SomeFilter::Pointer filter = SomeFilter::New();
+  auto filter = SomeFilter::New();
   filter->SetInput(reader->GetOutput());
 
   // monitor what's going on

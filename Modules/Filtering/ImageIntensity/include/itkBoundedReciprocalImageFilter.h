@@ -50,16 +50,12 @@ public:
   BoundedReciprocal() = default;
   ~BoundedReciprocal() = default;
   bool
-  operator!=(const BoundedReciprocal &) const
+  operator==(const BoundedReciprocal &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const BoundedReciprocal & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(BoundedReciprocal);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -70,7 +66,7 @@ public:
 } // namespace Functor
 
 template <typename TInputImage, typename TOutputImage>
-class BoundedReciprocalImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT BoundedReciprocalImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(BoundedReciprocalImageFilter);

@@ -62,19 +62,19 @@ public:
   static constexpr unsigned int ParametersDimension = NDimensions;
 
   /** Standard scalar type for this class. */
-  using ScalarType = typename Superclass::ScalarType;
+  using typename Superclass::ScalarType;
 
   /** Standard parameters container. */
-  using FixedParametersType = typename Superclass::FixedParametersType;
-  using ParametersType = typename Superclass::ParametersType;
+  using typename Superclass::FixedParametersType;
+  using typename Superclass::ParametersType;
 
   /** Standard Jacobian containers. */
-  using JacobianType = typename Superclass::JacobianType;
-  using JacobianPositionType = typename Superclass::JacobianPositionType;
-  using InverseJacobianPositionType = typename Superclass::InverseJacobianPositionType;
+  using typename Superclass::JacobianType;
+  using typename Superclass::JacobianPositionType;
+  using typename Superclass::InverseJacobianPositionType;
 
   /** The number of parameters defining this transform. */
-  using NumberOfParametersType = typename Superclass::NumberOfParametersType;
+  using typename Superclass::NumberOfParametersType;
 
   /** Standard vector type for this class. */
   using InputVectorType = Vector<TParametersValueType, NDimensions>;
@@ -98,7 +98,7 @@ public:
   using InverseTransformBasePointer = typename InverseTransformBaseType::Pointer;
 
   /** Transform category type. */
-  using TransformCategoryEnum = typename Superclass::TransformCategoryEnum;
+  using typename Superclass::TransformCategoryEnum;
 
   /** This method returns the value of the offset of the
    * TranslationTransform. */

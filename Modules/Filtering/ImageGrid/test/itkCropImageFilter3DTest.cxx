@@ -40,7 +40,7 @@ itkCropImageFilter3DTest(int, char *[])
   region.SetSize(size);
   region.SetIndex(index);
 
-  ImageType::Pointer image = ImageType::New();
+  auto image = ImageType::New();
 
   image->SetRegions(region);
   image->Allocate();
@@ -74,7 +74,7 @@ itkCropImageFilter3DTest(int, char *[])
 
   // check size of cropped image
   ImageType::RegionType::SizeType croppedSize = croppedImage->GetLargestPossibleRegion().GetSize();
-  for (unsigned i = 0; i < ImageType::RegionType::SizeType::GetSizeDimension(); i++)
+  for (unsigned i = 0; i < ImageType::RegionType::SizeType::GetSizeDimension(); ++i)
   {
     if (croppedSize[i] != dimSize - 2)
     {

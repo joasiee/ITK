@@ -34,8 +34,8 @@ Relabeler<TScalar, TImageDimension>::Relabeler()
 }
 
 template <typename TScalar, unsigned int TImageDimension>
-typename Relabeler<TScalar, TImageDimension>::DataObjectPointer
-Relabeler<TScalar, TImageDimension>::MakeOutput(DataObjectPointerArraySizeType itkNotUsed(idx))
+auto
+Relabeler<TScalar, TImageDimension>::MakeOutput(DataObjectPointerArraySizeType itkNotUsed(idx)) -> DataObjectPointer
 {
   return ImageType::New().GetPointer();
 }
@@ -50,7 +50,7 @@ Relabeler<TScalar, TImageDimension>::GenerateData()
 
   typename SegmentTreeType::Pointer  tree = this->GetInputSegmentTree();
   typename SegmentTreeType::Iterator it;
-  EquivalencyTable::Pointer          eqT = EquivalencyTable::New();
+  auto                               eqT = EquivalencyTable::New();
 
   output->SetBufferedRegion(output->GetRequestedRegion());
   output->Allocate();

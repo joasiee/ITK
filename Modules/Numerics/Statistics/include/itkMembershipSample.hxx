@@ -36,7 +36,7 @@ MembershipSample<TSample>::SetNumberOfClasses(unsigned int numberOfClasses)
 {
   m_NumberOfClasses = numberOfClasses;
   m_ClassSamples.resize(m_NumberOfClasses);
-  for (unsigned int i = 0; i < m_NumberOfClasses; i++)
+  for (unsigned int i = 0; i < m_NumberOfClasses; ++i)
   {
     m_ClassSamples[i] = ClassSampleType::New();
     (m_ClassSamples[i])->SetSample(this->GetSample());
@@ -69,7 +69,7 @@ template <typename TSample>
 inline int
 MembershipSample<TSample>::GetInternalClassLabel(const ClassLabelType classLabel) const
 {
-  for (unsigned int i = 0; i < m_UniqueClassLabels.size(); i++)
+  for (unsigned int i = 0; i < m_UniqueClassLabels.size(); ++i)
   {
     if (m_UniqueClassLabels[i] == classLabel)
     {
@@ -81,15 +81,15 @@ MembershipSample<TSample>::GetInternalClassLabel(const ClassLabelType classLabel
 }
 
 template <typename TSample>
-const typename MembershipSample<TSample>::ClassLabelHolderType
-MembershipSample<TSample>::GetClassLabelHolder() const
+auto
+MembershipSample<TSample>::GetClassLabelHolder() const -> const ClassLabelHolderType
 {
   return m_ClassLabelHolder;
 }
 
 template <typename TSample>
-const typename MembershipSample<TSample>::ClassSampleType *
-MembershipSample<TSample>::GetClassSample(const ClassLabelType & classLabel) const
+auto
+MembershipSample<TSample>::GetClassSample(const ClassLabelType & classLabel) const -> const ClassSampleType *
 {
   int classIndex = this->GetInternalClassLabel(classLabel);
   if (classIndex < 0)

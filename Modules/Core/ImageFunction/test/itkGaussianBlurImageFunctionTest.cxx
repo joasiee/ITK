@@ -28,7 +28,7 @@ itkGaussianBlurImageFunctionTest(int, char *[])
   using GFunctionType = itk::GaussianBlurImageFunction<ImageType>;
 
   // Create and allocate the image
-  ImageType::Pointer    image = ImageType::New();
+  auto                  image = ImageType::New();
   ImageType::SizeType   size;
   ImageType::IndexType  start;
   ImageType::RegionType region;
@@ -44,7 +44,7 @@ itkGaussianBlurImageFunctionTest(int, char *[])
   image->Allocate(true); // initialize buffer to zero
 
   // Fill the image with a straight line
-  for (unsigned int i = 0; i < 50; i++)
+  for (unsigned int i = 0; i < 50; ++i)
   {
     ImageType::IndexType ind;
     ind[0] = i;
@@ -55,7 +55,7 @@ itkGaussianBlurImageFunctionTest(int, char *[])
   }
 
   // Test the derivative of Gaussian image function
-  GFunctionType::Pointer gaussianFunction = GFunctionType::New();
+  auto gaussianFunction = GFunctionType::New();
   gaussianFunction->SetInputImage(image);
   itk::Index<2> index;
   index.Fill(25);
@@ -65,7 +65,7 @@ itkGaussianBlurImageFunctionTest(int, char *[])
   gaussianFunction->SetSigma(5.0);
   const GFunctionType::SigmaArrayType & sigma = gaussianFunction->GetSigma();
 
-  for (unsigned int i = 0; i < Dimension; i++)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
     if (sigma[i] != 5.0)
     {
@@ -81,7 +81,7 @@ itkGaussianBlurImageFunctionTest(int, char *[])
   gaussianFunction->SetExtent(5.0);
   const GFunctionType::ExtentArrayType & ext = gaussianFunction->GetExtent();
 
-  for (unsigned int i = 0; i < Dimension; i++)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
     if (ext[i] != 5.0)
     {
@@ -102,7 +102,7 @@ itkGaussianBlurImageFunctionTest(int, char *[])
 
     const GFunctionType::ErrorArrayType & readError = gaussianFunction->GetMaximumError();
 
-    for (unsigned int i = 0; i < Dimension; i++)
+    for (unsigned int i = 0; i < Dimension; ++i)
     {
       if (std::fabs(setError[i] - readError[i]) > 1e-6)
       {

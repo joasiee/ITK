@@ -38,7 +38,8 @@ namespace itk
  * \ingroup ITKImageFunction
  */
 template <typename TInputImage, typename TCoordRep = float>
-class NearestNeighborExtrapolateImageFunction : public ExtrapolateImageFunction<TInputImage, TCoordRep>
+class ITK_TEMPLATE_EXPORT NearestNeighborExtrapolateImageFunction
+  : public ExtrapolateImageFunction<TInputImage, TCoordRep>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(NearestNeighborExtrapolateImageFunction);
@@ -56,20 +57,20 @@ public:
   itkNewMacro(Self);
 
   /** OutputType type alias support */
-  using OutputType = typename Superclass::OutputType;
+  using typename Superclass::OutputType;
 
   /** InputImageType type alias support */
-  using InputImageType = typename Superclass::InputImageType;
+  using typename Superclass::InputImageType;
 
   /** Dimension underlying input image. */
   static constexpr unsigned int ImageDimension = Superclass::ImageDimension;
 
   /** Index type alias support */
-  using IndexType = typename Superclass::IndexType;
+  using typename Superclass::IndexType;
   using IndexValueType = typename IndexType::IndexValueType;
 
   /** ContinuousIndex type alias support */
-  using ContinuousIndexType = typename Superclass::ContinuousIndexType;
+  using typename Superclass::ContinuousIndexType;
 
   /** Evaluate the function at a ContinuousIndex position
    *
@@ -83,7 +84,7 @@ public:
   {
     IndexType nindex;
 
-    for (unsigned int j = 0; j < ImageDimension; j++)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       nindex[j] = Math::RoundHalfIntegerUp<IndexValueType>(index[j]);
       if (nindex[j] < this->GetStartIndex()[j])
@@ -110,7 +111,7 @@ public:
   {
     IndexType nindex;
 
-    for (unsigned int j = 0; j < ImageDimension; j++)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       if (index[j] < this->GetStartIndex()[j])
       {

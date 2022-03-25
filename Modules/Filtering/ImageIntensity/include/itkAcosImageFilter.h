@@ -37,16 +37,12 @@ public:
   Acos() = default;
   ~Acos() = default;
   bool
-  operator!=(const Acos &) const
+  operator==(const Acos &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Acos & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Acos);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -80,7 +76,7 @@ public:
  * \ingroup ITKImageIntensity
  */
 template <typename TInputImage, typename TOutputImage>
-class AcosImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT AcosImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(AcosImageFilter);

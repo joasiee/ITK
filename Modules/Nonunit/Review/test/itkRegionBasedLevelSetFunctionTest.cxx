@@ -42,9 +42,9 @@ public:
   /** Run-time type information (and related methods) */
   itkTypeMacro(RegionBasedLevelSetFunctionTestHelper, RegionBasedLevelSetFunction);
 
-  using ScalarValueType = typename Superclass::ScalarValueType;
-  using FeaturePixelType = typename Superclass::FeaturePixelType;
-  using FeatureIndexType = typename Superclass::FeatureIndexType;
+  using typename Superclass::ScalarValueType;
+  using typename Superclass::FeaturePixelType;
+  using typename Superclass::FeatureIndexType;
 
   ScalarValueType
   ComputeInternalTerm(const FeaturePixelType &, const FeatureIndexType &) override
@@ -125,7 +125,7 @@ itkRegionBasedLevelSetFunctionTest(int, char *[])
   using RegionBasedLevelSetFunctionType =
     itk::RegionBasedLevelSetFunctionTestHelper<ImageType, FeatureImageType, DataHelperType>;
 
-  RegionBasedLevelSetFunctionType::Pointer function = RegionBasedLevelSetFunctionType::New();
+  auto function = RegionBasedLevelSetFunctionType::New();
   if (function.IsNull())
   {
     return EXIT_FAILURE;

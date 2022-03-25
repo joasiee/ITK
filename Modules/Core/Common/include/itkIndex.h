@@ -19,6 +19,7 @@
 #define itkIndex_h
 
 #include "itkOffset.h"
+#include <type_traits> // For is_integral.
 
 namespace itk
 {
@@ -99,7 +100,7 @@ public:
   {
     Self result;
 
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       result[i] = m_InternalArray[i] + static_cast<IndexValueType>(sz[i]);
     }
@@ -110,7 +111,7 @@ public:
   const Self &
   operator+=(const SizeType & sz)
   {
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       m_InternalArray[i] += static_cast<IndexValueType>(sz[i]);
     }
@@ -124,7 +125,7 @@ public:
   {
     Self result;
 
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       result[i] = m_InternalArray[i] - static_cast<IndexValueType>(sz[i]);
     }
@@ -135,7 +136,7 @@ public:
   const Self &
   operator-=(const SizeType & sz)
   {
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       m_InternalArray[i] -= static_cast<IndexValueType>(sz[i]);
     }
@@ -148,7 +149,7 @@ public:
   {
     Self result;
 
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       result[i] = m_InternalArray[i] + offset[i];
     }
@@ -159,7 +160,7 @@ public:
   const Self &
   operator+=(const OffsetType & offset)
   {
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       m_InternalArray[i] += offset[i];
     }
@@ -170,7 +171,7 @@ public:
   const Self &
   operator-=(const OffsetType & offset)
   {
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       m_InternalArray[i] -= offset[i];
     }
@@ -183,7 +184,7 @@ public:
   {
     Self result;
 
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       result[i] = m_InternalArray[i] - off.m_InternalArray[i];
     }
@@ -196,7 +197,7 @@ public:
   {
     OffsetType result;
 
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       result[i] = m_InternalArray[i] - vec.m_InternalArray[i];
     }
@@ -210,7 +211,7 @@ public:
   {
     Self result;
 
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       result[i] = m_InternalArray[i] * static_cast<IndexValueType>(vec.m_InternalArray[i]);
     }
@@ -411,9 +412,9 @@ public:
     return false;
   }
 
-  reference operator[](size_type pos) { return m_InternalArray[pos]; }
+  constexpr reference operator[](size_type pos) { return m_InternalArray[pos]; }
 
-  const_reference operator[](size_type pos) const { return m_InternalArray[pos]; }
+  constexpr const_reference operator[](size_type pos) const { return m_InternalArray[pos]; }
 
   reference
   at(size_type pos)
@@ -468,11 +469,14 @@ public:
 
   /** Returns an Index object, filled with the specified value for each element.
    */
-  static Self
+  static constexpr Self
   Filled(const IndexValueType value)
   {
-    Self result;
-    result.Fill(value);
+    Self result{};
+    for (IndexValueType & indexValue : result.m_InternalArray)
+    {
+      indexValue = value;
+    }
     return result;
   }
 
@@ -567,6 +571,20 @@ swap(Index<VDimension> & one, Index<VDimension> & two)
 {
   std::swap(one.m_InternalArray, two.m_InternalArray);
 }
+
+
+/** Makes an Index object, having the specified index values. */
+template <typename... T>
+auto
+MakeIndex(const T... values)
+{
+  const auto toValueType = [](const auto value) {
+    static_assert(std::is_integral<decltype(value)>::value, "Each value must have an integral type!");
+    return static_cast<IndexValueType>(value);
+  };
+  return Index<sizeof...(T)>{ { toValueType(values)... } };
+}
+
 
 // static constexpr definition explicitly needed in C++11
 template <unsigned int VDimension>

@@ -24,14 +24,14 @@ int
 itkTemporalRegionTest(int, char *[])
 {
 
-#define CHECK_FOR_VALUE(a, b)                                                                                          \
-  {                                                                                                                    \
-    if (a != b)                                                                                                        \
-    {                                                                                                                  \
-      std::cerr << "Error in " #a << " expected " << b << " but got " << a << std::endl;                               \
-      return EXIT_FAILURE;                                                                                             \
-    }                                                                                                                  \
-  }                                                                                                                    \
+#define CHECK_FOR_VALUE(a, b)                                                            \
+  {                                                                                      \
+    if (a != b)                                                                          \
+    {                                                                                    \
+      std::cerr << "Error in " #a << " expected " << b << " but got " << a << std::endl; \
+      return EXIT_FAILURE;                                                               \
+    }                                                                                    \
+  }                                                                                      \
   ITK_MACROEND_NOOP_STATEMENT
 
   // Test arrays for frame durations
@@ -43,7 +43,7 @@ itkTemporalRegionTest(int, char *[])
   itk::RealTimeStamp    stamp1 = stamp0;
   itk::RealTimeInterval oneSecond(1, 0);
   itk::RealTimeInterval tenSeconds(10, 0);
-  for (unsigned int i = 0; i < 1000000L; i++)
+  for (unsigned int i = 0; i < 1000000L; ++i)
   {
     stamp1 += oneSecond;
   }

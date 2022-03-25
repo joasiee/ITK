@@ -71,15 +71,15 @@ itkMultiResolutionImageRegistrationMethodTest(int, char *[])
   using RegistrationType = itk::MultiResolutionImageRegistrationMethod<FixedImageType, MovingImageType>;
 
 
-  MetricType::Pointer             metric = MetricType::New();
-  TransformType::Pointer          transform = TransformType::New();
-  OptimizerType::Pointer          optimizer = OptimizerType::New();
-  FixedImageType::Pointer         fixedImage = FixedImageType::New();
-  MovingImageType::Pointer        movingImage = MovingImageType::New();
-  InterpolatorType::Pointer       interpolator = InterpolatorType::New();
-  FixedImagePyramidType::Pointer  fixedImagePyramid = FixedImagePyramidType::New();
-  MovingImagePyramidType::Pointer movingImagePyramid = MovingImagePyramidType::New();
-  RegistrationType::Pointer       registration = RegistrationType::New();
+  auto metric = MetricType::New();
+  auto transform = TransformType::New();
+  auto optimizer = OptimizerType::New();
+  auto fixedImage = FixedImageType::New();
+  auto movingImage = MovingImageType::New();
+  auto interpolator = InterpolatorType::New();
+  auto fixedImagePyramid = FixedImagePyramidType::New();
+  auto movingImagePyramid = MovingImagePyramidType::New();
+  auto registration = RegistrationType::New();
 
   FixedImageType::SizeType size;
   size.Fill(8);
@@ -136,26 +136,26 @@ itkMultiResolutionImageRegistrationMethodTest(int, char *[])
    * Test out initialization errors
    ****************************************************/
 
-#define TEST_INITIALIZATION_ERROR(ComponentName, badComponent, goodComponent)                                          \
-  registration->Set##ComponentName(badComponent);                                                                      \
-  try                                                                                                                  \
-  {                                                                                                                    \
-    pass = false;                                                                                                      \
-    registration->Update();                                                                                            \
-  }                                                                                                                    \
-  catch (const itk::ExceptionObject & err)                                                                             \
-  {                                                                                                                    \
-    std::cout << "Caught expected ExceptionObject" << std::endl;                                                       \
-    std::cout << err << std::endl;                                                                                     \
-    pass = true;                                                                                                       \
-  }                                                                                                                    \
-  registration->Set##ComponentName(goodComponent);                                                                     \
-                                                                                                                       \
-  if (!pass)                                                                                                           \
-  {                                                                                                                    \
-    std::cout << "Test failed." << std::endl;                                                                          \
-    return EXIT_FAILURE;                                                                                               \
-  }                                                                                                                    \
+#define TEST_INITIALIZATION_ERROR(ComponentName, badComponent, goodComponent) \
+  registration->Set##ComponentName(badComponent);                             \
+  try                                                                         \
+  {                                                                           \
+    pass = false;                                                             \
+    registration->Update();                                                   \
+  }                                                                           \
+  catch (const itk::ExceptionObject & err)                                    \
+  {                                                                           \
+    std::cout << "Caught expected ExceptionObject" << std::endl;              \
+    std::cout << err << std::endl;                                            \
+    pass = true;                                                              \
+  }                                                                           \
+  registration->Set##ComponentName(goodComponent);                            \
+                                                                              \
+  if (!pass)                                                                  \
+  {                                                                           \
+    std::cout << "Test failed." << std::endl;                                 \
+    return EXIT_FAILURE;                                                      \
+  }                                                                           \
   ITK_MACROEND_NOOP_STATEMENT
 
   TEST_INITIALIZATION_ERROR(Metric, nullptr, metric);

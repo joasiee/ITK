@@ -100,8 +100,9 @@ ScalarImageToCooccurrenceMatrixFilter<TImageType, THistogramFrequencyContainer>:
 }
 
 template <typename TImageType, typename THistogramFrequencyContainer>
-const typename ScalarImageToCooccurrenceMatrixFilter<TImageType, THistogramFrequencyContainer>::HistogramType *
+auto
 ScalarImageToCooccurrenceMatrixFilter<TImageType, THistogramFrequencyContainer>::GetOutput() const
+  -> const HistogramType *
 {
   const auto * output = static_cast<const HistogramType *>(this->ProcessObject::GetOutput(0));
 
@@ -139,7 +140,7 @@ ScalarImageToCooccurrenceMatrixFilter<TImageType, THistogramFrequencyContainer>:
   typename OffsetVector::ConstIterator offsets;
   for (offsets = m_Offsets->Begin(); offsets != m_Offsets->End(); ++offsets)
   {
-    for (unsigned int i = 0; i < offsets.Value().GetOffsetDimension(); i++)
+    for (unsigned int i = 0; i < offsets.Value().GetOffsetDimension(); ++i)
     {
       unsigned int distance = itk::Math::abs(offsets.Value()[i]);
       if (distance > minRadius)

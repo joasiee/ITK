@@ -181,7 +181,7 @@ public:
   using RadiusType = typename ConstNeighborhoodIteratorType::RadiusType;
 
   /** Superclass type alias. */
-  using OutputImageRegionType = typename Superclass::OutputImageRegionType;
+  using typename Superclass::OutputImageRegionType;
 
   /** VectorGradientMagnitudeImageFilter needs a larger input requested
    * region than the output requested region (larger by the kernel
@@ -230,8 +230,7 @@ public:
   using ComponentWeightsType = FixedArray<TRealType, VectorDimension>;
   using DerivativeWeightsType = FixedArray<TRealType, ImageDimension>;
 #if !defined(ITK_LEGACY_REMOVE)
-  using WeightsType ITK_DEPRECATED_MSG("Use DerivativeWeightsType or ComponentWeightsType instead.") =
-    ComponentWeightsType;
+  using WeightsType [[deprecated("Use DerivativeWeightsType or ComponentWeightsType instead.")]] = ComponentWeightsType;
 #endif
 
   /** Directly Set/Get the array of weights used in the gradient calculations.
@@ -349,9 +348,9 @@ protected:
 
     // Calculate the directional derivatives for each vector component using
     // central differences.
-    for (i = 0; i < ImageDimension; i++)
+    for (i = 0; i < ImageDimension; ++i)
     {
-      for (j = 0; j < VectorDimension; j++)
+      for (j = 0; j < VectorDimension; ++j)
       {
         d_phi_du[i][j] =
           m_DerivativeWeights[i] * m_SqrtComponentWeights[j] * 0.5 * (it.GetNext(i)[j] - it.GetPrevious(i)[j]);
@@ -359,9 +358,9 @@ protected:
     }
 
     // Calculate the symmetric metric tensor g
-    for (i = 0; i < ImageDimension; i++)
+    for (i = 0; i < ImageDimension; ++i)
     {
-      for (j = i; j < ImageDimension; j++)
+      for (j = i; j < ImageDimension; ++j)
       {
         g[j][i] = g[i][j] = dot_product(d_phi_du[i], d_phi_du[j]);
       }
@@ -459,9 +458,9 @@ protected:
 
     // Calculate the directional derivatives for each vector component using
     // central differences.
-    for (i = 0; i < ImageDimension; i++)
+    for (i = 0; i < ImageDimension; ++i)
     {
-      for (j = 0; j < VectorDimension; j++)
+      for (j = 0; j < VectorDimension; ++j)
       {
         d_phi_du[i][j] =
           m_DerivativeWeights[i] * m_SqrtComponentWeights[j] * 0.5 * (it.GetNext(i)[j] - it.GetPrevious(i)[j]);
@@ -469,9 +468,9 @@ protected:
     }
 
     // Calculate the symmetric metric tensor g
-    for (i = 0; i < ImageDimension; i++)
+    for (i = 0; i < ImageDimension; ++i)
     {
-      for (j = i; j < ImageDimension; j++)
+      for (j = i; j < ImageDimension; ++j)
       {
         g[j][i] = g[i][j] = dot_product(d_phi_du[i], d_phi_du[j]);
       }
@@ -498,7 +497,7 @@ private:
   bool m_UseImageSpacing;
   bool m_UsePrincipleComponents;
 
-  ThreadIdType m_RequestedNumberOfThreads;
+  ThreadIdType m_RequestedNumberOfWorkUnits;
 
   typename RealVectorImageType::ConstPointer m_RealValuedInputImage;
 };

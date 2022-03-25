@@ -37,16 +37,12 @@ public:
   Cos() = default;
   ~Cos() = default;
   bool
-  operator!=(const Cos &) const
+  operator==(const Cos &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Cos & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Cos);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -78,7 +74,7 @@ public:
  * \ingroup ITKImageIntensity
  */
 template <typename TInputImage, typename TOutputImage>
-class CosImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT CosImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(CosImageFilter);

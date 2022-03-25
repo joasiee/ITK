@@ -40,7 +40,7 @@ template <unsigned int NDimension>
 vnl_matrix<double> inline CalculateRotationMatrix(const vnl_symmetric_eigensystem<double> & eig)
 {
   vnl_matrix<double> rotationMatrix(NDimension, NDimension, 0);
-  for (unsigned int i = 0; i < NDimension; i++)
+  for (unsigned int i = 0; i < NDimension; ++i)
   {
     rotationMatrix.set_column(i, eig.get_eigenvector(i));
   }
@@ -102,11 +102,11 @@ CalculateOrientedImage(const vnl_symmetric_eigensystem<double> &                
   // centroid of the object, the rotation matrix is specified by the
   // eigenvectors, and there is no translation.
   using TransformType = itk::AffineTransform<double, Dimension>;
-  typename TransformType::Pointer    transform = TransformType::New();
+  auto                               transform = TransformType::New();
   typename TransformType::MatrixType rotationMatrix(vnl_RotationMatrix);
   typename TransformType::CenterType center;
   typename TInputImage::PointType    origin;
-  for (unsigned int i = 0; i < Dimension; i++)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
     center[i] = labelGeometry.m_Centroid[i] * inputImage->GetSpacing()[i];
     origin[i] = labelGeometry.m_OrientedBoundingBoxOrigin[i] * inputImage->GetSpacing()[i];
@@ -118,7 +118,7 @@ CalculateOrientedImage(const vnl_symmetric_eigensystem<double> &                
   transform->SetMatrix(rotationMatrix);
 
   using ResampleFilterType = itk::ResampleImageFilter<TInputImage, TIntensityImage>;
-  typename ResampleFilterType::Pointer resampler = ResampleFilterType::New();
+  auto resampler = ResampleFilterType::New();
 
   // The m_OrientedBoundingBoxSize is specified to float precision.
   // Here we need an integer size large enough to contain all of the points, so
@@ -126,7 +126,7 @@ CalculateOrientedImage(const vnl_symmetric_eigensystem<double> &                
   // We also need to ensure that that bounding box is not outside of
   // the image bounds.
   typename ResampleFilterType::SizeType boundingBoxSize;
-  for (unsigned int i = 0; i < Dimension; i++)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
     boundingBoxSize[i] =
       (typename ResampleFilterType::SizeType::SizeValueType)std::ceil(labelGeometry.m_OrientedBoundingBoxSize[i]);
@@ -143,7 +143,7 @@ CalculateOrientedImage(const vnl_symmetric_eigensystem<double> &                
     // Set up the interpolator.
     // Use a nearest neighbor interpolator since these are labeled images.
     using InterpolatorType = itk::NearestNeighborInterpolateImageFunction<TInputImage, double>;
-    typename InterpolatorType::Pointer interpolator = InterpolatorType::New();
+    auto interpolator = InterpolatorType::New();
     resampler->SetInterpolator(interpolator);
   }
   else
@@ -151,7 +151,7 @@ CalculateOrientedImage(const vnl_symmetric_eigensystem<double> &                
     // Set up the interpolator.
     // Use a linear interpolator since these are intensity images.
     using InterpolatorType = itk::LinearInterpolateImageFunction<TInputImage, double>;
-    typename InterpolatorType::Pointer interpolator = InterpolatorType::New();
+    auto interpolator = InterpolatorType::New();
     resampler->SetInterpolator(interpolator);
   }
   resampler->Update();
@@ -234,7 +234,7 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GenerateData()
     // VOLUME
     (*mapIt).second.m_ZeroOrderMoment++;
 
-    for (unsigned int i = 0; i < ImageDimension; i++)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       // FIRST ORDER RAW MOMENTS
       (*mapIt).second.m_FirstOrderRawMoments[i] += index[i];
@@ -244,11 +244,11 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GenerateData()
     // Even for ND, the second order moments can be found from just
     // two nested loops since second order moments consider only
     // interactions between pairs of indices.
-    for (unsigned int i = 0; i < ImageDimension; i++)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       // It is only necessary to fill in half of the matrix since it is
       // symmetric.
-      for (unsigned int j = 0; j < ImageDimension; j++)
+      for (unsigned int j = 0; j < ImageDimension; ++j)
       {
         (*mapIt).second.m_SecondOrderRawMoments(i, j) += index[i] * index[j];
       }
@@ -291,7 +291,7 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GenerateData()
       // INTEGRATED PIXEL VALUE
       (*mapIt).second.m_Sum += value;
 
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         // FIRST ORDER WEIGHTED RAW MOMENTS
         (*mapIt).second.m_FirstOrderWeightedRawMoments[i] += index[i] * (typename LabelIndexType::IndexValueType)value;
@@ -324,18 +324,18 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GenerateData()
   // Now that the m_LabelGeometryMapper has been updated for all
   // pixels in the image, we can calculate other geometrical values.
   // Loop through all labels of the image.
-  for (mapIt = m_LabelGeometryMapper.begin(); mapIt != m_LabelGeometryMapper.end(); mapIt++)
+  for (mapIt = m_LabelGeometryMapper.begin(); mapIt != m_LabelGeometryMapper.end(); ++mapIt)
   {
     // Update the bounding box measurements.
     (*mapIt).second.m_BoundingBoxVolume = 1;
-    for (unsigned int i = 0; i < ImageDimension; i++)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       (*mapIt).second.m_BoundingBoxSize[i] =
         (*mapIt).second.m_BoundingBox[2 * i + 1] - (*mapIt).second.m_BoundingBox[2 * i] + 1;
       (*mapIt).second.m_BoundingBoxVolume = (*mapIt).second.m_BoundingBoxVolume * (*mapIt).second.m_BoundingBoxSize[i];
     }
 
-    for (unsigned int i = 0; i < ImageDimension; i++)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       // Normalize the centroid sum by the count to get the centroid.
       (*mapIt).second.m_Centroid[i] =
@@ -358,9 +358,9 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GenerateData()
 
     // Using the raw moments, we can calculate the central moments.
     MatrixType normalizedSecondOrderCentralMoments(ImageDimension, ImageDimension, 0);
-    for (unsigned int i = 0; i < ImageDimension; i++)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
-      for (unsigned int j = 0; j < ImageDimension; j++)
+      for (unsigned int j = 0; j < ImageDimension; ++j)
       {
         normalizedSecondOrderCentralMoments(i, j) =
           ((*mapIt).second.m_SecondOrderRawMoments(i, j)) / ((*mapIt).second.m_ZeroOrderMoment) -
@@ -382,7 +382,7 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GenerateData()
     // Calculate the eigenvalues/eigenvectors
     VectorType eigenvalues(ImageDimension, 0);
     MatrixType eigenvectors(ImageDimension, ImageDimension, 0);
-    for (unsigned int i = 0; i < ImageDimension; i++)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       eigenvectors.set_column(i, eig.get_eigenvector(i));
       eigenvalues[i] = eig.get_eigenvalue(i);
@@ -391,7 +391,7 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GenerateData()
     (*mapIt).second.m_Eigenvectors = eigenvectors;
 
     itk::FixedArray<float, ImageDimension> axesLength;
-    for (unsigned int i = 0; i < ImageDimension; i++)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       axesLength[i] = 4 * std::sqrt(eigenvalues[i]);
     }
@@ -455,9 +455,9 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::CalculateOrientedBoundin
   // Subtract the centroid of the region so that the rotation will
   // be about the center of the region.
   MatrixType pixelLocations(ImageDimension, labelGeometry.m_PixelIndices.size(), 0);
-  for (unsigned int i = 0; i < labelGeometry.m_PixelIndices.size(); i++)
+  for (unsigned int i = 0; i < labelGeometry.m_PixelIndices.size(); ++i)
   {
-    for (unsigned int j = 0; j < ImageDimension; j++)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       pixelLocations(j, i) = labelGeometry.m_PixelIndices[i][j] - labelGeometry.m_Centroid[j];
     }
@@ -478,7 +478,7 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::CalculateOrientedBoundin
     transformedBoundingBox[i + 1] = NumericTraits<float>::NonpositiveMin();
   }
 
-  for (unsigned int column = 0; column < transformedPixelLocations.columns(); column++)
+  for (unsigned int column = 0; column < transformedPixelLocations.columns(); ++column)
   {
     for (unsigned int i = 0; i < (2 * ImageDimension); i += 2)
     {
@@ -533,10 +533,10 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::CalculateOrientedBoundin
   int            val;
   LabelIndexType binaryIndex;
   int            arrayIndex;
-  for (unsigned int i = 0; i < numberOfVertices; i++)
+  for (unsigned int i = 0; i < numberOfVertices; ++i)
   {
     val = i;
-    for (unsigned int j = 0; j < ImageDimension; j++)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       // This is the binary index as described above.
       binaryIndex[j] = val % 2;
@@ -554,9 +554,9 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::CalculateOrientedBoundin
 
   // Add the centroid back to each of the vertices since it was
   // subtracted when the points were rotated.
-  for (unsigned int i = 0; i < orientedBoundingBoxVertices.columns(); i++)
+  for (unsigned int i = 0; i < orientedBoundingBoxVertices.columns(); ++i)
   {
-    for (unsigned int j = 0; j < ImageDimension; j++)
+    for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       orientedBoundingBoxVertices(j, i) += labelGeometry.m_Centroid[j];
       // Copy the oriented bounding box vertices back to a vector of
@@ -566,7 +566,7 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::CalculateOrientedBoundin
   }
 
   // Find the origin of the oriented bounding box.
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     labelGeometry.m_OrientedBoundingBoxOrigin[i] = transformedBoundingBox[2 * i] + labelGeometry.m_Centroid[i];
   }
@@ -575,8 +575,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::CalculateOrientedBoundin
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::LabelIndicesType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetPixelIndices(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetPixelIndices(LabelPixelType label) const -> LabelIndicesType
 {
   MapConstIterator mapIt;
 
@@ -613,8 +613,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetVolume(LabelPixelType
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::RealType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetIntegratedIntensity(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetIntegratedIntensity(LabelPixelType label) const -> RealType
 {
   MapConstIterator mapIt;
 
@@ -631,8 +631,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetIntegratedIntensity(L
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::LabelPointType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetCentroid(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetCentroid(LabelPixelType label) const -> LabelPointType
 {
   MapConstIterator mapIt;
 
@@ -651,8 +651,9 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetCentroid(LabelPixelTy
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::LabelPointType
+auto
 LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetWeightedCentroid(LabelPixelType label) const
+  -> LabelPointType
 {
   MapConstIterator mapIt;
 
@@ -671,8 +672,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetWeightedCentroid(Labe
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::VectorType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetEigenvalues(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetEigenvalues(LabelPixelType label) const -> VectorType
 {
   MapConstIterator mapIt;
 
@@ -690,8 +691,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetEigenvalues(LabelPixe
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::MatrixType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetEigenvectors(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetEigenvectors(LabelPixelType label) const -> MatrixType
 {
   MapConstIterator mapIt;
 
@@ -709,8 +710,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetEigenvectors(LabelPix
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::AxesLengthType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetAxesLength(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetAxesLength(LabelPixelType label) const -> AxesLengthType
 {
   MapConstIterator mapIt;
 
@@ -729,8 +730,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetAxesLength(LabelPixel
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::RealType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetMinorAxisLength(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetMinorAxisLength(LabelPixelType label) const -> RealType
 {
   AxesLengthType axisLength = GetAxesLength(label);
 
@@ -738,8 +739,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetMinorAxisLength(Label
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::RealType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetMajorAxisLength(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetMajorAxisLength(LabelPixelType label) const -> RealType
 {
   AxesLengthType axisLength = GetAxesLength(label);
 
@@ -747,8 +748,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetMajorAxisLength(Label
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::RealType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetEccentricity(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetEccentricity(LabelPixelType label) const -> RealType
 {
   MapConstIterator mapIt;
 
@@ -765,8 +766,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetEccentricity(LabelPix
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::RealType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetElongation(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetElongation(LabelPixelType label) const -> RealType
 {
   MapConstIterator mapIt;
 
@@ -783,8 +784,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetElongation(LabelPixel
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::RealType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetOrientation(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetOrientation(LabelPixelType label) const -> RealType
 {
   MapConstIterator mapIt;
 
@@ -801,8 +802,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetOrientation(LabelPixe
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::BoundingBoxType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetBoundingBox(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetBoundingBox(LabelPixelType label) const -> BoundingBoxType
 {
   MapConstIterator mapIt;
 
@@ -821,8 +822,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetBoundingBox(LabelPixe
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::RealType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetBoundingBoxVolume(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetBoundingBoxVolume(LabelPixelType label) const -> RealType
 {
   MapConstIterator mapIt;
 
@@ -839,8 +840,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetBoundingBoxVolume(Lab
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::LabelSizeType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetBoundingBoxSize(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetBoundingBoxSize(LabelPixelType label) const -> LabelSizeType
 {
   MapConstIterator mapIt;
 
@@ -859,8 +860,9 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetBoundingBoxSize(Label
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::BoundingBoxVerticesType
+auto
 LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetOrientedBoundingBoxVertices(LabelPixelType label) const
+  -> BoundingBoxVerticesType
 {
   unsigned int     numberOfVertices = 1 << ImageDimension;
   MapConstIterator mapIt = m_LabelGeometryMapper.find(label);
@@ -880,8 +882,9 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetOrientedBoundingBoxVe
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::RealType
+auto
 LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetOrientedBoundingBoxVolume(LabelPixelType label) const
+  -> RealType
 {
   MapConstIterator mapIt;
 
@@ -898,8 +901,9 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetOrientedBoundingBoxVo
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::LabelPointType
+auto
 LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetOrientedBoundingBoxSize(LabelPixelType label) const
+  -> LabelPointType
 {
   MapConstIterator mapIt;
 
@@ -921,8 +925,9 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetOrientedBoundingBoxSi
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::LabelPointType
+auto
 LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetOrientedBoundingBoxOrigin(LabelPixelType label) const
+  -> LabelPointType
 {
   MapConstIterator mapIt;
 
@@ -941,8 +946,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetOrientedBoundingBoxOr
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::MatrixType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetRotationMatrix(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetRotationMatrix(LabelPixelType label) const -> MatrixType
 {
   MapConstIterator mapIt;
 
@@ -960,8 +965,8 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetRotationMatrix(LabelP
 }
 
 template <typename TLabelImage, typename TIntensityImage>
-typename LabelGeometryImageFilter<TLabelImage, TIntensityImage>::RegionType
-LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetRegion(LabelPixelType label) const
+auto
+LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetRegion(LabelPixelType label) const -> RegionType
 {
   MapConstIterator mapIt;
 
@@ -981,7 +986,7 @@ LabelGeometryImageFilter<TLabelImage, TIntensityImage>::GetRegion(LabelPixelType
 
     unsigned int dimension = bbox.Size() / 2;
 
-    for (unsigned int i = 0; i < dimension; i++)
+    for (unsigned int i = 0; i < dimension; ++i)
     {
       index[i] = bbox[2 * i];
       size[i] = bbox[2 * i + 1] - bbox[2 * i] + 1;
@@ -1039,7 +1044,7 @@ LabelGeometryImageFilter<TImage, TLabelImage>::PrintSelf(std::ostream & os, Inde
   os << indent << "Number of labels: " << m_LabelGeometryMapper.size() << std::endl;
 
   MapConstIterator mapIt;
-  for (mapIt = m_LabelGeometryMapper.begin(); mapIt != m_LabelGeometryMapper.end(); mapIt++)
+  for (mapIt = m_LabelGeometryMapper.begin(); mapIt != m_LabelGeometryMapper.end(); ++mapIt)
   {
     using LabelPrintType = typename NumericTraits<LabelPixelType>::PrintType;
     os << indent << "Label[" << (LabelPrintType)((*mapIt).second.m_Label) << "]: ";

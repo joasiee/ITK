@@ -31,7 +31,7 @@ testVector(const TVector & v1, const TVector & v2)
   bool         pass = true;
   const double tolerance = 1e-10;
 
-  for (unsigned int i = 0; i < v1.Size() && i < v2.Size(); i++)
+  for (unsigned int i = 0; i < v1.Size() && i < v2.Size(); ++i)
   {
     if (!itk::Math::FloatAlmostEqual(v1[i], v2[i], 10, tolerance))
     {
@@ -51,9 +51,9 @@ itkDisplacementFieldTransformCloneTest(int, char *[])
   using FieldType = DisplacementTransformType::DisplacementFieldType;
 
   // Create a displacement field transform
-  DisplacementTransformType::Pointer displacementTransform = DisplacementTransformType::New();
+  auto displacementTransform = DisplacementTransformType::New();
 
-  FieldType::Pointer field = FieldType::New();
+  auto field = FieldType::New();
 
   FieldType::SizeType   size;
   FieldType::IndexType  start;

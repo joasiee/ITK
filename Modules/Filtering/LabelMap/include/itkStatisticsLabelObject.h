@@ -38,7 +38,7 @@ namespace itk
  * \ingroup ITKLabelMap
  */
 template <typename TLabel, unsigned int VImageDimension>
-class StatisticsLabelObject : public ShapeLabelObject<TLabel, VImageDimension>
+class ITK_TEMPLATE_EXPORT StatisticsLabelObject : public ShapeLabelObject<TLabel, VImageDimension>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(StatisticsLabelObject);
@@ -61,15 +61,15 @@ public:
 
   static constexpr unsigned int ImageDimension = VImageDimension;
 
-  using IndexType = typename Superclass::IndexType;
+  using typename Superclass::IndexType;
 
   using PointType = Point<double, Self::ImageDimension>;
 
   using LabelType = TLabel;
 
-  using LineType = typename Superclass::LineType;
+  using typename Superclass::LineType;
 
-  using LengthType = typename Superclass::LengthType;
+  using typename Superclass::LengthType;
 
   using MatrixType = Matrix<double, Self::ImageDimension, Self::ImageDimension>;
 
@@ -77,7 +77,7 @@ public:
 
   using HistogramType = Statistics::Histogram<double>;
 
-  using AttributeType = typename Superclass::AttributeType;
+  using typename Superclass::AttributeType;
   static constexpr AttributeType MINIMUM = 200;
   static constexpr AttributeType MAXIMUM = 201;
   static constexpr AttributeType MEAN = 202;
@@ -244,7 +244,7 @@ public:
 
   using RegionType = ImageRegion<Self::ImageDimension>;
 
-  using CentroidType = typename Superclass::CentroidType;
+  using typename Superclass::CentroidType;
 
   template <typename TSourceLabelObject>
   void
@@ -509,10 +509,10 @@ public:
   {
     typename AffineTransformType::MatrixType matrix;
     typename AffineTransformType::OffsetType offset;
-    for (unsigned int i = 0; i < ImageDimension; i++)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       offset[i] = m_CenterOfGravity[i];
-      for (unsigned int j = 0; j < ImageDimension; j++)
+      for (unsigned int j = 0; j < ImageDimension; ++j)
       {
         matrix[j][i] = m_WeightedPrincipalAxes[i][j]; // Note the transposition
       }
@@ -535,10 +535,10 @@ public:
   {
     typename AffineTransformType::MatrixType matrix;
     typename AffineTransformType::OffsetType offset;
-    for (unsigned int i = 0; i < ImageDimension; i++)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       offset[i] = m_CenterOfGravity[i];
-      for (unsigned int j = 0; j < ImageDimension; j++)
+      for (unsigned int j = 0; j < ImageDimension; ++j)
       {
         matrix[j][i] = m_WeightedPrincipalAxes[i][j]; // Note the transposition
       }

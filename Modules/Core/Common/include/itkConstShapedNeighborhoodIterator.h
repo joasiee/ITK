@@ -84,10 +84,10 @@ public:
   using Superclass = NeighborhoodIterator<TImage, TBoundaryCondition>;
 
   /** Inherit type alias from superclass */
-  using OffsetType = typename Superclass::OffsetType;
+  using typename Superclass::OffsetType;
   using OffsetValueType = typename OffsetType::OffsetValueType;
-  using RadiusType = typename Superclass::RadiusType;
-  using SizeType = typename Superclass::SizeType;
+  using typename Superclass::RadiusType;
+  using typename Superclass::SizeType;
   using SizeValueType = typename SizeType::SizeValueType;
 
   /** Typedef support for common objects */
@@ -165,15 +165,12 @@ public:
     }
 
     bool
-    operator!=(const ConstIterator & o) const
-    {
-      return m_ListIterator != o.m_ListIterator;
-    }
-    bool
     operator==(const ConstIterator & o) const
     {
       return m_ListIterator == o.m_ListIterator;
     }
+
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ConstIterator);
 
     bool
     IsAtEnd() const
@@ -284,7 +281,9 @@ public:
   using Superclass::IsAtEnd;
   using Superclass::GetOffset;
   using Superclass::operator==;
+#ifndef ITK_EXPERIMENTAL_CXX20_REWRITTEN_UNEQUAL_OPERATOR
   using Superclass::operator!=;
+#endif
   using Superclass::operator<;
   using Superclass::operator>;
   using Superclass::operator>=;

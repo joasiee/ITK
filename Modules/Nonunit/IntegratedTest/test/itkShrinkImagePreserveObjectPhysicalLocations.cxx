@@ -48,12 +48,12 @@ MakeTwoLevelPyramid(TImageType::Pointer refImage)
 {
   PyramidFilterType::ScheduleType pyramidSchedule;
 
-  PyramidFilterType::Pointer MyPyramid = PyramidFilterType::New();
+  auto MyPyramid = PyramidFilterType::New();
   MyPyramid->SetInput(refImage);
   MyPyramid->SetNumberOfLevels(2);
   MyPyramid->SetMaximumError(1.e-5);
   pyramidSchedule.SetSize(2, 2);
-  for (unsigned int c = 0; c < pyramidSchedule.cols(); c++)
+  for (unsigned int c = 0; c < pyramidSchedule.cols(); ++c)
   {
     pyramidSchedule[0][c] = 8;
     pyramidSchedule[1][c] = 4;
@@ -71,7 +71,7 @@ GetImageCenterPhysicalPoint(TImageType::Pointer & image)
   itk::ContinuousIndex<itk::SpacePrecisionType, TImageType::ImageDimension> centerIndex;
   itk::ContinuousIndex<itk::SpacePrecisionType, TImageType::ImageDimension> firstIndex;
   itk::ContinuousIndex<itk::SpacePrecisionType, TImageType::ImageDimension> lastIndex;
-  for (unsigned int q = 0; q < TImageType::ImageDimension; q++)
+  for (unsigned int q = 0; q < TImageType::ImageDimension; ++q)
   {
     lastIndex[q] = (imageOverallSize[q] - 1);
     firstIndex[q] = 0;
@@ -94,11 +94,11 @@ GetCenterOfMass(TImageType::Pointer volume)
   TImageType::PointType CenterOfMass;
   {
     using momentsCalculatorType = itk::ImageMomentsCalculator<TImageType>;
-    momentsCalculatorType::Pointer moments = momentsCalculatorType::New();
+    auto moments = momentsCalculatorType::New();
     moments->SetImage(volume);
     moments->Compute();
     TImageType::PointType::VectorType tempCenterOfMass = moments->GetCenterOfGravity();
-    for (unsigned int q = 0; q < TImageType::ImageDimension; q++)
+    for (unsigned int q = 0; q < TImageType::ImageDimension; ++q)
     {
       CenterOfMass[q] = tempCenterOfMass[q];
     }
@@ -121,13 +121,13 @@ ComputeCG(TImageType::Pointer img)
     TImageType::PointType physicalPosition;
     img->TransformIndexToPhysicalPoint(indexPosition, physicalPosition);
 
-    for (unsigned int i = 0; i < TImageType::ImageDimension; i++)
+    for (unsigned int i = 0; i < TImageType::ImageDimension; ++i)
     {
       Cg[i] += physicalPosition[i] * value;
     }
     ++it;
   }
-  for (unsigned int i = 0; i < TImageType::ImageDimension; i++)
+  for (unsigned int i = 0; i < TImageType::ImageDimension; ++i)
   {
     Cg[i] = Cg[i] / sumMass;
   }
@@ -143,7 +143,7 @@ itkShrinkImagePreserveObjectPhysicalLocations(int, char *[])
   TImageType::SpacingType newSpacing;
   TImageType::PointType   newOrigin;
 
-  for (unsigned int i = 0; i < TImageType::ImageDimension; i++)
+  for (unsigned int i = 0; i < TImageType::ImageDimension; ++i)
   {
     newSize[i] = 32;
     newSpacing[i] = (1.0 + 3.0 * i);
@@ -157,7 +157,7 @@ itkShrinkImagePreserveObjectPhysicalLocations(int, char *[])
   newDirection[1][1] = 0;
   newOrigin = newDirection * newOrigin;
 
-  TImageType::Pointer image = TImageType::New();
+  auto image = TImageType::New();
   image->SetOrigin(newOrigin);
   image->SetSpacing(newSpacing);
   image->SetRegions(newSize);
@@ -167,10 +167,10 @@ itkShrinkImagePreserveObjectPhysicalLocations(int, char *[])
   image->Print(std::cout);
 
   TImageType::IndexType Index;
-  for (int u = 12; u < 20; u++)
+  for (int u = 12; u < 20; ++u)
   {
     Index[0] = u;
-    for (int v = 12; v < 20; v++)
+    for (int v = 12; v < 20; ++v)
     {
       Index[1] = v;
       image->SetPixel(Index, 255.0);
@@ -214,7 +214,7 @@ itkShrinkImagePreserveObjectPhysicalLocations(int, char *[])
 //#define __WRITE_DEBUG_IMAGING__
 #ifdef __WRITE_DEBUG_IMAGING__
   using WriterType = itk::ImageFileWriter<WImageType>;
-  WriterType::Pointer                                   writer = WriterType::New();
+  auto                                                  writer = WriterType::New();
   itk::CastImageFilter<TImageType, WImageType>::Pointer castFilter =
     itk::CastImageFilter<TImageType, WImageType>::New();
 

@@ -38,7 +38,7 @@ itkSpatialObjectToImageFilterTest(int, char *[])
 {
   using EllipseType = itk::EllipseSpatialObject<2>;
 
-  EllipseType::Pointer ellipse = EllipseType::New();
+  auto ellipse = EllipseType::New();
   ellipse->SetRadiusInObjectSpace(10);
   ellipse->Update();
 
@@ -51,7 +51,7 @@ itkSpatialObjectToImageFilterTest(int, char *[])
   using ImageType = itk::Image<double, 2>;
 
   using SpatialObjectToImageFilterType = itk::SpatialObjectToImageFilter<EllipseType, ImageType>;
-  SpatialObjectToImageFilterType::Pointer imageFilter = SpatialObjectToImageFilterType::New();
+  auto imageFilter = SpatialObjectToImageFilterType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(imageFilter, SpatialObjectToImageFilter, ImageSource);
 
@@ -82,7 +82,7 @@ itkSpatialObjectToImageFilterTest(int, char *[])
   float  spacingFloat[2];
   double spacingDouble[2];
 
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
     spacingFloat[i] = 1.0;
     spacingDouble[i] = 1.0;
@@ -91,7 +91,7 @@ itkSpatialObjectToImageFilterTest(int, char *[])
   imageFilter->SetSpacing(spacingDouble);
   const double * spacing_result = imageFilter->GetSpacing();
 
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
     if (spacing_result[i] != 1.0)
     {
@@ -108,7 +108,7 @@ itkSpatialObjectToImageFilterTest(int, char *[])
   float  originFloat[2];
   double originDouble[2];
 
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
     originFloat[i] = 0.0;
     originDouble[i] = 0.0;
@@ -117,7 +117,7 @@ itkSpatialObjectToImageFilterTest(int, char *[])
   imageFilter->SetOrigin(originDouble);
   const double * origin_result = imageFilter->GetOrigin();
 
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
     if (origin_result[i] != 0.0)
     {
@@ -134,7 +134,7 @@ itkSpatialObjectToImageFilterTest(int, char *[])
   // Test Progress Reporter
   ShowProgressObject progressWatch(imageFilter);
   using CommandType = itk::SimpleMemberCommand<ShowProgressObject>;
-  CommandType::Pointer command = CommandType::New();
+  auto command = CommandType::New();
   command->SetCallbackFunction(&progressWatch, &ShowProgressObject::ShowProgress);
   imageFilter->AddObserver(itk::ProgressEvent(), command);
 
@@ -147,9 +147,9 @@ itkSpatialObjectToImageFilterTest(int, char *[])
 
   ImageType::IndexType index;
   // Test only centered pixels
-  for (int i = -5; i < 5; i++)
+  for (int i = -5; i < 5; ++i)
   {
-    for (int j = -5; j < 5; j++)
+    for (int j = -5; j < 5; ++j)
     {
       index[0] = 25 + i;
       index[1] = 25 + j;
@@ -174,9 +174,9 @@ itkSpatialObjectToImageFilterTest(int, char *[])
   std::cout << "Testing SetUseObjectValue: ";
 
   // Test only centered pixels
-  for (int i = -5; i < 5; i++)
+  for (int i = -5; i < 5; ++i)
   {
-    for (int j = -5; j < 5; j++)
+    for (int j = -5; j < 5; ++j)
     {
       index[0] = 25 + i;
       index[1] = 25 + j;

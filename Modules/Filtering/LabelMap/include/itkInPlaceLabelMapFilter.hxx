@@ -83,7 +83,7 @@ InPlaceLabelMapFilter<TInputImage>::AllocateOutputs()
     }
 
     // If there are more than one outputs, allocate the remaining outputs
-    for (unsigned int i = 1; i < this->GetNumberOfIndexedOutputs(); i++)
+    for (unsigned int i = 1; i < this->GetNumberOfIndexedOutputs(); ++i)
     {
       OutputImagePointer outputPtr;
 
@@ -111,7 +111,7 @@ InPlaceLabelMapFilter<TInputImage>::AllocateOutputs()
       itkAssertInDebugAndIgnoreInReleaseMacro(labelObject != nullptr);
       itkAssertInDebugAndIgnoreInReleaseMacro(labelObject->GetLabel() == it.GetLabel());
 
-      typename LabelObjectType::Pointer newLabelObject = LabelObjectType::New();
+      auto newLabelObject = LabelObjectType::New();
       newLabelObject->template CopyAllFrom<LabelObjectType>(labelObject);
 
       output->AddLabelObject(newLabelObject);

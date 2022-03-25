@@ -29,7 +29,7 @@ ScaleLogarithmicTransform<TParametersValueType, NDimensions>::SetParameters(cons
 {
   ScaleType scales;
 
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     scales[i] = std::exp(parameters[i]);
   }
@@ -47,14 +47,14 @@ ScaleLogarithmicTransform<TParametersValueType, NDimensions>::SetParameters(cons
 
 // Get Parameters
 template <typename TParametersValueType, unsigned int NDimensions>
-const typename ScaleLogarithmicTransform<TParametersValueType, NDimensions>::ParametersType &
-ScaleLogarithmicTransform<TParametersValueType, NDimensions>::GetParameters() const
+auto
+ScaleLogarithmicTransform<TParametersValueType, NDimensions>::GetParameters() const -> const ParametersType &
 {
   itkDebugMacro(<< "Getting parameters ");
 
   const ScaleType & scales = this->GetScale();
   // Transfer the translation part
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     this->m_Parameters[i] = std::log(scales[i]);
   }
@@ -82,7 +82,7 @@ ScaleLogarithmicTransform<TParametersValueType, NDimensions>::ComputeJacobianWit
 
   jacobian.SetSize(SpaceDimension, this->GetNumberOfLocalParameters());
   jacobian.Fill(0);
-  for (unsigned int dim = 0; dim < SpaceDimension; dim++)
+  for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
     // the derivative with respect to Log(scale) = scale * derivative with
     // respect to scale.

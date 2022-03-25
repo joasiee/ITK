@@ -106,8 +106,8 @@ Euler3DTransform<TParametersValueType>::SetParameters(const ParametersType & par
 
 // Get Parameters
 template <typename TParametersValueType>
-const typename Euler3DTransform<TParametersValueType>::ParametersType &
-Euler3DTransform<TParametersValueType>::GetParameters() const
+auto
+Euler3DTransform<TParametersValueType>::GetParameters() const -> const ParametersType &
 {
   this->m_Parameters[0] = m_AngleX;
   this->m_Parameters[1] = m_AngleY;
@@ -120,8 +120,8 @@ Euler3DTransform<TParametersValueType>::GetParameters() const
 }
 
 template <typename TParametersValueType>
-const typename Euler3DTransform<TParametersValueType>::FixedParametersType &
-Euler3DTransform<TParametersValueType>::GetFixedParameters() const
+auto
+Euler3DTransform<TParametersValueType>::GetFixedParameters() const -> const FixedParametersType &
 {
   // Call the superclass GetFixedParameters so that it fills the
   // array, we ignore the returned data and add the additional
@@ -142,7 +142,7 @@ Euler3DTransform<TParametersValueType>::SetFixedParameters(const FixedParameters
   }
 
   InputPointType c;
-  for (unsigned int i = 0; i < InputSpaceDimension; i++)
+  for (unsigned int i = 0; i < InputSpaceDimension; ++i)
   {
     c[i] = this->m_FixedParameters[i] = parameters[i];
   }
@@ -342,7 +342,7 @@ Euler3DTransform<TParametersValueType>::ComputeJacobianWithRespectToParameters(c
 
   // compute derivatives for the translation part
   unsigned int blockOffset = 3;
-  for (unsigned int dim = 0; dim < SpaceDimension; dim++)
+  for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
     jacobian[dim][blockOffset + dim] = 1.0;
   }

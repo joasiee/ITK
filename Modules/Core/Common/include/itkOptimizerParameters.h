@@ -42,7 +42,7 @@ public:
   using Superclass = Array<TParametersValueType>;
   using ArrayType = Superclass;
   using VnlVectorType = typename Superclass::VnlVectorType;
-  using SizeValueType = typename Superclass::SizeValueType;
+  using typename Superclass::SizeValueType;
 
   /** Helper class for managing different types of parameter
    * data. */
@@ -96,7 +96,7 @@ public:
   Initialize()
   {
     // Set the default OptimizerParametersHelper
-    this->m_Helper.reset(new OptimizerParametersHelperType);
+    this->m_Helper = std::make_unique<OptimizerParametersHelperType>();
   }
 
 
@@ -182,8 +182,7 @@ public:
   ~OptimizerParameters() override = default;
 
 private:
-  std::unique_ptr<OptimizerParametersHelperType> m_Helper =
-    std::unique_ptr<OptimizerParametersHelperType>{ new OptimizerParametersHelperType };
+  std::unique_ptr<OptimizerParametersHelperType> m_Helper{ std::make_unique<OptimizerParametersHelperType>() };
 };
 
 } // namespace itk

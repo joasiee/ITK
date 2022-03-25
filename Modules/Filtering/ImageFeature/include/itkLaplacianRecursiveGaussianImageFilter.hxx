@@ -34,7 +34,7 @@ LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::LaplacianRecur
 {
   m_NormalizeAcrossScale = false;
 
-  for (unsigned int i = 0; i < NumberOfSmoothingFilters; i++)
+  for (unsigned int i = 0; i < NumberOfSmoothingFilters; ++i)
   {
     m_SmoothingFilters[i] = GaussianFilterType::New();
     m_SmoothingFilters[i]->SetOrder(GaussianOrderEnum::ZeroOrder);
@@ -55,7 +55,7 @@ LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::LaplacianRecur
 
   if (NumberOfSmoothingFilters > 1)
   {
-    for (unsigned int i = 1; i < NumberOfSmoothingFilters; i++)
+    for (unsigned int i = 1; i < NumberOfSmoothingFilters; ++i)
     {
       m_SmoothingFilters[i]->SetInput(m_SmoothingFilters[i - 1]->GetOutput());
     }
@@ -71,7 +71,7 @@ template <typename TInputImage, typename TOutputImage>
 void
 LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::SetSigma(RealType sigma)
 {
-  for (unsigned int i = 0; i < NumberOfSmoothingFilters; i++)
+  for (unsigned int i = 0; i < NumberOfSmoothingFilters; ++i)
   {
     m_SmoothingFilters[i]->SetSigma(sigma);
   }
@@ -84,8 +84,8 @@ LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::SetSigma(RealT
  * Get value of Sigma
  */
 template <typename TInputImage, typename TOutputImage>
-typename LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::RealType
-LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GetSigma() const
+auto
+LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GetSigma() const -> RealType
 {
   return m_DerivativeFilter->GetSigma();
 }
@@ -99,7 +99,7 @@ LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::SetNormalizeAc
 {
   m_NormalizeAcrossScale = normalize;
 
-  for (unsigned int i = 0; i < NumberOfSmoothingFilters; i++)
+  for (unsigned int i = 0; i < NumberOfSmoothingFilters; ++i)
   {
     m_SmoothingFilters[i]->SetNormalizeAcrossScale(normalize);
   }
@@ -134,21 +134,21 @@ LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GenerateData()
   itkDebugMacro(<< "LaplacianRecursiveGaussianImageFilter generating data ");
 
   // Set the number of threads on all the filters
-  for (unsigned int i = 0; i < ImageDimension - 1; i++)
+  for (unsigned int i = 0; i < ImageDimension - 1; ++i)
   {
     m_SmoothingFilters[i]->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
   }
   m_DerivativeFilter->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
 
   // Create a process accumulator for tracking the progress of minipipeline
-  ProgressAccumulator::Pointer progress = ProgressAccumulator::New();
+  auto progress = ProgressAccumulator::New();
   progress->SetMiniPipelineFilter(this);
 
   // dim^2 recursive gaussians + dim add filters + cast filter
   const unsigned int numberOfFilters = (ImageDimension * ImageDimension) + ImageDimension + 1;
 
   // register (most) filters with the progress accumulator
-  for (unsigned int i = 0; i < NumberOfSmoothingFilters; i++)
+  for (unsigned int i = 0; i < NumberOfSmoothingFilters; ++i)
   {
     progress->RegisterInternalFilter(m_SmoothingFilters[i], 1.0 / numberOfFilters);
   }
@@ -172,7 +172,7 @@ LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GenerateData()
   // The CastImageFilter is used because it is multithreaded and
   // it may perform no operation if the two images types are the same
   using CastFilterType = itk::CastImageFilter<CumulativeImageType, OutputImageType>;
-  typename CastFilterType::Pointer caster = CastFilterType::New();
+  auto caster = CastFilterType::New();
   caster->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
 
   // If the last filter is running in-place then this bulk data is not
@@ -194,14 +194,14 @@ LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GenerateData()
   // allocate the add and scale image filter just for the scope of
   // this function!
   using AddFilterType = itk::BinaryGeneratorImageFilter<CumulativeImageType, RealImageType, CumulativeImageType>;
-  typename AddFilterType::Pointer addFilter = AddFilterType::New();
+  auto addFilter = AddFilterType::New();
   addFilter->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
 
   // register with progress accumulator
   progress->RegisterInternalFilter(addFilter, 1.0 / numberOfFilters);
 
 
-  for (unsigned int dim = 0; dim < ImageDimension; dim++)
+  for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     unsigned int i = 0;
     unsigned int j = 0;

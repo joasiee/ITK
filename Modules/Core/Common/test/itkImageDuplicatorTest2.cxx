@@ -21,13 +21,16 @@
 #include "itkImageFileWriter.h"
 #include "itkImageDuplicator.h"
 #include "itkAbsImageFilter.h"
+#include "itkTestingMacros.h"
 
 int
 itkImageDuplicatorTest2(int argc, char * argv[])
 {
   if (argc < 3)
   {
-    std::cerr << "Usage: " << argv[0] << " Input Output\n";
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cerr << " Input Output" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -36,9 +39,9 @@ itkImageDuplicatorTest2(int argc, char * argv[])
   using ImageType = itk::Image<PixelType, Dimension>;
 
   using DuplicatorType = itk::ImageDuplicator<ImageType>;
-  DuplicatorType::Pointer dup = DuplicatorType::New();
+  auto dup = DuplicatorType::New();
   using AbsType = itk::AbsImageFilter<ImageType, ImageType>;
-  AbsType::Pointer absF = AbsType::New();
+  auto absF = AbsType::New();
 
   try
   {
@@ -46,7 +49,7 @@ itkImageDuplicatorTest2(int argc, char * argv[])
 
     ImageType::RegionType lpr = inImage->GetLargestPossibleRegion();
     ImageType::RegionType region = lpr;
-    for (unsigned d = 0; d < Dimension; d++)
+    for (unsigned d = 0; d < Dimension; ++d)
     {
       itk::IndexValueType size = region.GetSize(d);
       region.SetIndex(d, size / 4);

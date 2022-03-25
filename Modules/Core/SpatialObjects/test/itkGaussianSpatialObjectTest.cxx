@@ -25,7 +25,7 @@ itkGaussianSpatialObjectTest(int, char *[])
 {
   using GaussianType = itk::GaussianSpatialObject<4>;
 
-  GaussianType::Pointer myGaussian = GaussianType::New();
+  auto myGaussian = GaussianType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(myGaussian, GaussianSpatialObject, SpatialObject);
 
@@ -40,6 +40,11 @@ itkGaussianSpatialObjectTest(int, char *[])
   GaussianType::ScalarType sigma = 1.5;
   myGaussian->SetSigmaInObjectSpace(sigma);
   ITK_TEST_SET_GET_VALUE(sigma, myGaussian->GetSigmaInObjectSpace());
+
+  GaussianType::PointType center;
+  center.Fill(0.0);
+  myGaussian->SetCenterInObjectSpace(center);
+  ITK_TEST_SET_GET_VALUE(center, myGaussian->GetCenterInObjectSpace());
 
   // Point consistency
 
@@ -83,7 +88,7 @@ itkGaussianSpatialObjectTest(int, char *[])
   std::cout << "ObjectToWorldTransform" << std::endl;
 
   // Create myGaussian2 as a child of myGaussian
-  GaussianType::Pointer myGaussian2 = GaussianType::New();
+  auto myGaussian2 = GaussianType::New();
   std::cout << "AddChild" << std::endl;
   myGaussian->AddChild(myGaussian2);
 
@@ -134,7 +139,7 @@ itkGaussianSpatialObjectTest(int, char *[])
   std::cout << "World bounds = " << boundingBox->GetBounds() << std::endl;
   std::cout << "World Center = " << myGaussian->GetCenterInObjectSpace() << std::endl;
   std::cout << "World Radius = " << myGaussian->GetRadiusInObjectSpace() << std::endl;
-  for (unsigned int i = 0; i < 3; i++)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     if (itk::Math::NotAlmostEquals(boundingBox->GetBounds()[2 * i], 7.0) ||
         itk::Math::NotAlmostEquals(boundingBox->GetBounds()[2 * i + 1], 16.0))

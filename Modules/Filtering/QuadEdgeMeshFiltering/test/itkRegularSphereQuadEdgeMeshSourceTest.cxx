@@ -36,7 +36,7 @@ itkRegularSphereQuadEdgeMeshSourceTest(int argc, char * argv[])
 
   using SphereMeshSourceType = itk::RegularSphereMeshSource<MeshType>;
 
-  SphereMeshSourceType::Pointer mySphereMeshSource = SphereMeshSourceType::New();
+  auto mySphereMeshSource = SphereMeshSourceType::New();
 
   using PointType = SphereMeshSourceType::PointType;
   using VectorType = SphereMeshSourceType::VectorType;
@@ -73,7 +73,7 @@ itkRegularSphereQuadEdgeMeshSourceTest(int argc, char * argv[])
 
   std::cout << "Testing itk::RegularSphereMeshSource " << std::endl;
 
-  for (unsigned int i = 0; i < myMesh->GetNumberOfPoints(); i++)
+  for (unsigned int i = 0; i < myMesh->GetNumberOfPoints(); ++i)
   {
     myMesh->GetPoint(i, &pt);
     std::cout << "Point[" << i << "]: " << pt << std::endl;
@@ -81,7 +81,7 @@ itkRegularSphereQuadEdgeMeshSourceTest(int argc, char * argv[])
 
   using WriterType = itk::MeshFileWriter<MeshType>;
 
-  WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   writer->SetInput(myMesh);
   writer->SetFileName(argv[1]);
   writer->Write();

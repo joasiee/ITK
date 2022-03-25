@@ -47,8 +47,8 @@ RegistrationParameterScalesEstimator<TMetric>::RegistrationParameterScalesEstima
 
 /** Estimate the trusted scale for steps. It returns the voxel spacing. */
 template <typename TMetric>
-typename RegistrationParameterScalesEstimator<TMetric>::FloatType
-RegistrationParameterScalesEstimator<TMetric>::EstimateMaximumStepSize()
+auto
+RegistrationParameterScalesEstimator<TMetric>::EstimateMaximumStepSize() -> FloatType
 {
   this->CheckAndSetInputs();
 
@@ -58,7 +58,7 @@ RegistrationParameterScalesEstimator<TMetric>::EstimateMaximumStepSize()
 
   FloatType minSpacing = NumericTraits<FloatType>::max();
 
-  for (SizeValueType d = 0; d < dim; d++)
+  for (SizeValueType d = 0; d < dim; ++d)
   {
     if (minSpacing > spacing[d])
     {
@@ -300,10 +300,10 @@ RegistrationParameterScalesEstimator<TMetric>::ComputeSquaredJacobianNorms(const
   {
     this->m_Metric->GetMovingTransform()->ComputeJacobianWithRespectToParameters(point, jacobian);
 
-    for (SizeValueType p = 0; p < numPara; p++)
+    for (SizeValueType p = 0; p < numPara; ++p)
     {
       squareNorms[p] = NumericTraits<typename ParametersType::ValueType>::ZeroValue();
-      for (SizeValueType d = 0; d < dim; d++)
+      for (SizeValueType d = 0; d < dim; ++d)
       {
         squareNorms[p] += jacobian[d][p] * jacobian[d][p];
       }
@@ -313,10 +313,10 @@ RegistrationParameterScalesEstimator<TMetric>::ComputeSquaredJacobianNorms(const
   {
     this->m_Metric->GetFixedTransform()->ComputeJacobianWithRespectToParameters(point, jacobian);
 
-    for (SizeValueType p = 0; p < numPara; p++)
+    for (SizeValueType p = 0; p < numPara; ++p)
     {
       squareNorms[p] = NumericTraits<typename ParametersType::ValueType>::ZeroValue();
-      for (SizeValueType d = 0; d < dim; d++)
+      for (SizeValueType d = 0; d < dim; ++d)
       {
         squareNorms[p] += jacobian[d][p] * jacobian[d][p];
       }
@@ -479,8 +479,8 @@ RegistrationParameterScalesEstimator<TMetric>::CheckGeneralAffineTransformTempla
  *  Get the index of the virtual image center.
  */
 template <typename TMetric>
-typename RegistrationParameterScalesEstimator<TMetric>::VirtualIndexType
-RegistrationParameterScalesEstimator<TMetric>::GetVirtualDomainCentralIndex()
+auto
+RegistrationParameterScalesEstimator<TMetric>::GetVirtualDomainCentralIndex() -> VirtualIndexType
 {
   VirtualRegionType   region = this->m_Metric->GetVirtualRegion();
   const SizeValueType dim = this->GetDimension();
@@ -489,7 +489,7 @@ RegistrationParameterScalesEstimator<TMetric>::GetVirtualDomainCentralIndex()
   lowerIndex = region.GetIndex();
   upperIndex = region.GetUpperIndex();
 
-  for (SizeValueType d = 0; d < dim; d++)
+  for (SizeValueType d = 0; d < dim; ++d)
   {
     centralIndex[d] = (IndexValueType)((lowerIndex[d] + upperIndex[d]) / 2.0);
   }
@@ -501,8 +501,8 @@ RegistrationParameterScalesEstimator<TMetric>::GetVirtualDomainCentralIndex()
  *  Get the region around the virtual image center.
  */
 template <typename TMetric>
-typename RegistrationParameterScalesEstimator<TMetric>::VirtualRegionType
-RegistrationParameterScalesEstimator<TMetric>::GetVirtualDomainCentralRegion()
+auto
+RegistrationParameterScalesEstimator<TMetric>::GetVirtualDomainCentralRegion() -> VirtualRegionType
 {
   VirtualIndexType centralIndex = this->GetVirtualDomainCentralIndex();
 
@@ -513,7 +513,7 @@ RegistrationParameterScalesEstimator<TMetric>::GetVirtualDomainCentralRegion()
   lowerIndex = region.GetIndex();
   upperIndex = region.GetUpperIndex();
 
-  for (SizeValueType d = 0; d < dim; d++)
+  for (SizeValueType d = 0; d < dim; ++d)
   {
     if (lowerIndex[d] < centralIndex[d] - this->m_CentralRegionRadius)
     {
@@ -592,9 +592,9 @@ RegistrationParameterScalesEstimator<TMetric>::SampleVirtualDomainWithCorners()
 
   this->m_SamplePoints.resize(cornerNumber);
 
-  for (unsigned int i = 0; i < cornerNumber; i++)
+  for (unsigned int i = 0; i < cornerNumber; ++i)
   {
-    for (unsigned int d = 0; d < VirtualDimension; d++)
+    for (unsigned int d = 0; d < VirtualDimension; ++d)
     {
       const auto bit = (unsigned int)((i & (1 << d)) != 0); // 0 or 1
       corner[d] = firstCorner[d] + bit * (size[d] - 1);
@@ -644,7 +644,7 @@ RegistrationParameterScalesEstimator<TMetric>::SampleVirtualDomainRandomly()
 
   randIter.SetNumberOfSamples(this->m_NumberOfRandomSamples);
   randIter.GoToBegin();
-  for (SizeValueType i = 0; i < m_NumberOfRandomSamples; i++)
+  for (SizeValueType i = 0; i < m_NumberOfRandomSamples; ++i)
   {
     image->TransformIndexToPhysicalPoint(randIter.GetIndex(), point);
     this->m_SamplePoints[i] = point;

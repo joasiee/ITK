@@ -83,21 +83,21 @@ public:
 
   itkNewMacro(Self);
 
-  using DomainType = typename Superclass::DomainType;
-  using AssociateType = typename Superclass::AssociateType;
+  using typename Superclass::DomainType;
+  using typename Superclass::AssociateType;
 
-  using ImageToImageMetricv4Type = typename Superclass::ImageToImageMetricv4Type;
-  using VirtualPointType = typename Superclass::VirtualPointType;
-  using VirtualIndexType = typename Superclass::VirtualIndexType;
-  using FixedImagePointType = typename Superclass::FixedImagePointType;
-  using FixedImagePixelType = typename Superclass::FixedImagePixelType;
-  using FixedImageGradientType = typename Superclass::FixedImageGradientType;
-  using MovingImagePointType = typename Superclass::MovingImagePointType;
-  using MovingImagePixelType = typename Superclass::MovingImagePixelType;
-  using MovingImageGradientType = typename Superclass::MovingImageGradientType;
-  using MeasureType = typename Superclass::MeasureType;
-  using DerivativeType = typename Superclass::DerivativeType;
-  using DerivativeValueType = typename Superclass::DerivativeValueType;
+  using typename Superclass::ImageToImageMetricv4Type;
+  using typename Superclass::VirtualPointType;
+  using typename Superclass::VirtualIndexType;
+  using typename Superclass::FixedImagePointType;
+  using typename Superclass::FixedImagePixelType;
+  using typename Superclass::FixedImageGradientType;
+  using typename Superclass::MovingImagePointType;
+  using typename Superclass::MovingImagePixelType;
+  using typename Superclass::MovingImageGradientType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::DerivativeValueType;
 
 protected:
   VanilaImageToImageMetricv4GetValueAndDerivativeThreader() = default;
@@ -147,23 +147,23 @@ public:
   itkTypeMacro(VanillaImageToImageMetricv4, ImageToImageMetricv4);
 
   /** Superclass types */
-  using MeasureType = typename Superclass::MeasureType;
-  using DerivativeType = typename Superclass::DerivativeType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
 
-  using FixedImagePointType = typename Superclass::FixedImagePointType;
-  using FixedImagePixelType = typename Superclass::FixedImagePixelType;
-  using FixedImageGradientType = typename Superclass::FixedImageGradientType;
+  using typename Superclass::FixedImagePointType;
+  using typename Superclass::FixedImagePixelType;
+  using typename Superclass::FixedImageGradientType;
 
-  using MovingImagePointType = typename Superclass::MovingImagePointType;
-  using MovingImagePixelType = typename Superclass::MovingImagePixelType;
-  using MovingImageGradientType = typename Superclass::MovingImageGradientType;
+  using typename Superclass::MovingImagePointType;
+  using typename Superclass::MovingImagePixelType;
+  using typename Superclass::MovingImageGradientType;
 
-  using MovingTransformType = typename Superclass::MovingTransformType;
-  using JacobianType = typename Superclass::JacobianType;
-  using VirtualImageType = typename Superclass::VirtualImageType;
-  using VirtualIndexType = typename Superclass::VirtualIndexType;
-  using VirtualPointType = typename Superclass::VirtualPointType;
-  using VirtualPointSetType = typename Superclass::VirtualPointSetType;
+  using typename Superclass::MovingTransformType;
+  using typename Superclass::JacobianType;
+  using typename Superclass::VirtualImageType;
+  using typename Superclass::VirtualIndexType;
+  using typename Superclass::VirtualPointType;
+  using typename Superclass::VirtualPointSetType;
 
   /* Image dimension accessors */
   static constexpr typename TVirtualImage::ImageDimensionType VirtualImageDimension = TVirtualImage::ImageDimension;
@@ -225,7 +225,7 @@ itkMetricImageGradientTestRunTest(unsigned int                 imageSize,
   direction.SetIdentity();
 
   // Create simple test images.
-  typename ImageType::Pointer image = ImageType::New();
+  auto image = ImageType::New();
   image->SetRegions(region);
   image->SetSpacing(spacing);
   image->SetOrigin(origin);
@@ -240,7 +240,7 @@ itkMetricImageGradientTestRunTest(unsigned int                 imageSize,
   {
     it.Set(0);
     bool awayfromborder = true;
-    for (unsigned int j = 0; j < ImageDimensionality; j++)
+    for (unsigned int j = 0; j < ImageDimensionality; ++j)
     {
       if (it.GetIndex()[j] < static_cast<typename ImageType::IndexValueType>(imageBorder) ||
           static_cast<unsigned int>(std::abs(static_cast<float>(it.GetIndex()[j]) - static_cast<float>(size[j]))) <
@@ -258,7 +258,7 @@ itkMetricImageGradientTestRunTest(unsigned int                 imageSize,
 
   // Create a "moving" image
   using ResampleFilterType = itk::ResampleImageFilter<ImageType, ImageType>;
-  typename ResampleFilterType::Pointer resample = ResampleFilterType::New();
+  auto resample = ResampleFilterType::New();
   resample->SetTransform(transform);
   resample->SetInput(image);
   resample->SetOutputParametersFromImage(image);
@@ -282,7 +282,7 @@ itkMetricImageGradientTestRunTest(unsigned int                 imageSize,
 
     using WriterType = itk::ImageFileWriter<OutputImageType>;
 
-    typename WriterType::Pointer writer = WriterType::New();
+    auto writer = WriterType::New();
     // moving
     writer->SetFileName(outputPath + "_moving.nii.gz");
     writer->SetInput(movingImage);
@@ -305,7 +305,7 @@ itkMetricImageGradientTestRunTest(unsigned int                 imageSize,
 
   // compute Dm directly from graient image
   using CentralDifferenceCalculatorType = itk::CentralDifferenceImageFunction<ImageType, double>;
-  typename CentralDifferenceCalculatorType::Pointer movingCalculator = CentralDifferenceCalculatorType::New();
+  auto movingCalculator = CentralDifferenceCalculatorType::New();
   movingCalculator->UseImageDirectionOn();
   movingCalculator->SetInputImage(movingImage);
   mappedMovingImageGradientGroundtruth = movingCalculator->Evaluate(mappedPoint);
@@ -313,7 +313,7 @@ itkMetricImageGradientTestRunTest(unsigned int                 imageSize,
   // compute Dm using Metricv4 routine
   typename ImageType::PointType mappedMovingPoint;
   typename ImageType::PixelType mappedMovingPixelValue;
-  typename MetricType::Pointer  metric = MetricType::New();
+  auto                          metric = MetricType::New();
 
   metric->SetFixedImage(image);
   metric->SetMovingImage(movingImage);
@@ -323,7 +323,7 @@ itkMetricImageGradientTestRunTest(unsigned int                 imageSize,
   // run 1: with gradient filter: off
 
   double sumc = 0.0;
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
     bool b2 = false;
     switch (i)
@@ -394,7 +394,7 @@ itkMetricImageGradientTest(int argc, char * argv[])
   outputPath += commandName;
   std::cout << outputPath << std::endl;
 
-  for (dimensionality = 2; dimensionality <= 3; dimensionality++)
+  for (dimensionality = 2; dimensionality <= 3; ++dimensionality)
   {
     std::cout << "testing dimension: " << dimensionality << std::endl;
     minimumAverage = itk::NumericTraits<double>::max();
@@ -411,7 +411,7 @@ itkMetricImageGradientTest(int argc, char * argv[])
 
         using TransformType = itk::AffineTransform<double, 2>;
 
-        TransformType::Pointer transform = TransformType::New();
+        auto transform = TransformType::New();
         transform->SetIdentity();
 
         transform->Rotate2D(itk::Math::pi * rotationDegrees / 180);
@@ -431,7 +431,7 @@ itkMetricImageGradientTest(int argc, char * argv[])
       {
         // Transform
         using TransformType = itk::AffineTransform<double, 3>;
-        TransformType::Pointer transform = TransformType::New();
+        auto transform = TransformType::New();
         transform->SetIdentity();
         double angleRad = itk::Math::pi * rotationDegrees / 180;
         //    transform->SetRotation( angleRad, angleRad, angleRad );

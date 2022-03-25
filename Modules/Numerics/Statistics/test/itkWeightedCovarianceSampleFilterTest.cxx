@@ -67,11 +67,11 @@ itkWeightedCovarianceSampleFilterTest(int, char *[])
   using MeasurementVectorRealType = FilterType::MeasurementVectorRealType;
   using CovarianceMatrixType = FilterType::MatrixType;
 
-  FilterType::Pointer filter = FilterType::New();
+  auto filter = FilterType::New();
 
   MeasurementVectorType measure;
 
-  SampleType::Pointer sample = SampleType::New();
+  auto sample = SampleType::New();
 
   sample->SetMeasurementVectorSize(MeasurementVectorSize);
 
@@ -169,7 +169,7 @@ itkWeightedCovarianceSampleFilterTest(int, char *[])
   meanExpected33[1] = 2.08;
   meanExpected33[2] = 0.604;
 
-  for (unsigned int i = 0; i < MeasurementVectorSize; i++)
+  for (unsigned int i = 0; i < MeasurementVectorSize; ++i)
   {
     if (std::abs(meanExpected33[i] - mean[i]) > epsilon)
     {
@@ -192,9 +192,9 @@ itkWeightedCovarianceSampleFilterTest(int, char *[])
   matrixExpected33[2][1] = 0.00135;
   matrixExpected33[2][2] = 0.00043;
 
-  for (unsigned int i = 0; i < MeasurementVectorSize; i++)
+  for (unsigned int i = 0; i < MeasurementVectorSize; ++i)
   {
-    for (unsigned int j = 0; j < MeasurementVectorSize; j++)
+    for (unsigned int j = 0; j < MeasurementVectorSize; ++j)
       if (std::abs(matrixExpected33[i][j] - matrix[i][j]) > epsilon)
       {
         std::cerr << "Computed covariance matrix value is incorrrect" << std::endl;
@@ -234,7 +234,7 @@ itkWeightedCovarianceSampleFilterTest(int, char *[])
   meanExpected3[1] = 2.08;
   meanExpected3[2] = 0.604;
 
-  for (unsigned int i = 0; i < MeasurementVectorSize; i++)
+  for (unsigned int i = 0; i < MeasurementVectorSize; ++i)
   {
     if (std::abs(meanExpected3[i] - mean[i]) > epsilon)
     {
@@ -257,9 +257,9 @@ itkWeightedCovarianceSampleFilterTest(int, char *[])
   matrixExpected[2][1] = 0.00135;
   matrixExpected[2][2] = 0.00043;
 
-  for (unsigned int i = 0; i < MeasurementVectorSize; i++)
+  for (unsigned int i = 0; i < MeasurementVectorSize; ++i)
   {
-    for (unsigned int j = 0; j < MeasurementVectorSize; j++)
+    for (unsigned int j = 0; j < MeasurementVectorSize; ++j)
     {
       if (std::abs(matrixExpected[i][j] - matrix[i][j]) > epsilon)
       {
@@ -287,7 +287,7 @@ itkWeightedCovarianceSampleFilterTest(int, char *[])
   std::cout << "Mean: " << mean << std::endl;
   std::cout << "Covariance Matrix: " << matrix << std::endl;
 
-  for (unsigned int i = 0; i < MeasurementVectorSize; i++)
+  for (unsigned int i = 0; i < MeasurementVectorSize; ++i)
   {
     if (std::abs(meanExpected3[i] - mean[i]) > epsilon)
     {
@@ -296,9 +296,9 @@ itkWeightedCovarianceSampleFilterTest(int, char *[])
     }
   }
 
-  for (unsigned int i = 0; i < MeasurementVectorSize; i++)
+  for (unsigned int i = 0; i < MeasurementVectorSize; ++i)
   {
-    for (unsigned int j = 0; j < MeasurementVectorSize; j++)
+    for (unsigned int j = 0; j < MeasurementVectorSize; ++j)
     {
       if (std::abs(matrixExpected[i][j] - matrix[i][j]) > epsilon)
       {
@@ -342,7 +342,7 @@ itkWeightedCovarianceSampleFilterTest(int, char *[])
   }; // end of class
 
   // set  a constant 1.0 weight using a function
-  WeightedCovarianceSampleTestFunction1::Pointer weightFunction = WeightedCovarianceSampleTestFunction1::New();
+  auto weightFunction = WeightedCovarianceSampleTestFunction1::New();
   filter->SetWeightingFunction(weightFunction);
 
   try
@@ -361,7 +361,7 @@ itkWeightedCovarianceSampleFilterTest(int, char *[])
   std::cout << "Mean: " << mean << std::endl;
   std::cout << "Covariance Matrix: " << matrix << std::endl;
 
-  for (unsigned int i = 0; i < MeasurementVectorSize; i++)
+  for (unsigned int i = 0; i < MeasurementVectorSize; ++i)
   {
     if (std::abs(meanExpected3[i] - mean[i]) > epsilon)
     {
@@ -370,9 +370,9 @@ itkWeightedCovarianceSampleFilterTest(int, char *[])
     }
   }
 
-  for (unsigned int i = 0; i < MeasurementVectorSize; i++)
+  for (unsigned int i = 0; i < MeasurementVectorSize; ++i)
   {
-    for (unsigned int j = 0; j < MeasurementVectorSize; j++)
+    for (unsigned int j = 0; j < MeasurementVectorSize; ++j)
     {
       if (std::abs(matrixExpected[i][j] - matrix[i][j]) > epsilon)
       {

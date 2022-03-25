@@ -24,16 +24,16 @@ namespace itk
 {
 
 template <unsigned int NDimensions>
-typename MetaArrowConverter<NDimensions>::MetaObjectType *
-MetaArrowConverter<NDimensions>::CreateMetaObject()
+auto
+MetaArrowConverter<NDimensions>::CreateMetaObject() -> MetaObjectType *
 {
   return dynamic_cast<MetaObjectType *>(new ArrowMetaObjectType);
 }
 
 /** Convert a metaArrow into an arrow SpatialObject  */
 template <unsigned int NDimensions>
-typename MetaArrowConverter<NDimensions>::SpatialObjectPointer
-MetaArrowConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectType * mo)
+auto
+MetaArrowConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectType * mo) -> SpatialObjectPointer
 {
   const auto * metaArrow = dynamic_cast<const MetaArrow *>(mo);
   if (metaArrow == nullptr)
@@ -49,7 +49,7 @@ MetaArrowConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectType 
   const double *                         metaDirection = metaArrow->Direction();
   typename SpatialObjectType::PointType  positionInObjectSpace;
   typename SpatialObjectType::VectorType directionInObjectSpace;
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     positionInObjectSpace[i] = metaPosition[i];
     directionInObjectSpace[i] = metaDirection[i];
@@ -72,8 +72,8 @@ MetaArrowConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectType 
 
 /** Convert an arrow SpatialObject into a metaArrow */
 template <unsigned int NDimensions>
-typename MetaArrowConverter<NDimensions>::MetaObjectType *
-MetaArrowConverter<NDimensions>::SpatialObjectToMetaObject(const SpatialObjectType * spatialObject)
+auto
+MetaArrowConverter<NDimensions>::SpatialObjectToMetaObject(const SpatialObjectType * spatialObject) -> MetaObjectType *
 {
   ArrowSpatialObjectConstPointer arrowSO = dynamic_cast<const ArrowSpatialObjectType *>(spatialObject);
   if (arrowSO.IsNull())
@@ -95,7 +95,7 @@ MetaArrowConverter<NDimensions>::SpatialObjectToMetaObject(const SpatialObjectTy
   double                                 metaDirection[NDimensions];
   typename SpatialObjectType::PointType  spPositionInObjectSpace = arrowSO->GetPositionInObjectSpace();
   typename SpatialObjectType::VectorType spDirectionInObjectSpace = arrowSO->GetDirectionInObjectSpace();
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     metaPosition[i] = spPositionInObjectSpace[i];
     metaDirection[i] = spDirectionInObjectSpace[i];

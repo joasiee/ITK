@@ -72,6 +72,11 @@ try_compile(ITK_HAS_MALLINFO
   ${CMAKE_CURRENT_SOURCE_DIR}/CMake/itkCheckHasMallinfo.cxx
   )
 
+try_compile(ITK_HAS_MALLINFO2
+  ${ITK_BINARY_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/CMake/itkCheckHasMallinfo2.cxx
+  )
+
 try_compile(ITK_HAS_FEENABLEEXCEPT
   ${ITK_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/CMake/itkCheckHasFeenableexcept.cxx
@@ -145,21 +150,8 @@ set(ITKCommon_LIBRARIES ITKCommon)
 
 itk_module_impl()
 
-# configure and install compiler feature header files
-# that have fine granular support of C++11 features
-# identified in a way consistent with CMake 3.1.0 and
-# greater
-include(CMake/itkGenerateNewCompilerFeatureDetectionHeaders.cmake)
-
 install(FILES
   ${ITKCommon_BINARY_DIR}/itkConfigure.h
-  ${CMAKE_CURRENT_BINARY_DIR}/itk_compiler_detection.h
   DESTINATION ${ITKCommon_INSTALL_INCLUDE_DIR}
-  COMPONENT Development
-)
-
-install(FILES
-  ${ITK_compiler_detection_support_headers}
-  DESTINATION ${ITKCommon_INSTALL_INCLUDE_DIR}/compilers
   COMPONENT Development
 )

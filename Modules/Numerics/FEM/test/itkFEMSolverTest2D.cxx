@@ -35,7 +35,7 @@ itkFEMSolverTest2D(int argc, char * argv[])
   itk::FEMFactoryBase::GetFactory()->RegisterDefaultTypes();
 
   using Solver2DType = itk::fem::Solver<2>;
-  Solver2DType::Pointer solver = Solver2DType::New();
+  auto solver = Solver2DType::New();
 
   using SpatialObjectType = itk::SpatialObject<2>;
   using SpatialObjectPointer = SpatialObjectType::Pointer;
@@ -83,7 +83,7 @@ itkFEMSolverTest2D(int argc, char * argv[])
 
   int               numDOF = femSO->GetFEMObject()->GetNumberOfDegreesOfFreedom();
   vnl_vector<float> soln(numDOF);
-  for (int i = 0; i < numDOF; i++)
+  for (int i = 0; i < numDOF; ++i)
   {
     soln[i] = femSO->GetFEMObject()->GetSolution(i);
     std::cout << "Solution[" << i << "]:" << soln[i] << std::endl;

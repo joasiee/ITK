@@ -38,14 +38,14 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
 
   /* Create a 3D identity transformation and show its parameters */
   {
-    TransformType::Pointer identityTransform = TransformType::New();
+    auto identityTransform = TransformType::New();
     identityTransform->SetFocalDistance(focal);
 
     TransformType::OffsetType offset = identityTransform->GetOffset();
     std::cout << "Vector from instantiating an identity transform:  ";
     std::cout << offset << std::endl;
 
-    for (unsigned int i = 0; i < N; i++)
+    for (unsigned int i = 0; i < N; ++i)
     {
       if (std::fabs(offset[i] - 0.0) > epsilon)
       {
@@ -62,7 +62,7 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
 
   /* Create a Rigid 3D transform with translation */
   {
-    TransformType::Pointer translation = TransformType::New();
+    auto translation = TransformType::New();
     translation->SetFocalDistance(focal);
 
     TransformType::OffsetType ioffset;
@@ -74,7 +74,7 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
     std::cout << "pure Translation test:  ";
     std::cout << offset << std::endl;
 
-    for (unsigned int i = 0; i < N; i++)
+    for (unsigned int i = 0; i < N; ++i)
     {
       if (std::fabs(offset[i] - ioffset[i]) > epsilon)
       {
@@ -100,7 +100,7 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
       s[1] = q[1] * factor;
       TransformType::OutputPointType r;
       r = translation->TransformPoint(p);
-      for (unsigned int i = 0; i < N - 1; i++)
+      for (unsigned int i = 0; i < N - 1; ++i)
       {
         if (std::fabs(s[i] - r[i]) > epsilon)
         {
@@ -124,7 +124,7 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
 
   /* Create a Rigid 3D transform with a rotation */
   {
-    TransformType::Pointer rigid = TransformType::New();
+    auto rigid = TransformType::New();
     rigid->SetFocalDistance(focal);
 
     TransformType::OffsetType ioffset;
@@ -159,7 +159,7 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
       s[1] = q[1] * factor;
       TransformType::OutputPointType r;
       r = rigid->TransformPoint(p);
-      for (unsigned int i = 0; i < N - 1; i++)
+      for (unsigned int i = 0; i < N - 1; ++i)
       {
         if (std::fabs(s[i] - r[i]) > epsilon)
         {

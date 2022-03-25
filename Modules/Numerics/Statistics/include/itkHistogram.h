@@ -98,9 +98,9 @@ public:
   using MeasurementType = TMeasurement;
 
   /** Common sample class type alias */
-  using MeasurementVectorType = typename Superclass::MeasurementVectorType;
-  using InstanceIdentifier = typename Superclass::InstanceIdentifier;
-  using MeasurementVectorSizeType = typename Superclass::MeasurementVectorSizeType;
+  using typename Superclass::MeasurementVectorType;
+  using typename Superclass::InstanceIdentifier;
+  using typename Superclass::MeasurementVectorSizeType;
 
   using ValueType = MeasurementVectorType;
 
@@ -402,16 +402,12 @@ public:
     }
 
     bool
-    operator!=(const ConstIterator & it) const
-    {
-      return (m_Id != it.m_Id);
-    }
-
-    bool
     operator==(const ConstIterator & it) const
     {
       return (m_Id == it.m_Id);
     }
+
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ConstIterator);
 
   protected:
     ConstIterator(InstanceIdentifier id, const Self * histogram)

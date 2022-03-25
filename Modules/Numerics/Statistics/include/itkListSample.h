@@ -66,12 +66,12 @@ public:
   itkNewMacro(Self);
 
   /** Typedefs inherited from the superclass */
-  using MeasurementVectorType = typename Superclass::MeasurementVectorType;
-  using MeasurementVectorSizeType = typename Superclass::MeasurementVectorSizeType;
-  using MeasurementType = typename Superclass::MeasurementType;
-  using AbsoluteFrequencyType = typename Superclass::AbsoluteFrequencyType;
-  using TotalAbsoluteFrequencyType = typename Superclass::TotalAbsoluteFrequencyType;
-  using InstanceIdentifier = typename Superclass::InstanceIdentifier;
+  using typename Superclass::MeasurementVectorType;
+  using typename Superclass::MeasurementVectorSizeType;
+  using typename Superclass::MeasurementType;
+  using typename Superclass::AbsoluteFrequencyType;
+  using typename Superclass::TotalAbsoluteFrequencyType;
+  using typename Superclass::InstanceIdentifier;
 
   /** Value type of a measurement (component of the measurement
    * vector) */
@@ -183,16 +183,12 @@ public:
     }
 
     bool
-    operator!=(const ConstIterator & it) const
-    {
-      return (m_Iter != it.m_Iter);
-    }
-
-    bool
     operator==(const ConstIterator & it) const
     {
       return (m_Iter == it.m_Iter);
     }
+
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ConstIterator);
 
   protected:
     // This method should only be available to the ListSample class

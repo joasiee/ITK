@@ -37,8 +37,8 @@ FastMarchingUpwindGradientImageFilterBase<TInput, TOutput>::FastMarchingUpwindGr
 }
 
 template <typename TInput, typename TOutput>
-typename FastMarchingUpwindGradientImageFilterBase<TInput, TOutput>::GradientImageType *
-FastMarchingUpwindGradientImageFilterBase<TInput, TOutput>::GetGradientImage()
+auto
+FastMarchingUpwindGradientImageFilterBase<TInput, TOutput>::GetGradientImage() -> GradientImageType *
 {
   return dynamic_cast<GradientImageType *>(this->ProcessObject::GetOutput(1));
 }
@@ -120,7 +120,7 @@ FastMarchingUpwindGradientImageFilterBase<TInput, TOutput>::ComputeGradient(Outp
 
   centerPixel = oImage->GetPixel(iNode);
 
-  for (unsigned int j = 0; j < ImageDimension; j++)
+  for (unsigned int j = 0; j < ImageDimension; ++j)
   {
     neighIndex = iNode;
 

@@ -70,13 +70,13 @@ itkImageRegistrationMethodTest_12(int argc, char * argv[])
   using CommandIterationType = itk::CommandIterationUpdate<OptimizerType>;
 
 
-  MetricType::Pointer       metric = MetricType::New();
-  TransformType::Pointer    transform = TransformType::New();
-  OptimizerType::Pointer    optimizer = OptimizerType::New();
-  InterpolatorType::Pointer interpolator = InterpolatorType::New();
-  RegistrationType::Pointer registration = RegistrationType::New();
+  auto metric = MetricType::New();
+  auto transform = TransformType::New();
+  auto optimizer = OptimizerType::New();
+  auto interpolator = InterpolatorType::New();
+  auto registration = RegistrationType::New();
 
-  ImageSourceType::Pointer imageSource = ImageSourceType::New();
+  auto imageSource = ImageSourceType::New();
 
   SizeType size;
   size[0] = 100;
@@ -103,7 +103,7 @@ itkImageRegistrationMethodTest_12(int argc, char * argv[])
   metric->SetFixedImageRegion(fixedImage->GetBufferedRegion());
 
   // Instantiate an Observer to report the progress of the Optimization
-  CommandIterationType::Pointer iterationCommand = CommandIterationType::New();
+  auto iterationCommand = CommandIterationType::New();
   iterationCommand->SetOptimizer(optimizer);
 
   // Scale the translation components of the Transform in the Optimizer
@@ -143,7 +143,7 @@ itkImageRegistrationMethodTest_12(int argc, char * argv[])
     std::cout << "gradientTolerance = " << gradientTolerance << std::endl;
   }
 
-  for (unsigned int i = 0; i < dimension; i++)
+  for (unsigned int i = 0; i < dimension; ++i)
   {
     scales[i] = translationScale;
   }
@@ -180,7 +180,7 @@ itkImageRegistrationMethodTest_12(int argc, char * argv[])
 
   constexpr double tolerance = 1.0; // equivalent to 1 pixel.
 
-  for (unsigned int i = 0; i < numbeOfParameters; i++)
+  for (unsigned int i = 0; i < numbeOfParameters; ++i)
   {
     // the parameters are negated in order to get the inverse transformation.
     // this only works for comparing translation parameters....

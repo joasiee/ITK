@@ -40,7 +40,7 @@ namespace itk
  * \ingroup ITKLabelMap
  */
 template <typename TLabel, unsigned int VImageDimension>
-class ShapeLabelObject : public LabelObject<TLabel, VImageDimension>
+class ITK_TEMPLATE_EXPORT ShapeLabelObject : public LabelObject<TLabel, VImageDimension>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ShapeLabelObject);
@@ -63,15 +63,15 @@ public:
 
   static constexpr unsigned int ImageDimension = VImageDimension;
 
-  using IndexType = typename Superclass::IndexType;
+  using typename Superclass::IndexType;
 
   using LabelType = TLabel;
 
-  using LineType = typename Superclass::LineType;
+  using typename Superclass::LineType;
 
-  using LengthType = typename Superclass::LengthType;
+  using typename Superclass::LengthType;
 
-  using AttributeType = typename Superclass::AttributeType;
+  using typename Superclass::AttributeType;
 
   /** The number of pixels. */
   static constexpr AttributeType NUMBER_OF_PIXELS = 100;
@@ -634,10 +634,10 @@ public:
   {
     typename AffineTransformType::MatrixType matrix;
     typename AffineTransformType::OffsetType offset;
-    for (unsigned int i = 0; i < VImageDimension; i++)
+    for (unsigned int i = 0; i < VImageDimension; ++i)
     {
       offset[i] = m_Centroid[i];
-      for (unsigned int j = 0; j < VImageDimension; j++)
+      for (unsigned int j = 0; j < VImageDimension; ++j)
       {
         matrix[j][i] = m_PrincipalAxes[i][j]; // Note the transposition
       }
@@ -660,10 +660,10 @@ public:
   {
     typename AffineTransformType::MatrixType matrix;
     typename AffineTransformType::OffsetType offset;
-    for (unsigned int i = 0; i < VImageDimension; i++)
+    for (unsigned int i = 0; i < VImageDimension; ++i)
     {
       offset[i] = m_Centroid[i];
-      for (unsigned int j = 0; j < VImageDimension; j++)
+      for (unsigned int j = 0; j < VImageDimension; ++j)
       {
         matrix[j][i] = m_PrincipalAxes[i][j]; // Note the transposition
       }

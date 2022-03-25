@@ -41,8 +41,8 @@ ConicShellInteriorExteriorSpatialFunction<VDimension, TInput>::SetOriginGradient
 }
 
 template <unsigned int VDimension, typename TInput>
-typename ConicShellInteriorExteriorSpatialFunction<VDimension, TInput>::OutputType
-ConicShellInteriorExteriorSpatialFunction<VDimension, TInput>::Evaluate(const InputType & position) const
+auto
+ConicShellInteriorExteriorSpatialFunction<VDimension, TInput>::Evaluate(const InputType & position) const -> OutputType
 {
   using VectorType = Vector<double, VDimension>;
 
@@ -95,14 +95,14 @@ ConicShellInteriorExteriorSpatialFunction<VDimension, TInput>::PrintSelf(std::os
 
   unsigned int i;
   os << indent << "Origin: [";
-  for (i = 0; i < VDimension - 1; i++)
+  for (i = 0; i < VDimension - 1; ++i)
   {
     os << m_Origin[i] << ", ";
   }
   os << "]" << std::endl;
 
   os << indent << "Gradient at origin: [";
-  for (i = 0; i < VDimension - 1; i++)
+  for (i = 0; i < VDimension - 1; ++i)
   {
     os << m_OriginGradient[i] << ", ";
   }

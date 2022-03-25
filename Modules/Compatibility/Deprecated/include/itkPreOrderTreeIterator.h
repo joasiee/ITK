@@ -27,14 +27,14 @@ template <typename TTreeType>
 class ITK_TEMPLATE_EXPORT LeafTreeIterator;
 
 template <typename TTreeType>
-class PreOrderTreeIterator : public TreeIteratorBase<TTreeType>
+class ITK_TEMPLATE_EXPORT PreOrderTreeIterator : public TreeIteratorBase<TTreeType>
 {
 public:
   /** Typedefs */
   using ValueType = typename TTreeType::ValueType;
   using Superclass = TreeIteratorBase<TTreeType>;
-  using TreeNodeType = typename Superclass::TreeNodeType;
-  using NodeType = typename Superclass::NodeType;
+  using typename Superclass::TreeNodeType;
+  using typename Superclass::NodeType;
 
   /** Constructor */
   PreOrderTreeIterator(const TTreeType * tree, const TreeNodeType * start = nullptr);

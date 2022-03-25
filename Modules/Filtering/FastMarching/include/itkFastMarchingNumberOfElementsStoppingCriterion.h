@@ -38,7 +38,8 @@ namespace itk
  * \ingroup ITKFastMarching
  */
 template <typename TInput, typename TOutput>
-class FastMarchingNumberOfElementsStoppingCriterion : public FastMarchingStoppingCriterionBase<TInput, TOutput>
+class ITK_TEMPLATE_EXPORT FastMarchingNumberOfElementsStoppingCriterion
+  : public FastMarchingStoppingCriterionBase<TInput, TOutput>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(FastMarchingNumberOfElementsStoppingCriterion);
@@ -54,8 +55,8 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(FastMarchingNumberOfElementsStoppingCriterion, FastMarchingStoppingCriterionBase);
 
-  using OutputPixelType = typename Superclass::OutputPixelType;
-  using NodeType = typename Superclass::NodeType;
+  using typename Superclass::OutputPixelType;
+  using typename Superclass::NodeType;
 
   /** Get/set the threshold used by the stopping criteria. */
   itkSetMacro(TargetNumberOfElements, IdentifierType);

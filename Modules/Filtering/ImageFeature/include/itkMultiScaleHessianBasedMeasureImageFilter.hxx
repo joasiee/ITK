@@ -55,8 +55,8 @@ MultiScaleHessianBasedMeasureImageFilter<TInputImage, THessianImage, TOutputImag
   m_GenerateScalesOutput = false;
   m_GenerateHessianOutput = false;
 
-  typename ScalesImageType::Pointer  scalesImage = ScalesImageType::New();
-  typename HessianImageType::Pointer hessianImage = HessianImageType::New();
+  auto scalesImage = ScalesImageType::New();
+  auto hessianImage = HessianImageType::New();
   this->ProcessObject::SetNumberOfRequiredOutputs(3);
   this->ProcessObject::SetNthOutput(1, scalesImage.GetPointer());
   this->ProcessObject::SetNthOutput(2, hessianImage.GetPointer());
@@ -169,7 +169,7 @@ MultiScaleHessianBasedMeasureImageFilter<TInputImage, THessianImage, TOutputImag
 
   // Create a process accumulator for tracking the progress of this
   // minipipeline
-  ProgressAccumulator::Pointer progress = ProgressAccumulator::New();
+  auto progress = ProgressAccumulator::New();
   progress->SetMiniPipelineFilter(this);
 
   // prevent a divide by zero
@@ -334,8 +334,9 @@ MultiScaleHessianBasedMeasureImageFilter<TInputImage, THessianImage, TOutputImag
 /** Get the image containing the Hessian at which each pixel gave the
  * best response */
 template <typename TInputImage, typename THessianImage, typename TOutputImage>
-const typename MultiScaleHessianBasedMeasureImageFilter<TInputImage, THessianImage, TOutputImage>::HessianImageType *
+auto
 MultiScaleHessianBasedMeasureImageFilter<TInputImage, THessianImage, TOutputImage>::GetHessianOutput() const
+  -> const HessianImageType *
 {
   return static_cast<const HessianImageType *>(this->ProcessObject::GetOutput(2));
 }
@@ -344,8 +345,9 @@ MultiScaleHessianBasedMeasureImageFilter<TInputImage, THessianImage, TOutputImag
 /** Get the image containing the scales at which each pixel gave the
  * best response */
 template <typename TInputImage, typename THessianImage, typename TOutputImage>
-const typename MultiScaleHessianBasedMeasureImageFilter<TInputImage, THessianImage, TOutputImage>::ScalesImageType *
+auto
 MultiScaleHessianBasedMeasureImageFilter<TInputImage, THessianImage, TOutputImage>::GetScalesOutput() const
+  -> const ScalesImageType *
 {
   return static_cast<const ScalesImageType *>(this->ProcessObject::GetOutput(1));
 }

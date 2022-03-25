@@ -30,10 +30,10 @@ public:
   using Pointer = itk::SmartPointer<Self>;
   using ConstPointer = itk::SmartPointer<const Self>;
 
-  using MeasureType = typename Superclass::MeasureType;
-  using DerivativeType = typename Superclass::DerivativeType;
-  using ParametersType = typename Superclass::ParametersType;
-  using ParametersValueType = typename Superclass::ParametersValueType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::ParametersValueType;
 
   itkTypeMacro(ObjectToObjectOptimizerBaseTestMetric, ObjectToObjectMetricBase);
 
@@ -152,8 +152,8 @@ itkObjectToObjectOptimizerBaseTest(int, char *[])
 
   using MetricType = ObjectToObjectOptimizerBaseTestMetric<ImageType, ImageType>;
 
-  MetricType::Pointer                               metric = MetricType::New();
-  ObjectToObjectOptimizerBaseTestOptimizer::Pointer optimizer = ObjectToObjectOptimizerBaseTestOptimizer::New();
+  auto metric = MetricType::New();
+  auto optimizer = ObjectToObjectOptimizerBaseTestOptimizer::New();
 
   if (optimizer->GetStopConditionDescription() != std::string("Placeholder test return string"))
   {

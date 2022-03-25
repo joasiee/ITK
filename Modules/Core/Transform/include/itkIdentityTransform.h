@@ -69,20 +69,20 @@ public:
   static constexpr unsigned int OutputSpaceDimension = NDimensions;
 
   /** Type of the input parameters. */
-  using ParametersType = typename Superclass::ParametersType;
-  using ParametersValueType = typename Superclass::ParametersValueType;
-  using FixedParametersType = typename Superclass::FixedParametersType;
-  using FixedParametersValueType = typename Superclass::FixedParametersValueType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::ParametersValueType;
+  using typename Superclass::FixedParametersType;
+  using typename Superclass::FixedParametersValueType;
   using ScalarType = ParametersValueType;
 
 
   /** Type of the Jacobian matrix. */
-  using JacobianType = typename Superclass::JacobianType;
-  using JacobianPositionType = typename Superclass::JacobianPositionType;
-  using InverseJacobianPositionType = typename Superclass::InverseJacobianPositionType;
+  using typename Superclass::JacobianType;
+  using typename Superclass::JacobianPositionType;
+  using typename Superclass::InverseJacobianPositionType;
 
   /** Transform category type. */
-  using TransformCategoryEnum = typename Superclass::TransformCategoryEnum;
+  using typename Superclass::TransformCategoryEnum;
 
   /** Standard vector type for this class. */
   using InputVectorType = Vector<TParametersValueType, Self::InputSpaceDimension>;
@@ -174,7 +174,7 @@ public:
   void
   ComputeJacobianWithRespectToParameters(const InputPointType &, JacobianType & jacobian) const override
   {
-    jacobian = this->m_ZeroJacobian;
+    jacobian.SetSize(NDimensions, 0);
   }
 
 
@@ -242,17 +242,9 @@ public:
 protected:
   IdentityTransform()
     : Transform<TParametersValueType, NDimensions, NDimensions>(0)
-    , m_ZeroJacobian(NDimensions, 0)
-  {
-    // The Jacobian is constant, therefore it can be initialized in the
-    // constructor.
-    this->m_ZeroJacobian.Fill(0.0);
-  }
+  {}
 
   ~IdentityTransform() override = default;
-
-private:
-  JacobianType m_ZeroJacobian;
 };
 } // end namespace itk
 

@@ -10,7 +10,7 @@
 # CMake versions greater than the ITK_NEWEST_VALIDATED_POLICIES_VERSION policies will
 # continue to generate policy warnings "CMake Warning (dev)...Policy CMP0XXX is not set:"
 #
-set(ITK_OLDEST_VALIDATED_POLICIES_VERSION "3.10.2")
+set(ITK_OLDEST_VALIDATED_POLICIES_VERSION "3.16.3")
 set(ITK_NEWEST_VALIDATED_POLICIES_VERSION "3.19.7")
 cmake_minimum_required(VERSION ${ITK_OLDEST_VALIDATED_POLICIES_VERSION} FATAL_ERROR)
 if("${CMAKE_VERSION}" VERSION_LESS_EQUAL "${ITK_NEWEST_VALIDATED_POLICIES_VERSION}")
@@ -24,36 +24,25 @@ cmake_policy(VERSION ${ITK_CMAKE_POLICY_VERSION})
 # Now enumerate specific policies newer than ITK_NEWEST_VALIDATED_POLICIES_VERSION
 # that may need to be individually set to NEW/OLD
 #
-foreach(pnew "") # Currently Empty
+foreach(pnew "CMP0120")
   if(POLICY ${pnew})
     cmake_policy(SET ${pnew} NEW)
   endif()
 endforeach()
-foreach(pold "CMP0120") # CMP0120 will require non-trivial effort to address
+foreach(pold "CMP0091")
   if(POLICY ${pold})
     cmake_policy(SET ${pold} OLD)
   endif()
 endforeach()
 
-# ==== Define language standard configurations requiring at least c++11 standard
-if(CMAKE_CXX_STANDARD EQUAL "98" )
-   message(FATAL_ERROR "CMAKE_CXX_STANDARD:STRING=98 is not supported in ITK version 5 and greater.")
-endif()
-
-#####
-##  Set the default target properties for ITK
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 11) # Supported values are ``11``, ``14``, and ``17``.
-endif()
-if(NOT CMAKE_CXX_STANDARD_REQUIRED)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
-endif()
-if(NOT CMAKE_CXX_EXTENSIONS)
-  set(CMAKE_CXX_EXTENSIONS OFF)
-endif()
-
 # ====
+include(${CMAKE_CURRENT_SOURCE_DIR}/CMake/ITKInitializeCXXStandard.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMake/ITKInitializeBuildType.cmake)
+
+# ==== Define language standard configurations requiring at least c++14 standard
+if(CMAKE_CXX_STANDARD EQUAL "98" OR CMAKE_CXX_STANDARD LESS "14")
+   message(FATAL_ERROR "C++98 to C++11 are no longer supported in ITK version 5.3 and greater.")
+endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH})
 
@@ -242,14 +231,8 @@ set(CMAKE_DEBUG_POSTFIX "" CACHE STRING "Generate debug library name with a post
 mark_as_advanced(CMAKE_DEBUG_POSTFIX)
 
 # Configure find_package behavior
-if("${CMAKE_VERSION}" VERSION_GREATER_EQUAL "3.16")
-  if(NOT DEFINED CMAKE_FIND_USE_PACKAGE_REGISTRY)
+if(NOT DEFINED CMAKE_FIND_USE_PACKAGE_REGISTRY)
     set(CMAKE_FIND_USE_PACKAGE_REGISTRY 0)
-  endif()
-else()
-  if(NOT DEFINED CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY)
-    set(CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY 1)
-  endif()
 endif()
 
 # Setup build locations for shared libraries ----START
@@ -413,9 +396,9 @@ if(ITK_USE_MKL)
   # the command line. Otherwise, the first CMake run will always initialize
   # these variables to false. The error message will help the user to set
   # the appropriate values.
-  set(ITK_USE_FFTWD ON CACHE BOOL "Use double precision fftw if found")
-  set(ITK_USE_FFTWF ON CACHE BOOL "Use single precision fftw if found")
-  set(ITK_USE_SYSTEM_FFTW ON CACHE BOOL "Use an installed version of fftw")
+  set(ITK_USE_FFTWD ON CACHE BOOL "Use double precision FFTW if found")
+  set(ITK_USE_FFTWF ON CACHE BOOL "Use single precision FFTW if found")
+  set(ITK_USE_SYSTEM_FFTW ON CACHE BOOL "Use an installed version of FFTW")
   if(NOT ITK_USE_FFTWD OR NOT ITK_USE_FFTWF OR NOT ITK_USE_SYSTEM_FFTW)
     message(FATAL_ERROR "ITK_USE_MKL is set to ON. ITK_USE_FFTWD, ITK_USE_FFTWF\
  and ITK_USE_SYSTEM_FFTW must be set to ON, too.")
@@ -428,39 +411,39 @@ if(ITK_USE_CUFFTW)
   # the command line. Otherwise, the first CMake run will always initialize
   # these variables to false. The error message will help the user to set
   # the appropriate values.
-  set(ITK_USE_FFTWD ON CACHE BOOL "Use double precision fftw if found")
-  set(ITK_USE_FFTWF ON CACHE BOOL "Use single precision fftw if found")
-  set(ITK_USE_SYSTEM_FFTW ON CACHE BOOL "Use an installed version of fftw")
+  set(ITK_USE_FFTWD ON CACHE BOOL "Use double precision FFTW if found")
+  set(ITK_USE_FFTWF ON CACHE BOOL "Use single precision FFTW if found")
+  set(ITK_USE_SYSTEM_FFTW ON CACHE BOOL "Use an installed version of FFTW")
   if(NOT ITK_USE_FFTWD OR NOT ITK_USE_FFTWF OR NOT ITK_USE_SYSTEM_FFTW)
     message(FATAL_ERROR "ITK_USE_CUFFTW is set to ON. ITK_USE_FFTWD, ITK_USE_FFTWF\
  and ITK_USE_SYSTEM_FFTW must be set to ON, too.")
   endif()
 endif()
-# ITK_USE_FFTWD -- use double precision fftw
+# ITK_USE_FFTWD -- use double precision FFTW
 if(DEFINED USE_FFTWD)
   set(ITK_USE_FFTWD_DEFAULT ${USE_FFTWD})
 else()
   set(ITK_USE_FFTWD_DEFAULT OFF)
 endif()
-option(ITK_USE_FFTWD "Use double precision fftw if found" ${ITK_USE_FFTWD_DEFAULT})
+option(ITK_USE_FFTWD "Use double precision FFTW if found" ${ITK_USE_FFTWD_DEFAULT})
 mark_as_advanced(ITK_USE_FFTWD)
 #
-# ITK_USE_FFTWF -- use single precision fftw
+# ITK_USE_FFTWF -- use single precision FFTW
 if(DEFINED USE_FFTWF)
   set(ITK_USE_FFTWF_DEFAULT ${USE_FFTWF})
 else()
   set(ITK_USE_FFTWF_DEFAULT OFF)
 endif()
-option(ITK_USE_FFTWF "Use single precision fftw if found" ${ITK_USE_FFTWF_DEFAULT})
+option(ITK_USE_FFTWF "Use single precision FFTW if found" ${ITK_USE_FFTWF_DEFAULT})
 mark_as_advanced(ITK_USE_FFTWF)
 
-# ITK_USE_SYSTEM_FFTW -- locate a readybuilt fftw installation
+# ITK_USE_SYSTEM_FFTW -- locate a readybuilt FFTW installation
 if(DEFINED USE_SYSTEM_FFTW)
   set(ITK_USE_SYSTEM_FFTW_DEFAULT ${USE_SYSTEM_FFTW})
 else()
   set(ITK_USE_SYSTEM_FFTW_DEFAULT ${ITK_USE_SYSTEM_LIBRARIES})
 endif()
-option(ITK_USE_SYSTEM_FFTW "Use an installed version of fftw" ${ITK_USE_SYSTEM_FFTW_DEFAULT})
+option(ITK_USE_SYSTEM_FFTW "Use an installed version of FFTW" ${ITK_USE_SYSTEM_FFTW_DEFAULT})
 mark_as_advanced(ITK_USE_SYSTEM_FFTW)
 
 
@@ -587,6 +570,7 @@ install(FILES ${ITK_BINARY_DIR}/CMakeFiles/ITKConfig.cmake
               CMake/itkImageIOFactoryRegisterManager.h.in
               CMake/itkTransformIOFactoryRegisterManager.h.in
               CMake/itkMeshIOFactoryRegisterManager.h.in
+              CMake/ITKInitializeCXXStandard.cmake
   DESTINATION ${ITK_INSTALL_PACKAGE_DIR}
   COMPONENT Development)
 get_property(ITKTargets_MODULES GLOBAL PROPERTY ITKTargets_MODULES)
@@ -699,3 +683,25 @@ mark_as_advanced(FORCE
   Module_TwoProjectionRegistration
   Module_Ultrasound
   Module_VariationalRegistration)
+
+# Create an IDE folder structure similar to our source structure
+if("${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio|KDevelop")
+  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+  function(itk_organize_targets dir folder)
+    itk_get_all_targets_recursive(targets ${dir})
+    foreach(t ${targets})
+      get_target_property(f ${t} SOURCE_DIR)
+      string(REPLACE ${dir} "" f ${f})
+      set_target_properties (${t} PROPERTIES FOLDER "${folder}/${f}")
+    endforeach()
+  endfunction()
+  macro(itk_get_all_targets_recursive targets dir)
+      get_property(subdirectories DIRECTORY ${dir} PROPERTY SUBDIRECTORIES)
+      foreach(subdir ${subdirectories})
+          itk_get_all_targets_recursive(${targets} ${subdir})
+      endforeach()
+      get_property(current_targets DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
+      list(APPEND ${targets} ${current_targets})
+  endmacro()
+  itk_organize_targets(${CMAKE_SOURCE_DIR} ITK)
+endif()

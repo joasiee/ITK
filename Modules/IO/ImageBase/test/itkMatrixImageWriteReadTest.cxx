@@ -33,7 +33,7 @@ itkMatrixImageWriteReadTest(int ac, char * av[])
   using MatrixPixelType = itk::Matrix<float, 3, 3>;
   using MatrixImageType = itk::Image<MatrixPixelType, 3>;
 
-  MatrixImageType::Pointer matrixImage1 = MatrixImageType::New();
+  auto matrixImage1 = MatrixImageType::New();
 
   MatrixImageType::SizeType size;
   size.Fill(10);
@@ -69,9 +69,9 @@ itkMatrixImageWriteReadTest(int ac, char * av[])
   while (!itr.IsAtEnd())
   {
     itr.Set(matrixPixel);
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
-      for (unsigned int j = 0; j < 3; j++)
+      for (unsigned int j = 0; j < 3; ++j)
       {
         matrixPixel[i][j]++;
       }
@@ -81,7 +81,7 @@ itkMatrixImageWriteReadTest(int ac, char * av[])
 
   using MatrixWriterType = itk::ImageFileWriter<MatrixImageType>;
 
-  MatrixWriterType::Pointer matrixWriter = MatrixWriterType::New();
+  auto matrixWriter = MatrixWriterType::New();
 
   matrixWriter->SetInput(matrixImage1);
   matrixWriter->SetFileName(av[1]);
@@ -99,7 +99,7 @@ itkMatrixImageWriteReadTest(int ac, char * av[])
 
   using MatrixReaderType = itk::ImageFileReader<MatrixImageType>;
 
-  MatrixReaderType::Pointer matrixReader = MatrixReaderType::New();
+  auto matrixReader = MatrixReaderType::New();
 
   matrixReader->SetFileName(av[1]);
 
@@ -129,9 +129,9 @@ itkMatrixImageWriteReadTest(int ac, char * av[])
     const MatrixPixelType matrixPixel1 = mItr.Get();
     const MatrixPixelType matrixPixel2 = tItr.Get();
 
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
-      for (unsigned int j = 0; j < 3; j++)
+      for (unsigned int j = 0; j < 3; ++j)
       {
         if (std::abs(matrixPixel1[i][j] - matrixPixel2[i][j]) > tolerance)
         {

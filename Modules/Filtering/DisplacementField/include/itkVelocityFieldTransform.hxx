@@ -43,7 +43,7 @@ VelocityFieldTransform<TParametersValueType, NDimensions>::VelocityFieldTransfor
 
   // Setup and assign default interpolator
   using DefaultInterpolatorType = VectorLinearInterpolateImageFunction<VelocityFieldType, ScalarType>;
-  typename DefaultInterpolatorType::Pointer interpolator = DefaultInterpolatorType::New();
+  auto interpolator = DefaultInterpolatorType::New();
   this->m_VelocityFieldInterpolator = interpolator;
 
   // Setup and assign parameter helper. This will hold the displacement field
@@ -95,8 +95,8 @@ VelocityFieldTransform<TParametersValueType, NDimensions>::GetInverse(Self * inv
 
 // Return an inverse of this transform
 template <typename TParametersValueType, unsigned int NDimensions>
-typename VelocityFieldTransform<TParametersValueType, NDimensions>::InverseTransformBasePointer
-VelocityFieldTransform<TParametersValueType, NDimensions>::GetInverseTransform() const
+auto
+VelocityFieldTransform<TParametersValueType, NDimensions>::GetInverseTransform() const -> InverseTransformBasePointer
 {
   Pointer inverseTransform = New();
   if (this->GetInverse(inverseTransform))
@@ -161,27 +161,27 @@ VelocityFieldTransform<TParametersValueType, NDimensions>::SetFixedParameters(
   }
 
   SizeType size;
-  for (unsigned int d = 0; d < VelocityFieldDimension; d++)
+  for (unsigned int d = 0; d < VelocityFieldDimension; ++d)
   {
     size[d] = static_cast<SizeValueType>(fixedParameters[d]);
   }
 
   PointType origin;
-  for (unsigned int d = 0; d < VelocityFieldDimension; d++)
+  for (unsigned int d = 0; d < VelocityFieldDimension; ++d)
   {
     origin[d] = fixedParameters[d + VelocityFieldDimension];
   }
 
   SpacingType spacing;
-  for (unsigned int d = 0; d < VelocityFieldDimension; d++)
+  for (unsigned int d = 0; d < VelocityFieldDimension; ++d)
   {
     spacing[d] = fixedParameters[d + 2 * VelocityFieldDimension];
   }
 
   DirectionType direction;
-  for (unsigned int di = 0; di < VelocityFieldDimension; di++)
+  for (unsigned int di = 0; di < VelocityFieldDimension; ++di)
   {
-    for (unsigned int dj = 0; dj < VelocityFieldDimension; dj++)
+    for (unsigned int dj = 0; dj < VelocityFieldDimension; ++dj)
     {
       direction[di][dj] = fixedParameters[3 * VelocityFieldDimension + (di * VelocityFieldDimension + dj)];
     }
@@ -190,7 +190,7 @@ VelocityFieldTransform<TParametersValueType, NDimensions>::SetFixedParameters(
   PixelType zeroDisplacement;
   zeroDisplacement.Fill(0.0);
 
-  typename VelocityFieldType::Pointer velocityField = VelocityFieldType::New();
+  auto velocityField = VelocityFieldType::New();
   velocityField->SetSpacing(spacing);
   velocityField->SetOrigin(origin);
   velocityField->SetDirection(direction);
@@ -211,30 +211,30 @@ VelocityFieldTransform<TParametersValueType, NDimensions>::SetFixedParametersFro
 
   // Set the field size parameters
   SizeType fieldSize = fieldRegion.GetSize();
-  for (unsigned int i = 0; i < VelocityFieldDimension; i++)
+  for (unsigned int i = 0; i < VelocityFieldDimension; ++i)
   {
     this->m_FixedParameters[i] = static_cast<FixedParametersValueType>(fieldSize[i]);
   }
 
   // Set the origin parameters
   PointType fieldOrigin = this->m_VelocityField->GetOrigin();
-  for (unsigned int i = 0; i < VelocityFieldDimension; i++)
+  for (unsigned int i = 0; i < VelocityFieldDimension; ++i)
   {
     this->m_FixedParameters[VelocityFieldDimension + i] = fieldOrigin[i];
   }
 
   // Set the spacing parameters
   SpacingType fieldSpacing = this->m_VelocityField->GetSpacing();
-  for (unsigned int i = 0; i < VelocityFieldDimension; i++)
+  for (unsigned int i = 0; i < VelocityFieldDimension; ++i)
   {
     this->m_FixedParameters[2 * VelocityFieldDimension + i] = static_cast<FixedParametersValueType>(fieldSpacing[i]);
   }
 
   // Set the direction parameters
   DirectionType fieldDirection = this->m_VelocityField->GetDirection();
-  for (unsigned int di = 0; di < VelocityFieldDimension; di++)
+  for (unsigned int di = 0; di < VelocityFieldDimension; ++di)
   {
-    for (unsigned int dj = 0; dj < VelocityFieldDimension; dj++)
+    for (unsigned int dj = 0; dj < VelocityFieldDimension; ++dj)
     {
       this->m_FixedParameters[3 * VelocityFieldDimension + (di * VelocityFieldDimension + dj)] =
         static_cast<FixedParametersValueType>(fieldDirection[di][dj]);
@@ -247,7 +247,7 @@ typename VelocityFieldTransform<TParametersValueType, NDimensions>::Displacement
 VelocityFieldTransform<TParametersValueType, NDimensions>::CopyDisplacementField(
   const DisplacementFieldType * toCopy) const
 {
-  typename DisplacementFieldType::Pointer rval = DisplacementFieldType::New();
+  auto rval = DisplacementFieldType::New();
   rval->SetOrigin(toCopy->GetOrigin());
   rval->SetSpacing(toCopy->GetSpacing());
   rval->SetDirection(toCopy->GetDirection());

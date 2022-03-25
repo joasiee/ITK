@@ -83,7 +83,7 @@ HDF5TransformIOTemplate<TParametersValueType>::CanWriteFile(const char * fileNam
     ".hdf", ".h4", ".hdf4", ".h5", ".hdf5", ".he4", ".he5", ".hd5", nullptr,
   };
   std::string ext(itksys::SystemTools::GetFilenameLastExtension(fileName));
-  for (unsigned i = 0; extensions[i] != nullptr; i++)
+  for (unsigned i = 0; extensions[i] != nullptr; ++i)
   {
     if (ext == extensions[i])
     {
@@ -185,7 +185,7 @@ HDF5TransformIOTemplate<TParametersValueType>::ReadParameters(const std::string 
   {
     const std::unique_ptr<double[]> buf(new double[dim]);
     paramSet.read(buf.get(), H5::PredType::NATIVE_DOUBLE);
-    for (unsigned i = 0; i < dim; i++)
+    for (unsigned i = 0; i < dim; ++i)
     {
       ParameterArray.SetElement(i, static_cast<ParametersValueType>(buf[i]));
     }
@@ -194,7 +194,7 @@ HDF5TransformIOTemplate<TParametersValueType>::ReadParameters(const std::string 
   {
     const std::unique_ptr<float[]> buf(new float[dim]);
     paramSet.read(buf.get(), H5::PredType::NATIVE_FLOAT);
-    for (unsigned i = 0; i < dim; i++)
+    for (unsigned i = 0; i < dim; ++i)
     {
       ParameterArray.SetElement(i, static_cast<ParametersValueType>(buf[i]));
     }
@@ -232,7 +232,7 @@ HDF5TransformIOTemplate<TParametersValueType>::ReadFixedParameters(const std::st
   {
     const std::unique_ptr<double[]> buf(new double[dim]);
     paramSet.read(buf.get(), H5::PredType::NATIVE_DOUBLE);
-    for (unsigned i = 0; i < dim; i++)
+    for (unsigned i = 0; i < dim; ++i)
     {
       FixedParameterArray.SetElement(i, static_cast<FixedParametersValueType>(buf[i]));
     }
@@ -241,7 +241,7 @@ HDF5TransformIOTemplate<TParametersValueType>::ReadFixedParameters(const std::st
   {
     const std::unique_ptr<float[]> buf(new float[dim]);
     paramSet.read(buf.get(), H5::PredType::NATIVE_FLOAT);
-    for (unsigned i = 0; i < dim; i++)
+    for (unsigned i = 0; i < dim; ++i)
     {
       FixedParameterArray.SetElement(i, static_cast<FixedParametersValueType>(buf[i]));
     }
@@ -290,11 +290,11 @@ HDF5TransformIOTemplate<TParametersValueType>::Read()
   // happens in a big try/catch clause
   try
   {
-    this->m_H5File.reset(new H5::H5File(this->GetFileName(), H5F_ACC_RDONLY));
+    this->m_H5File = std::make_unique<H5::H5File>(this->GetFileName(), H5F_ACC_RDONLY);
     // open /TransformGroup
     H5::Group transformGroup = this->m_H5File->openGroup(transformGroupName);
 
-    for (unsigned int i = 0; i < transformGroup.getNumObjs(); i++)
+    for (unsigned int i = 0; i < transformGroup.getNumObjs(); ++i)
     {
       std::string transformName(GetTransformName(i));
 
@@ -411,7 +411,7 @@ HDF5TransformIOTemplate<TParametersValueType>::Write()
   try
   {
     H5::FileAccPropList fapl;
-#if (H5_VERS_MAJOR > 1) || (H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 10) ||                                             \
+#if (H5_VERS_MAJOR > 1) || (H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 10) || \
   (H5_VERS_MAJOR == 1) && (H5_VERS_MINOR == 10) && (H5_VERS_RELEASE >= 2)
     // File format which is backwards compatible with HDF5 version 1.8
     // Only HDF5 v1.10.2 has both setLibverBounds method and H5F_LIBVER_V18 constant
@@ -420,7 +420,8 @@ HDF5TransformIOTemplate<TParametersValueType>::Write()
 #  error The selected version of HDF5 library does not support setting backwards compatibility at run-time.\
   Please use a different version of HDF5, e.g. the one bundled with ITK (by setting ITK_USE_SYSTEM_HDF5 to OFF).
 #endif
-    this->m_H5File.reset(new H5::H5File(this->GetFileName(), H5F_ACC_TRUNC, H5::FileCreatPropList::DEFAULT, fapl));
+    this->m_H5File =
+      std::make_unique<H5::H5File>(this->GetFileName(), H5F_ACC_TRUNC, H5::FileCreatPropList::DEFAULT, fapl);
 
     this->WriteString(ItkVersion, Version::GetITKVersion());
     this->WriteString(HDFVersion, H5_VERS_INFO);

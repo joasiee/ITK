@@ -90,7 +90,7 @@ public:
     B[2] = 0;
 
     VectorType rightPart;
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       rightPart[i] = parameters[i];
     }
@@ -114,7 +114,7 @@ public:
   {
 
     VectorType rightPart;
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       rightPart[i] = parameters[i];
     }
@@ -187,11 +187,11 @@ itkVersorTransformOptimizerTest(int, char *[])
 
 
   // Declaration of a itkOptimizer
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
 
 
   // Declaration of the CostFunction adaptor
-  versorCostFunction::Pointer costFunction = versorCostFunction::New();
+  auto costFunction = versorCostFunction::New();
 
 
   itkOptimizer->SetCostFunction(costFunction);
@@ -251,7 +251,7 @@ itkVersorTransformOptimizerTest(int, char *[])
 
   VersorType             finalRotation;
   VersorType::VectorType finalRightPart;
-  for (unsigned int i = 0; i < spaceDimensions; i++)
+  for (unsigned int i = 0; i < spaceDimensions; ++i)
   {
     finalRightPart[i] = finalPosition[i];
   }

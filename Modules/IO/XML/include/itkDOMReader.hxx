@@ -33,7 +33,7 @@ DOMReader<TOutput>::DOMReader()
   // Create the logger.
   this->m_Logger = LoggerType::New();
   // by default logged messages go to the console
-  typename StdStreamLogOutput::Pointer defout = StdStreamLogOutput::New();
+  auto defout = StdStreamLogOutput::New();
   defout->SetStream(std::cout);
   this->m_Logger->AddLogOutput(defout);
   // settings that may be important
@@ -61,16 +61,16 @@ DOMReader<TOutput>::SetOutput(OutputType * output)
 
 /** Get the output object for full access. */
 template <typename TOutput>
-typename DOMReader<TOutput>::OutputType *
-DOMReader<TOutput>::GetOutput()
+auto
+DOMReader<TOutput>::GetOutput() -> OutputType *
 {
   return this->m_Output;
 }
 
 /** Get the output object for read-only access. */
 template <typename TOutput>
-const typename DOMReader<TOutput>::OutputType *
-DOMReader<TOutput>::GetOutput() const
+auto
+DOMReader<TOutput>::GetOutput() const -> const OutputType *
 {
   return this->m_Output;
 }
@@ -133,7 +133,7 @@ DOMReader<TOutput>::Update()
   this->m_IntermediateDOM->RemoveAllAttributesAndChildren();
 
   // read the input XML file and update the DOM object
-  typename DOMNodeXMLReader::Pointer reader = DOMNodeXMLReader::New();
+  auto reader = DOMNodeXMLReader::New();
   reader->SetDOMNodeXML(this->m_IntermediateDOM);
   reader->SetFileName(fn.ToString());
   reader->Update();

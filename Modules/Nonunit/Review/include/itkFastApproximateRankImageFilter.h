@@ -74,7 +74,7 @@ public:
   using IndexType = typename TInputImage::IndexType;
   using PixelType = typename TInputImage::PixelType;
   using OffsetType = typename TInputImage::OffsetType;
-  using FilterType = typename Superclass::FilterType;
+  using typename Superclass::FilterType;
 
   /** Image related type alias. */
   static constexpr unsigned int ImageDimension = TInputImage::ImageDimension;
@@ -87,7 +87,7 @@ public:
     if (m_Rank != rank)
     {
       m_Rank = rank;
-      for (unsigned i = 0; i < TInputImage::ImageDimension - 1; i++)
+      for (unsigned i = 0; i < TInputImage::ImageDimension - 1; ++i)
       {
         this->m_Filters[i]->SetRank(m_Rank);
       }

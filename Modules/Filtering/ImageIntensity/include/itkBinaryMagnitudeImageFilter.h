@@ -36,16 +36,12 @@ public:
   Modulus2() = default;
   ~Modulus2() = default;
   bool
-  operator!=(const Modulus2 &) const
+  operator==(const Modulus2 &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Modulus2 & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Modulus2);
 
   inline TOutput
   operator()(const TInput1 & A, const TInput2 & B) const
@@ -85,7 +81,8 @@ public:
  * \ingroup ITKImageIntensity
  */
 template <typename TInputImage1, typename TInputImage2, typename TOutputImage>
-class BinaryMagnitudeImageFilter : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
+class ITK_TEMPLATE_EXPORT BinaryMagnitudeImageFilter
+  : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(BinaryMagnitudeImageFilter);

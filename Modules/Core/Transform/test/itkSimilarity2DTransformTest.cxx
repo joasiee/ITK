@@ -28,7 +28,7 @@ CheckEqual(itk::Point<double, 2> p1, itk::Point<double, 2> p2)
 {
   const double epsilon = 1e-10;
 
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
     if (std::fabs(p1[i] - p2[i]) > epsilon)
     {
@@ -54,7 +54,7 @@ itkSimilarity2DTransformTest(int, char *[])
   bool                   Ok = true;
 
   using SimilarityTransformType = itk::CenteredSimilarity2DTransform<double>;
-  SimilarityTransformType::Pointer transform = SimilarityTransformType::New();
+  auto transform = SimilarityTransformType::New();
 
   // Test the identity transform
   std::cout << "Testing Identity:";
@@ -65,7 +65,7 @@ itkSimilarity2DTransformTest(int, char *[])
   SimilarityTransformType::OutputPointType           r;
 
   r = transform->TransformPoint(p);
-  for (unsigned int i = 0; i < N; i++)
+  for (unsigned int i = 0; i < N; ++i)
   {
     if (std::fabs(p[i] - r[i]) > epsilon)
     {
@@ -84,8 +84,8 @@ itkSimilarity2DTransformTest(int, char *[])
   }
 
   // Test SetAngle/GetAngle
-  SimilarityTransformType::Pointer transform1 = SimilarityTransformType::New();
-  SimilarityTransformType::Pointer transform2 = SimilarityTransformType::New();
+  auto transform1 = SimilarityTransformType::New();
+  auto transform2 = SimilarityTransformType::New();
   transform1->SetIdentity();
   double angle1 = .125;
   transform1->SetAngle(angle1);
@@ -122,7 +122,7 @@ itkSimilarity2DTransformTest(int, char *[])
   // Test the Set/Get Parameters
   std::cout << "Testing Set/GetParameters():" << std::endl;
   SimilarityTransformType::ParametersType params(6);
-  for (unsigned int i = 0; i < 6; i++)
+  for (unsigned int i = 0; i < 6; ++i)
   {
     params[i] = i + 1;
   }
@@ -135,7 +135,7 @@ itkSimilarity2DTransformTest(int, char *[])
   outputParams = transform->GetParameters();
 
   std::cout << "Output Parameters = " << outputParams << std::endl;
-  for (unsigned int i = 0; i < 4; i++) // do not test for the offset
+  for (unsigned int i = 0; i < 4; ++i) // do not test for the offset
   {
     if (std::fabs(outputParams[i] - params[i]) > epsilon)
     {
@@ -170,7 +170,7 @@ itkSimilarity2DTransformTest(int, char *[])
   q[0] = p[0] * costh - p[1] * sinth;
   q[1] = p[0] * sinth + p[1] * costh;
   r = transform->TransformPoint(p);
-  for (unsigned int i = 0; i < N; i++)
+  for (unsigned int i = 0; i < N; ++i)
   {
     if (std::fabs(q[i] - r[i]) > epsilon)
     {
@@ -202,7 +202,7 @@ itkSimilarity2DTransformTest(int, char *[])
   q = p + ioffset;
 
   r = transform->TransformPoint(p);
-  for (unsigned int i = 0; i < N; i++)
+  for (unsigned int i = 0; i < N; ++i)
   {
     if (std::fabs(q[i] - r[i]) > epsilon)
     {
@@ -245,7 +245,7 @@ itkSimilarity2DTransformTest(int, char *[])
   {
     // Test instantiation, inverse computation, back transform etc.
     using TransformType = itk::Similarity2DTransform<double>;
-    TransformType::Pointer t1 = TransformType::New();
+    auto t1 = TransformType::New();
 
     // Set parameters
     TransformType::ParametersType parameters(t1->GetNumberOfParameters());
@@ -282,7 +282,7 @@ itkSimilarity2DTransformTest(int, char *[])
       return EXIT_FAILURE;
     }
 
-    TransformType::Pointer t2dash = TransformType::New();
+    auto t2dash = TransformType::New();
     t1->GetInverse(t2dash);
     TransformType::InputPointType p3dash;
     p3dash = t2dash->TransformPoint(p2);
@@ -334,7 +334,7 @@ itkSimilarity2DTransformTest(int, char *[])
     }
 
     // Test compose
-    TransformType::Pointer t4 = TransformType::New();
+    auto t4 = TransformType::New();
 
     parameters[0] = 0.6;
     parameters[1] = 14.7 / 180.0 * itk::Math::pi;
@@ -383,7 +383,7 @@ itkSimilarity2DTransformTest(int, char *[])
     t4->ComputeJacobianWithRespectToParameters(p1, jacobian);
 
     TransformType::JacobianType approxJacobian = jacobian;
-    for (unsigned int k = 0; k < t1->GetNumberOfParameters(); k++)
+    for (unsigned int k = 0; k < t1->GetNumberOfParameters(); ++k)
     {
       constexpr double              delta = 0.001;
       TransformType::ParametersType plusParameters;
@@ -401,7 +401,7 @@ itkSimilarity2DTransformTest(int, char *[])
       plusPoint = t4->TransformPoint(p1);
       t4->SetParameters(minusParameters);
       minusPoint = t4->TransformPoint(p1);
-      for (unsigned int j = 0; j < 2; j++)
+      for (unsigned int j = 0; j < 2; ++j)
       {
         double approxDerivative = (plusPoint[j] - minusPoint[j]) / (2.0 * delta);
         double computedDerivative = jacobian[j][k];
@@ -424,7 +424,7 @@ itkSimilarity2DTransformTest(int, char *[])
   {
     // Test instantiation, inverse computation, back transform etc.
     using TransformType = SimilarityTransformType;
-    TransformType::Pointer t1 = TransformType::New();
+    auto t1 = TransformType::New();
 
     // Set parameters
     TransformType::ParametersType parameters(t1->GetNumberOfParameters());
@@ -458,7 +458,7 @@ itkSimilarity2DTransformTest(int, char *[])
       return EXIT_FAILURE;
     }
 
-    TransformType::Pointer t2dash = TransformType::New();
+    auto t2dash = TransformType::New();
     t1->GetInverse(t2dash);
     TransformType::InputPointType p3dash;
     p3dash = t2dash->TransformPoint(p2);
@@ -497,7 +497,7 @@ itkSimilarity2DTransformTest(int, char *[])
     }
 
     // Test compose
-    TransformType::Pointer t4 = TransformType::New();
+    auto t4 = TransformType::New();
 
     parameters[0] = 0.6;
     parameters[1] = 14.7 / 180.0 * itk::Math::pi;
@@ -542,7 +542,7 @@ itkSimilarity2DTransformTest(int, char *[])
     t4->ComputeJacobianWithRespectToParameters(p1, jacobian);
 
     TransformType::JacobianType approxJacobian = jacobian;
-    for (unsigned int k = 0; k < t1->GetNumberOfParameters(); k++)
+    for (unsigned int k = 0; k < t1->GetNumberOfParameters(); ++k)
     {
       constexpr double              delta = 0.001;
       TransformType::ParametersType plusParameters;
@@ -560,7 +560,7 @@ itkSimilarity2DTransformTest(int, char *[])
       plusPoint = t4->TransformPoint(p1);
       t4->SetParameters(minusParameters);
       minusPoint = t4->TransformPoint(p1);
-      for (unsigned int j = 0; j < 2; j++)
+      for (unsigned int j = 0; j < 2; ++j)
       {
         double approxDerivative = (plusPoint[j] - minusPoint[j]) / (2.0 * delta);
         double computedDerivative = jacobian[j][k];
@@ -583,15 +583,15 @@ itkSimilarity2DTransformTest(int, char *[])
   {
     // Test Set/Get Matrix and Set/Get Offset
     using TransformType = itk::Similarity2DTransform<double>;
-    TransformType::Pointer t1 = TransformType::New();
-    TransformType::Pointer t2 = TransformType::New();
+    auto t1 = TransformType::New();
+    auto t2 = TransformType::New();
 
     TransformType::InputPointType center;
     center[0] = 9.0;
     center[1] = 10.0;
 
     TransformType::ParametersType parameters(t1->GetNumberOfParameters());
-    for (unsigned int j = 0; j < t1->GetNumberOfParameters(); j++)
+    for (unsigned int j = 0; j < t1->GetNumberOfParameters(); ++j)
     {
       parameters[j] = static_cast<double>(j) + 1.0;
     }
@@ -624,7 +624,7 @@ itkSimilarity2DTransformTest(int, char *[])
     TransformType::ParametersType pdash = t2->GetParameters();
 
     std::cout << "Test Set/GetMatrix() and Set/GetOffset(): ";
-    for (unsigned int j = 0; j < t1->GetNumberOfParameters(); j++)
+    for (unsigned int j = 0; j < t1->GetNumberOfParameters(); ++j)
     {
       if (std::fabs(parameters[j] - pdash[j]) > epsilon)
       {

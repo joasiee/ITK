@@ -129,29 +129,29 @@ template <typename TInputImage, typename TOutputImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 IsoContourDistanceImageFilter<TInputImage, TOutputImage>::ThreaderFullCallback(void * arg)
 {
-  using ThreadInfo = MultiThreaderBase::WorkUnitInfo;
-  auto *       threadInfo = static_cast<ThreadInfo *>(arg);
-  ThreadIdType threadId = threadInfo->WorkUnitID;
-  ThreadIdType threadCount = threadInfo->NumberOfWorkUnits;
+  using WorkUnitInfo = MultiThreaderBase::WorkUnitInfo;
+  auto *       workUnitInfo = static_cast<WorkUnitInfo *>(arg);
+  ThreadIdType workUnitID = workUnitInfo->WorkUnitID;
+  ThreadIdType workUnitCount = workUnitInfo->NumberOfWorkUnits;
   using FilterStruct = typename ImageSource<TOutputImage>::ThreadStruct;
-  auto * str = (FilterStruct *)(threadInfo->UserData);
+  auto * str = (FilterStruct *)(workUnitInfo->UserData);
   Self * filter = static_cast<Self *>(str->Filter.GetPointer());
 
   // execute the actual method with appropriate output region
   // first find out how many pieces extent can be split into.
   typename TOutputImage::RegionType splitRegion;
-  ThreadIdType                      total = filter->SplitRequestedRegion(threadId, threadCount, splitRegion);
+  ThreadIdType                      total = filter->SplitRequestedRegion(workUnitID, workUnitCount, splitRegion);
 
-  if (threadId < total)
+  if (workUnitID < total)
   {
     // Iterate over split region or split band as convenient.
     if (!filter->m_NarrowBanding)
     {
-      filter->ThreadedGenerateDataFull(splitRegion, threadId);
+      filter->ThreadedGenerateDataFull(splitRegion, workUnitID);
     }
     else
     {
-      filter->ThreadedGenerateDataBand(splitRegion, threadId);
+      filter->ThreadedGenerateDataBand(splitRegion, workUnitID);
     }
   }
   // else don't use this thread. Threads were not split conveniently.
@@ -242,7 +242,7 @@ IsoContourDistanceImageFilter<TInputImage, TOutputImage>::ThreadedGenerateDataFu
 
   unsigned int n;
 
-  for (n = 0; n < ImageDimension; n++)
+  for (n = 0; n < ImageDimension; ++n)
   {
     radiusIn[n] = 2;
     radiusOut[n] = 1;
@@ -254,7 +254,7 @@ IsoContourDistanceImageFilter<TInputImage, TOutputImage>::ThreadedGenerateDataFu
   // Get Stride information to move across dimension
   std::vector<OffsetValueType> stride(ImageDimension, 0);
 
-  for (n = 0; n < ImageDimension; n++)
+  for (n = 0; n < ImageDimension; ++n)
   {
     stride[n] = inNeigIt.GetStride(n);
   }
@@ -289,7 +289,7 @@ IsoContourDistanceImageFilter<TInputImage, TOutputImage>::ThreadedGenerateDataBa
 
   InputSizeType radiusIn;
   SizeType      radiusOut;
-  for (n = 0; n < ImageDimension; n++)
+  for (n = 0; n < ImageDimension; ++n)
   {
     radiusIn[n] = 2;
     radiusOut[n] = 1;
@@ -302,7 +302,7 @@ IsoContourDistanceImageFilter<TInputImage, TOutputImage>::ThreadedGenerateDataBa
   // Get Stride information to move across dimension
   std::vector<OffsetValueType> stride(ImageDimension, 0);
 
-  for (n = 0; n < ImageDimension; n++)
+  for (n = 0; n < ImageDimension; ++n)
   {
     stride[n] = inNeigIt.GetStride(n);
   }
@@ -332,13 +332,13 @@ IsoContourDistanceImageFilter<TInputImage, TOutputImage>::ComputeValue(const Inp
   PixelRealType grad0[ImageDimension];
 
   // Compute gradient at val0
-  for (unsigned int ng = 0; ng < ImageDimension; ng++)
+  for (unsigned int ng = 0; ng < ImageDimension; ++ng)
   {
     grad0[ng] =
       static_cast<PixelRealType>(inNeigIt.GetNext(ng, 1)) - static_cast<PixelRealType>(inNeigIt.GetPrevious(ng, 1));
   }
 
-  for (unsigned int n = 0; n < ImageDimension; n++)
+  for (unsigned int n = 0; n < ImageDimension; ++n)
   {
     PixelRealType val1 = static_cast<PixelRealType>(inNeigIt.GetPixel(center + stride[n])) - m_LevelSetValue;
 
@@ -348,7 +348,7 @@ IsoContourDistanceImageFilter<TInputImage, TOutputImage>::ComputeValue(const Inp
     {
       PixelRealType grad1[ImageDimension];
 
-      for (unsigned int ng = 0; ng < ImageDimension; ng++)
+      for (unsigned int ng = 0; ng < ImageDimension; ++ng)
       {
         grad1[ng] = static_cast<PixelType>(inNeigIt.GetPixel(center + stride[n] + stride[ng])) -
                     static_cast<PixelType>(inNeigIt.GetPixel(center + stride[n] - stride[ng]));
@@ -376,7 +376,7 @@ IsoContourDistanceImageFilter<TInputImage, TOutputImage>::ComputeValue(const Inp
 
       PixelRealType norm = 0.;
 
-      for (unsigned int ng = 0; ng < ImageDimension; ng++)
+      for (unsigned int ng = 0; ng < ImageDimension; ++ng)
       {
         grad[ng] = (grad0[ng] * alpha0 + grad1[ng] * alpha1) / (2. * static_cast<PixelRealType>(m_Spacing[ng]));
         norm += grad[ng] * grad[ng];

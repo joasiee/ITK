@@ -25,9 +25,9 @@ testMatrix(const TMatrix & m1, const TMatrix & m2)
 {
   bool pass = true;
 
-  for (unsigned int i = 0; i < TMatrix::RowDimensions; i++)
+  for (unsigned int i = 0; i < TMatrix::RowDimensions; ++i)
   {
-    for (unsigned int j = 0; j < TMatrix::ColumnDimensions; j++)
+    for (unsigned int j = 0; j < TMatrix::ColumnDimensions; ++j)
     {
       if (std::fabs(m1[i][j] - m2[i][j]) > epsilon)
       {
@@ -44,7 +44,7 @@ testVector(const TVector & v1, const TVector & v2)
 {
   bool pass = true;
 
-  for (unsigned int i = 0; i < TVector::Dimension; i++)
+  for (unsigned int i = 0; i < TVector::Dimension; ++i)
   {
     if (std::fabs(v1[i] - v2[i]) > epsilon)
     {
@@ -59,7 +59,7 @@ itkTransformCloneTest(int, char *[])
 {
   using AffineTransformType = itk::AffineTransform<double, 3>;
   using Transform3DType = itk::Transform<double, 3, 3>;
-  AffineTransformType::Pointer          affineXfrm = AffineTransformType::New();
+  auto                                  affineXfrm = AffineTransformType::New();
   AffineTransformType::OutputVectorType axis, offset;
   axis[0] = -1.0;
   axis[1] = 1.0;
@@ -96,7 +96,7 @@ itkTransformCloneTest(int, char *[])
     return EXIT_FAILURE;
   }
   using CompositeTransformType = itk::CompositeTransform<double, 3>;
-  CompositeTransformType::Pointer compositeXfrm = CompositeTransformType::New();
+  auto compositeXfrm = CompositeTransformType::New();
   compositeXfrm->AddTransform(clonePtr);
   compositeXfrm->SetOnlyMostRecentTransformToOptimizeOn();
 

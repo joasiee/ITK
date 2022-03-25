@@ -128,21 +128,21 @@ public:
   static constexpr unsigned int ParametersDimension = NOutputDimensions * (NInputDimensions + 1);
 
   /** Parameters Type   */
-  using FixedParametersType = typename Superclass::FixedParametersType;
-  using FixedParametersValueType = typename Superclass::FixedParametersValueType;
-  using ParametersType = typename Superclass::ParametersType;
-  using ParametersValueType = typename Superclass::ParametersValueType;
+  using typename Superclass::FixedParametersType;
+  using typename Superclass::FixedParametersValueType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::ParametersValueType;
 
   /** Jacobian Types   */
-  using JacobianType = typename Superclass::JacobianType;
-  using JacobianPositionType = typename Superclass::JacobianPositionType;
-  using InverseJacobianPositionType = typename Superclass::InverseJacobianPositionType;
+  using typename Superclass::JacobianType;
+  using typename Superclass::JacobianPositionType;
+  using typename Superclass::InverseJacobianPositionType;
 
   /** Transform category type. */
-  using TransformCategoryEnum = typename Superclass::TransformCategoryEnum;
+  using typename Superclass::TransformCategoryEnum;
 
   /** Standard scalar type for this class */
-  using ScalarType = typename Superclass::ScalarType;
+  using typename Superclass::ScalarType;
 
   /** Standard vector type for this class   */
   using InputVectorType = Vector<TParametersValueType, Self::InputSpaceDimension>;
@@ -153,16 +153,16 @@ public:
   using InputCovariantVectorType = CovariantVector<TParametersValueType, Self::InputSpaceDimension>;
   using OutputCovariantVectorType = CovariantVector<TParametersValueType, Self::OutputSpaceDimension>;
 
-  using InputVectorPixelType = typename Superclass::InputVectorPixelType;
-  using OutputVectorPixelType = typename Superclass::OutputVectorPixelType;
+  using typename Superclass::InputVectorPixelType;
+  using typename Superclass::OutputVectorPixelType;
 
   /** Standard diffusion tensor type for this class */
-  using InputDiffusionTensor3DType = typename Superclass::InputDiffusionTensor3DType;
-  using OutputDiffusionTensor3DType = typename Superclass::OutputDiffusionTensor3DType;
+  using typename Superclass::InputDiffusionTensor3DType;
+  using typename Superclass::OutputDiffusionTensor3DType;
 
   /** Standard tensor type for this class */
-  using InputSymmetricSecondRankTensorType = typename Superclass::InputSymmetricSecondRankTensorType;
-  using OutputSymmetricSecondRankTensorType = typename Superclass::OutputSymmetricSecondRankTensorType;
+  using typename Superclass::InputSymmetricSecondRankTensorType;
+  using typename Superclass::OutputSymmetricSecondRankTensorType;
 
   using InputTensorEigenVectorType = CovariantVector<TParametersValueType, InputDiffusionTensor3DType::Dimension>;
 
@@ -503,8 +503,7 @@ protected:
    * omitted, then the MatrixOffsetTransformBase is initialized to an identity
    * transformation in the appropriate number of dimensions. */
   MatrixOffsetTransformBase(const MatrixType & matrix, const OutputVectorType & offset);
-  MatrixOffsetTransformBase(unsigned int paramDims);
-  MatrixOffsetTransformBase();
+  explicit MatrixOffsetTransformBase(unsigned int paramDims = ParametersDimension);
 
   /** Destroy an MatrixOffsetTransformBase object */
   ~MatrixOffsetTransformBase() override = default;
@@ -577,13 +576,13 @@ protected:
   itkGetConstMacro(Singular, bool);
 
 private:
-  MatrixType                m_Matrix;        // Matrix of the transformation
-  OutputVectorType          m_Offset;        // Offset of the transformation
-  mutable InverseMatrixType m_InverseMatrix; // Inverse of the matrix
-  mutable bool              m_Singular;      // Is m_Inverse singular?
+  MatrixType                m_Matrix{ MatrixType::GetIdentity() };               // Matrix of the transformation
+  OutputVectorType          m_Offset{};                                          // Offset of the transformation
+  mutable InverseMatrixType m_InverseMatrix{ InverseMatrixType::GetIdentity() }; // Inverse of the matrix
+  mutable bool              m_Singular{ false };                                 // Is m_Inverse singular?
 
-  InputPointType   m_Center;
-  OutputVectorType m_Translation;
+  InputPointType   m_Center{};
+  OutputVectorType m_Translation{};
 
   /** To avoid recomputation of the inverse if not needed */
   TimeStamp         m_MatrixMTime;

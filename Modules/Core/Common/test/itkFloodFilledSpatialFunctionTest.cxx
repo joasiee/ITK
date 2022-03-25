@@ -44,7 +44,7 @@ itkFloodFilledSpatialFunctionTest(int, char *[])
   PointValueType   sourceImageOrigin[] = { 0, 0 };
 
   // Creates the sourceImage (but doesn't set the size or allocate memory)
-  ImageType::Pointer sourceImage = ImageType::New();
+  auto sourceImage = ImageType::New();
   sourceImage->SetOrigin(sourceImageOrigin);
   sourceImage->SetSpacing(sourceImageSpacing);
 
@@ -73,7 +73,7 @@ itkFloodFilledSpatialFunctionTest(int, char *[])
   sourceImage->Allocate();
 
   // Loop over all available iterator strategies
-  for (int strat = 0; strat < 4; strat++)
+  for (int strat = 0; strat < 4; ++strat)
   {
     // Initialize the image to hold all 0's
     itk::ImageRegionIterator<ImageType> it = itk::ImageRegionIterator<ImageType>(sourceImage, largestPossibleRegion);
@@ -87,7 +87,7 @@ itkFloodFilledSpatialFunctionTest(int, char *[])
     using FunctionType = itk::SphereSpatialFunction<dim>;
     using FunctionPositionType = FunctionType::InputType;
 
-    FunctionType::Pointer spatialFunc = FunctionType::New();
+    auto spatialFunc = FunctionType::New();
     spatialFunc->SetRadius(1.0);
 
     FunctionPositionType center;

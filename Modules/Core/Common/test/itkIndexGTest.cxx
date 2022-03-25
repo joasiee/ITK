@@ -19,6 +19,7 @@
 // First include the header file to be tested:
 #include "itkIndex.h"
 #include <gtest/gtest.h>
+#include <initializer_list>
 #include <limits>
 
 namespace
@@ -45,7 +46,29 @@ Expect_Filled_returns_Index_with_specified_value_for_each_element()
   }
   Expect_Filled_with_value(std::numeric_limits<IndexValueType>::max());
 }
+
+
+template <itk::IndexValueType VFillValue>
+constexpr bool
+Is_Filled_Index_correctly_filled()
+{
+  for (const auto actualValue : itk::Index<>::Filled(VFillValue).m_InternalArray)
+  {
+    if (actualValue != VFillValue)
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
 } // namespace
+
+
+static_assert(Is_Filled_Index_correctly_filled<0>() && Is_Filled_Index_correctly_filled<1>() &&
+                Is_Filled_Index_correctly_filled<std::numeric_limits<itk::IndexValueType>::min()>() &&
+                Is_Filled_Index_correctly_filled<std::numeric_limits<itk::IndexValueType>::max()>(),
+              "itk::Index::Filled(value) should be correctly filled at compile-time");
 
 
 // Tests that itk::Index::Filled(value) returns an itk::Index with the
@@ -55,4 +78,18 @@ TEST(Index, FilledReturnsIndexWithSpecifiedValueForEachElement)
   // Test for 1-D and 3-D.
   Expect_Filled_returns_Index_with_specified_value_for_each_element<1>();
   Expect_Filled_returns_Index_with_specified_value_for_each_element<3>();
+}
+
+
+TEST(Index, Make)
+{
+  static_assert((decltype(itk::MakeIndex(1, 1))::Dimension == 2) && (decltype(itk::MakeIndex(1, 1, 1))::Dimension == 3),
+                "The dimension of the created itk::Size should equal the number of arguments");
+
+  EXPECT_EQ(itk::MakeIndex(0, 0), itk::Index<2>());
+  EXPECT_EQ(itk::MakeIndex(0, 0, 0), itk::Index<3>());
+
+  const auto itkIndex = itk::MakeIndex(1, 2, 3, 4);
+  const auto values = { 1, 2, 3, 4 };
+  EXPECT_TRUE(std::equal(itkIndex.begin(), itkIndex.end(), values.begin(), values.end()));
 }

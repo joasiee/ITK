@@ -38,16 +38,12 @@ public:
   ComplexToReal() = default;
   ~ComplexToReal() = default;
   bool
-  operator!=(const ComplexToReal &) const
+  operator==(const ComplexToReal &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const ComplexToReal & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ComplexToReal);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -58,7 +54,7 @@ public:
 } // namespace Functor
 
 template <typename TInputImage, typename TOutputImage>
-class ComplexToRealImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT ComplexToRealImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ComplexToRealImageFilter);

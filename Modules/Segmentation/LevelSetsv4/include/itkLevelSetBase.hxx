@@ -68,8 +68,8 @@ LevelSetBase<TInput, VDimension, TOutput, TDomain>::EvaluateGradientNorm(const I
 
 // ----------------------------------------------------------------------------
 template <typename TInput, unsigned int VDimension, typename TOutput, typename TDomain>
-typename LevelSetBase<TInput, VDimension, TOutput, TDomain>::OutputRealType
-LevelSetBase<TInput, VDimension, TOutput, TDomain>::EvaluateGradientNorm(const InputType & iP) const
+auto
+LevelSetBase<TInput, VDimension, TOutput, TDomain>::EvaluateGradientNorm(const InputType & iP) const -> OutputRealType
 {
   GradientType grad = this->EvaluateGradient(iP);
   return grad.GetNorm();
@@ -77,17 +77,17 @@ LevelSetBase<TInput, VDimension, TOutput, TDomain>::EvaluateGradientNorm(const I
 
 // ----------------------------------------------------------------------------
 template <typename TInput, unsigned int VDimension, typename TOutput, typename TDomain>
-typename LevelSetBase<TInput, VDimension, TOutput, TDomain>::OutputRealType
-LevelSetBase<TInput, VDimension, TOutput, TDomain>::EvaluateMeanCurvature(const InputType & iP) const
+auto
+LevelSetBase<TInput, VDimension, TOutput, TDomain>::EvaluateMeanCurvature(const InputType & iP) const -> OutputRealType
 {
   OutputRealType oValue = NumericTraits<OutputRealType>::ZeroValue();
 
   HessianType  hessian = this->EvaluateHessian(iP);
   GradientType grad = this->EvaluateGradient(iP);
 
-  for (unsigned int i = 0; i < Dimension; i++)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
-    for (unsigned int j = 0; j < Dimension; j++)
+    for (unsigned int j = 0; j < Dimension; ++j)
     {
       if (j != i)
       {
@@ -137,9 +137,9 @@ LevelSetBase<TInput, VDimension, TOutput, TDomain>::EvaluateMeanCurvature(const 
     ioData.MeanCurvature.m_Computed = true;
     ioData.MeanCurvature.m_Value = NumericTraits<OutputRealType>::ZeroValue();
 
-    for (unsigned int i = 0; i < Dimension; i++)
+    for (unsigned int i = 0; i < Dimension; ++i)
     {
-      for (unsigned int j = 0; j < Dimension; j++)
+      for (unsigned int j = 0; j < Dimension; ++j)
       {
         if (j != i)
         {

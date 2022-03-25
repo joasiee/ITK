@@ -23,7 +23,7 @@
 namespace itk
 {
 template <typename TTreeType>
-class PostOrderTreeIterator : public TreeIteratorBase<TTreeType>
+class ITK_TEMPLATE_EXPORT PostOrderTreeIterator : public TreeIteratorBase<TTreeType>
 {
 public:
   /** Typedefs */
@@ -31,8 +31,8 @@ public:
   using Superclass = TreeIteratorBase<TTreeType>;
   using TreeType = TTreeType;
   using ValueType = typename TTreeType::ValueType;
-  using TreeNodeType = typename Superclass::TreeNodeType;
-  using NodeType = typename Superclass::NodeType;
+  using typename Superclass::TreeNodeType;
+  using typename Superclass::NodeType;
 
   /** Constructor */
   PostOrderTreeIterator(TreeType * tree);

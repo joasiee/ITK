@@ -156,54 +156,16 @@ CompareHistogramImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::os
 {
   Superclass::PrintSelf(os, indent);
 
-  os << indent << "TrainingFixedImage: ";
-  if (m_TrainingFixedImage.IsNull())
-  {
-    os << 0 << std::endl;
-  }
-  else
-  {
-    os << m_TrainingFixedImage << std::endl;
-  }
+  itkPrintSelfObjectMacro(TrainingFixedImage);
+  itkPrintSelfObjectMacro(TrainingMovingImage);
+  itkPrintSelfObjectMacro(TrainingTransform);
+  itkPrintSelfObjectMacro(TrainingInterpolator);
 
-  os << indent << "TrainingMovingImage: ";
-  if (m_TrainingMovingImage.IsNull())
-  {
-    os << 0 << std::endl;
-  }
-  else
-  {
-    os << m_TrainingMovingImage << std::endl;
-  }
-  os << indent << "TrainingTransform: ";
-  if (m_TrainingTransform.IsNull())
-  {
-    os << 0 << std::endl;
-  }
-  else
-  {
-    os << m_TrainingTransform << std::endl;
-  }
-  os << indent << "TrainingInterpolator: ";
-  if (m_TrainingInterpolator.IsNull())
-  {
-    os << 0 << std::endl;
-  }
-  else
-  {
-    os << m_TrainingInterpolator << std::endl;
-  }
-  os << indent << "TrainingHistogram: ";
-  if (m_TrainingHistogram.IsNull())
-  {
-    os << 0 << std::endl;
-  }
-  else
-  {
-    os << m_TrainingHistogram << std::endl;
-  }
   os << indent << "TrainingFixedImageRegion: " << m_TrainingFixedImageRegion << std::endl;
+
+  itkPrintSelfObjectMacro(TrainingHistogram);
 }
-} // End namespace itk
+
+} // end namespace itk
 
 #endif // itkCompareHistogramImageToImageMetric_hxx

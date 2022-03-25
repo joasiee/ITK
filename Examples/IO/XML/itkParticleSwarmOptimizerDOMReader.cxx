@@ -36,7 +36,7 @@ ParticleSwarmOptimizerDOMReader::GenerateData(const DOMNodeType * inputdom,
   if (output == nullptr)
   {
     logger->Info("creating the output PSO object ...\n");
-    OutputType::Pointer object = OutputType::New();
+    auto object = OutputType::New();
     output = (OutputType *)object;
     this->SetOutput(output);
   }
@@ -111,7 +111,7 @@ ParticleSwarmOptimizerDOMReader::GenerateData(const DOMNodeType * inputdom,
     s.ToData(ubound); // read all data elements in the string
     // combine the two
     ParticleSwarmOptimizer::ParameterBoundsType bounds;
-    for (size_t i = 0; i < lbound.size(); i++)
+    for (size_t i = 0; i < lbound.size(); ++i)
     {
       std::pair<double, double> value;
       value.first = lbound[i];

@@ -20,6 +20,7 @@
 #include "itkImageFileWriter.h"
 #include "itkImageFileReader.h"
 #include "itkRawImageIO.h"
+#include "itkTestingMacros.h"
 
 
 // Specific ImageIO test
@@ -27,6 +28,13 @@
 int
 itkRawImageIOTest3(int argc, char * argv[])
 {
+  if (argc < 3)
+  {
+    std::cerr << "Missing Parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " Output1 Output2" << std::endl;
+    return EXIT_FAILURE;
+  }
+
   using ImageType = itk::Image<unsigned short, 2>;
   using PixelType = ImageType::PixelType;
 
@@ -36,12 +44,6 @@ itkRawImageIOTest3(int argc, char * argv[])
 
   using RawImageIOType = itk::RawImageIO<PixelType, ImageType::ImageDimension>;
 
-
-  if (argc < 3)
-  {
-    std::cerr << "Usage: " << argv[0] << " Output1 Output2\n";
-    return EXIT_FAILURE;
-  }
 
   // Create a source object (in this case a random image generator).
   // The source object is templated on the output type.
@@ -57,7 +59,7 @@ itkRawImageIOTest3(int argc, char * argv[])
   region.SetIndex(index);
   region.SetSize(size);
 
-  ImageType::Pointer image = ImageType::New();
+  auto image = ImageType::New();
   image->SetRegions(region);
   image->Allocate();
 
@@ -72,7 +74,7 @@ itkRawImageIOTest3(int argc, char * argv[])
     ++ii;
   }
 
-  RawImageIOType::Pointer io = RawImageIOType::New();
+  auto io = RawImageIOType::New();
   io->SetByteOrderToBigEndian();
 
   // Write out the image
@@ -120,6 +122,6 @@ itkRawImageIOTest3(int argc, char * argv[])
   writer->SetInput(reader->GetOutput());
   writer->Write();
 
-  std::cerr << "Test PASSED ! " << std::endl;
+  std::cout << "Test PASSED ! " << std::endl;
   return EXIT_SUCCESS;
 }

@@ -34,7 +34,7 @@ itkMeanSampleFilterTest2(int, char *[])
 
   using SampleType = itk::Statistics::ListSample<MeasurementVectorType>;
 
-  SampleType::Pointer sample = SampleType::New();
+  auto sample = SampleType::New();
 
   sample->SetMeasurementVectorSize(MeasurementVectorSize);
 
@@ -45,7 +45,7 @@ itkMeanSampleFilterTest2(int, char *[])
   std::cout << "Input sample values " << std::endl;
   while (counter < numberOfMeasurementVectors)
   {
-    for (unsigned int i = 0; i < MeasurementVectorSize; i++)
+    for (unsigned int i = 0; i < MeasurementVectorSize; ++i)
     {
       measure[i] = counter;
     }
@@ -56,7 +56,7 @@ itkMeanSampleFilterTest2(int, char *[])
 
   using FilterType = itk::Statistics::MeanSampleFilter<SampleType>;
 
-  FilterType::Pointer filter = FilterType::New();
+  auto filter = FilterType::New();
 
   filter->SetInput(sample);
 

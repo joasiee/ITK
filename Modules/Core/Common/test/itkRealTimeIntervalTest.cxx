@@ -21,28 +21,28 @@
 #include "itkMacro.h"
 #include "itkNumericTraits.h"
 
-#define CHECK_FOR_VALUE(a, b)                                                                                          \
-  {                                                                                                                    \
-    double eps = 4.0 * itk::NumericTraits<double>::epsilon();                                                          \
-    CLANG_PRAGMA_PUSH                                                                                                  \
-    CLANG_SUPPRESS_Wfloat_equal eps = (b == 0.0) ? eps : std::fabs(b * eps);                                           \
-    CLANG_PRAGMA_POP                                                                                                   \
-    if (std::fabs(a - b) > eps)                                                                                        \
-    {                                                                                                                  \
-      std::cerr << "Error in " #a << " expected " << b << " but got " << a << std::endl;                               \
-      return EXIT_FAILURE;                                                                                             \
-    }                                                                                                                  \
-  }                                                                                                                    \
+#define CHECK_FOR_VALUE(a, b)                                                            \
+  {                                                                                      \
+    double eps = 4.0 * itk::NumericTraits<double>::epsilon();                            \
+    CLANG_PRAGMA_PUSH                                                                    \
+    CLANG_SUPPRESS_Wfloat_equal eps = (b == 0.0) ? eps : std::fabs(b * eps);             \
+    CLANG_PRAGMA_POP                                                                     \
+    if (std::fabs(a - b) > eps)                                                          \
+    {                                                                                    \
+      std::cerr << "Error in " #a << " expected " << b << " but got " << a << std::endl; \
+      return EXIT_FAILURE;                                                               \
+    }                                                                                    \
+  }                                                                                      \
   ITK_MACROEND_NOOP_STATEMENT
 
-#define CHECK_FOR_BOOLEAN(x, expected)                                                                                 \
-  {                                                                                                                    \
-    if ((x) != expected)                                                                                               \
-    {                                                                                                                  \
-      std::cerr << "Error in " #x << std::endl;                                                                        \
-      return EXIT_FAILURE;                                                                                             \
-    }                                                                                                                  \
-  }                                                                                                                    \
+#define CHECK_FOR_BOOLEAN(x, expected)          \
+  {                                             \
+    if ((x) != expected)                        \
+    {                                           \
+      std::cerr << "Error in " #x << std::endl; \
+      return EXIT_FAILURE;                      \
+    }                                           \
+  }                                             \
   ITK_MACROEND_NOOP_STATEMENT
 
 
@@ -67,7 +67,7 @@ itkRealTimeIntervalTest(int, char *[])
   itk::RealTimeInterval intervalX = interval0;
 
   itk::RealTimeInterval oneSecond(1, 0);
-  for (unsigned int i = 0; i < 1000000L; i++)
+  for (unsigned int i = 0; i < 1000000L; ++i)
   {
     intervalX += oneSecond;
   }
@@ -85,7 +85,7 @@ itkRealTimeIntervalTest(int, char *[])
 
   itk::RealTimeInterval interval3 = interval0;
 
-  for (unsigned int i = 0; i < 1000000L; i++)
+  for (unsigned int i = 0; i < 1000000L; ++i)
   {
     interval3 += fiveMicroseconds;
   }
@@ -96,7 +96,7 @@ itkRealTimeIntervalTest(int, char *[])
 
   CHECK_FOR_VALUE(timeInSeconds, 5.0);
 
-  for (unsigned int i = 0; i < 1000000L; i++)
+  for (unsigned int i = 0; i < 1000000L; ++i)
   {
     interval3 -= fiveMicroseconds;
   }

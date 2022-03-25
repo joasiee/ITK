@@ -100,7 +100,7 @@ SimpleSignedDistance(const TPoint & p)
   double radius = 19.5;
 
   double accum = 0.0;
-  for (unsigned int j = 0; j < TPoint::PointDimension; j++)
+  for (unsigned int j = 0; j < TPoint::PointDimension; ++j)
   {
     accum += itk::Math::sqr(p[j] - center[j]);
   }
@@ -132,7 +132,7 @@ itkNarrowBandImageFilterBaseTest(int argc, char * argv[])
   region.SetSize(size);
   region.SetIndex(index);
 
-  ImageType::Pointer inputImage = ImageType::New();
+  auto inputImage = ImageType::New();
   inputImage->SetLargestPossibleRegion(region);
   inputImage->SetBufferedRegion(region);
   inputImage->SetRequestedRegion(region);
@@ -151,8 +151,8 @@ itkNarrowBandImageFilterBaseTest(int argc, char * argv[])
   }
 
   using RandomSourceType = itk::RandomImageSource<ImageType>;
-  RandomSourceType::Pointer randomSource = RandomSourceType::New();
-  ImageType::SizeValueType  tam[2];
+  auto                     randomSource = RandomSourceType::New();
+  ImageType::SizeValueType tam[2];
   tam[0] = 64;
   tam[1] = 64;
   randomSource->SetSize(tam);
@@ -164,25 +164,25 @@ itkNarrowBandImageFilterBaseTest(int argc, char * argv[])
   randomSource->SetNumberOfWorkUnits(1);
 
   using AddFilterType = itk::AddImageFilter<ImageType, ImageType, ImageType>;
-  AddFilterType::Pointer addFilter = AddFilterType::New();
+  auto addFilter = AddFilterType::New();
   addFilter->SetInput1(inputImage);
   addFilter->SetInput2(randomSource->GetOutput());
 
   using FilterType = itk::NbTestClass<ImageType, ImageType>;
 
-  FilterType::Pointer filter = FilterType::New();
+  auto filter = FilterType::New();
   filter->SetInput(addFilter->GetOutput());
   filter->Print(std::cout);
   try
   {
     using RescaleType = itk::RescaleIntensityImageFilter<ImageType, WriterImageType>;
-    RescaleType::Pointer rescale = RescaleType::New();
+    auto rescale = RescaleType::New();
     rescale->SetInput(filter->GetOutput());
     rescale->SetOutputMinimum(0);
     rescale->SetOutputMaximum(255);
 
     using WriterType = itk::ImageFileWriter<WriterImageType>;
-    WriterType::Pointer writer = WriterType::New();
+    auto writer = WriterType::New();
     writer->SetInput(rescale->GetOutput());
     writer->SetFileName(argv[1]);
     writer->Write();

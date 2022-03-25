@@ -148,11 +148,11 @@ itkPowellOptimizerv4Test(int, char *[])
   using OptimizerType = itk::PowellOptimizerv4<double>;
 
   // Declaration of a itkOptimizer
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
 
 
   // Declaration of the CostFunction
-  PowellBoundedMetric::Pointer metric = PowellBoundedMetric::New();
+  auto metric = PowellBoundedMetric::New();
 
 
   itkOptimizer->SetMetric(metric);
@@ -202,7 +202,7 @@ itkPowellOptimizerv4Test(int, char *[])
   //
   bool   pass = true;
   double trueParameters[2] = { 2, -2 };
-  for (unsigned int j = 0; j < 2; j++)
+  for (unsigned int j = 0; j < 2; ++j)
   {
     if (itk::Math::abs(finalPosition[j] - trueParameters[j]) > 0.01)
       pass = false;

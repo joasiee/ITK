@@ -48,16 +48,12 @@ public:
   ~SymmetricEigenAnalysisFunction() = default;
   using CalculatorType = SymmetricEigenAnalysis<TInput, TOutput>;
   bool
-  operator!=(const SymmetricEigenAnalysisFunction &) const
+  operator==(const SymmetricEigenAnalysisFunction &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const SymmetricEigenAnalysisFunction & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(SymmetricEigenAnalysisFunction);
 
   inline TOutput
   operator()(const TInput & x) const
@@ -139,16 +135,12 @@ public:
   ~SymmetricEigenAnalysisFixedDimensionFunction() = default;
   using CalculatorType = SymmetricEigenAnalysisFixedDimension<TMatrixDimension, TInput, TOutput>;
   bool
-  operator!=(const SymmetricEigenAnalysisFixedDimensionFunction &) const
+  operator==(const SymmetricEigenAnalysisFixedDimensionFunction &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const SymmetricEigenAnalysisFixedDimensionFunction & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(SymmetricEigenAnalysisFixedDimensionFunction);
 
   inline TOutput
   operator()(const TInput & x) const
@@ -241,11 +233,11 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  using OutputImageType = typename Superclass::OutputImageType;
+  using typename Superclass::OutputImageType;
   using OutputPixelType = typename TOutputImage::PixelType;
   using InputPixelType = typename TInputImage::PixelType;
   using InputValueType = typename InputPixelType::ValueType;
-  using FunctorType = typename Superclass::FunctorType;
+  using typename Superclass::FunctorType;
 
 #if !defined(ITK_LEGACY_REMOVE)
   /** Enables reverse compatibility for enumeration values */
@@ -349,11 +341,11 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  using OutputImageType = typename Superclass::OutputImageType;
+  using typename Superclass::OutputImageType;
   using OutputPixelType = typename TOutputImage::PixelType;
   using InputPixelType = typename TInputImage::PixelType;
   using InputValueType = typename InputPixelType::ValueType;
-  using FunctorType = typename Superclass::FunctorType;
+  using typename Superclass::FunctorType;
 
   /** expose public enumeration class as member  for backward compatibility */
   using EigenValueOrderEnum = itk::EigenValueOrderEnum;

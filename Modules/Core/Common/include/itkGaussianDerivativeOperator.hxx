@@ -28,8 +28,8 @@ namespace itk
 {
 
 template <typename TPixel, unsigned int VDimension, typename TAllocator>
-typename GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::CoefficientVector
-GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::GenerateCoefficients()
+auto
+GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::GenerateCoefficients() -> CoefficientVector
 {
 
   // compute gaussian kernel of 0-order
@@ -101,8 +101,8 @@ GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::GenerateCoefficients
 }
 
 template <typename TPixel, unsigned int VDimension, typename TAllocator>
-typename GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::CoefficientVector
-GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::GenerateGaussianCoefficients() const
+auto
+GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::GenerateGaussianCoefficients() const -> CoefficientVector
 {
 
   CoefficientVector coeff;
@@ -121,7 +121,7 @@ GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::GenerateGaussianCoef
   coeff.push_back(et * ModifiedBesselI1(pixelVariance));
   sum += coeff[1] * 2.0;
 
-  for (int i = 2; sum.GetSum() < cap; i++)
+  for (int i = 2; sum.GetSum() < cap; ++i)
   {
     coeff.push_back(et * ModifiedBesselI(i, pixelVariance));
     sum += coeff[i] * 2.0;
@@ -281,13 +281,16 @@ GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::ModifiedBesselI(int 
 
 template <typename TPixel, unsigned int VDimension, typename TAllocator>
 void
-GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::PrintSelf(std::ostream & os, Indent i) const
+GaussianDerivativeOperator<TPixel, VDimension, TAllocator>::PrintSelf(std::ostream & os, Indent indent) const
 {
-  os << i << "GaussianDerivativeOperator { this=" << this << ", m_NormalizeAcrossScale = " << m_NormalizeAcrossScale
-     << ", m_Order = " << m_Order << ", m_Spacing = " << m_Spacing << ", m_Variance = " << m_Variance
-     << ", m_MaximumError = " << m_MaximumError << ", m_MaximumKernelWidth = " << m_MaximumKernelWidth << "} "
-     << std::endl;
-  Superclass::PrintSelf(os, i.GetNextIndent());
+  Superclass::PrintSelf(os, indent);
+
+  os << indent << "NormalizeAcrossScale: " << m_NormalizeAcrossScale << std::endl;
+  os << indent << "Variance: " << m_Variance << std::endl;
+  os << indent << "MaximumError: " << m_MaximumError << std::endl;
+  os << indent << "MaximumKernelWidth: " << m_MaximumKernelWidth << std::endl;
+  os << indent << "Order: " << m_Order << std::endl;
+  os << indent << "Spacing: " << m_Spacing << std::endl;
 }
 
 } // end namespace itk

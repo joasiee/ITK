@@ -34,11 +34,11 @@ itkQuaternionRigidTransformTest(int, char *[])
 
   /* Create a 3D identity transformation and show its parameters */
   {
-    TransformType::Pointer    identityTransform = TransformType::New();
+    auto                      identityTransform = TransformType::New();
     TransformType::OffsetType offset = identityTransform->GetOffset();
     std::cout << "Vector from instantiating an identity transform:  ";
     std::cout << offset << std::endl;
-    for (unsigned int i = 0; i < N; i++)
+    for (unsigned int i = 0; i < N; ++i)
     {
       if (std::fabs(offset[i] - 0.0) > epsilon)
       {
@@ -55,7 +55,7 @@ itkQuaternionRigidTransformTest(int, char *[])
 
   /* Create a Rigid 3D transform with translation */
   {
-    TransformType::Pointer          translation = TransformType::New();
+    auto                            translation = TransformType::New();
     TransformType::OutputVectorType itransVector;
     itransVector[0] = 1;
     itransVector[1] = 4;
@@ -68,7 +68,7 @@ itkQuaternionRigidTransformTest(int, char *[])
     TransformType::OutputVectorType translationVector = translation->GetTranslation();
     std::cout << "pure Translation test:  ";
     std::cout << translationVector << std::endl;
-    for (unsigned int i = 0; i < N; i++)
+    for (unsigned int i = 0; i < N; ++i)
     {
       if (std::fabs(translationVector[i] - itransVector[i]) > epsilon)
       {
@@ -90,7 +90,7 @@ itkQuaternionRigidTransformTest(int, char *[])
       q = p + itransVector;
       TransformType::OutputPointType r;
       r = translation->TransformPoint(p);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -117,7 +117,7 @@ itkQuaternionRigidTransformTest(int, char *[])
       TransformType::InputVectorType            p = pInit;
       TransformType::OutputVectorType           q;
       q = translation->TransformVector(p);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         if (std::fabs(q[i] - p[i]) > epsilon)
         {
@@ -143,7 +143,7 @@ itkQuaternionRigidTransformTest(int, char *[])
       TransformType::InputCovariantVectorType            p = pInit;
       TransformType::OutputCovariantVectorType           q;
       q = translation->TransformCovariantVector(p);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         if (std::fabs(q[i] - p[i]) > epsilon)
         {
@@ -171,7 +171,7 @@ itkQuaternionRigidTransformTest(int, char *[])
       p[2] = 15;
       TransformType::OutputVnlVectorType q;
       q = translation->TransformVector(p);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         if (std::fabs(q[i] - p[i]) > epsilon)
         {
@@ -194,7 +194,7 @@ itkQuaternionRigidTransformTest(int, char *[])
 
   /* Create a Rigid 3D transform with a rotation given by a Matrix */
   {
-    TransformType::Pointer           rotation = TransformType::New();
+    auto                             rotation = TransformType::New();
     TransformType::VnlQuaternionType qrotation;
 
     // 15 degrees in radians
@@ -225,7 +225,7 @@ itkQuaternionRigidTransformTest(int, char *[])
     TransformType::OffsetType offset = rotation->GetOffset();
     std::cout << "pure Rotation test:  " << std::endl;
     std::cout << "Offset = " << offset << std::endl;
-    for (unsigned int i = 0; i < N; i++)
+    for (unsigned int i = 0; i < N; ++i)
     {
       if (std::fabs(offset[i] - ioffset[i]) > epsilon)
       {
@@ -246,9 +246,9 @@ itkQuaternionRigidTransformTest(int, char *[])
     TransformType::MatrixType matrix = rotation->GetMatrix();
     std::cout << "Rotation matrix:  " << std::endl;
     std::cout << matrix << std::endl;
-    for (unsigned int i = 0; i < N; i++)
+    for (unsigned int i = 0; i < N; ++i)
     {
-      for (unsigned int j = 0; j < N; j++)
+      for (unsigned int j = 0; j < N; ++j)
       {
         if (std::fabs(matrix[i][j] - mrotation[j][i]) > epsilon)
         {
@@ -276,7 +276,7 @@ itkQuaternionRigidTransformTest(int, char *[])
 
       TransformType::OutputPointType r;
       r = rotation->TransformPoint(p);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -309,7 +309,7 @@ itkQuaternionRigidTransformTest(int, char *[])
 
       TransformType::OutputVectorType r;
       r = rotation->TransformVector(p);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -342,7 +342,7 @@ itkQuaternionRigidTransformTest(int, char *[])
 
       TransformType::OutputCovariantVectorType r;
       r = rotation->TransformCovariantVector(p);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -378,7 +378,7 @@ itkQuaternionRigidTransformTest(int, char *[])
 
       TransformType::OutputVnlVectorType r;
       r = rotation->TransformVector(p);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -404,7 +404,7 @@ itkQuaternionRigidTransformTest(int, char *[])
     // Test the Jacobian
     std::cout << "Testing ComputeJacobianWithRespectToParameters()" << std::endl;
 
-    TransformType::Pointer        quaternionRigid = TransformType::New();
+    auto                          quaternionRigid = TransformType::New();
     TransformType::ParametersType parameters(quaternionRigid->GetNumberOfParameters());
 
     parameters.Fill(0.0);
@@ -431,7 +431,7 @@ itkQuaternionRigidTransformTest(int, char *[])
     std::cout << jacobian << std::endl;
 
     TransformType::JacobianType approxJacobian = jacobian;
-    for (unsigned int k = 0; k < quaternionRigid->GetNumberOfParameters(); k++)
+    for (unsigned int k = 0; k < quaternionRigid->GetNumberOfParameters(); ++k)
     {
       constexpr double              delta = 0.001;
       TransformType::ParametersType plusParameters;
@@ -449,7 +449,7 @@ itkQuaternionRigidTransformTest(int, char *[])
       plusPoint = quaternionRigid->TransformPoint(pInit);
       quaternionRigid->SetParameters(minusParameters);
       minusPoint = quaternionRigid->TransformPoint(pInit);
-      for (unsigned int j = 0; j < 3; j++)
+      for (unsigned int j = 0; j < 3; ++j)
       {
         double approxDerivative = (plusPoint[j] - minusPoint[j]) / (2.0 * delta);
         double computedDerivative = jacobian[j][k];
@@ -474,8 +474,8 @@ itkQuaternionRigidTransformTest(int, char *[])
     TransformType::OutputPointType pOut;
     quaternionRigid->SetParameters(parameters);
     {
-      TransformType::Pointer inverseQuaternionRigid = TransformType::New();
-      const bool             inverseIsValid = quaternionRigid->GetInverse(inverseQuaternionRigid);
+      auto       inverseQuaternionRigid = TransformType::New();
+      const bool inverseIsValid = quaternionRigid->GetInverse(inverseQuaternionRigid);
       if (!inverseIsValid)
       {
         std::cerr << "Error computing inverse transform" << std::endl;
@@ -489,7 +489,7 @@ itkQuaternionRigidTransformTest(int, char *[])
       pOut = inverseQuaternionRigid->TransformPoint(quaternionRigid->TransformPoint(pInit));
     }
     // pOut should equate pInit
-    for (unsigned int j = 0; j < 3; j++)
+    for (unsigned int j = 0; j < 3; ++j)
     {
       if (itk::Math::abs(pOut[j] - pInit[j]) > 1e-5)
       {
@@ -506,7 +506,7 @@ itkQuaternionRigidTransformTest(int, char *[])
 
   /* Create a Rigid 3D transform with a defined center and a rotation given by a Matrix */
   {
-    TransformType::Pointer           rotation = TransformType::New();
+    auto                             rotation = TransformType::New();
     TransformType::VnlQuaternionType qrotation;
 
     // 15 degrees in radians
@@ -560,7 +560,7 @@ itkQuaternionRigidTransformTest(int, char *[])
     ioffset[2] -= center[2];
 
     std::cout << "iOffset = " << ioffset << std::endl;
-    for (unsigned int i = 0; i < N; i++)
+    for (unsigned int i = 0; i < N; ++i)
     {
       if (std::fabs(offset[i] - ioffset[i]) > epsilon)
       {
@@ -581,9 +581,9 @@ itkQuaternionRigidTransformTest(int, char *[])
     TransformType::MatrixType matrix = rotation->GetMatrix();
     std::cout << "Rotation matrix:  " << std::endl;
     std::cout << matrix << std::endl;
-    for (unsigned int i = 0; i < N; i++)
+    for (unsigned int i = 0; i < N; ++i)
     {
-      for (unsigned int j = 0; j < N; j++)
+      for (unsigned int j = 0; j < N; ++j)
       {
         if (std::fabs(matrix[i][j] - mrotation[j][i]) > epsilon)
         {
@@ -615,7 +615,7 @@ itkQuaternionRigidTransformTest(int, char *[])
 
       TransformType::OutputPointType r;
       r = rotation->TransformPoint(p);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -648,7 +648,7 @@ itkQuaternionRigidTransformTest(int, char *[])
 
       TransformType::OutputVectorType r;
       r = rotation->TransformVector(p);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -681,7 +681,7 @@ itkQuaternionRigidTransformTest(int, char *[])
 
       TransformType::OutputCovariantVectorType r;
       r = rotation->TransformCovariantVector(p);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -717,7 +717,7 @@ itkQuaternionRigidTransformTest(int, char *[])
 
       TransformType::OutputVnlVectorType r;
       r = rotation->TransformVector(p);
-      for (unsigned int i = 0; i < N; i++)
+      for (unsigned int i = 0; i < N; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -751,13 +751,13 @@ itkQuaternionRigidTransformTest(int, char *[])
     using MatrixType = TransformType::MatrixType;
     MatrixType matrix;
 
-    TransformType::Pointer t = TransformType::New();
+    auto t = TransformType::New();
 
     // attempt to set an non-orthogonal matrix
     par = 0;
-    for (unsigned int row = 0; row < 3; row++)
+    for (unsigned int row = 0; row < 3; ++row)
     {
-      for (unsigned int col = 0; col < 3; col++)
+      for (unsigned int col = 0; col < 3; ++col)
       {
         matrix[row][col] = static_cast<double>(par + 1);
         ++par;
@@ -829,11 +829,11 @@ itkQuaternionRigidTransformTest(int, char *[])
     t = TransformType::New();
     t->SetParameters(e);
 
-    TransformType::Pointer t2 = TransformType::New();
+    auto t2 = TransformType::New();
     t2->SetMatrix(t->GetMatrix());
 
     ParametersType p = t2->GetParameters();
-    for (unsigned int k = 0; k < e.GetSize(); k++)
+    for (unsigned int k = 0; k < e.GetSize(); ++k)
     {
       if (std::fabs(e[k] - p[k]) > epsilon)
       {

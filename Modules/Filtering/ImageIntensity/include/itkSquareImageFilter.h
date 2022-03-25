@@ -44,16 +44,12 @@ public:
   Square() = default;
   ~Square() = default;
   bool
-  operator!=(const Square &) const
+  operator==(const Square &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Square & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Square);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -65,7 +61,7 @@ public:
 };
 } // namespace Functor
 template <typename TInputImage, typename TOutputImage>
-class SquareImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT SquareImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(SquareImageFilter);

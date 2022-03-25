@@ -71,27 +71,27 @@ public:
 #endif
 
   /** Stop condition return string type */
-  using StopConditionReturnStringType = typename Superclass::StopConditionReturnStringType;
+  using typename Superclass::StopConditionReturnStringType;
 
   /** Stop condition internal string type */
-  using StopConditionDescriptionType = typename Superclass::StopConditionDescriptionType;
+  using typename Superclass::StopConditionDescriptionType;
 
   /** It should be possible to derive the internal computation type from the class object. */
   using InternalComputationValueType = TInternalComputationValueType;
 
   /** Metric type over which this class is templated */
-  using MetricType = typename Superclass::MetricType;
+  using typename Superclass::MetricType;
   using MetricTypePointer = typename MetricType::Pointer;
 
   /** Derivative type */
-  using DerivativeType = typename Superclass::DerivativeType;
+  using typename Superclass::DerivativeType;
 
   /** Measure type */
-  using MeasureType = typename Superclass::MeasureType;
+  using typename Superclass::MeasureType;
 
-  using ScalesType = typename Superclass::ScalesType;
+  using typename Superclass::ScalesType;
 
-  using ParametersType = typename Superclass::ParametersType;
+  using typename Superclass::ParametersType;
 
   /** Type for the convergence checker */
   using ConvergenceMonitoringType = itk::Function::WindowConvergenceMonitoringFunction<TInternalComputationValueType>;
@@ -101,32 +101,6 @@ public:
 
   /** Get stop condition enum */
   itkGetConstReferenceMacro(StopCondition, StopConditionObjectToObjectOptimizerEnum);
-
-  /** Set the number of iterations. */
-  void
-  SetNumberOfIterations(const SizeValueType numberOfIterations) override
-  {
-    itkDebugMacro("setting NumberOfIterations to " << numberOfIterations);
-    if (this->m_NumberOfIterations != numberOfIterations)
-    {
-      this->m_NumberOfIterations = numberOfIterations;
-      this->Modified();
-    }
-  }
-
-  /** Get the number of iterations. */
-  SizeValueType
-  GetNumberOfIterations() const override
-  {
-    return this->m_NumberOfIterations;
-  }
-
-  /** Get the current iteration number. */
-  SizeValueType
-  GetCurrentIteration() const override
-  {
-    return this->m_CurrentIteration;
-  }
 
   /** Start and run the optimization */
   void

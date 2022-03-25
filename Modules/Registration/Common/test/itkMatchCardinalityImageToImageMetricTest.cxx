@@ -30,8 +30,10 @@ itkMatchCardinalityImageToImageMetricTest(int argc, char * argv[])
 
   if (argc < 2)
   {
-    std::cout << "Usage: " << itkNameOfTestExecutableMacro(argv) << " InputFile" << std::endl;
-    exit(1);
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cout << " InputFile" << std::endl;
+    return EXIT_FAILURE;
   }
 
   using ImageType = itk::Image<unsigned char, 2>;
@@ -40,10 +42,10 @@ itkMatchCardinalityImageToImageMetricTest(int argc, char * argv[])
   using ReaderType = itk::ImageFileReader<ImageType>;
   using InterpolatorType = itk::NearestNeighborInterpolateImageFunction<ImageType, double>;
 
-  ReaderType::Pointer       reader = ReaderType::New();
-  MetricType::Pointer       metric = MetricType::New();
-  TransformType::Pointer    transform = TransformType::New();
-  InterpolatorType::Pointer interpolator = InterpolatorType::New();
+  auto reader = ReaderType::New();
+  auto metric = MetricType::New();
+  auto transform = TransformType::New();
+  auto interpolator = InterpolatorType::New();
 
   MetricType::ParametersType offset(2);
 

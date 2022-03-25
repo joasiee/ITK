@@ -33,8 +33,8 @@ LevelSetDomainMapImageFilter<TInputImage, TOutputImage>::LevelSetDomainMapImageF
 }
 
 template <typename TInputImage, typename TOutputImage>
-const typename LevelSetDomainMapImageFilter<TInputImage, TOutputImage>::DomainMapType &
-LevelSetDomainMapImageFilter<TInputImage, TOutputImage>::GetDomainMap() const
+auto
+LevelSetDomainMapImageFilter<TInputImage, TOutputImage>::GetDomainMap() const -> const DomainMapType &
 {
   return this->m_DomainMap;
 }
@@ -70,7 +70,7 @@ LevelSetDomainMapImageFilter<TInputImage, TOutputImage>::ComputeConsistentRegion
       {
         const InputImageIndexType & stopIdx = iIt.GetIndex();
         InputImageSizeType          sizeOfRegion;
-        for (unsigned int i = 0; i < ImageDimension; i++)
+        for (unsigned int i = 0; i < ImageDimension; ++i)
         {
           sizeOfRegion[i] = stopIdx[i] - firstCornerIndex[i] + 1;
         }
@@ -107,7 +107,7 @@ LevelSetDomainMapImageFilter<TInputImage, TOutputImage>::GenerateData()
 
   InputImageIndexType end;
 
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     end[i] = size[i] - 1;
   }
@@ -134,7 +134,7 @@ LevelSetDomainMapImageFilter<TInputImage, TOutputImage>::GenerateData()
       InputImageRegionType subRegion;
       InputImageSizeType   sizeOfRegion;
 
-      for (unsigned int i = 0; i < ImageDimension; i++)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         bool sameOverlappingLevelSetIds = true;
         stopIdx = startIdx;

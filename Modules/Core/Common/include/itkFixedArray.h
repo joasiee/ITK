@@ -104,16 +104,14 @@ public:
     }
     Iterator    operator->() const { return (m_Iterator - 1); }
     ValueType & operator*() const { return *(m_Iterator - 1); }
-    bool
-    operator!=(const ReverseIterator & rit) const
-    {
-      return m_Iterator != rit.m_Iterator;
-    }
+
     bool
     operator==(const ReverseIterator & rit) const
     {
       return m_Iterator == rit.m_Iterator;
     }
+
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ReverseIterator);
 
   private:
     Iterator m_Iterator;
@@ -153,16 +151,14 @@ public:
     }
     ConstIterator     operator->() const { return (m_Iterator - 1); }
     const ValueType & operator*() const { return *(m_Iterator - 1); }
-    bool
-    operator!=(const ConstReverseIterator & rit) const
-    {
-      return m_Iterator != rit.m_Iterator;
-    }
+
     bool
     operator==(const ConstReverseIterator & rit) const
     {
       return m_Iterator == rit.m_Iterator;
     }
+
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ConstReverseIterator);
 
   private:
     ConstIterator m_Iterator;
@@ -254,21 +250,11 @@ public:
   bool
   operator==(const FixedArray & r) const;
 
-  bool
-  operator!=(const FixedArray & r) const
-  {
-    return !operator==(r);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(FixedArray);
+
 
   /** Allow the FixedArray to be indexed normally.  No bounds checking is done.
-   * The separate versions are a work-around for an integer conversion bug in
-   * Visual C++. */
-  reference       operator[](short index) { return m_InternalArray[index]; }
-  const_reference operator[](short index) const { return m_InternalArray[index]; }
-  reference       operator[](unsigned short index) { return m_InternalArray[index]; }
-  const_reference operator[](unsigned short index) const { return m_InternalArray[index]; }
-  reference       operator[](int index) { return m_InternalArray[index]; }
-  const_reference operator[](int index) const { return m_InternalArray[index]; }
+   */
 // false positive warnings with GCC
 #if defined(__GNUC__)
 #  if (__GNUC__ == 4) && (__GNUC_MINOR__ == 9) || (__GNUC__ >= 7)
@@ -276,21 +262,13 @@ public:
 #    pragma GCC diagnostic ignored "-Warray-bounds"
 #  endif
 #endif
-  reference       operator[](unsigned int index) { return m_InternalArray[index]; }
-  const_reference operator[](unsigned int index) const { return m_InternalArray[index]; }
+  constexpr reference       operator[](unsigned int index) { return m_InternalArray[index]; }
+  constexpr const_reference operator[](unsigned int index) const { return m_InternalArray[index]; }
 #if defined(__GNUC__)
 #  if (__GNUC__ == 4) && (__GNUC_MINOR__ == 9) || (__GNUC__ >= 7)
 #    pragma GCC diagnostic pop
 #  endif
 #endif
-  reference       operator[](long index) { return m_InternalArray[index]; }
-  const_reference operator[](long index) const { return m_InternalArray[index]; }
-  reference       operator[](unsigned long index) { return m_InternalArray[index]; }
-  const_reference operator[](unsigned long index) const { return m_InternalArray[index]; }
-  reference       operator[](long long index) { return m_InternalArray[index]; }
-  const_reference operator[](long long index) const { return m_InternalArray[index]; }
-  reference       operator[](unsigned long long index) { return m_InternalArray[index]; }
-  const_reference operator[](unsigned long long index) const { return m_InternalArray[index]; }
 
   /** Set/Get element methods are more convenient in wrapping languages */
   void
@@ -447,8 +425,17 @@ private:
   CArray m_InternalArray;
 
 public:
-  static FixedArray
-  Filled(const ValueType &);
+  /** Return an FixedArray with the given value assigned to all elements. */
+  static constexpr FixedArray
+  Filled(const ValueType & value)
+  {
+    FixedArray result{};
+    for (ValueType & element : result.m_InternalArray)
+    {
+      element = value;
+    }
+    return result;
+  }
 };
 
 template <typename TValue, unsigned int VLength>

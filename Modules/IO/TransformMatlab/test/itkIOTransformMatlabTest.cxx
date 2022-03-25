@@ -34,7 +34,7 @@ oneTest(const char * goodname, const char * badname)
   unsigned int i;
   using AffineTransformType = itk::AffineTransform<TParametersValueType, 4>;
   using AffineTransformTypeNotRegistered = itk::AffineTransform<TParametersValueType, 10>;
-  typename AffineTransformType::Pointer affine = AffineTransformType::New();
+  auto affine = AffineTransformType::New();
   using TransformWriterType = itk::TransformFileWriterTemplate<TParametersValueType>;
   using TransformReaderType = itk::TransformFileReaderTemplate<TParametersValueType>;
 
@@ -44,7 +44,7 @@ oneTest(const char * goodname, const char * badname)
   // Set it's parameters
   {
     typename AffineTransformType::ParametersType p = affine->GetParameters();
-    for (i = 0; i < p.GetSize(); i++)
+    for (i = 0; i < p.GetSize(); ++i)
     {
       p[i] = i;
     }
@@ -52,14 +52,14 @@ oneTest(const char * goodname, const char * badname)
   }
   {
     typename AffineTransformType::FixedParametersType p = affine->GetFixedParameters();
-    for (i = 0; i < p.GetSize(); i++)
+    for (i = 0; i < p.GetSize(); ++i)
     {
       p[i] = i;
     }
     affine->SetFixedParameters(p);
   }
-  typename TransformWriterType::Pointer writer = TransformWriterType::New();
-  typename TransformReaderType::Pointer reader = TransformReaderType::New();
+  auto writer = TransformWriterType::New();
+  auto reader = TransformReaderType::New();
 
   // writer->AddTransform(affine);
   writer->SetInput(affine);
@@ -107,12 +107,12 @@ oneTest(const char * goodname, const char * badname)
 
 
   std::cout << "\n\nCreating bad writer" << std::endl;
-  typename AffineTransformTypeNotRegistered::Pointer Bogus = AffineTransformTypeNotRegistered::New();
+  auto Bogus = AffineTransformTypeNotRegistered::New();
 
   // Set it's parameters
   {
     typename AffineTransformType::ParametersType p = Bogus->GetParameters();
-    for (i = 0; i < p.GetSize(); i++)
+    for (i = 0; i < p.GetSize(); ++i)
     {
       p[i] = i;
     }
@@ -120,15 +120,15 @@ oneTest(const char * goodname, const char * badname)
   }
   {
     typename AffineTransformType::FixedParametersType p = Bogus->GetFixedParameters();
-    for (i = 0; i < p.GetSize(); i++)
+    for (i = 0; i < p.GetSize(); ++i)
     {
       p[i] = i;
     }
     Bogus->SetFixedParameters(p);
   }
 
-  typename TransformWriterType::Pointer badwriter = TransformWriterType::New();
-  typename TransformReaderType::Pointer badreader = TransformReaderType::New();
+  auto badwriter = TransformWriterType::New();
+  auto badreader = TransformReaderType::New();
 
   badwriter->AddTransform(Bogus);
   badwriter->SetFileName(badname);
@@ -197,7 +197,7 @@ secondTest()
   fb.close();
 
   using TransformReaderType = itk::TransformFileReaderTemplate<TParametersValueType>;
-  typename TransformReaderType::Pointer reader = TransformReaderType::New();
+  auto reader = TransformReaderType::New();
   reader->SetFileName("IllegalTransform.txt");
   try
   {
@@ -234,7 +234,7 @@ thirdTest()
   fb.close();
 
   using TransformReaderType = itk::TransformFileReaderTemplate<TParametersValueType>;
-  typename TransformReaderType::Pointer reader = TransformReaderType::New();
+  auto reader = TransformReaderType::New();
   reader->SetFileName("IllegalMat.Mat");
   try
   {

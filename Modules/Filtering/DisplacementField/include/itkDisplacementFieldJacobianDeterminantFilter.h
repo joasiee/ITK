@@ -157,7 +157,7 @@ public:
   using RadiusType = typename ConstNeighborhoodIteratorType::RadiusType;
 
   /** Superclass type alias. */
-  using OutputImageRegionType = typename Superclass::OutputImageRegionType;
+  using typename Superclass::OutputImageRegionType;
 
   /** DisplacementFieldJacobianDeterminantFilter needs a larger input requested
    * region than the output requested region (larger by the kernel
@@ -262,7 +262,7 @@ protected:
 private:
   bool m_UseImageSpacing;
 
-  ThreadIdType m_RequestedNumberOfThreads;
+  ThreadIdType m_RequestedNumberOfWorkUnits;
 
   typename ImageBaseType::ConstPointer m_RealValuedInputImage;
 

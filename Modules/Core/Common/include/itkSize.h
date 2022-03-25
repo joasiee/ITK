@@ -20,8 +20,8 @@
 
 #include "itkIntTypes.h"
 #include "itkMacro.h"
-#include <algorithm> // For copy_n.
-#include <type_traits>
+#include <algorithm>   // For copy_n.
+#include <type_traits> // For is_integral.
 #include <memory>
 
 namespace itk
@@ -94,7 +94,7 @@ public:
   {
     Self result;
 
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       result[i] = m_InternalArray[i] + vec.m_InternalArray[i];
     }
@@ -105,7 +105,7 @@ public:
   const Self &
   operator+=(const Self & vec)
   {
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       m_InternalArray[i] += vec.m_InternalArray[i];
     }
@@ -118,7 +118,7 @@ public:
   {
     Self result;
 
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       result[i] = m_InternalArray[i] - vec.m_InternalArray[i];
     }
@@ -129,7 +129,7 @@ public:
   const Self &
   operator-=(const Self & vec)
   {
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       m_InternalArray[i] -= vec.m_InternalArray[i];
     }
@@ -141,7 +141,7 @@ public:
   {
     Self result;
 
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       result[i] = m_InternalArray[i] * vec.m_InternalArray[i];
     }
@@ -152,7 +152,7 @@ public:
   const Self &
   operator*=(const Self & vec)
   {
-    for (unsigned int i = 0; i < VDimension; i++)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       m_InternalArray[i] *= vec.m_InternalArray[i];
     }
@@ -324,9 +324,9 @@ public:
     return false;
   }
 
-  reference operator[](size_type pos) { return m_InternalArray[pos]; }
+  constexpr reference operator[](size_type pos) { return m_InternalArray[pos]; }
 
-  const_reference operator[](size_type pos) const { return m_InternalArray[pos]; }
+  constexpr const_reference operator[](size_type pos) const { return m_InternalArray[pos]; }
 
   reference
   at(size_type pos)
@@ -391,11 +391,14 @@ private:
 public:
   /** Returns a Size object, filled with the specified value for each element.
    */
-  static Self
+  static constexpr Self
   Filled(const SizeValueType value)
   {
-    Self result;
-    result.Fill(value);
+    Self result{};
+    for (SizeValueType & sizeValue : result.m_InternalArray)
+    {
+      sizeValue = value;
+    }
     return result;
   }
 
@@ -470,6 +473,20 @@ swap(Size<VDimension> & one, Size<VDimension> & two)
 {
   std::swap(one.m_InternalArray, two.m_InternalArray);
 }
+
+
+/** Makes a Size object, having the specified size values. */
+template <typename... T>
+auto
+MakeSize(const T... values)
+{
+  const auto toValueType = [](const auto value) {
+    static_assert(std::is_integral<decltype(value)>::value, "Each value must have an integral type!");
+    return static_cast<SizeValueType>(value);
+  };
+  return Size<sizeof...(T)>{ { toValueType(values)... } };
+}
+
 
 // static constexpr definition explicitly needed in C++11
 template <unsigned int VDimension>

@@ -74,8 +74,8 @@ ConfidenceConnectedImageFilter<TInputImage, TOutputImage>::AddSeed(const IndexTy
 
 /** Method to access seed container */
 template <typename TInputImage, typename TOutputImage>
-const typename ConfidenceConnectedImageFilter<TInputImage, TOutputImage>::SeedsContainerType &
-ConfidenceConnectedImageFilter<TInputImage, TOutputImage>::GetSeeds() const
+auto
+ConfidenceConnectedImageFilter<TInputImage, TOutputImage>::GetSeeds() const -> const SeedsContainerType &
 {
   itkDebugMacro("returning Seeds");
   return this->m_Seeds;
@@ -143,7 +143,7 @@ ConfidenceConnectedImageFilter<TInputImage, TOutputImage>::GenerateData()
   // Compute the statistics of the seed point
 
   // Set up the image function used for connectivity
-  typename FunctionType::Pointer function = FunctionType::New();
+  auto function = FunctionType::New();
   function->SetInputImage(inputImage);
 
   InputRealType lower;
@@ -308,7 +308,7 @@ ConfidenceConnectedImageFilter<TInputImage, TOutputImage>::GenerateData()
     // Essentially, we flip the iterator around, so we walk the input
     // image (so Get() will get pixel values from the input) and constrain
     // iterator such it only visits pixels that were set in the output.
-    typename SecondFunctionType::Pointer secondFunction = SecondFunctionType::New();
+    auto secondFunction = SecondFunctionType::New();
     secondFunction->SetInputImage(outputImage);
     secondFunction->ThresholdBetween(m_ReplaceValue, m_ReplaceValue);
 

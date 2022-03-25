@@ -48,8 +48,8 @@ MultiGradientOptimizerv4Template<TInternalComputationValueType>::PrintSelf(std::
 
 //-------------------------------------------------------------------
 template <typename TInternalComputationValueType>
-typename MultiGradientOptimizerv4Template<TInternalComputationValueType>::OptimizersListType &
-MultiGradientOptimizerv4Template<TInternalComputationValueType>::GetOptimizersList()
+auto
+MultiGradientOptimizerv4Template<TInternalComputationValueType>::GetOptimizersList() -> OptimizersListType &
 {
   return this->m_OptimizersList;
 }
@@ -69,16 +69,18 @@ MultiGradientOptimizerv4Template<TInternalComputationValueType>::SetOptimizersLi
 
 /** Get the list of metric values that we produced after the multi-gradient optimization.  */
 template <typename TInternalComputationValueType>
-const typename MultiGradientOptimizerv4Template<TInternalComputationValueType>::MetricValuesListType &
+auto
 MultiGradientOptimizerv4Template<TInternalComputationValueType>::GetMetricValuesList() const
+  -> const MetricValuesListType &
 {
   return this->m_MetricValuesList;
 }
 
 //-------------------------------------------------------------------
 template <typename TInternalComputationValueType>
-const typename MultiGradientOptimizerv4Template<TInternalComputationValueType>::StopConditionReturnStringType
+auto
 MultiGradientOptimizerv4Template<TInternalComputationValueType>::GetStopConditionDescription() const
+  -> const StopConditionReturnStringType
 {
   return this->m_StopConditionDescription.str();
 }
@@ -120,7 +122,7 @@ MultiGradientOptimizerv4Template<TInternalComputationValueType>::StartOptimizati
   /* Initialize the optimizer, but don't run it. */
   this->m_OptimizersList[0]->StartOptimization(true /* doOnlyInitialization */);
 
-  for (SizeValueType whichOptimizer = 1; whichOptimizer < maxOpt; whichOptimizer++)
+  for (SizeValueType whichOptimizer = 1; whichOptimizer < maxOpt; ++whichOptimizer)
   {
     this->m_MetricValuesList.push_back(this->m_MaximumMetricValue);
     const ParametersType & compareParams = this->m_OptimizersList[whichOptimizer]->GetCurrentPosition();
@@ -164,7 +166,7 @@ MultiGradientOptimizerv4Template<TInternalComputationValueType>::ResumeOptimizat
       NumericTraits<TInternalComputationValueType>::OneValue() / static_cast<TInternalComputationValueType>(maxOpt);
     itkDebugMacro(" nopt " << maxOpt);
 
-    for (SizeValueType whichOptimizer = 0; whichOptimizer < maxOpt; whichOptimizer++)
+    for (SizeValueType whichOptimizer = 0; whichOptimizer < maxOpt; ++whichOptimizer)
     {
       this->m_OptimizersList[whichOptimizer]->GetMetric()->GetValueAndDerivative(
         const_cast<MeasureType &>(this->m_OptimizersList[whichOptimizer]->GetCurrentMetricValue()),

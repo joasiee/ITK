@@ -98,27 +98,34 @@ LaplacianImageFilter<TInputImage, TOutputImage>::GenerateData()
 
   // Create the Laplacian operator
   LaplacianOperator<OutputPixelType, ImageDimension> oper;
-  for (unsigned i = 0; i < ImageDimension; i++)
+  for (unsigned i = 0; i < ImageDimension; ++i)
   {
-    if (this->GetInput()->GetSpacing()[i] == 0.0)
+    if (m_UseImageSpacing)
     {
-      itkExceptionMacro(<< "Image spacing cannot be zero");
+      if (this->GetInput()->GetSpacing()[i] == 0.0)
+      {
+        itkExceptionMacro(<< "Image spacing cannot be zero");
+      }
+      else
+      {
+        s[i] = 1.0 / this->GetInput()->GetSpacing()[i];
+      }
     }
     else
     {
-      s[i] = 1.0 / this->GetInput()->GetSpacing()[i];
+      s[i] = 1.0;
     }
   }
   oper.SetDerivativeScalings(s);
   oper.CreateOperator();
 
   using NOIF = NeighborhoodOperatorImageFilter<InputImageType, OutputImageType>;
-  typename NOIF::Pointer filter = NOIF::New();
+  auto filter = NOIF::New();
 
   filter->OverrideBoundaryCondition(&nbc);
 
   // Create a process accumulator for tracking the progress of this minipipeline
-  ProgressAccumulator::Pointer progress = ProgressAccumulator::New();
+  auto progress = ProgressAccumulator::New();
   progress->SetMiniPipelineFilter(this);
 
   // Register the filter with the with progress accumulator using

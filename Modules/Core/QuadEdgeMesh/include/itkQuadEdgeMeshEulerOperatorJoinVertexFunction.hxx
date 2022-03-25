@@ -84,8 +84,8 @@ QuadEdgeMeshEulerOperatorJoinVertexFunction<TMesh, TQEType>::PrintSelf(std::ostr
 
 //--------------------------------------------------------------------------
 template <typename TMesh, typename TQEType>
-typename QuadEdgeMeshEulerOperatorJoinVertexFunction<TMesh, TQEType>::OutputType
-QuadEdgeMeshEulerOperatorJoinVertexFunction<TMesh, TQEType>::Evaluate(QEType * e)
+auto
+QuadEdgeMeshEulerOperatorJoinVertexFunction<TMesh, TQEType>::Evaluate(QEType * e) -> OutputType
 {
   std::stack<QEType *> edges_to_be_deleted;
 
@@ -194,7 +194,7 @@ QuadEdgeMeshEulerOperatorJoinVertexFunction<TMesh, TQEType>::Process(QEType * e)
   using Zip = QuadEdgeMeshZipMeshFunction<MeshType, QEType>;
   if (wasLeftTriangle)
   {
-    typename Zip::Pointer zip = Zip::New();
+    auto zip = Zip::New();
     zip->SetInput(this->m_Mesh);
     if (QEType::m_NoPoint != zip->Evaluate(leftZip))
     {
@@ -214,7 +214,7 @@ QuadEdgeMeshEulerOperatorJoinVertexFunction<TMesh, TQEType>::Process(QEType * e)
   if (wasRiteTriangle)
   {
     NewOrg = riteZip->GetDestination();
-    typename Zip::Pointer zip = Zip::New();
+    auto zip = Zip::New();
     zip->SetInput(this->m_Mesh);
     if (QEType::m_NoPoint != zip->Evaluate(riteZip))
     {
@@ -527,8 +527,8 @@ QuadEdgeMeshEulerOperatorJoinVertexFunction<TMesh, TQEType>::IsEye(QEType * e)
 
 //--------------------------------------------------------------------------
 template <typename TMesh, typename TQEType>
-typename QuadEdgeMeshEulerOperatorJoinVertexFunction<TMesh, TQEType>::PointIdentifier
-QuadEdgeMeshEulerOperatorJoinVertexFunction<TMesh, TQEType>::CommonVertexNeighboor(QEType * e)
+auto
+QuadEdgeMeshEulerOperatorJoinVertexFunction<TMesh, TQEType>::CommonVertexNeighboor(QEType * e) -> PointIdentifier
 {
   QEType * qe = e;
   QEType * e_it = qe->GetOnext();

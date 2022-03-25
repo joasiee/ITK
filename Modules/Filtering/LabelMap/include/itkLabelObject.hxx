@@ -33,8 +33,8 @@ LabelObject<TLabel, VImageDimension>::LabelObject()
 }
 
 template <typename TLabel, unsigned int VImageDimension>
-typename LabelObject<TLabel, VImageDimension>::AttributeType
-LabelObject<TLabel, VImageDimension>::GetAttributeFromName(const std::string & s)
+auto
+LabelObject<TLabel, VImageDimension>::GetAttributeFromName(const std::string & s) -> AttributeType
 {
   if (s == "Label")
   {
@@ -61,8 +61,8 @@ LabelObject<TLabel, VImageDimension>::GetNameFromAttribute(const AttributeType &
  * Set/Get the label associated with that object.
  */
 template <typename TLabel, unsigned int VImageDimension>
-const typename LabelObject<TLabel, VImageDimension>::LabelType &
-LabelObject<TLabel, VImageDimension>::GetLabel() const
+auto
+LabelObject<TLabel, VImageDimension>::GetLabel() const -> const LabelType &
 {
   return m_Label;
 }
@@ -190,33 +190,33 @@ LabelObject<TLabel, VImageDimension>::AddLine(const LineType & line)
 }
 
 template <typename TLabel, unsigned int VImageDimension>
-typename LabelObject<TLabel, VImageDimension>::SizeValueType
-LabelObject<TLabel, VImageDimension>::GetNumberOfLines() const
+auto
+LabelObject<TLabel, VImageDimension>::GetNumberOfLines() const -> SizeValueType
 {
   return static_cast<typename LabelObject<TLabel, VImageDimension>::SizeValueType>(m_LineContainer.size());
 }
 
 template <typename TLabel, unsigned int VImageDimension>
-const typename LabelObject<TLabel, VImageDimension>::LineType &
-LabelObject<TLabel, VImageDimension>::GetLine(SizeValueType i) const
+auto
+LabelObject<TLabel, VImageDimension>::GetLine(SizeValueType i) const -> const LineType &
 {
   return m_LineContainer[i];
 }
 
 template <typename TLabel, unsigned int VImageDimension>
-typename LabelObject<TLabel, VImageDimension>::LineType &
-LabelObject<TLabel, VImageDimension>::GetLine(SizeValueType i)
+auto
+LabelObject<TLabel, VImageDimension>::GetLine(SizeValueType i) -> LineType &
 {
   return m_LineContainer[i];
 }
 
 template <typename TLabel, unsigned int VImageDimension>
-typename LabelObject<TLabel, VImageDimension>::SizeValueType
-LabelObject<TLabel, VImageDimension>::Size() const
+auto
+LabelObject<TLabel, VImageDimension>::Size() const -> SizeValueType
 {
   int size = 0;
 
-  for (auto it = m_LineContainer.begin(); it != m_LineContainer.end(); it++)
+  for (auto it = m_LineContainer.begin(); it != m_LineContainer.end(); ++it)
   {
     size += it->GetLength();
   }
@@ -231,8 +231,8 @@ LabelObject<TLabel, VImageDimension>::Empty() const
 }
 
 template <typename TLabel, unsigned int VImageDimension>
-typename LabelObject<TLabel, VImageDimension>::IndexType
-LabelObject<TLabel, VImageDimension>::GetIndex(SizeValueType offset) const
+auto
+LabelObject<TLabel, VImageDimension>::GetIndex(SizeValueType offset) const -> IndexType
 {
   SizeValueType o = offset;
 
@@ -329,7 +329,7 @@ LabelObject<TLabel, VImageDimension>::Optimize()
 
       // check the index to be sure that we are still in the same line idx
       bool sameIdx = true;
-      for (unsigned int i = 1; i < ImageDimension; i++)
+      for (unsigned int i = 1; i < ImageDimension; ++i)
       {
         if (currentIdx[i] != idx[i])
         {
@@ -365,7 +365,7 @@ template <typename TLabel, unsigned int VImageDimension>
 void
 LabelObject<TLabel, VImageDimension>::Shift(OffsetType offset)
 {
-  for (auto it = m_LineContainer.begin(); it != m_LineContainer.end(); it++)
+  for (auto it = m_LineContainer.begin(); it != m_LineContainer.end(); ++it)
   {
     LineType & line = *it;
     line.SetIndex(line.GetIndex() + offset);

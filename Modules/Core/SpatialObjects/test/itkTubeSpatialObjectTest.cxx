@@ -68,7 +68,7 @@ itkTubeSpatialObjectTest(int, char *[])
   offset.Fill(10);
   tube1->GetModifiableObjectToParentTransform()->SetOffset(offset);
 
-  for (unsigned int i = 0; i < 10; i++)
+  for (unsigned int i = 0; i < 10; ++i)
   {
     TubePointType p;
     p.SetPositionInObjectSpace(i, i, i);
@@ -482,7 +482,7 @@ itkTubeSpatialObjectTest(int, char *[])
   // For coverage only
   std::cout << "Testing PointBasedSO: ";
   using PointBasedType = itk::PointBasedSpatialObject<3>;
-  PointBasedType::Pointer                    pBSO = PointBasedType::New();
+  auto                                       pBSO = PointBasedType::New();
   PointBasedType::SpatialObjectPointType     pnt;
   PointBasedType::SpatialObjectPointListType ll;
   ll.push_back(pnt);

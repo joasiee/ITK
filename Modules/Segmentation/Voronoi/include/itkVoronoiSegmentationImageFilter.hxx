@@ -52,7 +52,7 @@ VoronoiSegmentationImageFilter<TInputImage, TOutputImage, TBinaryPriorImage>::Te
 
   const InputImageType * inputImage = this->GetInput();
 
-  for (i = 0; i < num; i++)
+  for (i = 0; i < num; ++i)
   {
     getp = (double)(inputImage->GetPixel(Plist[i]));
     addp = addp + getp;
@@ -109,9 +109,9 @@ VoronoiSegmentationImageFilter<TInputImage, TOutputImage, TBinaryPriorImage>::Ta
   unsigned int i, j;
   unsigned int minx = 0, miny = 0, maxx = 0, maxy = 0;
   bool         status = false;
-  for (i = 0; i < this->m_Size[1]; i++)
+  for (i = 0; i < this->m_Size[1]; ++i)
   {
-    for (j = 0; j < this->m_Size[0]; j++)
+    for (j = 0; j < this->m_Size[0]; ++j)
     {
       if ((status == 0) && (ait.Get()))
       {
@@ -138,27 +138,26 @@ VoronoiSegmentationImageFilter<TInputImage, TOutputImage, TBinaryPriorImage>::Ta
   }
 
   float addb = 0;
-  float addbb = 0;
   int   numb = 0;
 
   ait.GoToBegin();
   iit.GoToBegin();
-  for (i = 0; i < miny; i++)
+  for (i = 0; i < miny; ++i)
   {
-    for (j = 0; j < this->m_Size[0]; j++)
+    for (j = 0; j < this->m_Size[0]; ++j)
     {
       ++ait;
       ++iit;
     }
   }
-  for (i = miny; i <= maxy; i++)
+  for (i = miny; i <= maxy; ++i)
   {
-    for (j = 0; j < minx; j++)
+    for (j = 0; j < minx; ++j)
     {
       ++ait;
       ++iit;
     }
-    for (j = minx; j <= maxx; j++)
+    for (j = minx; j <= maxx; ++j)
     {
       if (ait.Get())
       {
@@ -172,12 +171,11 @@ VoronoiSegmentationImageFilter<TInputImage, TOutputImage, TBinaryPriorImage>::Ta
         numb++;
         currp = (float)(iit.Get());
         addb += currp;
-        addbb += currp * currp;
       }
       ++ait;
       ++iit;
     }
-    for (j = maxx + 1; j < this->m_Size[0]; j++)
+    for (j = maxx + 1; j < this->m_Size[0]; ++j)
     {
       ++ait;
       ++iit;

@@ -86,7 +86,7 @@ itkBinaryMask3DMeshSourceTest(int argc, char * argv[])
 
   unsigned int i, j, k, l;
 
-  for (unsigned char counter = 0; counter < 18; counter++)
+  for (unsigned char counter = 0; counter < 18; ++counter)
   {
     i = (counter / 1) % 2; // 0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1.
     j = (counter / 2) % 2; // 0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1.
@@ -95,7 +95,7 @@ itkBinaryMask3DMeshSourceTest(int argc, char * argv[])
     Create16CubeConfig(image, 0, 0, 3 * counter, i, j, k, l);
   }
 
-  MeshSourceType::Pointer meshSource = MeshSourceType::New();
+  auto meshSource = MeshSourceType::New();
   meshSource->SetInput(image);
   meshSource->SetObjectValue(internalValue);
 

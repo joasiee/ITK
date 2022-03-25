@@ -48,15 +48,16 @@ SpatialObjectToPointSetFilter<TPointBasedSpatialObject, TOutputPointSet>::SetInp
 }
 
 template <typename TPointBasedSpatialObject, typename TOutputPointSet>
-const typename SpatialObjectToPointSetFilter<TPointBasedSpatialObject, TOutputPointSet>::SpatialObjectType *
-SpatialObjectToPointSetFilter<TPointBasedSpatialObject, TOutputPointSet>::GetInput()
+auto
+SpatialObjectToPointSetFilter<TPointBasedSpatialObject, TOutputPointSet>::GetInput() -> const SpatialObjectType *
 {
   return static_cast<const SpatialObjectType *>(this->GetPrimaryInput());
 }
 
 template <typename TPointBasedSpatialObject, typename TOutputPointSet>
-const typename SpatialObjectToPointSetFilter<TPointBasedSpatialObject, TOutputPointSet>::SpatialObjectType *
+auto
 SpatialObjectToPointSetFilter<TPointBasedSpatialObject, TOutputPointSet>::GetInput(unsigned int idx)
+  -> const SpatialObjectType *
 {
   return static_cast<const SpatialObjectType *>(this->ProcessObject::GetInput(idx));
 }
@@ -111,7 +112,7 @@ SpatialObjectToPointSetFilter<TPointBasedSpatialObject, TOutputPointSet>::Genera
       typename PointBasedSpatialObjectType::PointType transformedPoint =
         inputSO->GetPoint(i)->GetPositionInWorldSpace();
 
-      for (unsigned int j = 0; j < Self::ObjectDimension; j++)
+      for (unsigned int j = 0; j < Self::ObjectDimension; ++j)
       {
         point[j] = transformedPoint[j];
       }
@@ -132,7 +133,7 @@ SpatialObjectToPointSetFilter<TPointBasedSpatialObject, TOutputPointSet>::Genera
         typename PointBasedSpatialObjectType::PointType transformedPoint =
           pointSO->GetPoint(i)->GetPositionInWorldSpace();
 
-        for (unsigned int j = 0; j < Self::ObjectDimension; j++)
+        for (unsigned int j = 0; j < Self::ObjectDimension; ++j)
         {
           point[j] = transformedPoint[j];
         }

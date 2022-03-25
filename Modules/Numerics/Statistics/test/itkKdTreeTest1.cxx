@@ -20,6 +20,7 @@
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkListSample.h"
 #include "itkKdTreeGenerator.h"
+#include "itkTestingMacros.h"
 #include <fstream>
 
 int
@@ -27,9 +28,9 @@ itkKdTreeTest1(int argc, char * argv[])
 {
   if (argc < 4)
   {
-    std::cerr << "Missing parameters" << std::endl;
-    std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << " numberOfDataPoints numberOfTestPoints bucketSize [graphvizDotOutputFile]" << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cerr << " numberOfDataPoints numberOfTestPoints bucketSize [graphvizDotOutputFile]" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -44,7 +45,7 @@ itkKdTreeTest1(int argc, char * argv[])
 
   constexpr SampleType::MeasurementVectorSizeType measurementVectorSize = 2;
 
-  SampleType::Pointer sample = SampleType::New();
+  auto sample = SampleType::New();
   sample->SetMeasurementVectorSize(measurementVectorSize);
 
   //
@@ -61,7 +62,7 @@ itkKdTreeTest1(int argc, char * argv[])
   }
 
   using TreeGeneratorType = itk::Statistics::KdTreeGenerator<SampleType>;
-  TreeGeneratorType::Pointer treeGenerator = TreeGeneratorType::New();
+  auto treeGenerator = TreeGeneratorType::New();
 
   const unsigned int bucketSize = std::stoi(argv[3]);
 
@@ -93,10 +94,10 @@ itkKdTreeTest1(int argc, char * argv[])
 
   using OriginType = DistanceMetricType::OriginType;
 
-  DistanceMetricType::Pointer distanceMetric = DistanceMetricType::New();
+  auto distanceMetric = DistanceMetricType::New();
 
   OriginType origin(measurementVectorSize);
-  for (unsigned int k = 0; k < sample->Size(); k++)
+  for (unsigned int k = 0; k < sample->Size(); ++k)
   {
 
     queryPoint = sample->GetMeasurementVector(k);

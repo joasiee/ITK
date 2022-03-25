@@ -38,6 +38,7 @@ itkCompositeTransformTest.cxx
 itkTransformCloneTest.cxx
 itkMultiTransformTest.cxx
 itkTestTransformGetInverse.cxx
+        itkTransformGeometryImageFilterTest.cxx
 )
 
 CreateTestDriver(ITKTransform  "${ITKTransform-Test_LIBRARIES}" "${ITKTransformTests}")
@@ -178,10 +179,17 @@ itk_add_test(NAME itkTestTransformGetInverse
   COMMAND ITKTransformTestDriver itkTestTransformGetInverse)
 set_property(TEST itkTestTransformGetInverse APPEND PROPERTY LABELS RUNS_LONG)
 set_tests_properties( itkTestTransformGetInverse PROPERTIES COST 50 )
+itk_add_test(NAME itkTransformGeometryImageFilterTest
+      COMMAND ITKTransformTestDriver itkTransformGeometryImageFilterTest
+              ${ITK_EXAMPLE_DATA_ROOT}/BrainProtonDensity3Slices.mha
+              DATA{Baseline/BrainProtonDensity3SlicesHardened.mha}
+              ${ITK_TEST_OUTPUT_DIR}/BrainProtonDensity3SlicesHardened.mha)
 
 set(ITKTransformGTests
   itkBSplineTransformGTest.cxx
   itkEuler3DTransformGTest.cxx
   itkMatrixOffsetTransformBaseGTest.cxx
+  itkSimilarityTransformGTest.cxx
+  itkTranslationTransformGTest.cxx
 )
 CreateGoogleTestDriver(ITKTransform "${ITKTransform-Test_LIBRARIES}" "${ITKTransformGTests}")

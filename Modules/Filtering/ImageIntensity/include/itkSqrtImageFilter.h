@@ -37,16 +37,12 @@ public:
   Sqrt() = default;
   ~Sqrt() = default;
   bool
-  operator!=(const Sqrt &) const
+  operator==(const Sqrt &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Sqrt & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Sqrt);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -67,7 +63,7 @@ public:
  * \ingroup ITKImageIntensity
  */
 template <typename TInputImage, typename TOutputImage>
-class SqrtImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT SqrtImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(SqrtImageFilter);

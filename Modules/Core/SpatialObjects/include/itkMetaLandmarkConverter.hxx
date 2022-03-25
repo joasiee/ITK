@@ -24,16 +24,16 @@ namespace itk
 {
 
 template <unsigned int NDimensions>
-typename MetaLandmarkConverter<NDimensions>::MetaObjectType *
-MetaLandmarkConverter<NDimensions>::CreateMetaObject()
+auto
+MetaLandmarkConverter<NDimensions>::CreateMetaObject() -> MetaObjectType *
 {
   return dynamic_cast<MetaObjectType *>(new LandmarkMetaObjectType);
 }
 
 /** Convert a metaLandmark into an Landmark SpatialObject  */
 template <unsigned int NDimensions>
-typename MetaLandmarkConverter<NDimensions>::SpatialObjectPointer
-MetaLandmarkConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectType * mo)
+auto
+MetaLandmarkConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectType * mo) -> SpatialObjectPointer
 {
   const auto * landmarkMO = dynamic_cast<const LandmarkMetaObjectType *>(mo);
   if (landmarkMO == nullptr)
@@ -55,14 +55,14 @@ MetaLandmarkConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectTy
 
   auto it2 = landmarkMO->GetPoints().begin();
 
-  for (unsigned int identifier = 0; identifier < landmarkMO->GetPoints().size(); identifier++)
+  for (unsigned int identifier = 0; identifier < landmarkMO->GetPoints().size(); ++identifier)
   {
     LandmarkPointType pnt;
 
     using PointType = typename LandmarkSpatialObjectType::PointType;
     PointType point;
 
-    for (unsigned int ii = 0; ii < NDimensions; ii++)
+    for (unsigned int ii = 0; ii < NDimensions; ++ii)
     {
       point[ii] = (*it2)->m_X[ii] * landmarkMO->ElementSpacing(ii);
     }
@@ -83,8 +83,8 @@ MetaLandmarkConverter<NDimensions>::MetaObjectToSpatialObject(const MetaObjectTy
 
 /** Convert a Landmark SpatialObject into a metaLandmark */
 template <unsigned int NDimensions>
-typename MetaLandmarkConverter<NDimensions>::MetaObjectType *
-MetaLandmarkConverter<NDimensions>::SpatialObjectToMetaObject(const SpatialObjectType * so)
+auto
+MetaLandmarkConverter<NDimensions>::SpatialObjectToMetaObject(const SpatialObjectType * so) -> MetaObjectType *
 {
   const LandmarkSpatialObjectConstPointer landmarkSO = dynamic_cast<const LandmarkSpatialObjectType *>(so);
 
@@ -101,7 +101,7 @@ MetaLandmarkConverter<NDimensions>::SpatialObjectToMetaObject(const SpatialObjec
   {
     auto * pnt = new LandmarkPnt(NDimensions);
 
-    for (unsigned int d = 0; d < NDimensions; d++)
+    for (unsigned int d = 0; d < NDimensions; ++d)
     {
       pnt->m_X[d] = (*it).GetPositionInObjectSpace()[d];
     }
@@ -123,7 +123,7 @@ MetaLandmarkConverter<NDimensions>::SpatialObjectToMetaObject(const SpatialObjec
   }
 
   float color[4];
-  for (unsigned int ii = 0; ii < 4; ii++)
+  for (unsigned int ii = 0; ii < 4; ++ii)
   {
     color[ii] = landmarkSO->GetProperty().GetColor()[ii];
   }

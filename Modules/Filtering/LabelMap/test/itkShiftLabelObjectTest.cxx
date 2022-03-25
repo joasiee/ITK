@@ -41,7 +41,7 @@ itkShiftLabelObjectTest(int argc, char * argv[])
 
   using LabelImageToLabelMapFilterType = itk::LabelImageToLabelMapFilter<ImageType, LabelMapType>;
 
-  ImageType::Pointer image = ImageType::New();
+  auto image = ImageType::New();
 
   SizeType sizeIn;
   sizeIn[0] = 12;
@@ -55,7 +55,7 @@ itkShiftLabelObjectTest(int argc, char * argv[])
 
   IndexType idxVertical;
   idxVertical[0] = 6;
-  for (int ctr = 1; ctr < 12; ctr++)
+  for (int ctr = 1; ctr < 12; ++ctr)
   {
     idxHorizontal[0] = ctr;
     idxVertical[1] = ctr;
@@ -63,7 +63,7 @@ itkShiftLabelObjectTest(int argc, char * argv[])
     image->SetPixel(idxVertical, 1);
   }
 
-  LabelImageToLabelMapFilterType::Pointer conversion = LabelImageToLabelMapFilterType::New();
+  auto conversion = LabelImageToLabelMapFilterType::New();
   conversion->SetInput(image);
   conversion->Update();
 
@@ -79,9 +79,9 @@ itkShiftLabelObjectTest(int argc, char * argv[])
   map->Print(std::cout);
 
   std::cout << "Printing out map." << std::endl;
-  for (int ctrI = 0; ctrI < 11; ctrI++)
+  for (int ctrI = 0; ctrI < 11; ++ctrI)
   {
-    for (int ctrJ = 0; ctrJ < 11; ctrJ++)
+    for (int ctrJ = 0; ctrJ < 11; ++ctrJ)
     {
       IndexType index;
       index[0] = ctrI;

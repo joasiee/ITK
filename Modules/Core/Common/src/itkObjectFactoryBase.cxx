@@ -425,7 +425,7 @@ NameIsSharedLibrary(const char * name)
 void
 ObjectFactoryBase::LoadLibrariesInPath(const char * path)
 {
-  Directory::Pointer dir = Directory::New();
+  auto dir = Directory::New();
 
   if (!dir->Load(path))
   {
@@ -436,7 +436,7 @@ ObjectFactoryBase::LoadLibrariesInPath(const char * path)
   /**
    * Attempt to load each file in the directory as a shared library
    */
-  for (unsigned int i = 0; i < dir->GetNumberOfFiles(); i++)
+  for (unsigned int i = 0; i < dir->GetNumberOfFiles(); ++i)
   {
     const char * file = dir->GetFile(i);
     /**

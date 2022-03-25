@@ -185,7 +185,7 @@ GradientDescentLineSearchOptimizerv4RunTest(itk::GradientDescentLineSearchOptimi
   // check results to see if it is within range
   //
   double trueParameters[2] = { 2, -2 };
-  for (unsigned int j = 0; j < 2; j++)
+  for (unsigned int j = 0; j < 2; ++j)
   {
     if (itk::Math::abs(finalPosition[j] - trueParameters[j]) > 0.01)
     {
@@ -210,7 +210,7 @@ itkGradientDescentLineSearchOptimizerv4Test(int, char *[])
   using ScalesType = OptimizerType::ScalesType;
 
   // Declaration of a itkOptimizer
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
 
   // Declaration of the Metric
   GradientDescentLineSearchOptimizerv4TestMetric::Pointer metric =
@@ -264,8 +264,8 @@ itkGradientDescentLineSearchOptimizerv4Test(int, char *[])
   itkOptimizer->Print(std::cout);
   std::cout << "Stop description   = " << itkOptimizer->GetStopConditionDescription() << std::endl;
 
-  OptimizerType::Pointer badOptimizer = OptimizerType::New();
-  bool                   caught = false;
+  auto badOptimizer = OptimizerType::New();
+  bool caught = false;
   try
   {
     badOptimizer->GetCurrentPosition();

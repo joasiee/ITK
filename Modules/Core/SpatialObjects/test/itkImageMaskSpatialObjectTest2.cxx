@@ -51,7 +51,7 @@ itkImageMaskSpatialObjectTest2(int, char *[])
   // Also explicitly uses nonzero origin, non identity scales
   // to fully test the commonly encountered cases from the real world
 
-  ImageType::Pointer image = ImageType::New();
+  auto image = ImageType::New();
 
   // Set the direction for a non-oriented image
   // to better test the frequently encountered case
@@ -103,7 +103,7 @@ itkImageMaskSpatialObjectTest2(int, char *[])
     }
   }
 
-  ImageMaskSpatialObject::Pointer maskSO = ImageMaskSpatialObject::New();
+  auto maskSO = ImageMaskSpatialObject::New();
   maskSO->SetImage(image);
   maskSO->Update();
 
@@ -193,7 +193,7 @@ itkImageMaskSpatialObjectTest2(int, char *[])
       std::sqrt(double(INSIDE_SIZE * INSIDE_SIZE + INSIDE_SIZE * INSIDE_SIZE + INSIDE_SIZE * INSIDE_SIZE)) * 100.0);
     const ImageType::SpacingType incrementVector = (endPoint - startPoint) / static_cast<double>(numberOfSteps);
     ImageType::PointType         point = startPoint;
-    for (int i = 0; i < numberOfSteps; i++)
+    for (int i = 0; i < numberOfSteps; ++i)
     {
       point += incrementVector;
       const bool isInside = maskSO->IsInsideInWorldSpace(point);

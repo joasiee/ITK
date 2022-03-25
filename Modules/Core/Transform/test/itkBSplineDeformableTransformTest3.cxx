@@ -23,6 +23,7 @@
 
 #include "itkBSplineDeformableTransform.h"
 #include "itkSimilarity2DTransform.h"
+#include "itkTestingMacros.h"
 
 #include <fstream>
 
@@ -76,22 +77,13 @@ public:
     using FixedReaderType = itk::ImageFileReader<FixedImageType>;
     using MovingReaderType = itk::ImageFileReader<MovingImageType>;
 
-    typename FixedReaderType::Pointer fixedReader = FixedReaderType::New();
+    auto fixedReader = FixedReaderType::New();
     fixedReader->SetFileName(argv[2]);
 
-    try
-    {
-      fixedReader->Update();
-    }
-    catch (const itk::ExceptionObject & excp)
-    {
-      std::cerr << "Exception thrown " << std::endl;
-      std::cerr << excp << std::endl;
-      return EXIT_FAILURE;
-    }
+    ITK_TRY_EXPECT_NO_EXCEPTION(fixedReader->Update());
 
 
-    typename MovingReaderType::Pointer movingReader = MovingReaderType::New();
+    auto movingReader = MovingReaderType::New();
 
     movingReader->SetFileName(argv[3]);
 
@@ -100,11 +92,11 @@ public:
 
     using FilterType = itk::ResampleImageFilter<MovingImageType, FixedImageType>;
 
-    typename FilterType::Pointer resampler = FilterType::New();
+    auto resampler = FilterType::New();
 
     using InterpolatorType = itk::LinearInterpolateImageFunction<MovingImageType, double>;
 
-    typename InterpolatorType::Pointer interpolator = InterpolatorType::New();
+    auto interpolator = InterpolatorType::New();
 
     resampler->SetInterpolator(interpolator);
 
@@ -130,7 +122,7 @@ public:
 
     using TransformType = itk::BSplineDeformableTransform<CoordinateRepType, SpaceDimension, VSplineOrder>;
 
-    typename TransformType::Pointer bsplineTransform = TransformType::New();
+    auto bsplineTransform = TransformType::New();
 
 
     using RegionType = typename TransformType::RegionType;
@@ -169,7 +161,7 @@ public:
     bsplineTransform->SetGridDirection(fixedImage->GetDirection());
 
     using BulkTransformType = itk::Similarity2DTransform<CoordinateRepType>;
-    BulkTransformType::Pointer bulkTransform = BulkTransformType::New();
+    auto bulkTransform = BulkTransformType::New();
     bulkTransform->SetIdentity();
 
     BulkTransformType::ParametersType bulkParameters = bulkTransform->GetParameters();
@@ -191,7 +183,7 @@ public:
 
     infile.open(argv[1]);
 
-    for (unsigned int n = 0; n < numberOfNodes; n++)
+    for (unsigned int n = 0; n < numberOfNodes; ++n)
     {
       infile >> parameters[n];
       infile >> parameters[n + numberOfNodes];
@@ -203,29 +195,20 @@ public:
     bsplineTransform->SetParameters(parameters);
 
 
-    typename CommandProgressUpdate::Pointer observer = CommandProgressUpdate::New();
+    auto observer = CommandProgressUpdate::New();
 
     resampler->AddObserver(itk::ProgressEvent(), observer);
 
 
     resampler->SetTransform(bsplineTransform);
 
-    try
-    {
-      itk::WriteImage(resampler->GetOutput(), argv[4]);
-    }
-    catch (const itk::ExceptionObject & excp)
-    {
-      std::cerr << "Exception thrown " << std::endl;
-      std::cerr << excp << std::endl;
-      return EXIT_FAILURE;
-    }
+    ITK_TRY_EXPECT_NO_EXCEPTION(itk::WriteImage(resampler->GetOutput(), argv[4]));
 
 
     using VectorType = itk::Vector<float, ImageDimension>;
     using DeformationFieldType = itk::Image<VectorType, ImageDimension>;
 
-    typename DeformationFieldType::Pointer field = DeformationFieldType::New();
+    auto field = DeformationFieldType::New();
     field->SetRegions(fixedRegion);
     field->SetOrigin(fixedOrigin);
     field->SetSpacing(fixedSpacing);
@@ -255,16 +238,7 @@ public:
 
     if (argc >= 6)
     {
-      try
-      {
-        itk::WriteImage(field, argv[5]);
-      }
-      catch (const itk::ExceptionObject & excp)
-      {
-        std::cerr << "Exception thrown " << std::endl;
-        std::cerr << excp << std::endl;
-        return EXIT_FAILURE;
-      }
+      ITK_TRY_EXPECT_NO_EXCEPTION(itk::WriteImage(field, argv[5]));
     }
     return EXIT_SUCCESS;
   }
@@ -277,8 +251,8 @@ itkBSplineDeformableTransformTest3(int argc, char * argv[])
 
   if (argc < 7)
   {
-    std::cerr << "Missing Parameters " << std::endl;
-    std::cerr << "Usage: " << argv[0];
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
     std::cerr << " coefficientsFile fixedImage ";
     std::cerr << "movingImage deformedMovingImage" << std::endl;
     std::cerr << "[deformationField][multithreader use #threads]" << std::endl;

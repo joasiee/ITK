@@ -31,7 +31,7 @@ RegularSphereMeshSource<TOutputMesh>::RegularSphereMeshSource()
   /**
    * Create the output
    */
-  typename TOutputMesh::Pointer output = TOutputMesh::New();
+  auto output = TOutputMesh::New();
   this->ProcessObject::SetNumberOfRequiredOutputs(1);
   this->ProcessObject::SetNthOutput(0, output.GetPointer());
   m_Center.Fill(0);
@@ -140,14 +140,14 @@ RegularSphereMeshSource<TOutputMesh>::GenerateData()
   // for each resolution.
   // it's an IN-PLACE process.
   unsigned int i;
-  for (i = 0; i < m_Resolution; i++)
+  for (i = 0; i < m_Resolution; ++i)
   {
     typename OutputMeshType::CellsContainerPointer    myCells = outputMesh->GetCells();
     typename OutputMeshType::CellsContainer::Iterator cells = myCells->Begin();
 
-    typename OutputMeshType::Pointer result = OutputMeshType::New();
-    PointType                        v[3];
-    PointType *                      v_pt[3];
+    auto        result = OutputMeshType::New();
+    PointType   v[3];
+    PointType * v_pt[3];
     v_pt[0] = &v[0];
     v_pt[1] = &v[1];
     v_pt[2] = &v[2];
@@ -159,13 +159,13 @@ RegularSphereMeshSource<TOutputMesh>::GenerateData()
     // container for the processed edges
     // when subdividing a triangle, the corresponding subdivided
     // edges are stocked here with the Id of the middle point.
-    PointMapType::Pointer handledEdges = PointMapType::New();
+    auto handledEdges = PointMapType::New();
 
     // for the points Id to be consecutive,
     // and for the Ids to exist only if the point has been copied
     // i.e. even if the container is a vector,
     // we ned to copy the old points first.
-    for (IdentifierType j = 0; j < pointIdxOffset; j++)
+    for (IdentifierType j = 0; j < pointIdxOffset; ++j)
     {
       outputMesh->GetPoint(j, v_pt[0]);
       // this is needed when the PointType is a QuadEdgeMeshPoint
@@ -189,7 +189,7 @@ RegularSphereMeshSource<TOutputMesh>::GenerateData()
 
         // for each point of the input triangle, create a copy in the output
         // mesh
-        for (unsigned int ii = 0; ii < 3; ii++)
+        for (unsigned int ii = 0; ii < 3; ++ii)
         {
           // get the point's geometry from previous mesh
           outputMesh->GetPoint(tp[ii], v_pt[ii]);
@@ -318,8 +318,8 @@ RegularSphereMeshSource<TOutputMesh>::GenerateData()
 }
 
 template <typename TOutputMesh>
-typename RegularSphereMeshSource<TOutputMesh>::PointType
-RegularSphereMeshSource<TOutputMesh>::Divide(const PointType & p1, const PointType & p2) const
+auto
+RegularSphereMeshSource<TOutputMesh>::Divide(const PointType & p1, const PointType & p2) const -> PointType
 {
   PointType p;
   PointType f;

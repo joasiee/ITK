@@ -58,7 +58,8 @@ namespace itk
  * \endsphinx
  */
 template <typename TInputImage, typename TOutputImage>
-class VectorGradientAnisotropicDiffusionImageFilter : public AnisotropicDiffusionImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT VectorGradientAnisotropicDiffusionImageFilter
+  : public AnisotropicDiffusionImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(VectorGradientAnisotropicDiffusionImageFilter);
@@ -76,7 +77,7 @@ public:
   itkTypeMacro(VectorGradientAnisotropicDiffusionImageFilter, AnisotropicDiffusionImageFilter);
 
   /** Extract information from the superclass. */
-  using UpdateBufferType = typename Superclass::UpdateBufferType;
+  using typename Superclass::UpdateBufferType;
 
   /** Determine the image dimension from the  superclass. */
   static constexpr unsigned int ImageDimension = Superclass::ImageDimension;

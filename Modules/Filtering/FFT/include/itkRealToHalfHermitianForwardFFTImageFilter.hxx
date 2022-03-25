@@ -62,8 +62,8 @@ struct DispatchFFTW_R2C_New<TSelfPointer, TInputImage, TOutputImage, float>
 #endif
 
 template <typename TInputImage, typename TOutputImage>
-typename RealToHalfHermitianForwardFFTImageFilter<TInputImage, TOutputImage>::Pointer
-RealToHalfHermitianForwardFFTImageFilter<TInputImage, TOutputImage>::New()
+auto
+RealToHalfHermitianForwardFFTImageFilter<TInputImage, TOutputImage>::New() -> Pointer
 {
   Pointer smartPtr = ::itk::ObjectFactory<Self>::Create();
 
@@ -72,6 +72,11 @@ RealToHalfHermitianForwardFFTImageFilter<TInputImage, TOutputImage>::New()
     smartPtr =
       DispatchFFTW_R2C_New<Pointer, TInputImage, TOutputImage, typename NumericTraits<OutputPixelType>::ValueType>::
         Apply();
+  }
+  else
+  {
+    // Correct extra reference count from ::itk::ObjectFactory<Self>::Create()
+    smartPtr->UnRegister();
   }
 
   return smartPtr;
@@ -114,7 +119,7 @@ RealToHalfHermitianForwardFFTImageFilter<TInputImage, TOutputImage>::GenerateOut
   outputSize[0] = static_cast<unsigned int>(inputSize[0]) / 2 + 1;
   outputStartIndex[0] = inputStartIndex[0];
 
-  for (unsigned int i = 1; i < OutputImageType::ImageDimension; i++)
+  for (unsigned int i = 1; i < OutputImageType::ImageDimension; ++i)
   {
     outputSize[i] = inputSize[i];
     outputStartIndex[i] = inputStartIndex[i];

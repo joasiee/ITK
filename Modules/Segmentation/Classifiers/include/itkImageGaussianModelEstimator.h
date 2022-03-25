@@ -140,22 +140,24 @@ private:
   /** Dimension of each individual pixel vector. */
   static constexpr unsigned int VectorDimension = InputImagePixelType::Dimension;
 
-  MatrixType   m_NumberOfSamples;
-  MatrixType   m_Means;
-  MatrixType * m_Covariance{ nullptr };
-
-  TrainingImagePointer m_TrainingImage;
-
-  /** A function that generates the
-   * model based on the training input data.
-   * Achieves the goal of training the classifier. */
+  /** Generate the model based on the training input data.
+   * Achieves the goal of training the classifier.
+   * Takes the set of training images and internally computes the means and
+   * variance of the various classes defined in the training set.
+   */
   void
   EstimateModels() override;
 
   void
   EstimateGaussianModelParameters();
-}; // class ImageGaussianModelEstimator
-} // namespace itk
+
+  MatrixType   m_NumberOfSamples;
+  MatrixType   m_Means;
+  MatrixType * m_Covariance{ nullptr };
+
+  TrainingImagePointer m_TrainingImage;
+};
+} // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #  include "itkImageGaussianModelEstimator.hxx"

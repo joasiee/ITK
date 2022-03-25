@@ -198,8 +198,9 @@ MutualInformationImageToImageMetric<TFixedImage, TMovingImage>::SampleFixedImage
  * Get the match Measure
  */
 template <typename TFixedImage, typename TMovingImage>
-typename MutualInformationImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 MutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters) const
+  -> MeasureType
 {
   // make sure the transform has the current parameters
   this->m_Transform->SetParameters(parameters);
@@ -471,10 +472,10 @@ MutualInformationImageToImageMetric<TFixedImage, TMovingImage>::CalculateDerivat
   this->m_Transform->ComputeJacobianWithRespectToParameters(point, jacobian);
 
   unsigned int numberOfParameters = this->m_Transform->GetNumberOfParameters();
-  for (unsigned int k = 0; k < numberOfParameters; k++)
+  for (unsigned int k = 0; k < numberOfParameters; ++k)
   {
     derivatives[k] = 0.0;
-    for (unsigned int j = 0; j < MovingImageDimension; j++)
+    for (unsigned int j = 0; j < MovingImageDimension; ++j)
     {
       derivatives[k] += jacobian[j][k] * imageDerivatives[j];
     }

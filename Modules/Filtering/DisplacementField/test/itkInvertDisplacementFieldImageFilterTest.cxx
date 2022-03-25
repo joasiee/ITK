@@ -40,7 +40,7 @@ itkInvertDisplacementFieldImageFilterTest(int, char *[])
 
   VectorType ones(1);
 
-  DisplacementFieldType::Pointer field = DisplacementFieldType::New();
+  auto field = DisplacementFieldType::New();
   field->SetOrigin(origin);
   field->SetSpacing(spacing);
   field->SetRegions(size);
@@ -61,7 +61,7 @@ itkInvertDisplacementFieldImageFilterTest(int, char *[])
   {
     DisplacementFieldType::IndexType index = ItF.GetIndex();
     bool                             isOnBoundary = false;
-    for (unsigned int d = 0; d < ImageDimension; d++)
+    for (unsigned int d = 0; d < ImageDimension; ++d)
     {
       if (index[d] == startIndex[d] || index[d] == static_cast<int>(size[d]) - startIndex[d] - 1)
       {
@@ -84,7 +84,7 @@ itkInvertDisplacementFieldImageFilterTest(int, char *[])
   float        meanTolerance = 0.001;
 
   using InverterType = itk::InvertDisplacementFieldImageFilter<DisplacementFieldType>;
-  InverterType::Pointer inverter = InverterType::New();
+  auto inverter = InverterType::New();
   inverter->SetInput(field);
   inverter->SetMaximumNumberOfIterations(numberOfIterations);
   inverter->SetMeanErrorToleranceThreshold(meanTolerance);

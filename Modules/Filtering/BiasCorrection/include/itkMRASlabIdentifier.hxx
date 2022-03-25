@@ -63,7 +63,7 @@ MRASlabIdentifier<TInputImage>::GenerateSlabRegions()
   std::vector<double> avgMin(totalSlices);
   // calculate minimum intensities for each slice
   ImagePixelType pixel;
-  for (int i = 0; i < 3; i++)
+  for (int i = 0; i < 3; ++i)
   {
     if (i != m_SlicingDirection)
     {
@@ -169,8 +169,8 @@ MRASlabIdentifier<TInputImage>::GenerateSlabRegions()
 }
 
 template <typename TInputImage>
-typename MRASlabIdentifier<TInputImage>::SlabRegionVectorType
-MRASlabIdentifier<TInputImage>::GetSlabRegionVector()
+auto
+MRASlabIdentifier<TInputImage>::GetSlabRegionVector() -> SlabRegionVectorType
 {
   return m_Slabs;
 }

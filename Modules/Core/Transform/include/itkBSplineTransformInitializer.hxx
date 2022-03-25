@@ -28,14 +28,6 @@ namespace itk
 {
 
 template <typename TTransform, typename TImage>
-BSplineTransformInitializer<TTransform, TImage>::BSplineTransformInitializer()
-  : m_Transform(nullptr)
-
-{
-  this->m_TransformDomainMeshSize.Fill(1);
-}
-
-template <typename TTransform, typename TImage>
 void
 BSplineTransformInitializer<TTransform, TImage>::SetTransformDomainMeshSize(const MeshSizeType meshSize)
 {
@@ -97,7 +89,7 @@ BSplineTransformInitializer<TTransform, TImage>::InitializeTransform() const
   using CoordRepType = typename ImagePointType::CoordRepType;
 
   using PointSetType = PointSet<CoordRepType, SpaceDimension>;
-  typename PointSetType::Pointer cornerPoints = PointSetType::New();
+  auto cornerPoints = PointSetType::New();
   cornerPoints->Initialize();
 
   using PointType = typename PointSetType::PointType;
@@ -116,15 +108,15 @@ BSplineTransformInitializer<TTransform, TImage>::InitializeTransform() const
   const CoordRepType BSplineTransformDomainEpsilon = std::pow(2.0, -3);
 
   ContinuousIndexType startIndex;
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     startIndex[i] = this->m_Image->GetLargestPossibleRegion().GetIndex()[i] - 0.5 - BSplineTransformDomainEpsilon;
   }
 
-  for (unsigned int d = 0, N = 1 << SpaceDimension; d < N; d++)
+  for (unsigned int d = 0, N = 1 << SpaceDimension; d < N; ++d)
   {
     ContinuousIndexType whichIndex;
-    for (unsigned int i = 0; i < SpaceDimension; i++)
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
       whichIndex[i] = startIndex[i] + static_cast<CoordRepType>(
                                         ((d >> i) & 1) * (this->m_Image->GetLargestPossibleRegion().GetSize()[i] +
@@ -144,7 +136,7 @@ BSplineTransformInitializer<TTransform, TImage>::InitializeTransform() const
                                       SpaceDimension,
                                       typename PointSetType::CoordRepType,
                                       typename PointSetType::PointsContainer>;
-  typename BoundingBoxType::Pointer bbox = BoundingBoxType::New();
+  auto bbox = BoundingBoxType::New();
   bbox->SetPoints(cornerPoints->GetPoints());
   bbox->ComputeBoundingBox();
 
@@ -152,7 +144,7 @@ BSplineTransformInitializer<TTransform, TImage>::InitializeTransform() const
   PointIdentifier transformDomainOriginId = 0;
   RealType        minDistance = NumericTraits<RealType>::max();
 
-  for (unsigned int d = 0; d < cornerPoints->GetNumberOfPoints(); d++)
+  for (unsigned int d = 0; d < cornerPoints->GetNumberOfPoints(); ++d)
   {
     PointType corner;
     corner.Fill(0.0);
@@ -179,14 +171,14 @@ BSplineTransformInitializer<TTransform, TImage>::InitializeTransform() const
   PointIdentifier minCornerId[SpaceDimension];
   double          minAngle[SpaceDimension];
 
-  for (unsigned int d = 0; d < SpaceDimension; d++)
+  for (unsigned int d = 0; d < SpaceDimension; ++d)
   {
     minAngle[d] = NumericTraits<double>::max();
 
     VectorType vectorAxis(0.0);
     vectorAxis[d] = 1.0;
 
-    for (unsigned int i = 0; i < SpaceDimension; i++)
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
       PointIdentifier oppositeCornerId =
         (static_cast<PointIdentifier>(1) << static_cast<PointIdentifier>(i)) ^ transformDomainOriginId;
@@ -203,7 +195,7 @@ BSplineTransformInitializer<TTransform, TImage>::InitializeTransform() const
       if (theta < minAngle[d])
       {
         bool alreadyFound = false;
-        for (unsigned int j = 0; j < d; j++)
+        for (unsigned int j = 0; j < d; ++j)
         {
           if (minCornerId[j] == oppositeCornerId)
           {
@@ -226,7 +218,7 @@ BSplineTransformInitializer<TTransform, TImage>::InitializeTransform() const
   // coordinate system. This is done by placing the rotated axis vectors as
   // columns in the rotation matrix.
 
-  for (unsigned int d = 0; d < SpaceDimension; d++)
+  for (unsigned int d = 0; d < SpaceDimension; ++d)
   {
     PointType corner;
     corner.Fill(0.0);
@@ -241,7 +233,7 @@ BSplineTransformInitializer<TTransform, TImage>::InitializeTransform() const
     transformDomainPhysicalDimensions[d] = vector.GetNorm();
     vector.Normalize();
 
-    for (unsigned int i = 0; i < SpaceDimension; i++)
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
       transformDomainDirection[i][d] = vector[i];
     }

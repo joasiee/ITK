@@ -45,12 +45,12 @@ itkLevelSetDomainMapImageFilterTest(int, char *[])
 
   ListPixelType l;
 
-  InputImageType::Pointer input = InputImageType::New();
+  auto input = InputImageType::New();
   input->SetRegions(region);
   input->Allocate();
   input->FillBuffer(l);
 
-  for (unsigned int i = 0; i < 10; i++)
+  for (unsigned int i = 0; i < 10; ++i)
   {
     ListPixelType ll;
     ll.push_back(i);
@@ -60,7 +60,7 @@ itkLevelSetDomainMapImageFilterTest(int, char *[])
     input->SetPixel(index, ll);
   }
 
-  DomainMapImageFilterType::Pointer filter = DomainMapImageFilterType::New();
+  auto filter = DomainMapImageFilterType::New();
   filter->SetInput(input);
   filter->Update();
 

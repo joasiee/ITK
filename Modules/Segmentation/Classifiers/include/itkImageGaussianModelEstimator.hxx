@@ -31,9 +31,7 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::~
   delete[] m_Covariance;
 }
 
-/**
- * PrintSelf
- */
+
 template <typename TInputImage, typename TMembershipFunction, typename TTrainingImage>
 void
 ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::PrintSelf(std::ostream & os,
@@ -53,11 +51,7 @@ void
 ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::GenerateData()
 {
   this->EstimateModels();
-} // end Generate data
-
-// Takes a set of training images and returns the means
-// and variance of the various classes defined in the
-// training set.
+}
 
 template <typename TInputImage, typename TMembershipFunction, typename TTrainingImage>
 void
@@ -80,7 +74,7 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::E
   TrainingImageSizeType trainingImageSize = trainingImage->GetBufferedRegion().GetSize();
 
   // Check if size of the two inputs are the same
-  for (unsigned int i = 0; i < TInputImage::ImageDimension; i++)
+  for (unsigned int i = 0; i < TInputImage::ImageDimension; ++i)
   {
     if (inputImageSize[i] != trainingImageSize[i])
     {
@@ -89,30 +83,22 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::E
     }
   }
 
-  //-------------------------------------------------------------------
   // Set up the gaussian membership calculators
-  //-------------------------------------------------------------------
-
   unsigned int numberOfModels = this->GetNumberOfModels();
 
-  //-------------------------------------------------------------------
   // Call local function to estimate mean variances of the various
   // class labels in the training set.
   // The statistics class functions have not been used since all the
   // class statistics are calculated simultaneously here.
-  //-------------------------------------------------------------------
-
   this->EstimateGaussianModelParameters();
 
-  //-------------------------------------------------------------------
   // Populate the membership functions for all the classes
-  //-------------------------------------------------------------------
   MembershipFunctionPointer                             membershipFunction;
   typename MembershipFunctionType::MeanVectorType       tmean;
   typename MembershipFunctionType::CovarianceMatrixType tcov;
 
   NumericTraits<typename MembershipFunctionType::MeanVectorType>::SetLength(tmean, VectorDimension);
-  for (unsigned int classIndex = 0; classIndex < numberOfModels; classIndex++)
+  for (unsigned int classIndex = 0; classIndex < numberOfModels; ++classIndex)
   {
     membershipFunction = TMembershipFunction::New();
 
@@ -128,7 +114,7 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::E
 
     this->AddMembershipFunction(membershipFunction);
   }
-} // end train classifier
+}
 
 template <typename TInputImage, typename TMembershipFunction, typename TTrainingImage>
 void
@@ -138,19 +124,13 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::E
   InputImageConstPointer  inputImage = this->GetInputImage();
   InputImageConstIterator inIt(inputImage, inputImage->GetBufferedRegion());
 
-  //-------------------------------------------------------------------
-
-  //-------------------------------------------------------------------
   // Set the iterators and the pixel type definition for the training image
   TrainingImageConstPointer trainingImage = this->GetTrainingImage();
 
   TrainingImageConstIterator trainingImageIt(trainingImage, trainingImage->GetBufferedRegion());
 
-  //-------------------------------------------------------------------
-
   unsigned int numberOfModels = (this->GetNumberOfModels());
 
-  //-------------------------------------------------------------------
   // Set up the matrices to hold the means and the covariance for the
   // training data
 
@@ -160,12 +140,12 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::E
   m_NumberOfSamples.set_size(numberOfModels, 1);
   m_NumberOfSamples.fill(0);
 
-  // delete previous allocation first
+  // Delete previous allocation first
   delete[] m_Covariance;
   // Number of covariance matrices are equal to the number of classes
   m_Covariance = (MatrixType *)new MatrixType[numberOfModels];
 
-  for (unsigned int i = 0; i < numberOfModels; i++)
+  for (unsigned int i = 0; i < numberOfModels; ++i)
   {
     m_Covariance[i].set_size(VectorDimension, VectorDimension);
     m_Covariance[i].fill(0);
@@ -190,69 +170,69 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::E
       m_NumberOfSamples[classIndex][0] += 1;
       InputImagePixelType inImgVec = inIt.Get();
 
-      for (unsigned int band_x = 0; band_x < VectorDimension; band_x++)
+      for (unsigned int band_x = 0; band_x < VectorDimension; ++band_x)
       {
         m_Means[classIndex][band_x] += inImgVec[band_x];
-        for (unsigned int band_y = 0; band_y <= band_x; band_y++)
+        for (unsigned int band_y = 0; band_y <= band_x; ++band_y)
         {
           m_Covariance[classIndex][band_x][band_y] += inImgVec[band_x] * inImgVec[band_y];
         }
       }
     }
-  } // end for
+  }
 
   // Loop through the classes to calculate the means and covariance
-  for (unsigned int classIndex = 0; classIndex < numberOfModels; classIndex++)
+  for (unsigned int classIndex = 0; classIndex < numberOfModels; ++classIndex)
   {
     if (Math::NotAlmostEquals(m_NumberOfSamples[classIndex][0], 0.0))
     {
-      for (unsigned int i = 0; i < VectorDimension; i++)
+      for (unsigned int i = 0; i < VectorDimension; ++i)
       {
         m_Means[classIndex][i] /= m_NumberOfSamples[classIndex][0];
       }
-    } // end if
+    }
 
     else
     {
-      for (unsigned int i = 0; i < VectorDimension; i++)
+      for (unsigned int i = 0; i < VectorDimension; ++i)
       {
         m_Means[classIndex][i] = 0;
       }
-    } // end else
+    }
 
     if (Math::NotAlmostEquals((m_NumberOfSamples[classIndex][0] - 1), 0.0))
     {
-      for (unsigned int band_x = 0; band_x < VectorDimension; band_x++)
+      for (unsigned int band_x = 0; band_x < VectorDimension; ++band_x)
       {
-        for (unsigned int band_y = 0; band_y <= band_x; band_y++)
+        for (unsigned int band_y = 0; band_y <= band_x; ++band_y)
         {
           m_Covariance[classIndex][band_x][band_y] /= (m_NumberOfSamples[classIndex][0] - 1);
-        } // end for band_y loop
-      }   // end for band_x loop
-    }     // end if
+        }
+      }
+    }
 
     else
     {
-      for (unsigned int band_x = 0; band_x < VectorDimension; band_x++)
+      for (unsigned int band_x = 0; band_x < VectorDimension; ++band_x)
       {
-        for (unsigned int band_y = 0; band_y <= band_x; band_y++)
+        for (unsigned int band_y = 0; band_y <= band_x; ++band_y)
         {
           m_Covariance[classIndex][band_x][band_y] = 0;
         }
       }
-    } // end else
+    }
 
     MatrixType tempMeanSq;
     tempMeanSq.set_size(VectorDimension, VectorDimension);
     tempMeanSq.fill(0);
 
-    for (unsigned int band_x = 0; band_x < VectorDimension; band_x++)
+    for (unsigned int band_x = 0; band_x < VectorDimension; ++band_x)
     {
-      for (unsigned int band_y = 0; band_y <= band_x; band_y++)
+      for (unsigned int band_y = 0; band_y <= band_x; ++band_y)
       {
         tempMeanSq[band_x][band_y] = m_Means[classIndex][band_x] * m_Means[classIndex][band_y];
       }
-    } // end for band_x loop
+    }
 
     if (Math::NotAlmostEquals((m_NumberOfSamples[classIndex][0] - 1), 0.0))
     {
@@ -265,16 +245,16 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::E
     {
       auto lastInX = (unsigned int)(VectorDimension - 1);
       auto upperY = (unsigned int)VectorDimension;
-      for (unsigned int band_x = 0; band_x < lastInX; band_x++)
+      for (unsigned int band_x = 0; band_x < lastInX; ++band_x)
       {
-        for (unsigned int band_y = band_x + 1; band_y < upperY; band_y++)
+        for (unsigned int band_y = band_x + 1; band_y < upperY; ++band_y)
         {
           m_Covariance[classIndex][band_x][band_y] = m_Covariance[classIndex][band_y][band_x];
         } // end band_y loop
       }   // end band_x loop
     }     // end if loop
   }       // end class index loop
-} // end EstimateGaussianModelParameters
-} // namespace itk
+}
+} // end namespace itk
 
 #endif

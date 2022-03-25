@@ -37,7 +37,7 @@ public:
   {
     using ReaderType = itk::ImageFileReader<TImage>;
 
-    typename ReaderType::Pointer reader = ReaderType::New();
+    auto reader = ReaderType::New();
     {
       if (imageio)
       {
@@ -64,7 +64,7 @@ public:
     if (zeroOrigin)
     {
       double origin[TImage::ImageDimension];
-      for (unsigned int i = 0; i < TImage::ImageDimension; i++)
+      for (unsigned int i = 0; i < TImage::ImageDimension; ++i)
       {
         origin[i] = 0;
       }
@@ -81,7 +81,7 @@ public:
   {
 
     using WriterType = itk::ImageFileWriter<ImageType>;
-    typename WriterType::Pointer writer = WriterType::New();
+    auto writer = WriterType::New();
 
     if (imageio.IsNull())
     {
@@ -110,7 +110,7 @@ public:
   static void
   RandomPix(vnl_random & randgen, itk::RGBPixel<unsigned char> & pix)
   {
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       pix[i] = randgen.lrand32(itk::NumericTraits<unsigned char>::max());
     }
@@ -152,7 +152,7 @@ public:
   static int
   Remove(const char * fname)
   {
-    return itksys::SystemTools::RemoveFile(fname);
+    return static_cast<bool>(itksys::SystemTools::RemoveFile(fname));
   }
 
   template <typename ImageType>
@@ -169,7 +169,7 @@ public:
   AllocateImageFromRegionAndSpacing(const typename ImageType::RegionType &  region,
                                     const typename ImageType::SpacingType & spacing)
   {
-    typename ImageType::Pointer rval = ImageType::New();
+    auto rval = ImageType::New();
     SetIdentityDirection<ImageType>(rval);
     rval->SetSpacing(spacing);
     rval->SetRegions(region);
@@ -182,7 +182,7 @@ public:
                                     const typename ImageType::SpacingType & spacing,
                                     int                                     vecLength)
   {
-    typename ImageType::Pointer rval = ImageType::New();
+    auto rval = ImageType::New();
     rval->SetSpacing(spacing);
     rval->SetRegions(region);
     rval->SetVectorLength(vecLength);

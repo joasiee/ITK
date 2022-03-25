@@ -34,7 +34,7 @@ GradientRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GradientRecursi
   m_NormalizeAcrossScale = false;
   this->m_UseImageDirection = true;
 
-  itkStaticAssert(ImageDimension > 0, "Images shall have one dimension at least");
+  static_assert(ImageDimension > 0, "Images shall have one dimension at least");
   const unsigned int imageDimensionMinus1 = ImageDimension - 1;
   if (ImageDimension > 1)
   {
@@ -97,7 +97,7 @@ GradientRecursiveGaussianImageFilter<TInputImage, TOutputImage>::SetSigmaArray(c
   if (this->m_Sigma != sigma)
   {
     this->m_Sigma = sigma;
-    itkStaticAssert(ImageDimension > 0, "Images shall have one dimension at least");
+    static_assert(ImageDimension > 0, "Images shall have one dimension at least");
     const unsigned int imageDimensionMinus1 = ImageDimension - 1;
     for (unsigned int i = 0; i != imageDimensionMinus1; ++i)
     {
@@ -113,8 +113,8 @@ GradientRecursiveGaussianImageFilter<TInputImage, TOutputImage>::SetSigmaArray(c
  * Get the Sigma array.
  */
 template <typename TInputImage, typename TOutputImage>
-typename GradientRecursiveGaussianImageFilter<TInputImage, TOutputImage>::SigmaArrayType
-GradientRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GetSigmaArray() const
+auto
+GradientRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GetSigmaArray() const -> SigmaArrayType
 {
   return m_Sigma;
 }
@@ -123,8 +123,8 @@ GradientRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GetSigmaArray()
  * Get value of Sigma. Returns the sigma along the first dimension.
  */
 template <typename TInputImage, typename TOutputImage>
-typename GradientRecursiveGaussianImageFilter<TInputImage, TOutputImage>::ScalarRealType
-GradientRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GetSigma() const
+auto
+GradientRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GetSigma() const -> ScalarRealType
 {
   return m_Sigma[0];
 }
@@ -138,9 +138,9 @@ GradientRecursiveGaussianImageFilter<TInputImage, TOutputImage>::SetNormalizeAcr
 {
   m_NormalizeAcrossScale = normalize;
 
-  itkStaticAssert(ImageDimension > 0, "Images shall have one dimension at least");
+  static_assert(ImageDimension > 0, "Images shall have one dimension at least");
   const unsigned int imageDimensionMinus1 = ImageDimension - 1;
-  for (unsigned int i = 0; i != imageDimensionMinus1; i++)
+  for (unsigned int i = 0; i != imageDimensionMinus1; ++i)
   {
     m_SmoothingFilters[i]->SetNormalizeAcrossScale(normalize);
   }
@@ -193,13 +193,13 @@ GradientRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GenerateData()
 {
   // Create a process accumulator for tracking the progress of this
   // minipipeline
-  ProgressAccumulator::Pointer progress = ProgressAccumulator::New();
+  auto progress = ProgressAccumulator::New();
   progress->SetMiniPipelineFilter(this);
 
   // Compute the contribution of each filter to the total progress.
   const double weight = 1.0 / (ImageDimension * ImageDimension);
 
-  itkStaticAssert(ImageDimension > 0, "Images shall have one dimension at least");
+  static_assert(ImageDimension > 0, "Images shall have one dimension at least");
   const unsigned int imageDimensionMinus1 = ImageDimension - 1;
   if (ImageDimension > 1)
   {

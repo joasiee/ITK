@@ -37,16 +37,12 @@ public:
   Atan2() = default;
   ~Atan2() = default;
   bool
-  operator!=(const Atan2 &) const
+  operator==(const Atan2 &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Atan2 & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Atan2);
 
   inline TOutput
   operator()(const TInput1 & A, const TInput2 & B) const
@@ -81,7 +77,7 @@ public:
  * \endsphinx
  */
 template <typename TInputImage1, typename TInputImage2, typename TOutputImage>
-class Atan2ImageFilter : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
+class ITK_TEMPLATE_EXPORT Atan2ImageFilter : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(Atan2ImageFilter);

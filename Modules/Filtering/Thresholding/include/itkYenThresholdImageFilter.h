@@ -48,7 +48,8 @@ namespace itk
  */
 
 template <typename TInputImage, typename TOutputImage, typename TMaskImage = TOutputImage>
-class YenThresholdImageFilter : public HistogramThresholdImageFilter<TInputImage, TOutputImage, TMaskImage>
+class ITK_TEMPLATE_EXPORT YenThresholdImageFilter
+  : public HistogramThresholdImageFilter<TInputImage, TOutputImage, TMaskImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(YenThresholdImageFilter);
@@ -88,7 +89,7 @@ public:
   using MaskIndexType = typename MaskImageType::IndexType;
   using MaskImageRegionType = typename MaskImageType::RegionType;
 
-  using HistogramType = typename Superclass::HistogramType;
+  using typename Superclass::HistogramType;
   using CalculatorType = YenThresholdCalculator<HistogramType, InputPixelType>;
 
   /** Image related type alias. */

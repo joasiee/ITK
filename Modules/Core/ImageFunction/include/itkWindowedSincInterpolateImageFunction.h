@@ -262,7 +262,7 @@ template <typename TInputImage,
           typename TWindowFunction = Function::HammingWindowFunction<VRadius>,
           class TBoundaryCondition = ZeroFluxNeumannBoundaryCondition<TInputImage, TInputImage>,
           class TCoordRep = double>
-class WindowedSincInterpolateImageFunction : public InterpolateImageFunction<TInputImage, TCoordRep>
+class ITK_TEMPLATE_EXPORT WindowedSincInterpolateImageFunction : public InterpolateImageFunction<TInputImage, TCoordRep>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(WindowedSincInterpolateImageFunction);
@@ -281,29 +281,29 @@ public:
   itkNewMacro(Self);
 
   /** OutputType type alias support */
-  using OutputType = typename Superclass::OutputType;
+  using typename Superclass::OutputType;
 
   /** InputImageType type alias support */
-  using InputImageType = typename Superclass::InputImageType;
+  using typename Superclass::InputImageType;
 
   /** RealType type alias support */
-  using RealType = typename Superclass::RealType;
+  using typename Superclass::RealType;
 
   /** Dimension underlying input image. */
   static constexpr unsigned int ImageDimension = Superclass::ImageDimension;
 
   /** Index type alias support */
-  using IndexType = typename Superclass::IndexType;
-  using IndexValueType = typename Superclass::IndexValueType;
+  using typename Superclass::IndexType;
+  using typename Superclass::IndexValueType;
 
   /** Size type alias support */
-  using SizeType = typename Superclass::SizeType;
+  using typename Superclass::SizeType;
 
   /** Image type definition */
   using ImageType = TInputImage;
 
   /** ContinuousIndex type alias support */
-  using ContinuousIndexType = typename Superclass::ContinuousIndexType;
+  using typename Superclass::ContinuousIndexType;
 
   void
   SetInputImage(const ImageType * image) override;

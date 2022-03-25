@@ -109,6 +109,9 @@ public:
   using Self = GaussianDerivativeOperator;
   using Superclass = NeighborhoodOperator<TPixel, VDimension, TAllocator>;
 
+  /** Run-time type information (and related methods). */
+  itkTypeMacro(GaussianDerivativeOperator, NeighborhoodOperator);
+
   using InterpolationModeEnum = GaussianDerivativeOperatorEnums::InterpolationMode;
 
   /** Neighborhood operator types. */
@@ -188,6 +191,7 @@ public:
   {
     m_MaximumKernelWidth = n;
   }
+  itkGetConstMacro(MaximumKernelWidth, unsigned int);
 
   /** Sets/Get the order of the derivative. */
   void
@@ -201,12 +205,12 @@ public:
     return m_Order;
   }
 
-  /** Prints member variables */
   void
-  PrintSelf(std::ostream & os, Indent i) const override;
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
 protected:
-  using CoefficientVector = typename Superclass::CoefficientVector;
+  /** Type alias support for coefficient vector type.*/
+  using typename Superclass::CoefficientVector;
 
   /** Returns the value of the modified Bessel function I0(x) at a point x >= 0.
    */
@@ -235,17 +239,10 @@ protected:
   }
 
 private:
-  /* methods for generations of the coefficients for a gaussian
-   * operator of 0-order respecting the remaining parameters */
+  /* Methods for generations of the coefficients for a Gaussian
+   * operator of 0-order respecting the remaining parameters. */
   CoefficientVector
   GenerateGaussianCoefficients() const;
-
-  /** For compatibility with itkWarningMacro */
-  const char *
-  GetNameOfClass() const override
-  {
-    return "itkGaussianDerivativeOperator";
-  }
 
   /** Normalize derivatives across scale space */
   bool m_NormalizeAcrossScale{ true };

@@ -34,10 +34,10 @@ public:
   using Pointer = itk::SmartPointer<Self>;
   using ConstPointer = itk::SmartPointer<const Self>;
 
-  using MeasureType = typename Superclass::MeasureType;
-  using DerivativeType = typename Superclass::DerivativeType;
-  using ParametersType = typename Superclass::ParametersType;
-  using ParametersValueType = typename Superclass::ParametersValueType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::ParametersValueType;
 
   itkTypeMacro(ObjectToObjectMetricTestMetric, ObjectToObjectMetricBase);
 
@@ -119,7 +119,7 @@ itkObjectToObjectMetricBaseTest(int, char *[])
   using ImageType = itk::Image<unsigned char, 3>;
   using ObjectMetricType = ObjectToObjectMetricTestMetric<ImageType, ImageType>;
 
-  ObjectMetricType::Pointer objectMetric = ObjectMetricType::New();
+  auto objectMetric = ObjectMetricType::New();
 
   objectMetric->Print(std::cout);
 

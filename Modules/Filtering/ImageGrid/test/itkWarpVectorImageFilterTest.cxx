@@ -33,7 +33,7 @@ public:
   ImagePattern()
   {
     m_Offset = 0.0;
-    for (int j = 0; j < VDimension; j++)
+    for (int j = 0; j < VDimension; ++j)
     {
       m_Coeff[j] = 0.0;
     }
@@ -43,7 +43,7 @@ public:
   Evaluate(const IndexType & index, const SizeType & size, const SizeType & clampSize, const float & padValue)
   {
     double accum = m_Offset;
-    for (int j = 0; j < VDimension; j++)
+    for (int j = 0; j < VDimension; ++j)
     {
       if (static_cast<unsigned int>(index[j]) < size[j])
       {
@@ -109,7 +109,7 @@ itkWarpVectorImageFilterTest(int, char *[])
   ImageType::SizeType   size = { { 64, 64 } };
   region.SetSize(size);
 
-  ImageType::Pointer input = ImageType::New();
+  auto input = ImageType::New();
   input->SetLargestPossibleRegion(region);
   input->SetBufferedRegion(region);
   input->Allocate();
@@ -118,7 +118,7 @@ itkWarpVectorImageFilterTest(int, char *[])
   unsigned int                 j;
   ImagePattern<ImageDimension> pattern;
   pattern.m_Offset = 64;
-  for (j = 0; j < ImageDimension; j++)
+  for (j = 0; j < ImageDimension; ++j)
   {
     pattern.m_Coeff[j] = 1.0;
   }
@@ -140,13 +140,13 @@ itkWarpVectorImageFilterTest(int, char *[])
 
   ImageType::RegionType fieldRegion;
   ImageType::SizeType   fieldSize;
-  for (j = 0; j < ImageDimension; j++)
+  for (j = 0; j < ImageDimension; ++j)
   {
     fieldSize[j] = size[j] * factors[j] + 5;
   }
   fieldRegion.SetSize(fieldSize);
 
-  FieldType::Pointer field = FieldType::New();
+  auto field = FieldType::New();
   field->SetLargestPossibleRegion(fieldRegion);
   field->SetBufferedRegion(fieldRegion);
   field->Allocate();
@@ -157,7 +157,7 @@ itkWarpVectorImageFilterTest(int, char *[])
   {
     IndexType  index = fieldIter.GetIndex();
     VectorType displacement;
-    for (j = 0; j < ImageDimension; j++)
+    for (j = 0; j < ImageDimension; ++j)
     {
       displacement[j] = (float)index[j] * ((1.0 / factors[j]) - 1.0);
     }
@@ -169,7 +169,7 @@ itkWarpVectorImageFilterTest(int, char *[])
   std::cout << "Run WarpVectorImageFilter in standalone mode with progress.";
   std::cout << std::endl;
   using WarperType = itk::WarpVectorImageFilter<ImageType, ImageType, FieldType>;
-  WarperType::Pointer warper = WarperType::New();
+  auto warper = WarperType::New();
 
   warper->SetInput(input);
   warper->SetDisplacementField(field);
@@ -216,7 +216,7 @@ itkWarpVectorImageFilterTest(int, char *[])
   ImageType::SizeType decrementForScaling;
   ImageType::SizeType clampSizeDecrement;
   ImageType::SizeType clampSize;
-  for (j = 0; j < ImageDimension; j++)
+  for (j = 0; j < ImageDimension; ++j)
   {
     validSize[j] = size[j] * factors[j];
 
@@ -249,7 +249,7 @@ itkWarpVectorImageFilterTest(int, char *[])
   validRegion.SetSize(validSize);
 
   // adjust the pattern coefficients to match
-  for (j = 0; j < ImageDimension; j++)
+  for (j = 0; j < ImageDimension; ++j)
   {
     pattern.m_Coeff[j] /= (double)factors[j];
   }
@@ -264,7 +264,7 @@ itkWarpVectorImageFilterTest(int, char *[])
     {
 
       PixelType trueValue(pattern.Evaluate(outIter.GetIndex(), validSize, clampSize, padValue));
-      for (unsigned int k = 0; k < ImageDimension; k++)
+      for (unsigned int k = 0; k < ImageDimension; ++k)
       {
         if (itk::Math::abs(trueValue[k] - value[k]) > 1e-4)
         {
@@ -296,18 +296,18 @@ itkWarpVectorImageFilterTest(int, char *[])
   std::cout << std::endl;
 
   using VectorCasterType = itk::CastImageFilter<FieldType, FieldType>;
-  VectorCasterType::Pointer vcaster = VectorCasterType::New();
+  auto vcaster = VectorCasterType::New();
 
   vcaster->SetInput(warper->GetDisplacementField());
 
-  WarperType::Pointer warper2 = WarperType::New();
+  auto warper2 = WarperType::New();
 
   warper2->SetInput(warper->GetInput());
   warper2->SetDisplacementField(vcaster->GetOutput());
   warper2->SetEdgePaddingValue(warper->GetEdgePaddingValue());
 
   using StreamerType = itk::StreamingImageFilter<ImageType, ImageType>;
-  StreamerType::Pointer streamer = StreamerType::New();
+  auto streamer = StreamerType::New();
   streamer->SetInput(warper2->GetOutput());
   streamer->SetNumberOfStreamDivisions(3);
   streamer->Update();

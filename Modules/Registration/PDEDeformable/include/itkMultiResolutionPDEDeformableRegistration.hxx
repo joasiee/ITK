@@ -48,7 +48,7 @@ MultiResolutionPDEDeformableRegistration<TFixedImage,
   // Primary input is optional in this filter
   this->RemoveRequiredInputName("Primary");
 
-  typename DefaultRegistrationType::Pointer registrator = DefaultRegistrationType::New();
+  auto registrator = DefaultRegistrationType::New();
   m_RegistrationFilter = registrator.GetPointer();
 
   m_MovingImagePyramid = MovingImagePyramidType::New();
@@ -62,7 +62,7 @@ MultiResolutionPDEDeformableRegistration<TFixedImage,
   m_MovingImagePyramid->SetNumberOfLevels(m_NumberOfLevels);
 
   unsigned int ilevel;
-  for (ilevel = 0; ilevel < m_NumberOfLevels; ilevel++)
+  for (ilevel = 0; ilevel < m_NumberOfLevels; ++ilevel)
   {
     m_NumberOfIterations[ilevel] = 10;
   }
@@ -266,7 +266,7 @@ MultiResolutionPDEDeformableRegistration<TFixedImage,
 
   os << indent << "NumberOfIterations: [";
   unsigned int ilevel;
-  for (ilevel = 0; ilevel < m_NumberOfLevels - 1; ilevel++)
+  for (ilevel = 0; ilevel < m_NumberOfLevels - 1; ++ilevel)
   {
     os << m_NumberOfIterations[ilevel] << ", ";
   }
@@ -380,7 +380,7 @@ MultiResolutionPDEDeformableRegistration<TFixedImage,
     tempField = inputPtr;
 
     using GaussianFilterType = RecursiveGaussianImageFilter<DisplacementFieldType, DisplacementFieldType>;
-    typename GaussianFilterType::Pointer smoother = GaussianFilterType::New();
+    auto smoother = GaussianFilterType::New();
 
     for (unsigned int dim = 0; dim < DisplacementFieldType::ImageDimension; ++dim)
     {
@@ -453,7 +453,7 @@ MultiResolutionPDEDeformableRegistration<TFixedImage,
 
     // cache shrink factors for computing the next expand factors.
     lastShrinkFactorsAllOnes = true;
-    for (unsigned int idim = 0; idim < ImageDimension; idim++)
+    for (unsigned int idim = 0; idim < ImageDimension; ++idim)
     {
       if (m_FixedImagePyramid->GetSchedule()[fixedLevel][idim] > 1)
       {

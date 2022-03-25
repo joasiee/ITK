@@ -35,15 +35,15 @@ Clamp<TInput, TOutput>::Clamp()
 {}
 
 template <typename TInput, typename TOutput>
-typename Clamp<TInput, TOutput>::OutputType
-Clamp<TInput, TOutput>::GetLowerBound() const
+auto
+Clamp<TInput, TOutput>::GetLowerBound() const -> OutputType
 {
   return m_LowerBound;
 }
 
 template <typename TInput, typename TOutput>
-typename Clamp<TInput, TOutput>::OutputType
-Clamp<TInput, TOutput>::GetUpperBound() const
+auto
+Clamp<TInput, TOutput>::GetUpperBound() const -> OutputType
 {
   return m_UpperBound;
 }
@@ -63,30 +63,23 @@ Clamp<TInput, TOutput>::SetBounds(const OutputType lowerBound, const OutputType 
 
 template <typename TInput, typename TOutput>
 bool
-Clamp<TInput, TOutput>::operator!=(const Self & other) const
-{
-  return m_UpperBound != other.m_UpperBound || m_LowerBound != other.m_LowerBound;
-}
-
-template <typename TInput, typename TOutput>
-bool
 Clamp<TInput, TOutput>::operator==(const Self & other) const
 {
-  return !(*this != other);
+  return m_UpperBound == other.m_UpperBound && m_LowerBound == other.m_LowerBound;
 }
 
 } // end namespace Functor
 
 template <typename TInputImage, typename TOutputImage>
-typename ClampImageFilter<TInputImage, TOutputImage>::OutputPixelType
-ClampImageFilter<TInputImage, TOutputImage>::GetLowerBound() const
+auto
+ClampImageFilter<TInputImage, TOutputImage>::GetLowerBound() const -> OutputPixelType
 {
   return this->GetFunctor().GetLowerBound();
 }
 
 template <typename TInputImage, typename TOutputImage>
-typename ClampImageFilter<TInputImage, TOutputImage>::OutputPixelType
-ClampImageFilter<TInputImage, TOutputImage>::GetUpperBound() const
+auto
+ClampImageFilter<TInputImage, TOutputImage>::GetUpperBound() const -> OutputPixelType
 {
   return this->GetFunctor().GetUpperBound();
 }

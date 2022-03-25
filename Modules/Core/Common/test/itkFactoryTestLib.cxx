@@ -40,8 +40,8 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(TestImportImageContainer, ImportImageContainer);
 
-  using ElementIdentifier = typename Superclass::ElementIdentifier;
-  using Element = typename Superclass::Element;
+  using typename Superclass::ElementIdentifier;
+  using typename Superclass::Element;
 
   using Allocator = std::allocator<TElement>;
 
@@ -166,16 +166,16 @@ public:
   static void
   RegisterOneFactory()
   {
-    ImportImageContainerFactory::Pointer factory = ImportImageContainerFactory::New();
+    auto factory = ImportImageContainerFactory::New();
     itk::ObjectFactoryBase::RegisterFactory(factory);
   }
 
 private:
-#define OverrideTypeMacro(t)                                                                                           \
-  this->RegisterOverride(typeid(itk::ImportImageContainer<unsigned long, t>).name(),                                   \
-                         typeid(TestImportImageContainer<unsigned long, t>).name(),                                    \
-                         "Test ImportImageContainerOverride",                                                          \
-                         true,                                                                                         \
+#define OverrideTypeMacro(t)                                                         \
+  this->RegisterOverride(typeid(itk::ImportImageContainer<unsigned long, t>).name(), \
+                         typeid(TestImportImageContainer<unsigned long, t>).name(),  \
+                         "Test ImportImageContainerOverride",                        \
+                         true,                                                       \
                          itk::CreateObjectFunction<TestImportImageContainer<unsigned long, t>>::New())
 
 

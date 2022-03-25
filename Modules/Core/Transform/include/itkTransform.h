@@ -18,6 +18,7 @@
 #ifndef itkTransform_h
 #define itkTransform_h
 
+#include <type_traits> // For std::enable_if
 #include "itkTransformBase.h"
 #include "itkVector.h"
 #include "itkImageRegion.h"
@@ -116,10 +117,10 @@ public:
   }
 
   /** Type of the input parameters. */
-  using FixedParametersType = typename Superclass::FixedParametersType;
-  using FixedParametersValueType = typename Superclass::FixedParametersValueType;
-  using ParametersType = typename Superclass::ParametersType;
-  using ParametersValueType = typename Superclass::ParametersValueType;
+  using typename Superclass::FixedParametersType;
+  using typename Superclass::FixedParametersValueType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::ParametersValueType;
   using DerivativeType = Array<ParametersValueType>;
 
   /** Type of the scalar representing coordinate and vector elements. */
@@ -171,7 +172,7 @@ public:
   using InputDirectionMatrix = Matrix<double, Self::InputSpaceDimension, Self::InputSpaceDimension>;
   using DirectionChangeMatrix = Matrix<double, Self::OutputSpaceDimension, Self::InputSpaceDimension>;
 
-  using NumberOfParametersType = typename Superclass::NumberOfParametersType;
+  using typename Superclass::NumberOfParametersType;
 
   /**  Method to transform a point.
    * \warning This method must be thread-safe. See, e.g., its use
@@ -451,7 +452,7 @@ public:
   std::string
   GetTransformTypeAsString() const override;
 
-  using TransformCategoryEnum = typename Superclass::TransformCategoryEnum;
+  using typename Superclass::TransformCategoryEnum;
 
   /** Indicates the category transform.
    *  e.g. an affine transform, or a local one, e.g. a deformation field.
@@ -543,6 +544,25 @@ public:
   itkLegacyMacro(virtual void ComputeInverseJacobianWithRespectToPosition(const InputPointType & x,
                                                                           JacobianType &         jacobian) const);
 
+  /** Apply this transform to an image without resampling.
+   *
+   * Updates image metadata (origin, spacing, direction cosines matrix) in place.
+   *
+   * Only available when input and output space are of the same dimension.
+   * Only works properly for linear transforms.
+   *
+   * The image parameter may be either a SmartPointer or a raw pointer.
+   * */
+  template <typename TImage>
+  std::enable_if_t<TImage::ImageDimension == NInputDimensions && TImage::ImageDimension == NOutputDimensions, void>
+  ApplyToImageMetadata(TImage * image) const;
+  template <typename TImage>
+  std::enable_if_t<TImage::ImageDimension == NInputDimensions && TImage::ImageDimension == NOutputDimensions, void>
+  ApplyToImageMetadata(SmartPointer<TImage> image) const
+  {
+    this->ApplyToImageMetadata(image.GetPointer()); // Delegate to the raw pointer signature
+  }
+
 protected:
   /**
    * Clone the current transform.
@@ -570,8 +590,6 @@ protected:
   OutputDiffusionTensor3DType
   PreservationOfPrincipalDirectionDiffusionTensor3DReorientation(const InputDiffusionTensor3DType &,
                                                                  const InverseJacobianPositionType &) const;
-
-  mutable DirectionChangeMatrix m_DirectionChange;
 
 private:
   template <typename TType>

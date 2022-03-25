@@ -119,7 +119,7 @@ ImageIORegion::GetRegionDimension() const
 {
   unsigned int dim = 0;
 
-  for (unsigned int i = 0; i < m_ImageDimension; i++)
+  for (unsigned int i = 0; i < m_ImageDimension; ++i)
   {
     if (m_Size[i] > 1)
     {
@@ -176,7 +176,7 @@ ImageIORegion::IsInside(const IndexType & index) const
   {
     return false;
   }
-  for (unsigned int i = 0; i < m_ImageDimension; i++)
+  for (unsigned int i = 0; i < m_ImageDimension; ++i)
   {
     if (index[i] < m_Index[i])
     {
@@ -202,7 +202,7 @@ ImageIORegion::IsInside(const Self & region) const
   }
   IndexType endCorner(region.m_ImageDimension);
   SizeType  size = region.GetSize();
-  for (unsigned int i = 0; i < m_ImageDimension; i++)
+  for (unsigned int i = 0; i < m_ImageDimension; ++i)
   {
     endCorner[i] = beginCorner[i] + size[i] - 1;
   }
@@ -232,13 +232,6 @@ bool
 ImageIORegion::operator==(const Self & region) const
 {
   return (m_Index == region.m_Index) && (m_Size == region.m_Size) && (m_ImageDimension == region.m_ImageDimension);
-}
-
-/** Compare two regions. */
-bool
-ImageIORegion::operator!=(const Self & region) const
-{
-  return !(*this == region);
 }
 
 void

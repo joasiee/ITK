@@ -825,7 +825,7 @@ def {snakeCase}(*args{args_typehint}, {kwargs_typehints}**kwargs){return_typehin
     import itk
 
     kwarg_typehints = {{ {kwarg_dict} }}
-    specified_kwarg_typehints = {{ k:v for (k,v) in kwarg_typehints.items() if kwarg_typehints[k] != ... }}
+    specified_kwarg_typehints = {{ k:v for (k,v) in kwarg_typehints.items() if kwarg_typehints[k] is not ... }}
     kwargs.update(specified_kwarg_typehints)
 
     instance = itk.{processObject}.New(*args, **kwargs)
@@ -1022,8 +1022,8 @@ def {snakeCase}_init_docstring():
 import collections
 
 from sys import version_info as _version_info
-if _version_info < (3, 6, 0):
-    raise RuntimeError("Python 3.6 or later required")
+if _version_info < (3, 7, 0):
+    raise RuntimeError("Python 3.7 or later required")
 %}
 """
                 )

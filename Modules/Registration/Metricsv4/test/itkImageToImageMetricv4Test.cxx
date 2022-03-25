@@ -51,19 +51,19 @@ public:
 
   itkNewMacro(Self);
 
-  using DomainType = typename Superclass::DomainType;
-  using AssociateType = typename Superclass::AssociateType;
+  using typename Superclass::DomainType;
+  using typename Superclass::AssociateType;
 
-  using VirtualPointType = typename Superclass::VirtualPointType;
-  using VirtualIndexType = typename Superclass::VirtualIndexType;
-  using FixedImagePointType = typename Superclass::FixedImagePointType;
-  using FixedImagePixelType = typename Superclass::FixedImagePixelType;
-  using FixedImageGradientType = typename Superclass::FixedImageGradientType;
-  using MovingImagePointType = typename Superclass::MovingImagePointType;
-  using MovingImagePixelType = typename Superclass::MovingImagePixelType;
-  using MovingImageGradientType = typename Superclass::MovingImageGradientType;
-  using MeasureType = typename Superclass::MeasureType;
-  using DerivativeType = typename Superclass::DerivativeType;
+  using typename Superclass::VirtualPointType;
+  using typename Superclass::VirtualIndexType;
+  using typename Superclass::FixedImagePointType;
+  using typename Superclass::FixedImagePixelType;
+  using typename Superclass::FixedImageGradientType;
+  using typename Superclass::MovingImagePointType;
+  using typename Superclass::MovingImagePixelType;
+  using typename Superclass::MovingImageGradientType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
 
 protected:
   TestImageToImageGetValueAndDerivativeThreader() = default;
@@ -88,10 +88,10 @@ protected:
     // Only do derivative calculations when it is requested in the metric.
     if (this->GetComputeDerivative())
     {
-      for (unsigned int par = 0; par < this->m_Associate->GetNumberOfLocalParameters(); par++)
+      for (unsigned int par = 0; par < this->m_Associate->GetNumberOfLocalParameters(); ++par)
       {
         double sum = 0.0;
-        for (unsigned int dim = 0; dim < TImageToImageMetricv4::MovingImageDimension; dim++)
+        for (unsigned int dim = 0; dim < TImageToImageMetricv4::MovingImageDimension; ++dim)
         {
           sum += mappedMovingImageGradient[dim] + mappedFixedImageGradient[dim];
         }
@@ -123,18 +123,18 @@ public:
   itkTypeMacro(ImageToImageMetricv4TestMetric, ImageToImageMetricv4);
 
   /** superclass types */
-  using MeasureType = typename Superclass::MeasureType;
-  using DerivativeType = typename Superclass::DerivativeType;
-  using VirtualPointType = typename Superclass::VirtualPointType;
-  using FixedImagePointType = typename Superclass::FixedImagePointType;
-  using FixedImagePixelType = typename Superclass::FixedImagePixelType;
-  using FixedImageGradientType = typename Superclass::FixedImageGradientType;
-  using MovingImagePointType = typename Superclass::MovingImagePointType;
-  using MovingImagePixelType = typename Superclass::MovingImagePixelType;
-  using MovingImageGradientType = typename Superclass::MovingImageGradientType;
-  using VirtualImageType = typename Superclass::VirtualImageType;
-  using VirtualIndexType = typename Superclass::VirtualIndexType;
-  using VirtualPointSetType = typename Superclass::VirtualPointSetType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::VirtualPointType;
+  using typename Superclass::FixedImagePointType;
+  using typename Superclass::FixedImagePixelType;
+  using typename Superclass::FixedImageGradientType;
+  using typename Superclass::MovingImagePointType;
+  using typename Superclass::MovingImagePixelType;
+  using typename Superclass::MovingImageGradientType;
+  using typename Superclass::VirtualImageType;
+  using typename Superclass::VirtualIndexType;
+  using typename Superclass::VirtualPointSetType;
 
   static constexpr typename TVirtualImage::ImageDimensionType VirtualImageDimension = TVirtualImage::ImageDimension;
   static constexpr typename TMovingImage::ImageDimensionType  MovingImageDimension = TMovingImage::ImageDimension;
@@ -170,7 +170,7 @@ bool
 ImageToImageMetricv4TestTestArray(const TVector & v1, const TVector & v2)
 {
   bool pass = true;
-  for (unsigned int i = 0; i < v1.Size(); i++)
+  for (unsigned int i = 0; i < v1.Size(); ++i)
   {
     const double epsilon = 1e-10;
     if (std::fabs(v1[i] - v2[i]) > epsilon)
@@ -265,10 +265,10 @@ ImageToImageMetricv4TestComputeIdentityTruthValues(const ImageToImageMetricv4Tes
       movingImageDerivative = movingGradientCalculator->Evaluate(point);
     }
 
-    for (unsigned int par = 0; par < metric->GetNumberOfLocalParameters(); par++)
+    for (unsigned int par = 0; par < metric->GetNumberOfLocalParameters(); ++par)
     {
       double sum = 0.0;
-      for (unsigned int dim = 0; dim < ImageToImageMetricv4TestImageDimensionality; dim++)
+      for (unsigned int dim = 0; dim < ImageToImageMetricv4TestImageDimensionality; ++dim)
       {
         sum += movingImageDerivative[dim] + fixedImageDerivative[dim];
       }
@@ -368,7 +368,7 @@ ImageToImageMetricv4TestRunSingleTest(const ImageToImageMetricv4TestMetricPointe
   }
 
   // Check number of threads and valid points
-  std::cout << "--Number of threads used: " << metric->GetNumberOfWorkUnitsUsed() << std::endl;
+  std::cout << "--Number of work units used: " << metric->GetNumberOfWorkUnitsUsed() << std::endl;
   if (metric->GetNumberOfValidPoints() != (expectedNumberOfPoints))
   {
     std::cerr << "Expected number of valid points to be " << expectedNumberOfPoints << " but instead got "
@@ -427,14 +427,14 @@ itkImageToImageMetricv4Test(int, char ** const)
   direction.SetIdentity();
 
   // Create simple test images.
-  ImageToImageMetricv4TestImageType::Pointer fixedImage = ImageToImageMetricv4TestImageType::New();
+  auto fixedImage = ImageToImageMetricv4TestImageType::New();
   fixedImage->SetRegions(region);
   fixedImage->SetSpacing(spacing);
   fixedImage->SetOrigin(origin);
   fixedImage->SetDirection(direction);
   fixedImage->Allocate();
 
-  ImageToImageMetricv4TestImageType::Pointer movingImage = ImageToImageMetricv4TestImageType::New();
+  auto movingImage = ImageToImageMetricv4TestImageType::New();
   movingImage->SetRegions(region);
   movingImage->SetSpacing(spacing);
   movingImage->SetOrigin(origin);
@@ -464,8 +464,8 @@ itkImageToImageMetricv4Test(int, char ** const)
   // Transforms
   using FixedTransformType = itk::TranslationTransform<double, ImageToImageMetricv4TestImageDimensionality>;
   using MovingTransformType = itk::TranslationTransform<double, ImageToImageMetricv4TestImageDimensionality>;
-  FixedTransformType::Pointer  fixedTransform = FixedTransformType::New();
-  MovingTransformType::Pointer movingTransform = MovingTransformType::New();
+  auto fixedTransform = FixedTransformType::New();
+  auto movingTransform = MovingTransformType::New();
   fixedTransform->SetIdentity();
   movingTransform->SetIdentity();
 
@@ -490,7 +490,7 @@ itkImageToImageMetricv4Test(int, char ** const)
   // Run through all the permutations image gradient calculation method.
   ImageToImageMetricv4TestMetricType::MeasureType    truthValue;
   ImageToImageMetricv4TestMetricType::DerivativeType truthDerivative;
-  for (itk::ThreadIdType numberOfThreads = 1; numberOfThreads < 6; numberOfThreads++)
+  for (itk::ThreadIdType numberOfThreads = 1; numberOfThreads < 6; ++numberOfThreads)
   {
     metric->SetMaximumNumberOfWorkUnits(numberOfThreads);
     for (signed char useMovingFilter = 1; useMovingFilter >= 0; --useMovingFilter)
@@ -552,9 +552,9 @@ itkImageToImageMetricv4Test(int, char ** const)
   // Create a displacement field transform
   using DisplacementTransformType =
     itk::DisplacementFieldTransform<double, ImageToImageMetricv4TestImageDimensionality>;
-  DisplacementTransformType::Pointer displacementTransform = DisplacementTransformType::New();
+  auto displacementTransform = DisplacementTransformType::New();
   using FieldType = DisplacementTransformType::DisplacementFieldType;
-  FieldType::Pointer field = FieldType::New(); // This is based on itk::Image
+  auto field = FieldType::New(); // This is based on itk::Image
 
   FieldType::SizeType   defsize;
   FieldType::IndexType  start;
@@ -620,9 +620,9 @@ itkImageToImageMetricv4Test(int, char ** const)
 
   std::cout << "Creating point set..." << std::endl;
   DimensionSizeType ind = 0;
-  for (DimensionSizeType i = 0; i < imageSize; i++)
+  for (DimensionSizeType i = 0; i < imageSize; ++i)
   {
-    for (DimensionSizeType j = 0; j < imageSize; j++)
+    for (DimensionSizeType j = 0; j < imageSize; ++j)
     {
       testPointCoords[0] = i;
       testPointCoords[1] = j;

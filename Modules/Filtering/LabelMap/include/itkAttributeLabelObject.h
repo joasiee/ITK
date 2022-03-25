@@ -70,7 +70,7 @@ public:
  * \ingroup ITKLabelMap
  */
 template <typename TLabel, unsigned int VImageDimension, typename TAttributeValue>
-class AttributeLabelObject : public LabelObject<TLabel, VImageDimension>
+class ITK_TEMPLATE_EXPORT AttributeLabelObject : public LabelObject<TLabel, VImageDimension>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(AttributeLabelObject);
@@ -93,13 +93,13 @@ public:
 
   static constexpr unsigned int ImageDimension = VImageDimension;
 
-  using IndexType = typename Superclass::IndexType;
+  using typename Superclass::IndexType;
 
   using LabelType = TLabel;
 
-  using LineType = typename Superclass::LineType;
+  using typename Superclass::LineType;
 
-  using LengthType = typename Superclass::LengthType;
+  using typename Superclass::LengthType;
 
   using AttributeValueType = TAttributeValue;
 
@@ -141,10 +141,7 @@ public:
   }
 
 protected:
-  AttributeLabelObject()
-  {
-    // how to initialize the attribute ?
-  }
+  AttributeLabelObject() = default;
 
 
   void
@@ -156,7 +153,7 @@ protected:
   }
 
 private:
-  AttributeValueType m_Attribute;
+  AttributeValueType m_Attribute{};
 };
 
 } // end namespace itk

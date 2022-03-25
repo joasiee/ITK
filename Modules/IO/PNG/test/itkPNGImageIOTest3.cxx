@@ -28,7 +28,9 @@ itkPNGImageIOTest3(int argc, char * argv[])
 {
   if (argc < 2)
   {
-    std::cerr << "Usage: " << argv[0] << " input" << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cerr << " input" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -39,7 +41,7 @@ itkPNGImageIOTest3(int argc, char * argv[])
 
   // Read the input image
   itk::PNGImageIO::Pointer io = itk::PNGImageIO::New();
-  ReaderType::Pointer      reader = ReaderType::New();
+  auto                     reader = ReaderType::New();
   reader->SetFileName(argv[1]);
   reader->SetImageIO(io);
 

@@ -303,7 +303,7 @@ MultiGradientOptimizerv4RunTest(itk::MultiGradientOptimizerv4::Pointer & itkOpti
   ParametersType trueParameters(2);
   trueParameters[0] = 1.5;
   trueParameters[1] = -1.5;
-  for (itk::SizeValueType j = 0; j < 2; j++)
+  for (itk::SizeValueType j = 0; j < 2; ++j)
   {
     if (fabs(finalPosition[j] - trueParameters[j]) > 0.01)
     {
@@ -327,12 +327,12 @@ itkMultiGradientOptimizerv4Test(int, char *[])
   using ParametersType = MultiGradientOptimizerv4TestMetric::ParametersType;
 
   // Declaration of a itkOptimizer
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
 
   // Declaration of the Metric
-  MultiGradientOptimizerv4TestMetric::Pointer  metric = MultiGradientOptimizerv4TestMetric::New();
-  MultiGradientOptimizerv4TestMetric2::Pointer metric2 = MultiGradientOptimizerv4TestMetric2::New();
-  constexpr unsigned int                       spaceDimension = 2;
+  auto                   metric = MultiGradientOptimizerv4TestMetric::New();
+  auto                   metric2 = MultiGradientOptimizerv4TestMetric2::New();
+  constexpr unsigned int spaceDimension = 2;
   itkOptimizer->SetMetric(metric);
   itkOptimizer->SetNumberOfIterations(50);
 

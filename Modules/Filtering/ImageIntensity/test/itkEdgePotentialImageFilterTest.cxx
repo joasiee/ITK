@@ -47,7 +47,7 @@ itkEdgePotentialImageFilterTest(int, char *[])
   using RegionType = itk::ImageRegion<ImageDimension>;
 
   // Create two images
-  InputImageType::Pointer inputImage = InputImageType::New();
+  auto inputImage = InputImageType::New();
 
   // Define their size, and start index
   SizeType size;
@@ -75,7 +75,7 @@ itkEdgePotentialImageFilterTest(int, char *[])
 
   // Initialize the content input image
   VectorType vec;
-  for (unsigned int j = 0; j < ImageDimension; j++)
+  for (unsigned int j = 0; j < ImageDimension; ++j)
   {
     vec[j] = 10.0;
   }
@@ -91,7 +91,7 @@ itkEdgePotentialImageFilterTest(int, char *[])
   // create an EdgePotentialImageFilter
   using FilterType = itk::EdgePotentialImageFilter<InputImageType, OutputImageType>;
 
-  FilterType::Pointer      filter = FilterType::New();
+  auto                     filter = FilterType::New();
   itk::SimpleFilterWatcher watcher(filter);
 
   // Connect the input images

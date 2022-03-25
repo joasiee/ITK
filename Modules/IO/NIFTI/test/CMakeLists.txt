@@ -73,6 +73,8 @@ itk_add_test(NAME itkNiftiVectorImageTest
       COMMAND ITKIONIFTITestDriver itkNiftiImageIOTest3 ${ITK_TEST_OUTPUT_DIR} )
 itk_add_test(NAME itkNiftiDimensionLimitsTest
       COMMAND ITKIONIFTITestDriver itkNiftiImageIOTest11 ${ITK_TEST_OUTPUT_DIR} SizeFailure.nii.gz )
+itk_add_test(NAME itkNiftiLargeRGBTest
+        COMMAND ITKIONIFTITestDriver itkNiftiImageIOTest12 ${ITK_TEST_OUTPUT_DIR} LargeRGBImage.nii.gz )
 itk_add_test(NAME itkNiftiReadAnalyzeTest
       COMMAND ITKIONIFTITestDriver itkNiftiReadAnalyzeTest ${ITK_TEST_OUTPUT_DIR} )
 itk_add_test(NAME itkExtractSliceSlopeInterceptUCHAR
@@ -84,5 +86,13 @@ itk_add_test(NAME itkNiftiReadWriteDirectionTest
         DATA{${ITK_DATA_ROOT}/Input/LPSLabels.nii.gz}
         DATA{${ITK_DATA_ROOT}/Input/LPSLabels_noqform.nii.gz}
         DATA{${ITK_DATA_ROOT}/Input/LPSLabels_nosform.nii.gz}
+        ${ITK_TEST_OUTPUT_DIR}
+        )
+
+itk_add_test(NAME itkNiftiReadWriteDirectionSmallVoxelTest
+        COMMAND ITKIONIFTITestDriver itkNiftiReadWriteDirectionTest
+        DATA{Input/SmallVoxels.nii.gz}
+        DATA{Input/SmallVoxels_noqform.nii.gz}
+        DATA{Input/SmallVoxels_nosform.nii.gz}
         ${ITK_TEST_OUTPUT_DIR}
         )

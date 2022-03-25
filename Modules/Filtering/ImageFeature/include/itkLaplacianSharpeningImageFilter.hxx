@@ -93,7 +93,7 @@ LaplacianSharpeningImageFilter<TInputImage, TOutputImage>::GenerateData()
   // Create the Laplacian operator
   LaplacianOperator<RealType, ImageDimension> oper;
   double                                      s[ImageDimension];
-  for (unsigned i = 0; i < ImageDimension; i++)
+  for (unsigned i = 0; i < ImageDimension; ++i)
   {
     if (this->GetInput()->GetSpacing()[i] == 0.0)
     {
@@ -112,11 +112,11 @@ LaplacianSharpeningImageFilter<TInputImage, TOutputImage>::GenerateData()
   using NOIF = NeighborhoodOperatorImageFilter<InputImageType, RealImageType>;
   ZeroFluxNeumannBoundaryCondition<InputImageType> nbc;
 
-  typename NOIF::Pointer filter = NOIF::New();
+  auto filter = NOIF::New();
   filter->OverrideBoundaryCondition(static_cast<typename NOIF::ImageBoundaryConditionPointerType>(&nbc));
 
   // Create a process accumulator for tracking the progress of this minipipeline
-  ProgressAccumulator::Pointer progress = ProgressAccumulator::New();
+  auto progress = ProgressAccumulator::New();
   progress->SetMiniPipelineFilter(this);
 
   // Register the filter with the with progress accumulator using

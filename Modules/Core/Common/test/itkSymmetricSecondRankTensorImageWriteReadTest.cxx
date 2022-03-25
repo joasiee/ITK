@@ -34,7 +34,7 @@ itkSymmetricSecondRankTensorImageWriteReadTest(int ac, char * av[])
   using TensorPixelType = itk::SymmetricSecondRankTensor<float, 2>;
   using TensorImageType = itk::Image<TensorPixelType, 2>;
 
-  TensorImageType::Pointer tensorImageInput = TensorImageType::New();
+  auto tensorImageInput = TensorImageType::New();
 
   TensorImageType::SizeType size;
   size.Fill(10);
@@ -62,7 +62,7 @@ itkSymmetricSecondRankTensorImageWriteReadTest(int ac, char * av[])
   while (!itr.IsAtEnd())
   {
     itr.Set(tensorPixelInput);
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
       tensorPixelInput[i]++;
     ++itr;
   }
@@ -86,7 +86,7 @@ itkSymmetricSecondRankTensorImageWriteReadTest(int ac, char * av[])
       tensorPixelInput = inIt.Get();
       const TensorPixelType tensorPixelOutput = outIt.Get();
 
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::abs(tensorPixelInput[i] - tensorPixelOutput[i]) > tolerance)
         {

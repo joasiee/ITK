@@ -23,6 +23,7 @@
 #include "itkImageFileWriter.h"
 
 #include "itkDirectFourierReconstructionImageToImageFilter.h"
+#include "itkTestingMacros.h"
 
 using InternalPixelType = double;
 using TestOutputPixelType = short int;
@@ -82,24 +83,27 @@ itkDirectFourierReconstructionImageToImageFilterTest(int argc, char * argv[])
 
   if (argc != 18)
   {
-    std::cerr << "Wrong number of input arguments" << std::endl;
-    std::cerr << "Usage : " << std::endl << "\t";
-    std::cerr << argv[0] << " input output r_dir z_dir alpha_dir nz ng fc nb alpha_range x y z sx sy sz sigma"
-              << std::endl;
-    return 1;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cerr << " input output r_dir z_dir alpha_dir nz ng fc nb alpha_range x y z sx sy sz sigma" << std::endl;
+    return EXIT_FAILURE;
   }
 
-  ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   reader->SetFileName(argv[1]);
 
 
-  SmootherType::Pointer smoother = SmootherType::New();
+  auto smoother = SmootherType::New();
   smoother->SetInput(reader->GetOutput());
   smoother->SetSigma(std::stod(argv[17]));
   smoother->SetDirection(std::stoi(argv[3]));
 
 
-  ReconstructionFilterType::Pointer reconstruct = ReconstructionFilterType::New();
+  auto reconstruct = ReconstructionFilterType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(reconstruct, DirectFourierReconstructionImageToImageFilter, ImageToImageFilter);
+
+
   if (std::stod(argv[17]) == 0)
   {
     reconstruct->SetInput(reader->GetOutput());
@@ -117,16 +121,16 @@ itkDirectFourierReconstructionImageToImageFilterTest(int argc, char * argv[])
   reconstruct->SetRadialSplineOrder(std::stoi(argv[9]));
   reconstruct->SetAlphaRange(std::stoi(argv[10]));
 
-  CommandProgressUpdate::Pointer observer = CommandProgressUpdate::New();
+  auto observer = CommandProgressUpdate::New();
   reconstruct->AddObserver(itk::ProgressEvent(), observer);
 
-  RescalerType::Pointer rescaler = RescalerType::New();
+  auto rescaler = RescalerType::New();
   rescaler->SetInput(reconstruct->GetOutput());
   rescaler->SetOutputMinimum(itk::NumericTraits<TestOutputPixelType>::min());
   rescaler->SetOutputMaximum(itk::NumericTraits<TestOutputPixelType>::max());
 
 
-  ROIFilterType::Pointer ROIFilter = ROIFilterType::New();
+  auto ROIFilter = ROIFilterType::New();
   ROIFilter->SetInput(rescaler->GetOutput());
 
   ROIFilterType::IndexType start;
@@ -147,27 +151,14 @@ itkDirectFourierReconstructionImageToImageFilterTest(int argc, char * argv[])
   ROIFilter->SetRegionOfInterest(requestedRegion);
 
 
-  WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   writer->SetFileName(argv[2]);
   writer->UseCompressionOn();
   writer->SetInput(ROIFilter->GetOutput());
 
+  ITK_TRY_EXPECT_NO_EXCEPTION(writer->Update());
 
-  try
-  {
-    writer->Update();
-  }
-  catch (const itk::ExceptionObject & err)
-  {
-    std::cerr << "An error occurred somewhere:" << std::endl;
-    std::cerr << err << std::endl;
-    return 2;
-  }
 
-  std::cout << "Done" << std::endl;
-
-  std::cout << reconstruct << std::endl;
-
-  return 0;
-
-} // main
+  std::cout << "Test finished." << std::endl;
+  return EXIT_SUCCESS;
+}

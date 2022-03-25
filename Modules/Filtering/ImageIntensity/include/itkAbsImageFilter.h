@@ -36,16 +36,12 @@ public:
   Abs() = default;
   ~Abs() = default;
   bool
-  operator!=(const Abs &) const
+  operator==(const Abs &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Abs & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Abs);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -69,7 +65,7 @@ public:
  * \endsphinx
  */
 template <typename TInputImage, typename TOutputImage>
-class AbsImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT AbsImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(AbsImageFilter);

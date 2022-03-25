@@ -50,10 +50,10 @@ namespace fem
  *
    \code
          using FEMObjectType = itk::fem::FEMObject<3>;
-         FEMObjectObjectType::Pointer fem = FEMObjectObjectType::New();
+         auto fem = FEMObjectObjectType::New();
          ...
          using FEMSolverType = itk::fem::Solver<3>;
-         FEMSolverType::Pointer solver = FEMSolverType::New();
+         auto solver = FEMSolverType::New();
 
          solver->SetInput( fem );
          solver->Update();
@@ -233,7 +233,7 @@ public:
     bb1.Fill(0.0);
 
     InterpolationGridPointType bb2;
-    for (unsigned int i = 0; i < FEMDimension; i++)
+    for (unsigned int i = 0; i < FEMDimension; ++i)
     {
       bb2[i] = size[i] - 1.0;
     }

@@ -100,7 +100,7 @@ public:
   {
     m_Radius.Fill(0);
     m_Size.Fill(0);
-    for (DimensionValueType i = 0; i < VDimension; i++)
+    for (DimensionValueType i = 0; i < VDimension; ++i)
     {
       m_StrideTable[i] = 0;
     }
@@ -130,12 +130,7 @@ public:
     return (m_Radius == other.m_Radius && m_Size == other.m_Size && m_DataBuffer == other.m_DataBuffer);
   }
 
-  /** Not Equal operator. */
-  bool
-  operator!=(const Self & other) const
-  {
-    return (m_Radius != other.m_Radius || m_Size != other.m_Size || m_DataBuffer != other.m_DataBuffer);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Self);
 
   /** Returns the radius of the neighborhood. */
   const SizeType
@@ -352,11 +347,5 @@ operator<<(std::ostream & os, const Neighborhood<TPixel, VDimension, TContainer>
 #ifndef ITK_MANUAL_INSTANTIATION
 #  include "itkNeighborhood.hxx"
 #endif
-
-/*
-#ifndef ITK_MANUAL_INSTANTIATION
-#include "itkNeighborhood.hxx"
-#endif
-*/
 
 #endif

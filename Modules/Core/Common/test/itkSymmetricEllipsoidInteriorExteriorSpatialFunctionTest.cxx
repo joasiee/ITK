@@ -33,7 +33,7 @@ itkSymmetricEllipsoidInteriorExteriorSpatialFunctionTest(int, char *[])
   using TSymEllipsoidFunctionVectorType = TSymEllipsoidFunctionType::InputType;
 
   // Create an ellipsoid spatial function for the source image
-  TSymEllipsoidFunctionType::Pointer spatialFunc = TSymEllipsoidFunctionType::New();
+  auto spatialFunc = TSymEllipsoidFunctionType::New();
 
   // Define function doitkSymmetricEllipsoidInteriorExteriorSpatialFunctionTest, which encapsulates ellipsoid.
   int xExtent = 50;
@@ -68,11 +68,11 @@ itkSymmetricEllipsoidInteriorExteriorSpatialFunctionTest(int, char *[])
   bool functionValue;            // Value of pixel at a given position
   int  interiorPixelCounter = 0; // Count pixels inside ellipsoid
 
-  for (int x = 0; x < xExtent; x++)
+  for (int x = 0; x < xExtent; ++x)
   {
-    for (int y = 0; y < yExtent; y++)
+    for (int y = 0; y < yExtent; ++y)
     {
-      for (int z = 0; z < zExtent; z++)
+      for (int z = 0; z < zExtent; ++z)
       {
         testPosition[0] = x;
         testPosition[1] = y;

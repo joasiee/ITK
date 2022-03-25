@@ -111,7 +111,8 @@ template <typename TMesh,
           typename TMeasure = double,
           typename TPriorityQueueWrapper =
             MinPriorityQueueElementWrapper<typename TMesh::QEType *, std::pair<bool, TMeasure>>>
-class NumberOfPointsCriterion : public QuadEdgeMeshDecimationCriterion<TMesh, TElement, TMeasure, TPriorityQueueWrapper>
+class ITK_TEMPLATE_EXPORT NumberOfPointsCriterion
+  : public QuadEdgeMeshDecimationCriterion<TMesh, TElement, TMeasure, TPriorityQueueWrapper>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(NumberOfPointsCriterion);
@@ -127,11 +128,11 @@ public:
   /** New macro for creation of through a Smart Pointer   */
   itkNewMacro(Self);
 
-  using MeshType = typename Superclass::MeshType;
-  using ElementType = typename Superclass::ElementType;
-  using MeasureType = typename Superclass::MeasureType;
-  using PriorityQueueWrapperType = typename Superclass::PriorityQueueWrapperType;
-  using PriorityType = typename Superclass::PriorityType;
+  using typename Superclass::MeshType;
+  using typename Superclass::ElementType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::PriorityQueueWrapperType;
+  using typename Superclass::PriorityType;
 
   inline bool
   is_satisfied(MeshType * iMesh, const ElementType & itkNotUsed(iElement), const MeasureType & itkNotUsed(iValue)) const
@@ -154,7 +155,8 @@ template <typename TMesh,
           typename TMeasure = double,
           typename TPriorityQueueWrapper =
             MinPriorityQueueElementWrapper<typename TMesh::QEType *, std::pair<bool, TMeasure>>>
-class NumberOfFacesCriterion : public QuadEdgeMeshDecimationCriterion<TMesh, TElement, TMeasure, TPriorityQueueWrapper>
+class ITK_TEMPLATE_EXPORT NumberOfFacesCriterion
+  : public QuadEdgeMeshDecimationCriterion<TMesh, TElement, TMeasure, TPriorityQueueWrapper>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(NumberOfFacesCriterion);
@@ -170,12 +172,12 @@ public:
   /** New macro for creation of through a Smart Pointer   */
   itkNewMacro(Self);
 
-  using MeshType = typename Superclass::MeshType;
+  using typename Superclass::MeshType;
   using CellsContainerConstIterator = typename MeshType::CellsContainerConstIterator;
-  using ElementType = typename Superclass::ElementType;
-  using MeasureType = typename Superclass::MeasureType;
-  using PriorityQueueWrapperType = typename Superclass::PriorityQueueWrapperType;
-  using PriorityType = typename Superclass::PriorityType;
+  using typename Superclass::ElementType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::PriorityQueueWrapperType;
+  using typename Superclass::PriorityType;
 
   bool
   is_satisfied(MeshType *          iMesh,
@@ -217,12 +219,12 @@ public:
   /** New macro for creation of through a Smart Pointer   */
   itkNewMacro(Self);
 
-  using MeshType = typename Superclass::MeshType;
+  using typename Superclass::MeshType;
   using CellsContainerConstIterator = typename MeshType::CellsContainerConstIterator;
-  using ElementType = typename Superclass::ElementType;
-  using MeasureType = typename Superclass::MeasureType;
-  using PriorityQueueWrapperType = typename Superclass::PriorityQueueWrapperType;
-  using PriorityType = typename Superclass::PriorityType;
+  using typename Superclass::ElementType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::PriorityQueueWrapperType;
+  using typename Superclass::PriorityType;
 
   bool
   is_satisfied(MeshType *          itkNotUsed(iMesh),
@@ -266,12 +268,12 @@ public:
   /** New macro for creation of through a Smart Pointer   */
   itkNewMacro(Self);
 
-  using MeshType = typename Superclass::MeshType;
+  using typename Superclass::MeshType;
   using CellsContainerConstIterator = typename MeshType::CellsContainerConstIterator;
-  using ElementType = typename Superclass::ElementType;
-  using MeasureType = typename Superclass::MeasureType;
-  using PriorityQueueWrapperType = typename Superclass::PriorityQueueWrapperType;
-  using PriorityType = typename Superclass::PriorityType;
+  using typename Superclass::ElementType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::PriorityQueueWrapperType;
+  using typename Superclass::PriorityType;
 
   inline bool
   is_satisfied(MeshType *, const ElementType &, const MeasureType & iValue) const

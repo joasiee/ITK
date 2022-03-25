@@ -41,7 +41,7 @@ GetTestImage(int d1, int d2, int d3, int d4)
   RegionND.SetSize(sizeND);
   RegionND.SetIndex(origND);
 
-  TestImageType::Pointer imageND = TestImageType::New();
+  auto imageND = TestImageType::New();
   imageND->SetLargestPossibleRegion(RegionND);
   imageND->SetBufferedRegion(RegionND);
   imageND->SetRequestedRegion(RegionND);
@@ -256,7 +256,7 @@ itkConstNeighborhoodIteratorTest(int, char *[])
     std::cerr << "IndexInBounds failed for index 0, expected false." << std::endl;
     return EXIT_FAILURE;
   }
-  for (unsigned int n = 0; n < 4; n++)
+  for (unsigned int n = 0; n < 4; ++n)
   {
     if (resultOffset[n] != static_cast<itk::OffsetValueType>(radius[n]))
     {
@@ -271,7 +271,7 @@ itkConstNeighborhoodIteratorTest(int, char *[])
     std::cerr << "IndexInBounds failed for index size-1, expected true." << std::endl;
     return EXIT_FAILURE;
   }
-  for (unsigned int n = 0; n < 4; n++)
+  for (unsigned int n = 0; n < 4; ++n)
   {
     if (resultOffset[n] != 0)
     {
@@ -282,7 +282,7 @@ itkConstNeighborhoodIteratorTest(int, char *[])
 
   // Test min boundary by dimension
   int result = EXIT_SUCCESS;
-  for (unsigned int n = 0; n < 4; n++)
+  for (unsigned int n = 0; n < 4; ++n)
   {
     IteratorType::IndexType boundaryLoc = centerLoc;
     boundaryLoc[n] = 0;
@@ -296,7 +296,7 @@ itkConstNeighborhoodIteratorTest(int, char *[])
   }
 
   // Test max boundary by dimension
-  for (unsigned int n = 0; n < 4; n++)
+  for (unsigned int n = 0; n < 4; ++n)
   {
     IteratorType::IndexType boundaryLoc = centerLoc;
     boundaryLoc[n] = dims[n] - 1;
@@ -330,7 +330,7 @@ itkConstNeighborhoodIteratorTest(int, char *[])
 
     ChangeRegionTestImageType::RegionType imageRegion(imageCorner, imageSize);
 
-    ChangeRegionTestImageType::Pointer image = ChangeRegionTestImageType::New();
+    auto image = ChangeRegionTestImageType::New();
     image->SetRegions(imageRegion);
     image->Allocate();
 

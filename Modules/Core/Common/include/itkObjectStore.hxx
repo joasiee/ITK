@@ -52,7 +52,7 @@ ObjectStore<TObjectType>::Reserve(SizeValueType n)
   m_Store.push_back(new_block);
 
   m_FreeList.reserve(n);
-  for (ObjectType * ptr = new_block.Begin; ptr < new_block.Begin + new_block.Size; ptr++)
+  for (ObjectType * ptr = new_block.Begin; ptr < new_block.Begin + new_block.Size; ++ptr)
   {
     m_FreeList.push_back(ptr);
   }
@@ -60,8 +60,8 @@ ObjectStore<TObjectType>::Reserve(SizeValueType n)
 }
 
 template <typename TObjectType>
-typename ObjectStore<TObjectType>::ObjectType *
-ObjectStore<TObjectType>::Borrow()
+auto
+ObjectStore<TObjectType>::Borrow() -> ObjectType *
 {
   ObjectType * p;
 

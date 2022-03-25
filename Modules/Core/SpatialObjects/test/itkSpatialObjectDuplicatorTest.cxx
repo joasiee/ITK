@@ -27,12 +27,12 @@ int
 itkSpatialObjectDuplicatorTest(int, char *[])
 {
   using EllipseType = itk::EllipseSpatialObject<3>;
-  EllipseType::Pointer ellipse = EllipseType::New();
+  auto ellipse = EllipseType::New();
   ellipse->SetRadiusInObjectSpace(3);
   ellipse->GetProperty().SetColor(0, 1, 1);
 
   using DuplicatorType = itk::SpatialObjectDuplicator<EllipseType>;
-  DuplicatorType::Pointer duplicator = DuplicatorType::New();
+  auto duplicator = DuplicatorType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(duplicator, SpatialObjectDuplicator, Object);
 
@@ -47,11 +47,11 @@ itkSpatialObjectDuplicatorTest(int, char *[])
 
   // Test with a group
   using GroupType = itk::GroupSpatialObject<3>;
-  GroupType::Pointer group = GroupType::New();
+  auto group = GroupType::New();
   group->AddChild(ellipse);
 
   using DuplicatorGroupType = itk::SpatialObjectDuplicator<GroupType>;
-  DuplicatorGroupType::Pointer duplicatorGroup = DuplicatorGroupType::New();
+  auto duplicatorGroup = DuplicatorGroupType::New();
   duplicatorGroup->SetInput(group);
   duplicatorGroup->Update();
   GroupType::Pointer groupCopy = duplicatorGroup->GetOutput();
@@ -71,7 +71,7 @@ itkSpatialObjectDuplicatorTest(int, char *[])
   // Tubes
   DTITubeType::DTITubePointListType list3;
 
-  for (unsigned int i = 0; i < 7; i++)
+  for (unsigned int i = 0; i < 7; ++i)
   {
     DTITubePointType p;
     p.SetPositionInObjectSpace(i * 3, i * 3, i * 3);
@@ -90,7 +90,7 @@ itkSpatialObjectDuplicatorTest(int, char *[])
     // this is only for testing
     // the tensor matrix should be definite positive
     // in the real case
-    for (unsigned int k = 0; k < 6; k++)
+    for (unsigned int k = 0; k < 6; ++k)
     {
       v[k] = k;
     }
@@ -99,13 +99,13 @@ itkSpatialObjectDuplicatorTest(int, char *[])
     list3.push_back(p);
   }
 
-  DTITubeType::Pointer dtiTube = DTITubeType::New();
+  auto dtiTube = DTITubeType::New();
   dtiTube->GetProperty().SetName("Tube 3");
   dtiTube->SetId(3);
   dtiTube->SetPoints(list3);
 
   using DuplicatorDTIType = itk::SpatialObjectDuplicator<DTITubeType>;
-  DuplicatorDTIType::Pointer duplicatorDti = DuplicatorDTIType::New();
+  auto duplicatorDti = DuplicatorDTIType::New();
   duplicatorDti->SetInput(dtiTube);
   duplicatorDti->Update();
   DTITubeType::Pointer dtiTube_copy = duplicatorDti->GetOutput();
@@ -126,9 +126,9 @@ itkSpatialObjectDuplicatorTest(int, char *[])
       return EXIT_FAILURE;
     }
 
-    for (jdti = dtiTube_copy->GetPoints().begin(); jdti != dtiTube_copy->GetPoints().end(); jdti++)
+    for (jdti = dtiTube_copy->GetPoints().begin(); jdti != dtiTube_copy->GetPoints().end(); ++jdti)
     {
-      for (unsigned int d = 0; d < 3; d++)
+      for (unsigned int d = 0; d < 3; ++d)
       {
         if (itk::Math::NotAlmostEquals((*jdti).GetPositionInWorldSpace()[d], value * dtiTube_copy->GetId()))
         {
@@ -202,7 +202,7 @@ itkSpatialObjectDuplicatorTest(int, char *[])
         return EXIT_FAILURE;
       }
       int ind;
-      for (ind = 0; ind < 6; ind++)
+      for (ind = 0; ind < 6; ++ind)
       {
         if (itk::Math::NotExactlyEquals((*jdti).GetTensorMatrix()[ind], ind))
         {

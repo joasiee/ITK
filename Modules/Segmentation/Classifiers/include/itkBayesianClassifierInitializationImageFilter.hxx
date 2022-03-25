@@ -89,11 +89,11 @@ BayesianClassifierInitializationImageFilter<TInputImage, TProbabilityPrecisionTy
     VectorContainer<unsigned short, typename GaussianMembershipFunctionType::CovarianceMatrixType *>;
 
   // Run k means to get the means from the input image
-  typename KMeansFilterType::Pointer kmeansFilter = KMeansFilterType::New();
+  auto kmeansFilter = KMeansFilterType::New();
   kmeansFilter->SetInput(this->GetInput());
   kmeansFilter->SetUseNonContiguousLabels(false);
 
-  for (unsigned k = 0; k < m_NumberOfClasses; k++)
+  for (unsigned k = 0; k < m_NumberOfClasses; ++k)
   {
     const double userProvidedInitialMean = k;
     // TODO: Choose more reasonable defaults for specifying the initial means
@@ -175,7 +175,7 @@ BayesianClassifierInitializationImageFilter<TInputImage, TProbabilityPrecisionTy
   }
 
   // Create gaussian membership functions.
-  typename MeanEstimatorsContainerType::Pointer       meanEstimatorsContainer = MeanEstimatorsContainerType::New();
+  auto                                                meanEstimatorsContainer = MeanEstimatorsContainerType::New();
   typename CovarianceEstimatorsContainerType::Pointer covarianceEstimatorsContainer =
     CovarianceEstimatorsContainerType::New();
   meanEstimatorsContainer->Reserve(m_NumberOfClasses);
@@ -196,7 +196,7 @@ BayesianClassifierInitializationImageFilter<TInputImage, TProbabilityPrecisionTy
 
     meanEstimators->Fill(estimatedMeans[i]);
     covarianceEstimators->Fill(estimatedCovariances[i]);
-    typename GaussianMembershipFunctionType::Pointer gaussianDensityFunction = GaussianMembershipFunctionType::New();
+    auto gaussianDensityFunction = GaussianMembershipFunctionType::New();
     gaussianDensityFunction->SetMean(*(meanEstimatorsContainer->GetElement(i)));
     gaussianDensityFunction->SetCovariance(*(covarianceEstimatorsContainer->GetElement(i)));
 
@@ -254,7 +254,7 @@ BayesianClassifierInitializationImageFilter<TInputImage, TProbabilityPrecisionTy
   while (!itrMembershipImage.IsAtEnd())
   {
     mv[0] = itrInputImage.Get();
-    for (unsigned int i = 0; i < m_NumberOfClasses; i++)
+    for (unsigned int i = 0; i < m_NumberOfClasses; ++i)
     {
       membershipPixel[i] = (m_MembershipFunctionContainer->GetElement(i))->Evaluate(mv);
     }

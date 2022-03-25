@@ -49,7 +49,7 @@ namespace itk
  *      using DownsamplerType2D = itk::BSplineDownsampleImageFilter<ImageType2D,ImageType2D,ResamplerType>;
  *      using UpsamplerType2D = itk::BSplineUpsampleImageFilter<ImageType2D,ImageType2D,ResamplerType>;
  *
- *      DownsamplerType2D::Pointer downSampler = DownsamplerType2D::New();
+ *      auto downSampler = DownsamplerType2D::New();
  *      UpsamplerType2D::Pointer   upSampler =   UpsamplerType2D::New();
  *      int splineOrder = 3;
  *      downSampler->SetSplineOrder(splineOrder);
@@ -106,16 +106,16 @@ public:
   itkNewMacro(Self);
 
   /** InputImageType type alias support */
-  using InputImageType = typename Superclass::InputImageType;
+  using typename Superclass::InputImageType;
 
   /** InputImagePointer type alias support */
-  using InputImagePointer = typename Superclass::InputImagePointer;
+  using typename Superclass::InputImagePointer;
 
   /** OutputImagePointer type alias support */
-  using OutputImagePointer = typename Superclass::OutputImagePointer;
+  using typename Superclass::OutputImagePointer;
 
   /** OutputImageIterator type alias support */
-  using OutputImageIterator = typename Superclass::OutputImageIterator;
+  using typename Superclass::OutputImageIterator;
 
   /** Creates an image half the size of the input image with spacing twice the
    * input image. */

@@ -35,8 +35,8 @@ itkBSplineTransformInitializerTest1(int argc, char * argv[])
 
   if (argc < 5)
   {
-    std::cerr << "Missing Parameters " << std::endl;
-    std::cerr << "Usage: " << argv[0];
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
     std::cerr << " coefficientsFile fixedImage";
     std::cerr << " movingImage deformedMovingImage" << std::endl;
     std::cerr << " [deformationField]" << std::endl;
@@ -52,21 +52,13 @@ itkBSplineTransformInitializerTest1(int argc, char * argv[])
   using FixedReaderType = itk::ImageFileReader<FixedImageType>;
   using MovingReaderType = itk::ImageFileReader<MovingImageType>;
 
-  FixedReaderType::Pointer fixedReader = FixedReaderType::New();
+  auto fixedReader = FixedReaderType::New();
   fixedReader->SetFileName(argv[2]);
 
-  try
-  {
-    fixedReader->Update();
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    std::cerr << "Exception thrown " << std::endl;
-    std::cerr << excp << std::endl;
-    return EXIT_FAILURE;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(fixedReader->Update());
 
-  MovingReaderType::Pointer movingReader = MovingReaderType::New();
+
+  auto movingReader = MovingReaderType::New();
 
   movingReader->SetFileName(argv[3]);
 
@@ -74,11 +66,11 @@ itkBSplineTransformInitializerTest1(int argc, char * argv[])
 
   using FilterType = itk::ResampleImageFilter<MovingImageType, FixedImageType>;
 
-  FilterType::Pointer resampler = FilterType::New();
+  auto resampler = FilterType::New();
 
   using InterpolatorType = itk::LinearInterpolateImageFunction<MovingImageType, double>;
 
-  InterpolatorType::Pointer interpolator = InterpolatorType::New();
+  auto interpolator = InterpolatorType::New();
 
   resampler->SetInterpolator(interpolator);
 
@@ -103,10 +95,10 @@ itkBSplineTransformInitializerTest1(int argc, char * argv[])
 
   using TransformType = itk::BSplineTransform<CoordinateRepType, SpaceDimension, SplineOrder>;
 
-  TransformType::Pointer bsplineTransform = TransformType::New();
+  auto bsplineTransform = TransformType::New();
 
   using InitializerType = itk::BSplineTransformInitializer<TransformType, FixedImageType>;
-  InitializerType::Pointer transformInitializer = InitializerType::New();
+  auto transformInitializer = InitializerType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(transformInitializer, BSplineTransformInitializer, Object);
 
@@ -146,21 +138,13 @@ itkBSplineTransformInitializerTest1(int argc, char * argv[])
 
   resampler->SetTransform(bsplineTransform);
 
-  try
-  {
-    itk::WriteImage(resampler->GetOutput(), argv[4]);
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    std::cerr << "Exception thrown " << std::endl;
-    std::cerr << excp << std::endl;
-    return EXIT_FAILURE;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(itk::WriteImage(resampler->GetOutput(), argv[4]));
+
 
   using VectorType = itk::Vector<float, ImageDimension>;
   using DeformationFieldType = itk::Image<VectorType, ImageDimension>;
 
-  DeformationFieldType::Pointer field = DeformationFieldType::New();
+  auto field = DeformationFieldType::New();
   field->SetRegions(fixedRegion);
   field->SetOrigin(fixedOrigin);
   field->SetSpacing(fixedSpacing);
@@ -192,16 +176,7 @@ itkBSplineTransformInitializerTest1(int argc, char * argv[])
 
   if (argc >= 6)
   {
-    try
-    {
-      itk::WriteImage(field, argv[5]);
-    }
-    catch (const itk::ExceptionObject & excp)
-    {
-      std::cerr << "Exception thrown " << std::endl;
-      std::cerr << excp << std::endl;
-      return EXIT_FAILURE;
-    }
+    ITK_TRY_EXPECT_NO_EXCEPTION(itk::WriteImage(field, argv[5]));
   }
 
   return EXIT_SUCCESS;

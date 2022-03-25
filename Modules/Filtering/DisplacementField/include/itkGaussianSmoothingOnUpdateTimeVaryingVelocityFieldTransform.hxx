@@ -70,7 +70,7 @@ GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType,
     auto * updateFieldPointer =
       reinterpret_cast<DisplacementVectorType *>(const_cast<DerivativeType &>(update).data_block());
 
-    typename ImporterType::Pointer importer = ImporterType::New();
+    auto importer = ImporterType::New();
     importer->SetImportPointer(updateFieldPointer, numberOfPixels, importFilterWillReleaseMemory);
     importer->SetRegion(velocityField->GetBufferedRegion());
     importer->SetOrigin(velocityField->GetOrigin());
@@ -110,7 +110,7 @@ GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType,
   {
     itkDebugMacro("Smooothing the total field.");
 
-    typename ImporterType::Pointer importer = ImporterType::New();
+    auto importer = ImporterType::New();
     importer->SetImportPointer(velocityField->GetBufferPointer(), numberOfPixels, importFilterWillReleaseMemory);
     importer->SetRegion(velocityField->GetBufferedRegion());
     importer->SetOrigin(velocityField->GetOrigin());
@@ -147,16 +147,16 @@ GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType,
   }
 
   using DuplicatorType = ImageDuplicator<VelocityFieldType>;
-  typename DuplicatorType::Pointer duplicator = DuplicatorType::New();
+  auto duplicator = DuplicatorType::New();
   duplicator->SetInputImage(field);
   duplicator->Update();
 
   TimeVaryingVelocityFieldPointer smoothField = duplicator->GetOutput();
 
   using SmootherType = VectorNeighborhoodOperatorImageFilter<VelocityFieldType, VelocityFieldType>;
-  typename SmootherType::Pointer smoother = SmootherType::New();
+  auto smoother = SmootherType::New();
 
-  for (unsigned int d = 0; d < TimeVaryingVelocityFieldDimension; d++)
+  for (unsigned int d = 0; d < TimeVaryingVelocityFieldDimension; ++d)
   {
     using GaussianType = GaussianOperator<DisplacementVectorValueType, NDimensions + 1>;
     GaussianType gaussian;
@@ -210,7 +210,7 @@ GaussianSmoothingOnUpdateTimeVaryingVelocityFieldTransform<TParametersValueType,
     TimeVaryingVelocityFieldIndexType index = fieldIt.GetIndex();
 
     bool isOnBoundary = false;
-    for (unsigned int d = 0; d < NDimensions; d++)
+    for (unsigned int d = 0; d < NDimensions; ++d)
     {
       if (index[d] == startIndex[d] || index[d] == static_cast<IndexValueType>(size[d]) - startIndex[d] - 1)
       {

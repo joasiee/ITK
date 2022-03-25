@@ -25,8 +25,8 @@ itkSphereMeshSourceTest(int, char *[])
 
   using fPointType = itk::Point<float, 3>;
   using fSphereMeshSourceType = itk::SphereMeshSource<itk::Mesh<float>>;
-  fSphereMeshSourceType::Pointer mySphereMeshSource = fSphereMeshSourceType::New();
-  fPointType                     center;
+  auto       mySphereMeshSource = fSphereMeshSourceType::New();
+  fPointType center;
   center.Fill(0);
   fPointType::ValueType scaleInit[3] = { 1, 1, 1 };
   fPointType            scale = scaleInit;
@@ -51,7 +51,7 @@ itkSphereMeshSourceTest(int, char *[])
   pt_ptr = &pt;
 
   std::cout << "Testing itk::SphereMeshSource " << std::endl;
-  for (int i = 0; i < 12; i++)
+  for (int i = 0; i < 12; ++i)
   {
     mySphereMeshSource->GetOutput()->GetPoint(i, pt_ptr);
     std::cout << "Point1: " << pt[0] << ", " << pt[1] << ", " << pt[2] << std::endl;

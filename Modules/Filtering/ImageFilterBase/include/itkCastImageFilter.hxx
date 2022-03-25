@@ -90,7 +90,7 @@ CastImageFilter<TInputImage, TOutputImage>::DynamicThreadedGenerateData(
 template <typename TInputImage, typename TOutputImage>
 template <typename TInputPixelType,
           typename TOutputPixelType,
-          typename std::enable_if<mpl::is_static_castable<TInputPixelType, TOutputPixelType>::value, int>::type>
+          std::enable_if_t<mpl::is_static_castable<TInputPixelType, TOutputPixelType>::value, int>>
 void
 CastImageFilter<TInputImage, TOutputImage>::DynamicThreadedGenerateDataDispatched(
   const OutputImageRegionType & outputRegionForThread)
@@ -112,7 +112,7 @@ CastImageFilter<TInputImage, TOutputImage>::DynamicThreadedGenerateDataDispatche
 template <typename TInputImage, typename TOutputImage>
 template <typename TInputPixelType,
           typename TOutputPixelType,
-          typename std::enable_if<!mpl::is_static_castable<TInputPixelType, TOutputPixelType>::value, int>::type>
+          std::enable_if_t<!mpl::is_static_castable<TInputPixelType, TOutputPixelType>::value, int>>
 void
 CastImageFilter<TInputImage, TOutputImage>::DynamicThreadedGenerateDataDispatched(
   const OutputImageRegionType & outputRegionForThread)
@@ -153,7 +153,7 @@ CastImageFilter<TInputImage, TOutputImage>::DynamicThreadedGenerateDataDispatche
     while (!inputIt.IsAtEndOfLine())
     {
       const InputPixelType & inputPixel = inputIt.Get();
-      for (unsigned int k = 0; k < componentsPerPixel; k++)
+      for (unsigned int k = 0; k < componentsPerPixel; ++k)
       {
         value[k] = static_cast<typename OutputPixelType::ValueType>(inputPixel[k]);
       }

@@ -31,12 +31,12 @@ SphereSpatialFunction<VImageDimension, TInput>::SphereSpatialFunction()
 }
 
 template <unsigned int VImageDimension, typename TInput>
-typename SphereSpatialFunction<VImageDimension, TInput>::OutputType
-SphereSpatialFunction<VImageDimension, TInput>::Evaluate(const InputType & position) const
+auto
+SphereSpatialFunction<VImageDimension, TInput>::Evaluate(const InputType & position) const -> OutputType
 {
   double acc = 0;
 
-  for (unsigned int i = 0; i < VImageDimension; i++)
+  for (unsigned int i = 0; i < VImageDimension; ++i)
   {
     acc += (position[i] - m_Center[i]) * (position[i] - m_Center[i]);
   }
@@ -61,7 +61,7 @@ SphereSpatialFunction<VImageDimension, TInput>::PrintSelf(std::ostream & os, Ind
 
   unsigned int i;
   os << indent << "Center: [";
-  for (i = 0; i < VImageDimension - 1; i++)
+  for (i = 0; i < VImageDimension - 1; ++i)
   {
     os << m_Center[i] << ", ";
   }

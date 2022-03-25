@@ -74,12 +74,12 @@ public:
 
   /** Superclass type alias for Measurement vector, measurement,
    * Instance Identifier, frequency, size, size element value */
-  using MeasurementType = typename Superclass::MeasurementType;
-  using MeasurementVectorType = typename Superclass::MeasurementVectorType;
-  using AbsoluteFrequencyType = typename Superclass::AbsoluteFrequencyType;
-  using TotalAbsoluteFrequencyType = typename Superclass::TotalAbsoluteFrequencyType;
-  using MeasurementVectorSizeType = typename Superclass::MeasurementVectorSizeType;
-  using InstanceIdentifier = typename Superclass::InstanceIdentifier;
+  using typename Superclass::MeasurementType;
+  using typename Superclass::MeasurementVectorType;
+  using typename Superclass::AbsoluteFrequencyType;
+  using typename Superclass::TotalAbsoluteFrequencyType;
+  using typename Superclass::MeasurementVectorSizeType;
+  using typename Superclass::InstanceIdentifier;
 
   using ValueType = MeasurementVectorType;
 
@@ -160,16 +160,12 @@ public:
     }
 
     bool
-    operator!=(const ConstIterator & it) const
-    {
-      return (m_Iter != it.m_Iter);
-    }
-
-    bool
     operator==(const ConstIterator & it) const
     {
       return (m_Iter == it.m_Iter);
     }
+
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ConstIterator);
 
   protected:
     // This method should only be available to the ListSample class

@@ -19,6 +19,7 @@
 #include "itkImage.h"
 #include "itkRGBPixel.h"
 #include "itkTextOutput.h" // Needed to see warnings
+#include "itkTestingMacros.h"
 
 using myPointer = itk::ImportImageContainer<unsigned long, short>::Pointer;
 bool
@@ -45,7 +46,7 @@ MakeImage(const int count, T pixel)
   using RegionType = typename ImageType::RegionType;
   using SizeType = typename ImageType::SizeType;
 
-  typename ImageType::Pointer testImage = ImageType::New();
+  auto testImage = ImageType::New();
 
   IndexType index;
   index[0] = 0;
@@ -71,7 +72,7 @@ ReallocateImage()
   using ImageType = itk::Image<double, 2>;
   using SizeType = ImageType::SizeType;
 
-  ImageType::Pointer testImage = ImageType::New();
+  auto testImage = ImageType::New();
 
   SizeType size = { { 5, 3 } };
 
@@ -89,7 +90,9 @@ itkObjectFactoryTest2(int argc, char * argv[])
   itk::ObjectFactoryBase::UnRegisterAllFactories();
   if (argc < 2)
   {
-    std::cout << "Usage: " << argv[0] << " FactoryPath [FactoryPath [FactoryPath ..." << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cerr << " FactoryPath [FactoryPath [FactoryPath ..." << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -103,7 +106,7 @@ itkObjectFactoryTest2(int argc, char * argv[])
   std::string pathSeparator = ":";
 #endif
   std::string path = "";
-  for (int ac = 1; ac < argc - 1; ac++)
+  for (int ac = 1; ac < argc - 1; ++ac)
   {
     path += argv[ac];
 #ifdef CMAKE_INTDIR
@@ -139,7 +142,7 @@ itkObjectFactoryTest2(int argc, char * argv[])
       std::list<std::string>::const_iterator n = names.begin();
       std::list<std::string>::const_iterator d = descriptions.begin();
       std::list<bool>::const_iterator        e = enableflags.begin();
-      for (std::list<std::string>::const_iterator o = overrides.begin(); o != overrides.end(); ++o, ++n, ++d, e++)
+      for (std::list<std::string>::const_iterator o = overrides.begin(); o != overrides.end(); ++o, ++n, ++d, ++e)
       {
         std::cout << "    Override " << *o << " with " << *n << std::endl
                   << "      described as \"" << *d << "\"" << std::endl

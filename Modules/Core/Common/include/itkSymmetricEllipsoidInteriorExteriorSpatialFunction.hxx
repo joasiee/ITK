@@ -32,8 +32,9 @@ SymmetricEllipsoidInteriorExteriorSpatialFunction<VDimension,
 }
 
 template <unsigned int VDimension, typename TInput>
-typename SymmetricEllipsoidInteriorExteriorSpatialFunction<VDimension, TInput>::OutputType
+auto
 SymmetricEllipsoidInteriorExteriorSpatialFunction<VDimension, TInput>::Evaluate(const InputType & position) const
+  -> OutputType
 {
   double uniqueTerm;    // Term in ellipsoid equation for unique axis
   double symmetricTerm; // Term in ellipsoid equation for symmetric axes
@@ -43,7 +44,7 @@ SymmetricEllipsoidInteriorExteriorSpatialFunction<VDimension, TInput>::Evaluate(
 
   // Project the position onto the major axis, normalize by axis length,
   // and determine whether position is inside ellipsoid.
-  for (unsigned int i = 0; i < VDimension; i++)
+  for (unsigned int i = 0; i < VDimension; ++i)
   {
     pointVector[i] = position[i] - m_Center[i];
   }

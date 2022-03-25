@@ -46,8 +46,8 @@ runGPUBinaryThresholdImageFilterTest(const std::string & inFile, const std::stri
   using ReaderType = itk::ImageFileReader<InputImageType>;
   using WriterType = itk::ImageFileWriter<OutputImageType>;
 
-  typename ReaderType::Pointer reader = ReaderType::New();
-  typename WriterType::Pointer writer = WriterType::New();
+  auto reader = ReaderType::New();
+  auto writer = WriterType::New();
 
   if (!itk::IsGPUAvailable())
   {
@@ -67,14 +67,14 @@ runGPUBinaryThresholdImageFilterTest(const std::string & inFile, const std::stri
   constexpr OutputPixelType outsideValue = 0;
   constexpr OutputPixelType insideValue = 255;
 
-  for (int nThreads = 1; nThreads <= 8; nThreads++)
+  for (int numberOfWorkUnits = 1; numberOfWorkUnits <= 8; ++numberOfWorkUnits)
   {
-    typename ThresholdFilterType::Pointer CPUFilter = ThresholdFilterType::New();
-    itk::TimeProbe                        cputimer;
+    auto           CPUFilter = ThresholdFilterType::New();
+    itk::TimeProbe cputimer;
     cputimer.Start();
 
     // build pipeline
-    CPUFilter->SetNumberOfWorkUnits(nThreads);
+    CPUFilter->SetNumberOfWorkUnits(numberOfWorkUnits);
 
     CPUFilter->SetOutsideValue(outsideValue);
     CPUFilter->SetInsideValue(insideValue);
@@ -87,12 +87,12 @@ runGPUBinaryThresholdImageFilterTest(const std::string & inFile, const std::stri
     cputimer.Stop();
 
     std::cout << "CPU binary threshold took " << cputimer.GetMean() << " seconds with "
-              << CPUFilter->GetNumberOfWorkUnits() << " threads.\n"
+              << CPUFilter->GetNumberOfWorkUnits() << " work units.\n"
               << std::endl;
 
-    if (nThreads == 8)
+    if (numberOfWorkUnits == 8)
     {
-      typename GPUThresholdFilterType::Pointer GPUFilter = GPUThresholdFilterType::New();
+      auto GPUFilter = GPUThresholdFilterType::New();
 
       itk::TimeProbe gputimer;
       gputimer.Start();

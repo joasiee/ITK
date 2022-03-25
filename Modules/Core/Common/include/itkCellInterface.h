@@ -29,52 +29,52 @@
 // Define a macro for CellInterface sub-classes to use
 // to define the Accept and GetTopologyId virtuals used
 // by the MultiVisitor class
-#define itkCellVisitMacro(TopologyId)                                                                                  \
-  static constexpr CellGeometryEnum GetTopologyId() { return TopologyId; }                                             \
-  virtual void Accept(CellIdentifier cellid, typename CellInterface<PixelType, CellTraits>::MultiVisitor * mv)         \
-    override                                                                                                           \
-  {                                                                                                                    \
-    typename CellInterfaceVisitor<PixelType, CellTraits>::Pointer v = mv->GetVisitor(TopologyId);                      \
-    if (v)                                                                                                             \
-    {                                                                                                                  \
-      v->VisitFromCell(cellid, this);                                                                                  \
-    }                                                                                                                  \
+#define itkCellVisitMacro(TopologyId)                                                                          \
+  static constexpr CellGeometryEnum GetTopologyId() { return TopologyId; }                                     \
+  virtual void Accept(CellIdentifier cellid, typename CellInterface<PixelType, CellTraits>::MultiVisitor * mv) \
+    override                                                                                                   \
+  {                                                                                                            \
+    typename CellInterfaceVisitor<PixelType, CellTraits>::Pointer v = mv->GetVisitor(TopologyId);              \
+    if (v)                                                                                                     \
+    {                                                                                                          \
+      v->VisitFromCell(cellid, this);                                                                          \
+    }                                                                                                          \
   }
 
 // Define a macro for the common type alias required by the
 // classes deriving form CellInterface (included).
-#define itkCellCommonTypedefs(celltype)                                                                                \
-  using Self = celltype;                                                                                               \
-  using ConstSelfAutoPointer = AutoPointer<const Self>;                                                                \
-  using SelfAutoPointer = AutoPointer<Self>;                                                                           \
-  using RawPointer = Self *;                                                                                           \
+#define itkCellCommonTypedefs(celltype)                 \
+  using Self = celltype;                                \
+  using ConstSelfAutoPointer = AutoPointer<const Self>; \
+  using SelfAutoPointer = AutoPointer<Self>;            \
+  using RawPointer = Self *;                            \
   using ConstRawPointer = const Self *
 
 // Define a macro for the common type alias required by the
 // classes deriving form CellInterface (excluded).
-#define itkCellInheritedTypedefs(superclassArg)                                                                        \
-  using Superclass = superclassArg;                                                                                    \
-  using PixelType = typename Superclass::PixelType;                                                                    \
-  using CellType = typename Superclass::CellType;                                                                      \
-  using CellAutoPointer = typename Superclass::CellAutoPointer;                                                        \
-  using CellConstAutoPointer = typename Superclass::CellConstAutoPointer;                                              \
-  using CellRawPointer = typename Superclass::CellRawPointer;                                                          \
-  using CellConstRawPointer = typename Superclass::CellConstRawPointer;                                                \
-  using CellTraits = typename Superclass::CellTraits;                                                                  \
-  using CoordRepType = typename Superclass::CoordRepType;                                                              \
-  using InterpolationWeightType = typename Superclass::InterpolationWeightType;                                        \
-  using PointIdentifier = typename Superclass::PointIdentifier;                                                        \
-  using PointIdIterator = typename Superclass::PointIdIterator;                                                        \
-  using PointIdConstIterator = typename Superclass::PointIdConstIterator;                                              \
-  using CellIdentifier = typename Superclass::CellIdentifier;                                                          \
-  using CellFeatureIdentifier = typename Superclass::CellFeatureIdentifier;                                            \
-  using CellFeatureCount = typename Superclass::CellFeatureIdentifier;                                                 \
-  using PointType = typename Superclass::PointType;                                                                    \
-  using VectorType = typename Superclass::VectorType;                                                                  \
-  using PointsContainer = typename Superclass::PointsContainer;                                                        \
-  using UsingCellsContainer = typename Superclass::UsingCellsContainer;                                                \
-  using ParametricCoordArrayType = typename Superclass::ParametricCoordArrayType;                                      \
-  using ShapeFunctionsArrayType = typename Superclass::ShapeFunctionsArrayType;                                        \
+#define itkCellInheritedTypedefs(superclassArg)                        \
+  using Superclass = superclassArg;                                    \
+  using typename Superclass::PixelType;                                \
+  using CellType = typename Superclass::CellType;                      \
+  using typename Superclass::CellAutoPointer;                          \
+  using typename Superclass::CellConstAutoPointer;                     \
+  using typename Superclass::CellRawPointer;                           \
+  using typename Superclass::CellConstRawPointer;                      \
+  using typename Superclass::CellTraits;                               \
+  using typename Superclass::CoordRepType;                             \
+  using typename Superclass::InterpolationWeightType;                  \
+  using typename Superclass::PointIdentifier;                          \
+  using typename Superclass::PointIdIterator;                          \
+  using typename Superclass::PointIdConstIterator;                     \
+  using typename Superclass::CellIdentifier;                           \
+  using typename Superclass::CellFeatureIdentifier;                    \
+  using CellFeatureCount = typename Superclass::CellFeatureIdentifier; \
+  using typename Superclass::PointType;                                \
+  using typename Superclass::VectorType;                               \
+  using typename Superclass::PointsContainer;                          \
+  using typename Superclass::UsingCellsContainer;                      \
+  using typename Superclass::ParametricCoordArrayType;                 \
+  using typename Superclass::ShapeFunctionsArrayType;                  \
   static constexpr unsigned int PointDimension = Superclass::PointDimension
 
 namespace itk
@@ -537,15 +537,15 @@ public:
   using PointIdConstIterator = const PointIdentifier *;
 };
 
-#define itkMakeCellTraitsMacro                                                                                         \
-  CellTraitsInfo<Self::PointDimension,                                                                                 \
-                 CoordRepType,                                                                                         \
-                 InterpolationWeightType,                                                                              \
-                 PointIdentifier,                                                                                      \
-                 CellIdentifier,                                                                                       \
-                 CellFeatureIdentifier,                                                                                \
-                 PointType,                                                                                            \
-                 PointsContainer,                                                                                      \
+#define itkMakeCellTraitsMacro            \
+  CellTraitsInfo<Self::PointDimension,    \
+                 CoordRepType,            \
+                 InterpolationWeightType, \
+                 PointIdentifier,         \
+                 CellIdentifier,          \
+                 CellFeatureIdentifier,   \
+                 PointType,               \
+                 PointsContainer,         \
                  UsingCellsContainer>
 } // end namespace itk
 

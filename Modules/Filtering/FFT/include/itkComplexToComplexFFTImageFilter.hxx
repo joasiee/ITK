@@ -76,8 +76,8 @@ struct DispatchFFTW_Complex_New<TSelfPointer, TImage, float>
 #endif
 
 template <typename TImage>
-typename ComplexToComplexFFTImageFilter<TImage>::Pointer
-ComplexToComplexFFTImageFilter<TImage>::New()
+auto
+ComplexToComplexFFTImageFilter<TImage>::New() -> Pointer
 {
   Pointer smartPtr = ObjectFactory<Self>::Create();
 
@@ -85,6 +85,11 @@ ComplexToComplexFFTImageFilter<TImage>::New()
   {
     smartPtr =
       DispatchFFTW_Complex_New<Pointer, TImage, typename NumericTraits<typename TImage::PixelType>::ValueType>::Apply();
+  }
+  else
+  {
+    // Correct extra reference count from ObjectFactory<Self>::Create()
+    smartPtr->UnRegister();
   }
 
   return smartPtr;

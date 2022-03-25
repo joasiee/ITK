@@ -43,9 +43,9 @@ public:
   /** Run-time type information (and related methods) */
   itkTypeMacro(ScalarChanAndVeseLevelSetFunctionTestHelper, ScalarChanAndVeseLevelSetFunction);
 
-  using ScalarValueType = typename Superclass::ScalarValueType;
-  using FeaturePixelType = typename Superclass::FeaturePixelType;
-  using FeatureIndexType = typename Superclass::FeatureIndexType;
+  using typename Superclass::ScalarValueType;
+  using typename Superclass::FeaturePixelType;
+  using typename Superclass::FeatureIndexType;
 
 
   virtual ScalarValueType
@@ -144,7 +144,7 @@ itkScalarChanAndVeseLevelSetFunctionTest1(int, char *[])
   using ChanAndVeseLevelSetFunctionType =
     itk::ScalarChanAndVeseLevelSetFunctionTestHelper<ImageType, FeatureImageType, DataHelperType>;
 
-  ChanAndVeseLevelSetFunctionType::Pointer function = ChanAndVeseLevelSetFunctionType::New();
+  auto function = ChanAndVeseLevelSetFunctionType::New();
 
   std::cout << "GetNameOfClass() = " << function->GetNameOfClass() << std::endl;
   function->Print(std::cout);

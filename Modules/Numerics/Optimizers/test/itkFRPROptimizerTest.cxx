@@ -114,11 +114,11 @@ itkFRPROptimizerTest(int, char *[])
   using OptimizerType = itk::FRPROptimizer;
 
   // Declaration of a itkOptimizer
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
 
 
   // Declaration of the CostFunction
-  FRPRGradientCostFunction::Pointer costFunction = FRPRGradientCostFunction::New();
+  auto costFunction = FRPRGradientCostFunction::New();
 
 
   itkOptimizer->SetCostFunction(costFunction);
@@ -168,7 +168,7 @@ itkFRPROptimizerTest(int, char *[])
     //
     bool   pass = true;
     double trueParameters[2] = { 2, -2 };
-    for (unsigned int j = 0; j < 2; j++)
+    for (unsigned int j = 0; j < 2; ++j)
     {
       if (itk::Math::abs(finalPosition[j] - trueParameters[j]) > 0.01)
         pass = false;
@@ -221,7 +221,7 @@ itkFRPROptimizerTest(int, char *[])
     //
     bool   pass = true;
     double trueParameters[2] = { 2, -2 };
-    for (unsigned int j = 0; j < 2; j++)
+    for (unsigned int j = 0; j < 2; ++j)
     {
       if (itk::Math::abs(finalPosition[j] - trueParameters[j]) > 0.01)
         pass = false;

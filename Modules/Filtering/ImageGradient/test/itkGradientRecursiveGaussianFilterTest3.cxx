@@ -21,6 +21,7 @@
 #include "itkVariableLengthVector.h"
 #include "itkVectorImage.h"
 #include "itkImageFileWriter.h"
+#include "itkTestingMacros.h"
 
 /*
  * Test itkGradientRecursiveGaussianFilter with various types
@@ -55,7 +56,7 @@ itkGradientRecursiveGaussianFilterTest3Run(typename TImageType::PixelType &   my
   using myRegionType = itk::ImageRegion<myDimension>;
 
   // Create the image
-  typename myImageType::Pointer inputImage = myImageType::New();
+  auto inputImage = myImageType::New();
 
   // Define their size, and start index
   mySizeType size;
@@ -115,7 +116,7 @@ itkGradientRecursiveGaussianFilterTest3Run(typename TImageType::PixelType &   my
   using myGradientImageType = typename myFilterType::OutputImageType;
 
   // Create a  Filter
-  typename myFilterType::Pointer filter = myFilterType::New();
+  auto filter = myFilterType::New();
 
   // Connect the input images
   filter->SetInput(inputImage);
@@ -135,7 +136,7 @@ itkGradientRecursiveGaussianFilterTest3Run(typename TImageType::PixelType &   my
   // Write the output to file
   using WriterType = itk::ImageFileWriter<myGradientImageType>;
 
-  typename WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   writer->SetFileName(outputFilename);
   writer->SetInput(outputImage);
   writer->Update();
@@ -143,8 +144,6 @@ itkGradientRecursiveGaussianFilterTest3Run(typename TImageType::PixelType &   my
   // All objects should be automatically destroyed at this point
   return EXIT_SUCCESS;
 }
-
-////////////////////////////////////////////////////////////////////
 
 template <typename TGradImage1DType, typename TGradImageVectorType>
 int
@@ -164,9 +163,9 @@ itkGradientRecursiveGaussianFilterTest3Compare(typename TGradImage1DType::Pointe
   {
     typename TGradImage1DType::PixelType     scalar = scalarIt.Value();
     typename TGradImageVectorType::PixelType vector = vector2DIt.Value();
-    for (unsigned int d = 0; d < numDimensions; d++)
+    for (unsigned int d = 0; d < numDimensions; ++d)
     {
-      for (unsigned int c = 0; c < vector.GetNumberOfComponents() / numDimensions; c++)
+      for (unsigned int c = 0; c < vector.GetNumberOfComponents() / numDimensions; ++c)
       {
         typename TGradImage1DType::PixelType::ValueType truth = scalar[d] / (c + 1.0);
         typename TGradImage1DType::PixelType::ValueType test = vector[d + (c * numDimensions)];
@@ -185,15 +184,13 @@ itkGradientRecursiveGaussianFilterTest3Compare(typename TGradImage1DType::Pointe
   return EXIT_SUCCESS;
 }
 
-////////////////////////////////////////////////////////////////////
-
 int
 itkGradientRecursiveGaussianFilterTest3(int argc, char * argv[])
 {
   if (argc != 8)
   {
-    std::cerr << "Missing Parameters " << std::endl;
-    std::cerr << "Usage: " << argv[0];
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
     std::cerr << " outputImageFile1 outputImageFile2 outputImageFile3 outputImageFile4 outputImageFile5 "
                  "outputImageFile6 outputImageFile7"
               << std::endl;

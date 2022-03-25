@@ -124,8 +124,9 @@ PolylineMaskImageFilter<TInputImage, TPolyline, TVector, TOutputImage>::Generate
 }
 
 template <typename TInputImage, typename TPolyline, typename TVector, typename TOutputImage>
-typename PolylineMaskImageFilter<TInputImage, TPolyline, TVector, TOutputImage>::ProjPlanePointType
+auto
 PolylineMaskImageFilter<TInputImage, TPolyline, TVector, TOutputImage>::TransformProjectPoint(PointType inputPoint)
+  -> ProjPlanePointType
 {
   PointType centered;
 
@@ -213,10 +214,10 @@ PolylineMaskImageFilter<TInputImage, TPolyline, TVector, TOutputImage>::Generate
   using BoundingBoxType = BoundingBox<unsigned long int, 2, double>;
   using CornerPointProjectionContainer = BoundingBoxType::PointsContainer;
 
-  CornerPointProjectionContainer::Pointer cornerPointProjectionlist = CornerPointProjectionContainer::New();
-  CornerPointType                         cornerPoint;
-  CornerPointType                         originPoint;
-  CornerPointProjectionType               cornerProjectionPoint;
+  auto                      cornerPointProjectionlist = CornerPointProjectionContainer::New();
+  CornerPointType           cornerPoint;
+  CornerPointType           originPoint;
+  CornerPointProjectionType cornerProjectionPoint;
 
   originPoint[0] = 0.0;
   originPoint[1] = 0.0;
@@ -284,7 +285,7 @@ PolylineMaskImageFilter<TInputImage, TPolyline, TVector, TOutputImage>::Generate
   cornerPointProjectionlist->push_back(cornerProjectionPoint);
 
   // Compute the bounding box of the projected points
-  BoundingBoxType::Pointer boundingBox = BoundingBoxType::New();
+  auto boundingBox = BoundingBoxType::New();
 
   boundingBox->SetPoints(cornerPointProjectionlist);
 
@@ -311,7 +312,7 @@ PolylineMaskImageFilter<TInputImage, TPolyline, TVector, TOutputImage>::Generate
   projectionRegion.SetIndex(projectionStart);
   projectionRegion.SetSize(projectionSize);
 
-  typename ProjectionImageType::Pointer projectionImagePtr = ProjectionImageType::New();
+  auto projectionImagePtr = ProjectionImageType::New();
 
   ProjectionImagePointType origin;
   origin[0] = bounds[0];

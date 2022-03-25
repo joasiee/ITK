@@ -31,7 +31,7 @@ FastMarchingExtensionImageFilter<TLevelSet, TAuxValue, VAuxDimension, TSpeedImag
   this->ProcessObject::SetNumberOfRequiredOutputs(1 + AuxDimension);
 
   AuxImagePointer ptr;
-  for (unsigned int k = 0; k < VAuxDimension; k++)
+  for (unsigned int k = 0; k < VAuxDimension; ++k)
   {
     ptr = AuxImageType::New();
     this->ProcessObject::SetNthOutput(k + 1, ptr.GetPointer());
@@ -55,8 +55,9 @@ FastMarchingExtensionImageFilter<TLevelSet, TAuxValue, VAuxDimension, TSpeedImag
  *
  */
 template <typename TLevelSet, typename TAuxValue, unsigned int VAuxDimension, typename TSpeedImage>
-typename FastMarchingExtensionImageFilter<TLevelSet, TAuxValue, VAuxDimension, TSpeedImage>::AuxImageType *
+auto
 FastMarchingExtensionImageFilter<TLevelSet, TAuxValue, VAuxDimension, TSpeedImage>::GetAuxiliaryImage(unsigned int idx)
+  -> AuxImageType *
 {
   if (idx >= AuxDimension || this->GetNumberOfIndexedOutputs() < idx + 2)
   {
@@ -79,7 +80,7 @@ FastMarchingExtensionImageFilter<TLevelSet, TAuxValue, VAuxDimension, TSpeedImag
   // set the size of all the auxiliary outputs
   // to be the same as the primary output
   typename Superclass::LevelSetPointer primaryOutput = this->GetOutput();
-  for (unsigned int k = 0; k < VAuxDimension; k++)
+  for (unsigned int k = 0; k < VAuxDimension; ++k)
   {
     AuxImageType * ptr = this->GetAuxiliaryImage(k);
     ptr->CopyInformation(primaryOutput);
@@ -95,7 +96,7 @@ FastMarchingExtensionImageFilter<TLevelSet, TAuxValue, VAuxDimension, TSpeedImag
   DataObject * itkNotUsed(output))
 {
   // This filter requires all of the output images in the buffer.
-  for (unsigned int j = 0; j < this->GetNumberOfIndexedOutputs(); j++)
+  for (unsigned int j = 0; j < this->GetNumberOfIndexedOutputs(); ++j)
   {
     if (this->ProcessObject::GetOutput(j))
     {
@@ -135,7 +136,7 @@ FastMarchingExtensionImageFilter<TLevelSet, TAuxValue, VAuxDimension, TSpeedImag
   }
 
   // allocate memory for the auxiliary outputs
-  for (unsigned int k = 0; k < VAuxDimension; k++)
+  for (unsigned int k = 0; k < VAuxDimension; ++k)
   {
     AuxImageType * ptr = this->GetAuxiliaryImage(k);
     ptr->SetBufferedRegion(ptr->GetRequestedRegion());
@@ -164,7 +165,7 @@ FastMarchingExtensionImageFilter<TLevelSet, TAuxValue, VAuxDimension, TSpeedImag
         continue;
       }
 
-      for (unsigned int k = 0; k < VAuxDimension; k++)
+      for (unsigned int k = 0; k < VAuxDimension; ++k)
       {
         this->m_AuxImages[k]->SetPixel(node.GetIndex(), auxVec[k]);
       }
@@ -188,7 +189,7 @@ FastMarchingExtensionImageFilter<TLevelSet, TAuxValue, VAuxDimension, TSpeedImag
         continue;
       }
 
-      for (unsigned int k = 0; k < VAuxDimension; k++)
+      for (unsigned int k = 0; k < VAuxDimension; ++k)
       {
         this->m_AuxImages[k]->SetPixel(node.GetIndex(), auxVec[k]);
       }
@@ -223,13 +224,13 @@ FastMarchingExtensionImageFilter<TLevelSet, TAuxValue, VAuxDimension, TSpeedImag
   if (solution < this->GetLargeValue())
   {
     // update auxiliary values
-    for (unsigned int k = 0; k < VAuxDimension; k++)
+    for (unsigned int k = 0; k < VAuxDimension; ++k)
     {
       double       numer = 0.0;
       double       denom = 0.;
       AuxValueType auxVal;
 
-      for (unsigned int j = 0; j < SetDimension; j++)
+      for (unsigned int j = 0; j < SetDimension; ++j)
       {
         node = this->GetNodeUsedInCalculation(j);
 

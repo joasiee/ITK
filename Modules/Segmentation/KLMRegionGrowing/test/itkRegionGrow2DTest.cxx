@@ -116,7 +116,7 @@ test_RegionGrowKLMExceptionHandling()
   int sizeLen = 3;
 
   using ImageType5D = itk::Image<itk::Vector<double, NUMBANDS2>, NUMDIM5D>;
-  ImageType5D::Pointer image5D = ImageType5D::New();
+  auto image5D = ImageType5D::New();
 
   ImageType5D::SizeType imageSize5D;
   imageSize5D.Fill(sizeLen);
@@ -139,7 +139,7 @@ test_RegionGrowKLMExceptionHandling()
 
   using KLMRegionGrowImageFilterType5D = itk::KLMRegionGrowImageFilter<ImageType5D, ImageType5D>;
 
-  KLMRegionGrowImageFilterType5D::Pointer exceptionTestingFilter5D = KLMRegionGrowImageFilterType5D::New();
+  auto exceptionTestingFilter5D = KLMRegionGrowImageFilterType5D::New();
 
   KLMRegionGrowImageFilterType5D::GridSizeType gridSize5D;
   gridSize5D.Fill(1);
@@ -154,25 +154,25 @@ test_RegionGrowKLMExceptionHandling()
   bool passed;
 
 #undef LOCAL_TEST_EXCEPTION_MACRO
-#define LOCAL_TEST_EXCEPTION_MACRO(MSG, FILTER)                                                                        \
-  passed = false;                                                                                                      \
-  try                                                                                                                  \
-  {                                                                                                                    \
-    std::cout << MSG << std::endl;                                                                                     \
-    FILTER->Update();                                                                                                  \
-  }                                                                                                                    \
-  catch (const itk::ExceptionObject & err)                                                                             \
-  {                                                                                                                    \
-    std::cout << "Caught expected error." << std::endl;                                                                \
-    std::cout << err << std::endl;                                                                                     \
-    FILTER->ResetPipeline();                                                                                           \
-    passed = true;                                                                                                     \
-  }                                                                                                                    \
-  if (!passed)                                                                                                         \
-  {                                                                                                                    \
-    std::cout << "Test FAILED" << std::endl;                                                                           \
-    return EXIT_FAILURE;                                                                                               \
-  }                                                                                                                    \
+#define LOCAL_TEST_EXCEPTION_MACRO(MSG, FILTER)         \
+  passed = false;                                       \
+  try                                                   \
+  {                                                     \
+    std::cout << MSG << std::endl;                      \
+    FILTER->Update();                                   \
+  }                                                     \
+  catch (const itk::ExceptionObject & err)              \
+  {                                                     \
+    std::cout << "Caught expected error." << std::endl; \
+    std::cout << err << std::endl;                      \
+    FILTER->ResetPipeline();                            \
+    passed = true;                                      \
+  }                                                     \
+  if (!passed)                                          \
+  {                                                     \
+    std::cout << "Test FAILED" << std::endl;            \
+    return EXIT_FAILURE;                                \
+  }                                                     \
   ITK_MACROEND_NOOP_STATEMENT
 
   // maximum number of regions must be greater than 1
@@ -186,7 +186,7 @@ test_RegionGrowKLMExceptionHandling()
   exceptionTestingFilter5D->SetMaximumNumberOfRegions(2);
 
   // size lengths must be divisible by the grid size along each dimension
-  for (int idim = 0; idim < NUMDIM5D; idim++)
+  for (int idim = 0; idim < NUMDIM5D; ++idim)
   {
     gridSize5D[idim]++;
     exceptionTestingFilter5D->SetGridSize(gridSize5D);
@@ -227,7 +227,7 @@ test_regiongrowKLM1D()
   using ImageType = itk::Image<itk::Vector<unsigned char, NUMBANDS3>, NUMDIM1D>;
   using OutputImageType = itk::Image<itk::Vector<double, NUMBANDS3>, NUMDIM1D>;
 
-  ImageType::Pointer image = ImageType::New();
+  auto image = ImageType::New();
 
   unsigned int        numPixels = 100;
   unsigned int        numPixelsHalf = 50;
@@ -276,7 +276,7 @@ test_regiongrowKLM1D()
 
   using KLMRegionGrowImageFilterType = itk::KLMRegionGrowImageFilter<ImageType, OutputImageType>;
 
-  KLMRegionGrowImageFilterType::Pointer KLMFilter = KLMRegionGrowImageFilterType::New();
+  auto KLMFilter = KLMRegionGrowImageFilterType::New();
 
   KLMRegionGrowImageFilterType::GridSizeType gridSize;
   gridSize.Fill(1);
@@ -285,17 +285,17 @@ test_regiongrowKLM1D()
   KLMFilter->SetGridSize(gridSize);
 
 #undef LOCAL_TEST_EXCEPTION_MACRO
-#define LOCAL_TEST_EXCEPTION_MACRO(FILTER)                                                                             \
-  try                                                                                                                  \
-  {                                                                                                                    \
-    FILTER->Update();                                                                                                  \
-  }                                                                                                                    \
-  catch (const itk::ExceptionObject & err)                                                                             \
-  {                                                                                                                    \
-    std::cout << "Caught unexpected error." << std::endl;                                                              \
-    std::cout << err << std::endl;                                                                                     \
-    return EXIT_FAILURE;                                                                                               \
-  }                                                                                                                    \
+#define LOCAL_TEST_EXCEPTION_MACRO(FILTER)                \
+  try                                                     \
+  {                                                       \
+    FILTER->Update();                                     \
+  }                                                       \
+  catch (const itk::ExceptionObject & err)                \
+  {                                                       \
+    std::cout << "Caught unexpected error." << std::endl; \
+    std::cout << err << std::endl;                        \
+    return EXIT_FAILURE;                                  \
+  }                                                       \
   std::cout << std::endl << "Filter has been udpated" << std::endl
 
   std::cout << std::endl << "First test, lambda = 0" << std::endl;
@@ -736,7 +736,7 @@ test_regiongrowKLM1D()
     pixelOut5in[0] = 0;
     pixelOut5in[1] = 0;
     pixelOut5in[2] = 0;
-    for (int idx = 0; idx < gridWidth; idx++)
+    for (int idx = 0; idx < gridWidth; ++idx)
     {
       pixelIn = inIt.Get();
       pixelOut5in[0] += pixelIn[0];
@@ -758,7 +758,7 @@ test_regiongrowKLM1D()
 
     pixelOut5in /= gridWidth;
     pixelOut5in /= spacing[0];
-    for (int idx = 0; idx < gridWidth; idx++)
+    for (int idx = 0; idx < gridWidth; ++idx)
     {
       pixelOut5out = outIt5.Get();
       std::cout << "idx: " << idx << " pixelOut5out: " << pixelOut5out << std::endl;
@@ -794,7 +794,7 @@ test_regiongrowKLM2D()
   using ImageType = itk::Image<itk::Vector<int, NUMBANDS2>, NUMDIM2D>;
   using OutputImageType = itk::Image<itk::Vector<double, NUMBANDS2>, NUMDIM2D>;
 
-  ImageType::Pointer image = ImageType::New();
+  auto image = ImageType::New();
 
   ImageType::SizeType imageSize;
   imageSize[0] = 10;
@@ -848,7 +848,7 @@ test_regiongrowKLM2D()
 
   using KLMRegionGrowImageFilterType = itk::KLMRegionGrowImageFilter<ImageType, OutputImageType>;
 
-  KLMRegionGrowImageFilterType::Pointer KLMFilter = KLMRegionGrowImageFilterType::New();
+  auto KLMFilter = KLMRegionGrowImageFilterType::New();
 
   KLMRegionGrowImageFilterType::GridSizeType gridSize;
   gridSize.Fill(1);
@@ -1169,7 +1169,7 @@ test_regiongrowKLM2D()
 
   using HistogramGeneratorType = itk::Statistics::ScalarImageToHistogramGenerator<LabelledImageType>;
 
-  HistogramGeneratorType::Pointer histogramGenerator = HistogramGeneratorType::New();
+  auto histogramGenerator = HistogramGeneratorType::New();
 
   histogramGenerator->SetInput(KLMFilter->GetLabelledImage());
   histogramGenerator->SetNumberOfBins(KLMFilter->GetNumberOfRegions());
@@ -1242,7 +1242,7 @@ test_regiongrowKLM3D()
   using ImageType = itk::Image<itk::Vector<short int, NUMBANDS2>, NUMDIM3D>;
   using OutputImageType = itk::Image<itk::Vector<float, NUMBANDS2>, NUMDIM3D>;
 
-  ImageType::Pointer image = ImageType::New();
+  auto image = ImageType::New();
 
   ImageType::SizeType imageSize;
   imageSize[0] = 10;
@@ -1312,7 +1312,7 @@ test_regiongrowKLM3D()
 
   using KLMRegionGrowImageFilterType = itk::KLMRegionGrowImageFilter<ImageType, OutputImageType>;
 
-  KLMRegionGrowImageFilterType::Pointer KLMFilter = KLMRegionGrowImageFilterType::New();
+  auto KLMFilter = KLMRegionGrowImageFilterType::New();
 
   KLMRegionGrowImageFilterType::GridSizeType gridSize;
   gridSize.Fill(1);
@@ -1671,7 +1671,7 @@ test_regiongrowKLM3D()
 
   using HistogramGeneratorType = itk::Statistics::ScalarImageToHistogramGenerator<LabelledImageType>;
 
-  HistogramGeneratorType::Pointer histogramGenerator = HistogramGeneratorType::New();
+  auto histogramGenerator = HistogramGeneratorType::New();
 
   histogramGenerator->SetInput(KLMFilter->GetLabelledImage());
   histogramGenerator->SetNumberOfBins(KLMFilter->GetNumberOfRegions());
@@ -1744,7 +1744,7 @@ test_regiongrowKLM4D()
   using ImageType = itk::Image<itk::Vector<short int, NUMBANDS1>, NUMDIM4D>;
   using OutputImageType = itk::Image<itk::Vector<float, NUMBANDS1>, NUMDIM4D>;
 
-  ImageType::Pointer image = ImageType::New();
+  auto image = ImageType::New();
 
   ImageType::SizeType imageSize;
   int                 multVal = 2;
@@ -1772,7 +1772,7 @@ test_regiongrowKLM4D()
 
   using KLMRegionGrowImageFilterType = itk::KLMRegionGrowImageFilter<ImageType, OutputImageType>;
 
-  KLMRegionGrowImageFilterType::Pointer KLMFilter = KLMRegionGrowImageFilterType::New();
+  auto KLMFilter = KLMRegionGrowImageFilterType::New();
 
   KLMRegionGrowImageFilterType::GridSizeType gridSize;
   gridSize[0] = 1;
@@ -2063,7 +2063,7 @@ test_regiongrowKLM4D()
 
   using HistogramGeneratorType = itk::Statistics::ScalarImageToHistogramGenerator<LabelledImageType>;
 
-  HistogramGeneratorType::Pointer histogramGenerator = HistogramGeneratorType::New();
+  auto histogramGenerator = HistogramGeneratorType::New();
 
   histogramGenerator->SetInput(KLMFilter->GetLabelledImage());
   histogramGenerator->SetNumberOfBins(KLMFilter->GetNumberOfRegions());

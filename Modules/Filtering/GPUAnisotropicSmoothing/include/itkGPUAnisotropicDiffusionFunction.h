@@ -35,7 +35,7 @@ namespace itk
  * \ingroup ITKGPUAnisotropicSmoothing
  */
 template <typename TImage>
-class GPUAnisotropicDiffusionFunction : public GPUFiniteDifferenceFunction<TImage>
+class ITK_TEMPLATE_EXPORT GPUAnisotropicDiffusionFunction : public GPUFiniteDifferenceFunction<TImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(GPUAnisotropicDiffusionFunction);
@@ -50,13 +50,13 @@ public:
   itkTypeMacro(GPUAnisotropicDiffusionFunction, GPUFiniteDifferenceFunction);
 
   /** Inherit some parameters from the superclass type */
-  using ImageType = typename Superclass::ImageType;
-  using PixelType = typename Superclass::PixelType;
+  using typename Superclass::ImageType;
+  using typename Superclass::PixelType;
   using PixelrealType = typename Superclass::PixelRealType;
-  using RadiusType = typename Superclass::RadiusType;
-  using NeighborhoodType = typename Superclass::NeighborhoodType;
-  using TimeStepType = typename Superclass::TimeStepType;
-  using FloatOffsetType = typename Superclass::FloatOffsetType;
+  using typename Superclass::RadiusType;
+  using typename Superclass::NeighborhoodType;
+  using typename Superclass::TimeStepType;
+  using typename Superclass::FloatOffsetType;
 
   /** Inherit some parameters from the superclass type */
   static constexpr unsigned int ImageDimension = Superclass::ImageDimension;

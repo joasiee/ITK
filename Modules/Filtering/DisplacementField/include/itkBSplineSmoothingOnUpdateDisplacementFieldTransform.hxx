@@ -49,7 +49,7 @@ BSplineSmoothingOnUpdateDisplacementFieldTransform<TParametersValueType, NDimens
   const ArrayType & meshSize)
 {
   ArrayType numberOfControlPoints;
-  for (unsigned int d = 0; d < Dimension; d++)
+  for (unsigned int d = 0; d < Dimension; ++d)
   {
     numberOfControlPoints[d] = meshSize[d] + this->m_SplineOrder;
   }
@@ -65,7 +65,7 @@ BSplineSmoothingOnUpdateDisplacementFieldTransform<TParametersValueType, NDimens
   const ArrayType & meshSize)
 {
   ArrayType numberOfControlPoints;
-  for (unsigned int d = 0; d < Dimension; d++)
+  for (unsigned int d = 0; d < Dimension; ++d)
   {
     numberOfControlPoints[d] = meshSize[d] + this->m_SplineOrder;
   }
@@ -90,7 +90,7 @@ BSplineSmoothingOnUpdateDisplacementFieldTransform<TParametersValueType, NDimens
   // Smooth the update field
   //
   bool smoothUpdateField = true;
-  for (unsigned int d = 0; d < Dimension; d++)
+  for (unsigned int d = 0; d < Dimension; ++d)
   {
     if (this->m_NumberOfControlPointsForTheUpdateField[d] <= this->m_SplineOrder)
     {
@@ -106,7 +106,7 @@ BSplineSmoothingOnUpdateDisplacementFieldTransform<TParametersValueType, NDimens
     auto * updateFieldPointer =
       reinterpret_cast<DisplacementVectorType *>(const_cast<DerivativeType &>(update).data_block());
 
-    typename ImporterType::Pointer importer = ImporterType::New();
+    auto importer = ImporterType::New();
     importer->SetImportPointer(updateFieldPointer, numberOfPixels, importFilterWillReleaseMemory);
     importer->SetRegion(displacementField->GetBufferedRegion());
     importer->SetOrigin(displacementField->GetOrigin());
@@ -138,7 +138,7 @@ BSplineSmoothingOnUpdateDisplacementFieldTransform<TParametersValueType, NDimens
   // Smooth the total field
   //
   bool smoothTotalField = true;
-  for (unsigned int d = 0; d < Dimension; d++)
+  for (unsigned int d = 0; d < Dimension; ++d)
   {
     if (this->m_NumberOfControlPointsForTheTotalField[d] <= this->m_SplineOrder)
     {
@@ -151,7 +151,7 @@ BSplineSmoothingOnUpdateDisplacementFieldTransform<TParametersValueType, NDimens
   {
     itkDebugMacro("Smooothing the total field.");
 
-    typename ImporterType::Pointer importer = ImporterType::New();
+    auto importer = ImporterType::New();
     importer->SetImportPointer(displacementField->GetBufferPointer(), numberOfPixels, importFilterWillReleaseMemory);
     importer->SetRegion(displacementField->GetBufferedRegion());
     importer->SetOrigin(displacementField->GetOrigin());
@@ -179,7 +179,7 @@ BSplineSmoothingOnUpdateDisplacementFieldTransform<TParametersValueType, NDimens
   const DisplacementFieldType * field,
   const ArrayType &             numberOfControlPoints)
 {
-  typename BSplineFilterType::Pointer bspliner = BSplineFilterType::New();
+  auto bspliner = BSplineFilterType::New();
   bspliner->SetUseInputFieldToDefineTheBSplineDomain(true);
   bspliner->SetDisplacementField(field);
   bspliner->SetNumberOfControlPoints(numberOfControlPoints);

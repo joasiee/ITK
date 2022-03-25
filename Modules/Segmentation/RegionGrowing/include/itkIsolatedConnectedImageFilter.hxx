@@ -157,16 +157,16 @@ IsolatedConnectedImageFilter<TInputImage, TOutputImage>::ClearSeeds2()
 }
 
 template <typename TInputImage, typename TOutputImage>
-const typename IsolatedConnectedImageFilter<TInputImage, TOutputImage>::SeedsContainerType &
-IsolatedConnectedImageFilter<TInputImage, TOutputImage>::GetSeeds1() const
+auto
+IsolatedConnectedImageFilter<TInputImage, TOutputImage>::GetSeeds1() const -> const SeedsContainerType &
 {
   itkDebugMacro("returning Seeds1");
   return this->m_Seeds1;
 }
 
 template <typename TInputImage, typename TOutputImage>
-const typename IsolatedConnectedImageFilter<TInputImage, TOutputImage>::SeedsContainerType &
-IsolatedConnectedImageFilter<TInputImage, TOutputImage>::GetSeeds2() const
+auto
+IsolatedConnectedImageFilter<TInputImage, TOutputImage>::GetSeeds2() const -> const SeedsContainerType &
 {
   itkDebugMacro("returning Seeds2");
   return this->m_Seeds2;
@@ -200,7 +200,7 @@ IsolatedConnectedImageFilter<TInputImage, TOutputImage>::GenerateData()
   using FunctionType = BinaryThresholdImageFunction<InputImageType>;
   using IteratorType = FloodFilledImageFunctionConditionalIterator<OutputImageType, FunctionType>;
 
-  typename FunctionType::Pointer function = FunctionType::New();
+  auto function = FunctionType::New();
   function->SetInputImage(inputImage);
 
   float             progressWeight = 0.0f;

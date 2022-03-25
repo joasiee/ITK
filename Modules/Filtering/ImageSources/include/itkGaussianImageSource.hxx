@@ -56,8 +56,8 @@ GaussianImageSource<TOutputImage>::SetParameters(const ParametersType & paramete
 }
 
 template <typename TOutputImage>
-typename GaussianImageSource<TOutputImage>::ParametersType
-GaussianImageSource<TOutputImage>::GetParameters() const
+auto
+GaussianImageSource<TOutputImage>::GetParameters() const -> ParametersType
 {
   ParametersType parameters(2 * ArrayType::Length + 1);
   for (unsigned int i = 0; i < ArrayType::Length; ++i)
@@ -89,7 +89,7 @@ GaussianImageSource<TOutputImage>::GenerateData()
 
   // Create and initialize a new Gaussian function
   using FunctionType = GaussianSpatialFunction<double, NDimensions>;
-  typename FunctionType::Pointer gaussian = FunctionType::New();
+  auto gaussian = FunctionType::New();
 
   gaussian->SetSigma(m_Sigma);
   gaussian->SetMean(m_Mean);

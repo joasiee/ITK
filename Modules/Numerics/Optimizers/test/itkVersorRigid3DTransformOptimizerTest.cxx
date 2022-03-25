@@ -115,7 +115,7 @@ public:
   GetValue(const ParametersType & parameters) const override
   {
     TransformType::ParametersType p(Self::SpaceDimension);
-    for (unsigned int i = 0; i < 6; i++)
+    for (unsigned int i = 0; i < 6; ++i)
     {
       p[i] = parameters[i];
     }
@@ -134,7 +134,7 @@ public:
   GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const override
   {
     VectorType rightPart;
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       rightPart[i] = parameters[i];
     }
@@ -231,11 +231,11 @@ itkVersorRigid3DTransformOptimizerTest(int, char *[])
 
 
   // Declaration of a itkOptimizer
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
 
 
   // Declaration of the CostFunction adaptor
-  versorRigid3DCostFunction::Pointer costFunction = versorRigid3DCostFunction::New();
+  auto costFunction = versorRigid3DCostFunction::New();
 
 
   itkOptimizer->SetCostFunction(costFunction);
@@ -306,7 +306,7 @@ itkVersorRigid3DTransformOptimizerTest(int, char *[])
 
   VersorType             finalRotation;
   VersorType::VectorType finalRightPart;
-  for (unsigned int i = 0; i < spaceDimensions; i++)
+  for (unsigned int i = 0; i < spaceDimensions; ++i)
   {
     finalRightPart[i] = finalPosition[i];
   }
@@ -315,7 +315,7 @@ itkVersorRigid3DTransformOptimizerTest(int, char *[])
   std::cout << "Solution versor  = (" << finalRotation << ")" << std::endl;
 
   VersorType::VectorType finalTranslation;
-  for (unsigned int j = 0; j < spaceDimensions; j++)
+  for (unsigned int j = 0; j < spaceDimensions; ++j)
   {
     finalTranslation[j] = finalPosition[j + spaceDimensions];
   }

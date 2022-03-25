@@ -44,10 +44,10 @@ itkFEMLoadPointTestUser(int, char *[])
   itk::FEMFactoryBase::GetFactory()->RegisterDefaultTypes();
 
   using FEMObjectType = itk::fem::FEMObject<2>;
-  FEMObjectType::Pointer femObject = FEMObjectType::New();
+  auto femObject = FEMObjectType::New();
 
   using Solver2DType = itk::fem::Solver<2>;
-  Solver2DType::Pointer solver = Solver2DType::New();
+  auto solver = Solver2DType::New();
 
 
   itk::fem::Element::Node::Pointer n1;
@@ -146,7 +146,7 @@ itkFEMLoadPointTestUser(int, char *[])
   // Solvers being tested
   int numsolvers = 3;
 
-  for (int s = 0; s < numsolvers; s++)
+  for (int s = 0; s < numsolvers; ++s)
   {
     if (s == 2)
     {
@@ -172,7 +172,7 @@ itkFEMLoadPointTestUser(int, char *[])
 
     int               numDOF = femObject->GetNumberOfDegreesOfFreedom();
     vnl_vector<float> soln(numDOF);
-    for (int i = 0; i < numDOF; i++)
+    for (int i = 0; i < numDOF; ++i)
     {
       soln[i] = solver->GetSolution(i);
     }

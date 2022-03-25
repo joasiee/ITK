@@ -35,7 +35,7 @@ template <typename TParametersValueType, unsigned int NDimensions>
 void
 ScaleTransform<TParametersValueType, NDimensions>::SetParameters(const ParametersType & parameters)
 {
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     m_Scale[i] = parameters[i];
   }
@@ -55,12 +55,12 @@ ScaleTransform<TParametersValueType, NDimensions>::SetParameters(const Parameter
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-const typename ScaleTransform<TParametersValueType, NDimensions>::ParametersType &
-ScaleTransform<TParametersValueType, NDimensions>::GetParameters() const
+auto
+ScaleTransform<TParametersValueType, NDimensions>::GetParameters() const -> const ParametersType &
 {
   itkDebugMacro(<< "Getting parameters ");
   // Transfer the translation part
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     this->m_Parameters[i] = m_Scale[i];
   }
@@ -85,7 +85,7 @@ template <typename TParametersValueType, unsigned int NDimensions>
 void
 ScaleTransform<TParametersValueType, NDimensions>::Compose(const Self * other, bool)
 {
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     m_Scale[i] *= other->m_Scale[i];
   }
@@ -96,7 +96,7 @@ template <typename TParametersValueType, unsigned int NDimensions>
 void
 ScaleTransform<TParametersValueType, NDimensions>::Scale(const ScaleType & scale, bool)
 {
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     m_Scale[i] *= scale[i];
   }
@@ -104,13 +104,13 @@ ScaleTransform<TParametersValueType, NDimensions>::Scale(const ScaleType & scale
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename ScaleTransform<TParametersValueType, NDimensions>::OutputPointType
-ScaleTransform<TParametersValueType, NDimensions>::TransformPoint(const InputPointType & point) const
+auto
+ScaleTransform<TParametersValueType, NDimensions>::TransformPoint(const InputPointType & point) const -> OutputPointType
 {
   OutputPointType        result;
   const InputPointType & center = this->GetCenter();
 
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     result[i] = (point[i] - center[i]) * m_Scale[i] + center[i];
   }
@@ -119,12 +119,13 @@ ScaleTransform<TParametersValueType, NDimensions>::TransformPoint(const InputPoi
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename ScaleTransform<TParametersValueType, NDimensions>::OutputVectorType
+auto
 ScaleTransform<TParametersValueType, NDimensions>::TransformVector(const InputVectorType & vect) const
+  -> OutputVectorType
 {
   OutputVectorType result;
 
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     result[i] = vect[i] * m_Scale[i];
   }
@@ -133,12 +134,13 @@ ScaleTransform<TParametersValueType, NDimensions>::TransformVector(const InputVe
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename ScaleTransform<TParametersValueType, NDimensions>::OutputVnlVectorType
+auto
 ScaleTransform<TParametersValueType, NDimensions>::TransformVector(const InputVnlVectorType & vect) const
+  -> OutputVnlVectorType
 {
   OutputVnlVectorType result;
 
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     result[i] = vect[i] * m_Scale[i];
   }
@@ -147,13 +149,14 @@ ScaleTransform<TParametersValueType, NDimensions>::TransformVector(const InputVn
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename ScaleTransform<TParametersValueType, NDimensions>::OutputCovariantVectorType
+auto
 ScaleTransform<TParametersValueType, NDimensions>::TransformCovariantVector(const InputCovariantVectorType & vect) const
+  -> OutputCovariantVectorType
 {
   // Covariant Vectors are scaled by the inverse
   OutputCovariantVectorType result;
 
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     result[i] = vect[i] / m_Scale[i];
   }
@@ -170,7 +173,7 @@ ScaleTransform<TParametersValueType, NDimensions>::GetInverse(Self * inverse) co
     return false;
   }
   inverse->SetFixedParameters(this->GetFixedParameters());
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     inverse->m_Scale[i] = NumericTraits<double>::OneValue() / m_Scale[i];
   }
@@ -180,8 +183,8 @@ ScaleTransform<TParametersValueType, NDimensions>::GetInverse(Self * inverse) co
 
 
 template <typename TParametersValueType, unsigned int NDimensions>
-typename ScaleTransform<TParametersValueType, NDimensions>::InverseTransformBasePointer
-ScaleTransform<TParametersValueType, NDimensions>::GetInverseTransform() const
+auto
+ScaleTransform<TParametersValueType, NDimensions>::GetInverseTransform() const -> InverseTransformBasePointer
 {
   Pointer inv = New();
 
@@ -211,7 +214,7 @@ ScaleTransform<TParametersValueType, NDimensions>::ComputeJacobianWithRespectToP
   j.SetSize(SpaceDimension, this->GetNumberOfLocalParameters());
   j.Fill(0.0);
   const InputPointType & center = this->GetCenter();
-  for (unsigned int dim = 0; dim < SpaceDimension; dim++)
+  for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
     j(dim, dim) = p[dim] - center[dim];
   }
@@ -225,7 +228,7 @@ ScaleTransform<TParametersValueType, NDimensions>::ComputeJacobianWithRespectToP
   JacobianPositionType & jac) const
 {
   jac.fill(0.0);
-  for (unsigned int dim = 0; dim < NDimensions; dim++)
+  for (unsigned int dim = 0; dim < NDimensions; ++dim)
   {
     jac[dim][dim] = m_Scale[dim];
   }
@@ -249,7 +252,7 @@ ScaleTransform<TParametersValueType, NDimensions>::ComputeMatrix()
   MatrixType matrix;
 
   matrix.SetIdentity();
-  for (unsigned int dim = 0; dim < SpaceDimension; dim++)
+  for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
     matrix[dim][dim] = m_Scale[dim];
   }
@@ -266,7 +269,7 @@ ScaleTransform<TParametersValueType, NDimensions>::BackTransform(const OutputPoi
   InputPointType         result;
   const InputPointType & center = this->GetCenter();
 
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     result[i] = (point[i] + center[i]) / m_Scale[i] - center[i];
   }
@@ -280,7 +283,7 @@ ScaleTransform<TParametersValueType, NDimensions>::BackTransform(const OutputVec
 {
   InputVectorType result;
 
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     result[i] = vect[i] / m_Scale[i];
   }
@@ -294,7 +297,7 @@ ScaleTransform<TParametersValueType, NDimensions>::BackTransform(const OutputVnl
 {
   InputVnlVectorType result;
 
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     result[i] = vect[i] / m_Scale[i];
   }
@@ -309,7 +312,7 @@ ScaleTransform<TParametersValueType, NDimensions>::BackTransform(const OutputCov
   // Covariant Vectors are scaled by the inverse
   InputCovariantVectorType result;
 
-  for (unsigned int i = 0; i < SpaceDimension; i++)
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     result[i] = vect[i] * m_Scale[i];
   }

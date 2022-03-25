@@ -62,6 +62,7 @@ Similarity3DTransform<TParametersValueType>::SetScale(ScaleType scale)
 {
   m_Scale = scale;
   this->ComputeMatrix();
+  this->ComputeOffset();
 }
 
 // Directly set the matrix
@@ -184,8 +185,8 @@ Similarity3DTransform<TParametersValueType>::SetParameters(const ParametersType 
 //
 
 template <typename TParametersValueType>
-const typename Similarity3DTransform<TParametersValueType>::ParametersType &
-Similarity3DTransform<TParametersValueType>::GetParameters() const
+auto
+Similarity3DTransform<TParametersValueType>::GetParameters() const -> const ParametersType &
 {
   itkDebugMacro(<< "Getting parameters ");
 

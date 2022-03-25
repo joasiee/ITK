@@ -60,16 +60,12 @@ public:
   SquaredDifference2() = default;
   ~SquaredDifference2() = default;
   bool
-  operator!=(const SquaredDifference2 &) const
+  operator==(const SquaredDifference2 &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const SquaredDifference2 & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(SquaredDifference2);
 
   inline TOutput
   operator()(const TInput1 & A, const TInput2 & B) const
@@ -84,7 +80,8 @@ public:
 } // namespace Functor
 
 template <typename TInputImage1, typename TInputImage2, typename TOutputImage>
-class SquaredDifferenceImageFilter : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
+class ITK_TEMPLATE_EXPORT SquaredDifferenceImageFilter
+  : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(SquaredDifferenceImageFilter);

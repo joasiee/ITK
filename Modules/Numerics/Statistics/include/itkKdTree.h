@@ -149,9 +149,9 @@ template <typename TSample>
 struct ITK_TEMPLATE_EXPORT KdTreeNonterminalNode : public KdTreeNode<TSample>
 {
   using Superclass = KdTreeNode<TSample>;
-  using MeasurementType = typename Superclass::MeasurementType;
-  using CentroidType = typename Superclass::CentroidType;
-  using InstanceIdentifier = typename Superclass::InstanceIdentifier;
+  using typename Superclass::MeasurementType;
+  using typename Superclass::CentroidType;
+  using typename Superclass::InstanceIdentifier;
 
   KdTreeNonterminalNode(unsigned int, MeasurementType, Superclass *, Superclass *);
 
@@ -264,9 +264,9 @@ template <typename TSample>
 struct ITK_TEMPLATE_EXPORT KdTreeWeightedCentroidNonterminalNode : public KdTreeNode<TSample>
 {
   using Superclass = KdTreeNode<TSample>;
-  using MeasurementType = typename Superclass::MeasurementType;
-  using CentroidType = typename Superclass::CentroidType;
-  using InstanceIdentifier = typename Superclass::InstanceIdentifier;
+  using typename Superclass::MeasurementType;
+  using typename Superclass::CentroidType;
+  using typename Superclass::InstanceIdentifier;
   using MeasurementVectorSizeType = typename TSample::MeasurementVectorSizeType;
 
   KdTreeWeightedCentroidNonterminalNode(unsigned int,
@@ -394,9 +394,9 @@ template <typename TSample>
 struct ITK_TEMPLATE_EXPORT KdTreeTerminalNode : public KdTreeNode<TSample>
 {
   using Superclass = KdTreeNode<TSample>;
-  using MeasurementType = typename Superclass::MeasurementType;
-  using CentroidType = typename Superclass::CentroidType;
-  using InstanceIdentifier = typename Superclass::InstanceIdentifier;
+  using typename Superclass::MeasurementType;
+  using typename Superclass::CentroidType;
+  using typename Superclass::InstanceIdentifier;
 
   KdTreeTerminalNode() = default;
 
@@ -619,7 +619,7 @@ public:
       m_Distances[m_FarthestNeighborIndex] = distance;
       double     farthestDistance = NumericTraits<double>::min();
       const auto size = static_cast<unsigned int>(m_Distances.size());
-      for (unsigned int i = 0; i < size; i++)
+      for (unsigned int i = 0; i < size; ++i)
       {
         if (m_Distances[i] > farthestDistance)
         {

@@ -65,7 +65,8 @@ namespace itk
  * \endsphinx
  */
 template <typename TInputImage, typename TOutputImage>
-class VectorCurvatureAnisotropicDiffusionImageFilter : public AnisotropicDiffusionImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT VectorCurvatureAnisotropicDiffusionImageFilter
+  : public AnisotropicDiffusionImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(VectorCurvatureAnisotropicDiffusionImageFilter);
@@ -83,7 +84,7 @@ public:
   itkTypeMacro(VectorCurvatureAnisotropicDiffusionImageFilter, AnisotropicDiffusionImageFilter);
 
   /** Convenient type alias. */
-  using UpdateBufferType = typename Superclass::UpdateBufferType;
+  using typename Superclass::UpdateBufferType;
 
   /** Determine the image dimension. */
   static constexpr unsigned int ImageDimension = Superclass::ImageDimension;

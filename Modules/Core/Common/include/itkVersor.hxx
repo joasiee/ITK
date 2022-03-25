@@ -143,14 +143,6 @@ Versor<T>::operator/(const Self & v) const
 /** Comparison operator */
 template <typename T>
 bool
-Versor<T>::operator!=(const Self & v) const
-{
-  return !(*this == v);
-}
-
-/** Comparison operator */
-template <typename T>
-bool
 Versor<T>::operator==(const Self & v) const
 {
   // Evaluate the quaternion ratio between them
@@ -200,8 +192,8 @@ Versor<T>::GetReciprocal() const
 
 /** Get Tensor part */
 template <typename T>
-typename Versor<T>::ValueType
-Versor<T>::GetTensor() const
+auto
+Versor<T>::GetTensor() const -> ValueType
 {
   const auto tensor = static_cast<ValueType>(std::sqrt(m_X * m_X + m_Y * m_Y + m_Z * m_Z + m_W * m_W));
 
@@ -231,8 +223,8 @@ Versor<T>::Normalize()
 
 /** Get Axis */
 template <typename T>
-typename Versor<T>::VectorType
-Versor<T>::GetAxis() const
+auto
+Versor<T>::GetAxis() const -> VectorType
 {
   VectorType axis;
 
@@ -260,8 +252,8 @@ Versor<T>::GetAxis() const
 
 /** Get Right part */
 template <typename T>
-typename Versor<T>::VectorType
-Versor<T>::GetRight() const
+auto
+Versor<T>::GetRight() const -> VectorType
 {
   VectorType axis;
 
@@ -274,16 +266,16 @@ Versor<T>::GetRight() const
 
 /** Get Scalar part */
 template <typename T>
-typename Versor<T>::ValueType
-Versor<T>::GetScalar() const
+auto
+Versor<T>::GetScalar() const -> ValueType
 {
   return m_W;
 }
 
 /** Get Angle (in radians) */
 template <typename T>
-typename Versor<T>::ValueType
-Versor<T>::GetAngle() const
+auto
+Versor<T>::GetAngle() const -> ValueType
 {
   const auto ax = static_cast<RealType>(m_X);
   const auto ay = static_cast<RealType>(m_Y);
@@ -589,8 +581,8 @@ localTransformVectorMath(const InputVectorType & VectorObject,
 
 /** Transform a Vector */
 template <typename T>
-typename Versor<T>::VectorType
-Versor<T>::Transform(const VectorType & v) const
+auto
+Versor<T>::Transform(const VectorType & v) const -> VectorType
 {
   return localTransformVectorMath<VectorType, T, typename Versor<T>::VectorType>(
     v, this->m_X, this->m_Y, this->m_Z, this->m_W);
@@ -600,8 +592,8 @@ Versor<T>::Transform(const VectorType & v) const
  *  given that this is an orthogonal transformation
  *  CovariantVectors are transformed as vectors. */
 template <typename T>
-typename Versor<T>::CovariantVectorType
-Versor<T>::Transform(const CovariantVectorType & v) const
+auto
+Versor<T>::Transform(const CovariantVectorType & v) const -> CovariantVectorType
 {
   return localTransformVectorMath<CovariantVectorType, T, typename Versor<T>::CovariantVectorType>(
     v, this->m_X, this->m_Y, this->m_Z, this->m_W);
@@ -609,8 +601,8 @@ Versor<T>::Transform(const CovariantVectorType & v) const
 
 /** Transform a Point */
 template <typename T>
-typename Versor<T>::PointType
-Versor<T>::Transform(const PointType & v) const
+auto
+Versor<T>::Transform(const PointType & v) const -> PointType
 {
   return localTransformVectorMath<PointType, T, typename Versor<T>::PointType>(
     v, this->m_X, this->m_Y, this->m_Z, this->m_W);
@@ -618,8 +610,8 @@ Versor<T>::Transform(const PointType & v) const
 
 /** Transform a VnlVector */
 template <typename T>
-typename Versor<T>::VnlVectorType
-Versor<T>::Transform(const VnlVectorType & v) const
+auto
+Versor<T>::Transform(const VnlVectorType & v) const -> VnlVectorType
 {
   return localTransformVectorMath<VnlVectorType, T, typename Versor<T>::VnlVectorType>(
     v, this->m_X, this->m_Y, this->m_Z, this->m_W);

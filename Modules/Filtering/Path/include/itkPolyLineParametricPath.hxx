@@ -26,8 +26,8 @@
 namespace itk
 {
 template <unsigned int VDimension>
-typename PolyLineParametricPath<VDimension>::OutputType
-PolyLineParametricPath<VDimension>::Evaluate(const InputType & input) const
+auto
+PolyLineParametricPath<VDimension>::Evaluate(const InputType & input) const -> OutputType
 {
   // Handle the endpoint carefully, since there is no following vertex
   const auto endPoint = static_cast<InputType>(m_VertexList->Size() - 1);
@@ -47,7 +47,7 @@ PolyLineParametricPath<VDimension>::Evaluate(const InputType & input) const
   // For some stupid reason, there is no easy way to cast from a point to a
   // continuous index.
   OutputType output;
-  for (unsigned int i = 0; i < VDimension; i++)
+  for (unsigned int i = 0; i < VDimension; ++i)
   {
     output[i] = outputPoint[i];
   }
@@ -56,8 +56,8 @@ PolyLineParametricPath<VDimension>::Evaluate(const InputType & input) const
 }
 
 template <unsigned int VDimension>
-typename PolyLineParametricPath<VDimension>::VectorType
-PolyLineParametricPath<VDimension>::EvaluateDerivative(const InputType & input) const
+auto
+PolyLineParametricPath<VDimension>::EvaluateDerivative(const InputType & input) const -> VectorType
 {
   // Get next integral time-point
   const InputType nextTimepoint = std::min(std::floor(input + 1.0), this->EndOfInput());
@@ -80,8 +80,8 @@ PolyLineParametricPath<VDimension>::EvaluateDerivative(const InputType & input) 
 }
 
 template <unsigned int VDimension>
-typename PolyLineParametricPath<VDimension>::OffsetType
-PolyLineParametricPath<VDimension>::IncrementInput(InputType & input) const
+auto
+PolyLineParametricPath<VDimension>::IncrementInput(InputType & input) const -> OffsetType
 {
   // Save this input index since we will use it to calculate the offset
   const IndexType originalIndex = this->EvaluateToIndex(input);

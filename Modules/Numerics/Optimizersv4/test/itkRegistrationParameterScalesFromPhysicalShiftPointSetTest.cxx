@@ -38,15 +38,15 @@ public:
   using Pointer = itk::SmartPointer<Self>;
   using ConstPointer = itk::SmartPointer<const Self>;
 
-  using MeasureType = typename Superclass::MeasureType;
-  using DerivativeType = typename Superclass::DerivativeType;
-  using ParametersType = typename Superclass::ParametersType;
-  using ParametersValueType = typename Superclass::ParametersValueType;
-  using PointType = typename Superclass::PointType;
-  using PixelType = typename Superclass::PixelType;
-  using LocalDerivativeType = typename Superclass::LocalDerivativeType;
-  using FixedPointSetType = typename Superclass::FixedPointSetType;
-  using MovingPointSetType = typename Superclass::MovingPointSetType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::ParametersValueType;
+  using typename Superclass::PointType;
+  using typename Superclass::PixelType;
+  using typename Superclass::LocalDerivativeType;
+  using typename Superclass::FixedPointSetType;
+  using typename Superclass::MovingPointSetType;
 
   itkTypeMacro(RegistrationParameterScalesFromPhysicalShiftPointSetTestMetric, PointSetToPointSetMetricv4);
 
@@ -86,9 +86,9 @@ itkRegistrationParameterScalesFromPhysicalShiftPointSetTest(int, char *[])
   using PointSetType = itk::PointSet<PixelType, Dimension>;
   using PointType = PointSetType::PointType;
 
-  PointSetType::Pointer fixedPoints = PointSetType::New();
+  auto fixedPoints = PointSetType::New();
   fixedPoints->Initialize();
-  PointSetType::Pointer movingPoints = PointSetType::New();
+  auto movingPoints = PointSetType::New();
   movingPoints->Initialize();
 
   itk::Size<Dimension> virtualDomainSize;
@@ -118,16 +118,16 @@ itkRegistrationParameterScalesFromPhysicalShiftPointSetTest(int, char *[])
 
   // Transforms
   using MovingTransformType = itk::AffineTransform<double, Dimension>;
-  MovingTransformType::Pointer movingTransform = MovingTransformType::New();
+  auto movingTransform = MovingTransformType::New();
   movingTransform->SetIdentity();
 
   using FixedTransformType = itk::TranslationTransform<double, Dimension>;
-  FixedTransformType::Pointer fixedTransform = FixedTransformType::New();
+  auto fixedTransform = FixedTransformType::New();
   fixedTransform->SetIdentity();
 
   // Metric
   using MetricType = RegistrationParameterScalesFromPhysicalShiftPointSetTestMetric<PointSetType, PointSetType>;
-  MetricType::Pointer metric = MetricType::New();
+  auto metric = MetricType::New();
 
   metric->SetFixedPointSet(fixedPoints);
   metric->SetMovingPointSet(movingPoints);
@@ -155,21 +155,21 @@ itkRegistrationParameterScalesFromPhysicalShiftPointSetTest(int, char *[])
   RegistrationParameterScalesFromPhysicalShiftType::ScalesType theoreticalMovingScales(
     movingTransform->GetNumberOfParameters());
   itk::SizeValueType param = 0;
-  for (itk::SizeValueType row = 0; row < Dimension; row++)
+  for (itk::SizeValueType row = 0; row < Dimension; ++row)
   {
-    for (itk::SizeValueType col = 0; col < Dimension; col++)
+    for (itk::SizeValueType col = 0; col < Dimension; ++col)
     {
       theoreticalMovingScales[param++] = upperRightPoint[col] * upperRightPoint[col];
     }
   }
-  for (itk::SizeValueType row = 0; row < Dimension; row++)
+  for (itk::SizeValueType row = 0; row < Dimension; ++row)
   {
     theoreticalMovingScales[param++] = 1;
   }
 
   // compare test to truth
   bool affinePass = true;
-  for (itk::SizeValueType p = 0; p < theoreticalMovingScales.GetSize(); p++)
+  for (itk::SizeValueType p = 0; p < theoreticalMovingScales.GetSize(); ++p)
   {
     if (std::abs((movingScales[p] - theoreticalMovingScales[p]) / theoreticalMovingScales[p]) > 0.01)
     {
@@ -188,7 +188,7 @@ itkRegistrationParameterScalesFromPhysicalShiftPointSetTest(int, char *[])
   }
 
   bool nonUniformForAffine = false;
-  for (itk::SizeValueType p = 1; p < movingScales.GetSize(); p++)
+  for (itk::SizeValueType p = 1; p < movingScales.GetSize(); ++p)
   {
     if (itk::Math::NotExactlyEquals(movingScales[p], movingScales[0]))
     {
@@ -213,7 +213,7 @@ itkRegistrationParameterScalesFromPhysicalShiftPointSetTest(int, char *[])
 
   // compute truth
   FloatType theoreticalStepScale = 0.0;
-  for (itk::SizeValueType row = 0; row < Dimension; row++)
+  for (itk::SizeValueType row = 0; row < Dimension; ++row)
   {
     theoreticalStepScale += upperRightPoint[row] * upperRightPoint[row];
   }
@@ -248,7 +248,7 @@ itkRegistrationParameterScalesFromPhysicalShiftPointSetTest(int, char *[])
   theoreticalFixedScales.Fill(1.0);
 
   bool translationPass = true;
-  for (itk::SizeValueType p = 0; p < theoreticalFixedScales.GetSize(); p++)
+  for (itk::SizeValueType p = 0; p < theoreticalFixedScales.GetSize(); ++p)
   {
     if (std::abs((fixedScales[p] - theoreticalFixedScales[p]) / theoreticalFixedScales[p]) > 0.01)
     {
@@ -266,7 +266,7 @@ itkRegistrationParameterScalesFromPhysicalShiftPointSetTest(int, char *[])
   }
 
   bool uniformForTranslation = true;
-  for (itk::SizeValueType p = 1; p < fixedScales.GetSize(); p++)
+  for (itk::SizeValueType p = 1; p < fixedScales.GetSize(); ++p)
   {
     if (std::abs(fixedScales[p] - fixedScales[0]) > 1e-6)
     {
@@ -297,7 +297,7 @@ itkRegistrationParameterScalesFromPhysicalShiftPointSetTest(int, char *[])
   index.Fill(0);
   region.SetIndex(index);
 
-  FieldType::Pointer field = FieldType::New();
+  auto field = FieldType::New();
   field->SetRegions(region);
   double spacing[2] = { 1.0, 1.0 };
   field->SetSpacing(spacing);
@@ -306,7 +306,7 @@ itkRegistrationParameterScalesFromPhysicalShiftPointSetTest(int, char *[])
   field->Allocate();
   field->FillBuffer(zero);
 
-  DisplacementTransformType::Pointer displacementTransform = DisplacementTransformType::New();
+  auto displacementTransform = DisplacementTransformType::New();
   displacementTransform->SetDisplacementField(field);
   metric->SetMovingTransform(displacementTransform);
   // We must initialize the metric so it will create a virtual domain from the displacement field.
@@ -324,7 +324,7 @@ itkRegistrationParameterScalesFromPhysicalShiftPointSetTest(int, char *[])
   theoreticalLocalScales.Fill(1.0);
 
   bool displacementPass = true;
-  for (itk::SizeValueType p = 0; p < theoreticalLocalScales.GetSize(); p++)
+  for (itk::SizeValueType p = 0; p < theoreticalLocalScales.GetSize(); ++p)
   {
     if (std::abs((localScales[p] - theoreticalLocalScales[p]) / theoreticalLocalScales[p]) > 0.01)
     {

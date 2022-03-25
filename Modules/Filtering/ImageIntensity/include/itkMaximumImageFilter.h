@@ -36,16 +36,12 @@ public:
   Maximum() = default;
   ~Maximum() = default;
   bool
-  operator!=(const Maximum &) const
+  operator==(const Maximum &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Maximum & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Maximum);
 
   inline TOutput
   operator()(const TInput1 & A, const TInput2 & B) const
@@ -82,7 +78,8 @@ public:
  * \endsphinx
  */
 template <typename TInputImage1, typename TInputImage2 = TInputImage1, typename TOutputImage = TInputImage1>
-class MaximumImageFilter : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
+class ITK_TEMPLATE_EXPORT MaximumImageFilter
+  : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(MaximumImageFilter);

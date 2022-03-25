@@ -27,7 +27,7 @@ itkAtanRegularizedHeavisideStepFunctionTest1(int, char *[])
 
   using HeavisideFunctionBaseType = itk::AtanRegularizedHeavisideStepFunction<InputType, OutputType>;
 
-  HeavisideFunctionBaseType::Pointer functionBase0 = HeavisideFunctionBaseType::New();
+  auto functionBase0 = HeavisideFunctionBaseType::New();
 
   std::cout << "GetNameOfClass() = " << functionBase0->GetNameOfClass() << std::endl;
   functionBase0->Print(std::cout);
@@ -48,7 +48,7 @@ itkAtanRegularizedHeavisideStepFunctionTest1(int, char *[])
 
   constexpr InputType incValue = 0.1;
 
-  for (signed int x = minValue; x < maxValue; x++)
+  for (signed int x = minValue; x < maxValue; ++x)
   {
     const InputType ix = x * incValue;
     OutputType      f = functionBase0->Evaluate(ix);

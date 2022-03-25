@@ -61,16 +61,12 @@ public:
   AbsoluteValueDifference2() = default;
   ~AbsoluteValueDifference2() = default;
   bool
-  operator!=(const AbsoluteValueDifference2 &) const
+  operator==(const AbsoluteValueDifference2 &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const AbsoluteValueDifference2 & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(AbsoluteValueDifference2);
 
   inline TOutput
   operator()(const TInput1 & A, const TInput2 & B) const
@@ -86,7 +82,8 @@ public:
 } // namespace Functor
 
 template <typename TInputImage1, typename TInputImage2, typename TOutputImage>
-class AbsoluteValueDifferenceImageFilter : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
+class ITK_TEMPLATE_EXPORT AbsoluteValueDifferenceImageFilter
+  : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(AbsoluteValueDifferenceImageFilter);

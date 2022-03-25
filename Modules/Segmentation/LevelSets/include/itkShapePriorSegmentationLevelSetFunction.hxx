@@ -87,8 +87,9 @@ ShapePriorSegmentationLevelSetFunction<TImageType, TFeatureImageType>::ComputeUp
  * Compute the global time step.
  */
 template <typename TImageType, typename TFeatureImageType>
-typename ShapePriorSegmentationLevelSetFunction<TImageType, TFeatureImageType>::TimeStepType
+auto
 ShapePriorSegmentationLevelSetFunction<TImageType, TFeatureImageType>::ComputeGlobalTimeStep(void * gd) const
+  -> TimeStepType
 {
   TimeStepType dt;
 
@@ -120,7 +121,7 @@ ShapePriorSegmentationLevelSetFunction<TImageType, TFeatureImageType>::ComputeGl
   }
 
   double maxScaleCoefficient = 0.0;
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     maxScaleCoefficient = std::max(this->m_ScaleCoefficients[i], maxScaleCoefficient);
   }

@@ -36,9 +36,9 @@ testArray(const itk::Array2D<T> & m1, const itk::Array2D<T> & m2)
     return pass;
   }
 
-  for (unsigned int i = 0; i < m1.rows(); i++)
+  for (unsigned int i = 0; i < m1.rows(); ++i)
   {
-    for (unsigned int j = 0; j < m1.cols(); j++)
+    for (unsigned int j = 0; j < m1.cols(); ++j)
     {
       // We need to test whether m1 is a NaN and/or m2 is a NaN.
       // If they are both NaN, then they are the same.
@@ -93,7 +93,7 @@ itkCSVFileReaderWriterTest_Func(int argc, char * argv[], bool headers)
 
   // write out the array2D object
   using WriterType = itk::CSVNumericObjectFileWriter<double, ARows, ACols>;
-  WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
 
   if (argc < 2)
   {
@@ -134,7 +134,7 @@ itkCSVFileReaderWriterTest_Func(int argc, char * argv[], bool headers)
   }
 
   using ReaderType = itk::CSVArray2DFileReader<double>;
-  ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   reader->SetFileName(filename);
   reader->SetFieldDelimiterCharacter(',');
   reader->SetStringDelimiterCharacter('"');

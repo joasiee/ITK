@@ -32,9 +32,7 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::ImagePCAShapeModelEstima
   m_NumberOfPrincipalComponentsRequired = 0;
   this->SetNumberOfPrincipalComponentsRequired(1);
 }
-/**
- * PrintSelf
- */
+
 template <typename TInputImage, typename TOutputImage>
 void
 ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::PrintSelf(std::ostream & os, Indent indent) const
@@ -56,15 +54,11 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::PrintSelf(std::ostream &
   os << indent << "NumberOfPrincipalComponentsRequired: " << m_NumberOfPrincipalComponentsRequired << std::endl;
 }
 
-/**
- * Enlarge the output requested region to the largest possible region.
- */
 template <typename TInputImage, typename TOutputImage>
 void
 ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::EnlargeOutputRequestedRegion(DataObject * itkNotUsed(output))
 {
-  // this filter requires the all of the output images to be in
-  // the buffer
+  // Require all of the output images to be in the buffer
   for (unsigned int idx = 0; idx < this->GetNumberOfIndexedOutputs(); ++idx)
   {
     if (this->GetOutput(idx))
@@ -74,16 +68,14 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::EnlargeOutputRequestedRe
   }
 }
 
-/**
- * Requires all of the inputs to be in the buffer up to the
- * LargestPossibleRegion of the first input.
- */
 template <typename TInputImage, typename TOutputImage>
 void
 ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::GenerateInputRequestedRegion()
 {
   Superclass::GenerateInputRequestedRegion();
 
+  // Require all of the inputs to be in the buffer up to the
+  // LargestPossibleRegion of the first input.
   if (this->GetInput(0))
   {
     // Set the requested region of the first input to largest possible region
@@ -109,14 +101,11 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::GenerateInputRequestedRe
 
         InputImagePointer ptr = const_cast<TInputImage *>(this->GetInput(idx));
         ptr->SetRequestedRegion(requestedRegion);
-      } // if ( this->GetIntput(idx))
-    }   // for idx
-  }     // if( this->GetInput(0) )
+      }
+    }
+  }
 }
 
-/**
- * Generate data (start the model building process)
- */
 template <typename TInputImage, typename TOutputImage>
 void
 ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::GenerateData()
@@ -128,7 +117,7 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::GenerateData()
 
   InputImagePointer input = const_cast<TInputImage *>(this->GetInput(0));
   unsigned int      j;
-  for (j = 0; j < numberOfOutputs; j++)
+  for (j = 0; j < numberOfOutputs; ++j)
   {
     OutputImagePointer output = this->GetOutput(j);
     output->SetBufferedRegion(output->GetRequestedRegion());
@@ -157,7 +146,7 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::GenerateData()
   unsigned int kthLargestPrincipalComp = m_NumberOfTrainingImages;
   unsigned int numberOfValidOutputs = std::min(numberOfOutputs, m_NumberOfTrainingImages + 1);
 
-  for (j = 1; j < numberOfValidOutputs; j++)
+  for (j = 1; j < numberOfValidOutputs; ++j)
   {
     // Extract one column vector at a time
     m_OneEigenVector = m_EigenVectors.get_column(kthLargestPrincipalComp - 1);
@@ -179,7 +168,7 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::GenerateData()
   }
 
   // Fill extraneous outputs with zero
-  for (; j < numberOfOutputs; j++)
+  for (; j < numberOfOutputs; ++j)
   {
     region = this->GetOutput(j)->GetRequestedRegion();
     OutputIterator outIterJ(this->GetOutput(j), region);
@@ -197,11 +186,8 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::GenerateData()
   {
     m_EigenVectors.set_size(0, 0);
   }
-} // end Generate data
+}
 
-/**
- * Set the number of required principal components
- */
 template <typename TInputImage, typename TOutputImage>
 void
 ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::SetNumberOfPrincipalComponentsRequired(unsigned int n)
@@ -221,7 +207,7 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::SetNumberOfPrincipalComp
     if (numberOfOutputs < m_NumberOfPrincipalComponentsRequired + 1)
     {
       // Make and add extra outputs
-      for (idx = numberOfOutputs; idx <= m_NumberOfPrincipalComponentsRequired; idx++)
+      for (idx = numberOfOutputs; idx <= m_NumberOfPrincipalComponentsRequired; ++idx)
       {
         typename DataObject::Pointer output = this->MakeOutput(idx);
         this->SetNthOutput(idx, output.GetPointer());
@@ -238,9 +224,6 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::SetNumberOfPrincipalComp
   }
 }
 
-/**
- * Set the number of training images.
- */
 template <typename TInputImage, typename TOutputImage>
 void
 ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::SetNumberOfTrainingImages(unsigned int n)
@@ -256,11 +239,6 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::SetNumberOfTrainingImage
   }
 }
 
-/**-----------------------------------------------------------------
- * Takes a set of training images and returns the means
- * and variance of the various classes defined in the
- * training set.
- */
 template <typename TInputImage, typename TOutputImage>
 void
 ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::EstimateShapeModels()
@@ -268,12 +246,8 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::EstimateShapeModels()
   this->CalculateInnerProduct();
 
   this->EstimatePCAShapeModelParameters();
-} // end EstimateShapeModels
+}
 
-/**
- * Calculate the inner product between the input training vector
- * where each image is treated as a vector of n-elements
- */
 template <typename TInputImage, typename TOutputImage>
 void
 ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::CalculateInnerProduct()
@@ -287,7 +261,7 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::CalculateInnerProduct()
 
   m_InputImageIteratorArray.resize(m_NumberOfTrainingImages);
 
-  for (unsigned int i = 0; i < m_NumberOfTrainingImages; i++)
+  for (unsigned int i = 0; i < m_NumberOfTrainingImages; ++i)
   {
     InputImageConstPointer inputImagePtr = dynamic_cast<const TInputImage *>(ProcessObject::GetInput(i));
 
@@ -300,52 +274,44 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::CalculateInnerProduct()
     m_InputImageIteratorArray[i].GoToBegin();
   }
 
-  //-------------------------------------------------------------------
   // Set up the matrix to hold the inner product and the means from the
   // training data
-  //-------------------------------------------------------------------
   m_InputImageSize = (inputImagePointerArray[0])->GetBufferedRegion().GetSize();
 
   m_NumberOfPixels = 1;
-  for (unsigned int i = 0; i < InputImageDimension; i++)
+  for (unsigned int i = 0; i < InputImageDimension; ++i)
   {
     m_NumberOfPixels *= m_InputImageSize[i];
   }
 
-  //-------------------------------------------------------------------------
-  // Calculate the Means
-  //-------------------------------------------------------------------------
+  // Calculate the means
   m_Means.set_size(m_NumberOfPixels);
   m_Means.fill(0);
 
   InputImageConstIterator tempImageItA;
 
-  for (unsigned int img_number = 0; img_number < m_NumberOfTrainingImages; img_number++)
+  for (unsigned int img_number = 0; img_number < m_NumberOfTrainingImages; ++img_number)
   {
     tempImageItA = m_InputImageIteratorArray[img_number];
 
-    for (unsigned int band_x = 0; band_x < m_NumberOfPixels; band_x++)
+    for (unsigned int band_x = 0; band_x < m_NumberOfPixels; ++band_x)
     {
       m_Means[band_x] += tempImageItA.Get();
       ++tempImageItA;
     }
-  } // end: looping through the image
-  //-------------------------------------------------------------------------
+  }
 
   m_Means /= m_NumberOfTrainingImages;
 
-  //-------------------------------------------------------------------------
   // Calculate the inner product
-  //-------------------------------------------------------------------------
   m_InnerProduct.set_size(m_NumberOfTrainingImages, m_NumberOfTrainingImages);
   m_InnerProduct.fill(0);
 
   InputImageConstIterator tempImageItB;
 
-  //-------------------------------------------------------------------------
-  for (unsigned int band_x = 0; band_x < m_NumberOfTrainingImages; band_x++)
+  for (unsigned int band_x = 0; band_x < m_NumberOfTrainingImages; ++band_x)
   {
-    for (unsigned int band_y = 0; band_y <= band_x; band_y++)
+    for (unsigned int band_y = 0; band_y <= band_x; ++band_y)
     {
       // Pointer to the vector (in original matrix)
       tempImageItA = m_InputImageIteratorArray[band_x];
@@ -353,28 +319,25 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::CalculateInnerProduct()
       // Pointer to the vector in the transposed matrix
       tempImageItB = m_InputImageIteratorArray[band_y];
 
-      for (unsigned int pix_number = 0; pix_number < m_NumberOfPixels; pix_number++)
+      for (unsigned int pix_number = 0; pix_number < m_NumberOfPixels; ++pix_number)
       {
         m_InnerProduct[band_x][band_y] +=
           (tempImageItA.Get() - m_Means[pix_number]) * (tempImageItB.Get() - m_Means[pix_number]);
 
         ++tempImageItA;
         ++tempImageItB;
-      } // end: looping through the image
-    }   // end: band_y loop
-  }     // end: band_x loop
+      }
+    }
+  }
 
-  //---------------------------------------------------------------------
   // Fill the rest of the inner product matrix and make it symmetric
-  //---------------------------------------------------------------------
-
-  for (unsigned int band_x = 0; band_x < (m_NumberOfTrainingImages - 1); band_x++)
+  for (unsigned int band_x = 0; band_x < (m_NumberOfTrainingImages - 1); ++band_x)
   {
-    for (unsigned int band_y = band_x + 1; band_y < m_NumberOfTrainingImages; band_y++)
+    for (unsigned int band_y = band_x + 1; band_y < m_NumberOfTrainingImages; ++band_y)
     {
       m_InnerProduct[band_x][band_y] = m_InnerProduct[band_y][band_x];
-    } // end band_y loop
-  }   // end band_x loop
+    }
+  }
 
   if ((m_NumberOfTrainingImages - 1) != 0)
   {
@@ -384,12 +347,8 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::CalculateInnerProduct()
   {
     m_InnerProduct.fill(0);
   }
-} // end CalculateInnerProduct
+}
 
-/*-----------------------------------------------------------------
- *Estimage shape models using PCA.
- *-----------------------------------------------------------------
- */
 template <typename TInputImage, typename TOutputImage>
 void
 ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::EstimatePCAShapeModelParameters()
@@ -402,14 +361,12 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::EstimatePCAShapeModelPar
 
   MatrixOfDoubleType eigenVectorsOfInnerProductMatrix = eigenVectors_eigenValues.V;
 
-  //--------------------------------------------------------------------
   // Calculate the principal shape variations
   //
   // m_EigenVectors capture the principal shape variantions
   // m_EigenValues capture the relative weight of each variation
   // Multiply original image vetors with the eigenVectorsOfInnerProductMatrix
   // to derive the principal shapes.
-  //--------------------------------------------------------------------
 
   m_EigenVectors.set_size(m_NumberOfPixels, m_NumberOfTrainingImages);
   m_EigenVectors.fill(0);
@@ -417,13 +374,13 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::EstimatePCAShapeModelPar
   double                  pix_value;
   InputImageConstIterator tempImageItA;
 
-  for (unsigned int img_number = 0; img_number < m_NumberOfTrainingImages; img_number++)
+  for (unsigned int img_number = 0; img_number < m_NumberOfTrainingImages; ++img_number)
   {
     tempImageItA = m_InputImageIteratorArray[img_number];
-    for (unsigned int pix_number = 0; pix_number < m_NumberOfPixels; pix_number++)
+    for (unsigned int pix_number = 0; pix_number < m_NumberOfPixels; ++pix_number)
     {
       pix_value = tempImageItA.Get();
-      for (unsigned int vec_number = 0; vec_number < m_NumberOfTrainingImages; vec_number++)
+      for (unsigned int vec_number = 0; vec_number < m_NumberOfTrainingImages; ++vec_number)
       {
         m_EigenVectors[pix_number][vec_number] +=
           (pix_value * eigenVectorsOfInnerProductMatrix[img_number][vec_number]);
@@ -443,15 +400,11 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::EstimatePCAShapeModelPar
   // is ordered in decending order of their corresponding eigen values.
   m_EigenValues.flip();
 
-  //--------------------------------------------------------------------
   // Normalize the eigen values
-  //--------------------------------------------------------------------
-
   m_EigenVectorNormalizedEnergy = m_EigenValues;
   m_EigenVectorNormalizedEnergy.normalize();
-} // end EstimatePCAShapeModelParameters
+}
 
-//-----------------------------------------------------------------
 } // namespace itk
 
 #endif

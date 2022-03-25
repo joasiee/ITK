@@ -31,7 +31,9 @@ itkBMPImageIOTestPalette(int argc, char * argv[])
 {
   if (argc != 5)
   {
-    std::cerr << "Usage: " << argv[0] << " input"
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cerr << " input"
               << " output"
               << " expandRGBPalette"
               << " isPaletteImage" << std::endl;
@@ -46,10 +48,10 @@ itkBMPImageIOTestPalette(int argc, char * argv[])
   using WriterType = itk::ImageFileWriter<ScalarImageType>;
   using IOType = itk::BMPImageIO;
 
-  IOType::Pointer io = IOType::New();
+  auto io = IOType::New();
 
-  ReaderType::Pointer reader = ReaderType::New();
-  WriterType::Pointer writer = WriterType::New();
+  auto reader = ReaderType::New();
+  auto writer = WriterType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(io, BMPImageIO, ImageIOBase);
 

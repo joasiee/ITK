@@ -27,8 +27,9 @@
 // In \cite{Leventon2000}, Leventon \emph{et al.} extended the
 // geodesic active contours method with an additional shape-influenced term in
 // the driving PDE. The
-// \doxygen{GeodesicActiveContourShapePriorLevelSetFilter} is a generalization
-// of Leventon's approach and its use is illustrated in the following example.
+// \doxygen{GeodesicActiveContourShapePriorLevelSetImageFilter} is a
+// generalization of Leventon's approach and its use is illustrated in the
+// following example.
 //
 // To support shape-guidance, the generic level set
 // equation (Eqn(~\ref{eqn:LevelSetEquation})) is extended to incorporate a
@@ -825,7 +826,7 @@ main(int argc, char * argv[])
   // Software Guide : BeginCodeSnippet
   OptimizerType::ScalesType scales(shape->GetNumberOfParameters());
   scales.Fill(1.0);
-  for (unsigned int k = 0; k < numberOfPCAModes; k++)
+  for (unsigned int k = 0; k < numberOfPCAModes; ++k)
   {
     scales[k] = 20.0; // scales for the pca mode multiplier
   }

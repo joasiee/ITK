@@ -55,7 +55,8 @@ namespace itk
  * \ingroup ITKAnisotropicSmoothing
  */
 template <typename TInputImage, typename TOutputImage>
-class CurvatureAnisotropicDiffusionImageFilter : public AnisotropicDiffusionImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT CurvatureAnisotropicDiffusionImageFilter
+  : public AnisotropicDiffusionImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(CurvatureAnisotropicDiffusionImageFilter);
@@ -73,7 +74,7 @@ public:
   itkTypeMacro(CurvatureAnisotropicDiffusionImageFilter, AnisotropicDiffusionImageFilter);
 
   /** Extract superclass information. */
-  using UpdateBufferType = typename Superclass::UpdateBufferType;
+  using typename Superclass::UpdateBufferType;
 
   /** Extract superclass image dimension. */
   static constexpr unsigned int ImageDimension = Superclass::ImageDimension;

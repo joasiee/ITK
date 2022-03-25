@@ -62,7 +62,7 @@ test(int testIdx)
   region2D.SetSize(size2D);
   region2D.SetIndex(index2D);
 
-  myImageType2D1::Pointer inputImage2D = myImageType2D1::New();
+  auto inputImage2D = myImageType2D1::New();
   inputImage2D->SetLargestPossibleRegion(region2D);
   inputImage2D->SetBufferedRegion(region2D);
   inputImage2D->SetRequestedRegion(region2D);
@@ -94,9 +94,9 @@ test(int testIdx)
     std::cout << "Compute with a 9x9 image, with a 5x5 square at the center set to ON." << std::endl << std::endl;
     // Test the signed Danielsson Output for the a 5x5 square in a 9x9 image
     int i, j;
-    for (i = 2; i <= 6; i++)
+    for (i = 2; i <= 6; ++i)
     {
-      for (j = 2; j <= 6; j++)
+      for (j = 2; j <= 6; ++j)
       {
         index2D[0] = i;
         index2D[1] = j;
@@ -108,7 +108,7 @@ test(int testIdx)
   /* Create Danielsson Distance Map filter */
   using myFilterType2D = itk::SignedDanielssonDistanceMapImageFilter<myImageType2D1, myImageType2D2>;
 
-  myFilterType2D::Pointer filter2D = myFilterType2D::New();
+  auto filter2D = myFilterType2D::New();
 
   filter2D->SetInput(inputImage2D);
   myImageType2D2::Pointer outputDistance2D = filter2D->GetOutput();
@@ -144,7 +144,7 @@ test(int testIdx)
       while (!it2D4.IsAtEndOfLine())
       {
         std::cout << "[";
-        for (unsigned int i = 0; i < 2; i++)
+        for (unsigned int i = 0; i < 2; ++i)
         {
           std::cout << it2D4.Get()[i];
           if (i == 0)

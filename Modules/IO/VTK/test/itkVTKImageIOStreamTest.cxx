@@ -124,7 +124,7 @@ TestStreamWrite(char * file1, unsigned int numberOfStreams = 0)
 
   // Create a source object (in this case a constant image).
   typename ImageType::SizeValueType size[TDimension];
-  for (unsigned int i = 0; i < TDimension; i++)
+  for (unsigned int i = 0; i < TDimension; ++i)
   {
     size[i] = 2 << (i + 1);
   }
@@ -196,7 +196,7 @@ TestStreamRead(char * file1, unsigned int numberOfStreams = 0)
 
   // Create a source object (in this case a constant image).
   typename ImageType::SizeValueType size[TDimension];
-  for (unsigned int i = 0; i < TDimension; i++)
+  for (unsigned int i = 0; i < TDimension; ++i)
   {
     size[i] = 2 << (i + 1);
   }
@@ -292,14 +292,14 @@ itkVTKImageIOStreamTest(int argc, char * argv[])
   unsigned int numberOfStreams = 2;
   int          status = 0;
 
-#define ReadWriteTestMACRO(scalarType)                                                                                 \
-  status += TestStreamWrite<scalarType, 2>(argv[1], 0);                                                                \
-  status += TestStreamWrite<scalarType, 2>(argv[1], numberOfStreams);                                                  \
-  status += TestStreamWrite<scalarType, 3>(argv[1], 0);                                                                \
-  status += TestStreamWrite<scalarType, 3>(argv[1], numberOfStreams);                                                  \
-  status += TestStreamRead<scalarType, 2>(argv[1], 0);                                                                 \
-  status += TestStreamRead<scalarType, 2>(argv[1], numberOfStreams);                                                   \
-  status += TestStreamRead<scalarType, 3>(argv[1], 0);                                                                 \
+#define ReadWriteTestMACRO(scalarType)                                \
+  status += TestStreamWrite<scalarType, 2>(argv[1], 0);               \
+  status += TestStreamWrite<scalarType, 2>(argv[1], numberOfStreams); \
+  status += TestStreamWrite<scalarType, 3>(argv[1], 0);               \
+  status += TestStreamWrite<scalarType, 3>(argv[1], numberOfStreams); \
+  status += TestStreamRead<scalarType, 2>(argv[1], 0);                \
+  status += TestStreamRead<scalarType, 2>(argv[1], numberOfStreams);  \
+  status += TestStreamRead<scalarType, 3>(argv[1], 0);                \
   status += TestStreamRead<scalarType, 3>(argv[1], numberOfStreams);
 
   ReadWriteTestMACRO(float) ReadWriteTestMACRO(double) ReadWriteTestMACRO(unsigned char) ReadWriteTestMACRO(char)

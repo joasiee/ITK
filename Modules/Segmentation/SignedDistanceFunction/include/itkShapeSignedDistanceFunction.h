@@ -50,7 +50,8 @@ namespace itk
  * \ingroup ITKSignedDistanceFunction
  */
 template <typename TCoordRep, unsigned int VSpaceDimension>
-class ShapeSignedDistanceFunction : public SpatialFunction<double, VSpaceDimension, Point<TCoordRep, VSpaceDimension>>
+class ITK_TEMPLATE_EXPORT ShapeSignedDistanceFunction
+  : public SpatialFunction<double, VSpaceDimension, Point<TCoordRep, VSpaceDimension>>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ShapeSignedDistanceFunction);
@@ -66,10 +67,10 @@ public:
   itkTypeMacro(ShapeSignedDistanceFunction, SpatialFunction);
 
   /** OutputType type alias support */
-  using OutputType = typename Superclass::OutputType;
+  using typename Superclass::OutputType;
 
   /** InputType type alias support */
-  using InputType = typename Superclass::InputType;
+  using typename Superclass::InputType;
 
   /** Dimension underlying input image. */
   static constexpr unsigned int SpaceDimension = VSpaceDimension;

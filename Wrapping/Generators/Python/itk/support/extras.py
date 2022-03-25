@@ -21,6 +21,7 @@ from typing import Optional, Union, Dict, Any, List, Tuple, Sequence, TYPE_CHECK
 from sys import stderr as system_error_stream
 
 import numpy as np
+
 try:
     from numpy.typing import ArrayLike
 except ImportError:
@@ -70,6 +71,8 @@ __all__ = [
     "vector_container_from_array",
     "GetArrayFromVnlVector",
     "array_from_vnl_vector",
+    "GetVnlVectorFromArray",
+    "vnl_vector_from_array",
     "GetArrayViewFromVnlVector",
     "array_view_from_vnl_vector",
     "GetVnlMatrixFromArray",
@@ -274,7 +277,7 @@ def _get_itk_pixelid(numpy_array_type):
 
 def _GetArrayFromImage(
     image_or_filter, function_name: str, keep_axes: bool, update: bool, ttype
-)-> np.ndarray:
+) -> np.ndarray:
     """Get an Array with the content of the image buffer"""
     # Finds the image type
     import itk
@@ -327,10 +330,7 @@ def GetArrayViewFromImage(
 array_view_from_image = GetArrayViewFromImage
 
 
-def _GetImageFromArray(
-  arr:ArrayLike,
-  function_name: str,
-  is_vector: bool, ttype):
+def _GetImageFromArray(arr: ArrayLike, function_name: str, is_vector: bool, ttype):
     """Get an ITK image from a Python array."""
     import itk
 
@@ -385,9 +385,8 @@ Please specify an output type via the 'ttype' keyword parameter."""
 
 
 def GetImageFromArray(
-  arr:ArrayLike,
-  is_vector: bool = False,
-  ttype=None) -> "itkt.ImageBase":
+    arr: ArrayLike, is_vector: bool = False, ttype=None
+) -> "itkt.ImageBase":
     """Get an ITK image from a Python array."""
     return _GetImageFromArray(arr, "GetImageFromArray", is_vector, ttype)
 
@@ -396,9 +395,8 @@ image_from_array = GetImageFromArray
 
 
 def GetImageViewFromArray(
-  arr:ArrayLike,
-  is_vector: bool = False,
-  ttype=None) -> "itkt.ImageBase":
+    arr: ArrayLike, is_vector: bool = False, ttype=None
+) -> "itkt.ImageBase":
     """Get an ITK image view from a Python array."""
     return _GetImageFromArray(arr, "GetImageViewFromArray", is_vector, ttype)
 
@@ -407,8 +405,8 @@ image_view_from_array = GetImageViewFromArray
 
 
 def array_from_vector_container(
-  container:"itkt.VectorContainer",
-  ttype=None) -> np.ndarray:
+    container: "itkt.VectorContainer", ttype=None
+) -> np.ndarray:
     """Get an Array with the content of the vector container"""
     import itk
 
@@ -433,8 +431,8 @@ def array_from_vector_container(
 
 
 def array_view_from_vector_container(
-  container:"itkt.VectorContainer",
-  ttype=None) -> np.ndarray:
+    container: "itkt.VectorContainer", ttype=None
+) -> np.ndarray:
     """Get an Array view with the content of the vector container"""
     import itk
 
@@ -458,9 +456,7 @@ def array_view_from_vector_container(
     return itk.PyVectorContainer[keys[0]].array_view_from_vector_container(container)
 
 
-def vector_container_from_array(
-  arr:ArrayLike,
-  ttype=None) -> "itkt.VectorContainer":
+def vector_container_from_array(arr: ArrayLike, ttype=None) -> "itkt.VectorContainer":
     """Get a vector container from a Python array"""
     import itk
 
@@ -542,7 +538,7 @@ def GetArrayViewFromVnlMatrix(vnl_matrix, ttype=None) -> np.ndarray:
 array_view_from_vnl_matrix = GetArrayViewFromVnlMatrix
 
 
-def _GetVnlObjectFromArray(arr : ArrayLike, function_name: str, ttype):
+def _GetVnlObjectFromArray(arr: ArrayLike, function_name: str, ttype):
     """Get a vnl object from a Python array."""
     import itk
 
@@ -566,9 +562,7 @@ def _GetVnlObjectFromArray(arr : ArrayLike, function_name: str, ttype):
     return templatedFunction(arr)
 
 
-def GetVnlVectorFromArray(
-  arr:ArrayLike,
-  ttype=None):
+def GetVnlVectorFromArray(arr: ArrayLike, ttype=None):
     """Get a vnl vector from a Python array."""
     return _GetVnlObjectFromArray(arr, "GetVnlVectorFromArray", ttype)
 
@@ -576,9 +570,7 @@ def GetVnlVectorFromArray(
 vnl_vector_from_array = GetVnlVectorFromArray
 
 
-def GetVnlMatrixFromArray(
-  arr:ArrayLike,
-  ttype=None):
+def GetVnlMatrixFromArray(arr: ArrayLike, ttype=None):
     """Get a vnl matrix from a Python array."""
     return _GetVnlObjectFromArray(arr, "GetVnlMatrixFromArray", ttype)
 
@@ -593,7 +585,7 @@ def GetArrayFromMatrix(itk_matrix) -> np.ndarray:
 array_from_matrix = GetArrayFromMatrix
 
 
-def GetMatrixFromArray(arr : ArrayLike) -> "itkt.Matrix":
+def GetMatrixFromArray(arr: ArrayLike) -> "itkt.Matrix":
     import itk
 
     vnl_matrix = GetVnlMatrixFromArray(arr)
@@ -729,7 +721,26 @@ def vtk_image_from_image(l_image: "itkt.ImageOrImageSource") -> "vtk.vtkImageDat
     dims = [1] * 3
     dims[:dim] = itk.size(l_image)
     vtk_image.SetDimensions(dims)
-    # Todo: Add Direction with VTK 9
+    # Copy direction matrix for VTK>=9
+    import vtk
+
+    if vtk.vtkVersion.GetVTKMajorVersion() >= 9:
+        l_direction = l_image.GetDirection()
+        direction = itk.array_from_matrix(l_direction).flatten().tolist()
+        if len(direction) == 4:
+            # Change 2d matrix to 3d
+            direction = [
+                direction[0],
+                direction[1],
+                0.0,
+                direction[2],
+                direction[3],
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+            ]
+        vtk_image.SetDirectionMatrix(direction)
     if l_image.GetImageDimension() == 3:
         PixelType = itk.template(l_image)[1][0]
         if PixelType == itk.Vector:
@@ -770,7 +781,23 @@ def image_from_vtk_image(vtk_image: "vtk.vtkImageData") -> "itkt.ImageBase":
     l_origin = [0.0] * dim
     l_origin[:dim] = vtk_image.GetOrigin()[:dim]
     l_image.SetOrigin(l_origin)
-    # Todo: Add Direction with VTK 9
+    # Direction support with VTK 9
+    import vtk
+
+    if vtk.vtkVersion.GetVTKMajorVersion() >= 9:
+        direction = vtk_image.GetDirectionMatrix()
+        if dim == 3:
+            direction_array = np.identity(3)
+            for y in (0, 1, 2):
+                for x in (0, 1, 2):
+                    direction_array[x, y] = direction.GetElement(x, y)
+        elif dim == 2:
+            direction_array = np.identity(2)
+            for y in (0, 1):
+                for x in (0, 1):
+                    direction_array[x, y] = direction.GetElement(x, y)
+        l_direction = itk.matrix_from_array(direction_array)
+        l_image.SetDirection(l_direction)
     return l_image
 
 
@@ -838,7 +865,7 @@ def imwrite(
     tmp_auto_pipeline = auto_pipeline.current
     auto_pipeline.current = None
     writer = itk.ImageFileWriter[type(img)].New(
-        Input=img, FileName=filename, UseCompression=compression
+        Input=img, FileName=f"{filename}", UseCompression=compression
     )
     auto_pipeline.current = tmp_auto_pipeline
     if imageio:
@@ -915,7 +942,7 @@ def imread(
             names_generator = itk.GDCMSeriesFileNames.New()
             names_generator.SetUseSeriesDetails(True)
             names_generator.AddSeriesRestriction("0008|0021")  # Series Date
-            names_generator.SetDirectory(filename)
+            names_generator.SetDirectory(f"{filename}")
             series_uid = names_generator.GetSeriesUIDs()
             if len(series_uid) == 0:
                 raise FileNotFoundError(f"no DICOMs in: {filename}.")
@@ -927,14 +954,14 @@ def imread(
             filename = names_generator.GetFileNames(series_identifier)
     if type(filename) in [list, tuple]:
         template_reader_type = itk.ImageSeriesReader
-        io_filename = filename[0]
+        io_filename = f"{filename[0]}"
         increase_dimension = True
-        kwargs = {"FileNames": filename}
+        kwargs = {"FileNames": [f"{f}" for f in filename]}
     else:
         template_reader_type = itk.ImageFileReader
-        io_filename = filename
+        io_filename = f"{filename}"
         increase_dimension = False
-        kwargs = {"FileName": filename}
+        kwargs = {"FileName": f"{filename}"}
     if imageio:
         kwargs["ImageIO"] = imageio
     if pixel_type:
@@ -949,7 +976,15 @@ def imread(
         # Increase dimension if last dimension is not of size one.
         if increase_dimension and image_IO.GetDimensions(dimension - 1) != 1:
             dimension += 1
-        ImageType = itk.Image[pixel_type, dimension]
+        is_vlv = False
+        try:
+            is_vlv = itk.template(pixel_type)[0] is itk.VariableLengthVector
+        except KeyError:
+            pass
+        if is_vlv:
+            ImageType = itk.VectorImage[itk.template(pixel_type)[1][0], dimension]
+        else:
+            ImageType = itk.Image[pixel_type, dimension]
         reader = template_reader_type[ImageType].New(**kwargs)
     else:
         reader = template_reader_type.New(**kwargs)
@@ -971,7 +1006,7 @@ def meshwrite(
     tmp_auto_pipeline = auto_pipeline.current
     auto_pipeline.current = None
     writer = itk.MeshFileWriter[type(mesh)].New(
-        Input=mesh, FileName=filename, UseCompression=compression
+        Input=mesh, FileName=f"{filename}", UseCompression=compression
     )
     auto_pipeline.current = tmp_auto_pipeline
     writer.Update()
@@ -1006,9 +1041,9 @@ def meshread(
         except (KeyError, itk.TemplateTypeError):
             pass
     TemplateReaderType = itk.MeshFileReader
-    io_filename = filename
+    io_filename = f"{filename}"
     increase_dimension = False
-    kwargs = {"FileName": filename}
+    kwargs = {"FileName": f"{filename}"}
     if pixel_type:
         meshIO = itk.MeshIOFactory.CreateMeshIO(
             io_filename, itk.CommonEnums.IOFileMode_ReadMode
@@ -1046,7 +1081,7 @@ def transformread(filename: fileiotype) -> List["itkt.TransformBase"]:
     import itk
 
     reader = itk.TransformFileReaderTemplate[itk.D].New()
-    reader.SetFileName(str(filename))
+    reader.SetFileName(f"{filename}")
     reader.Update()
 
     transforms = []
@@ -1081,7 +1116,7 @@ def transformwrite(
     import itk
 
     writer = itk.TransformFileWriterTemplate[itk.D].New()
-    writer.SetFileName(filename)
+    writer.SetFileName(f"{filename}")
     writer.SetUseCompression(compression)
     for transform in transforms:
         writer.AddTransform(transform)

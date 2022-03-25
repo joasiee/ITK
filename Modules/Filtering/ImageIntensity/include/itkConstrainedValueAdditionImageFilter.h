@@ -37,16 +37,12 @@ public:
   ConstrainedValueAddition() = default;
   ~ConstrainedValueAddition() = default;
   bool
-  operator!=(const ConstrainedValueAddition &) const
+  operator==(const ConstrainedValueAddition &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const ConstrainedValueAddition & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ConstrainedValueAddition);
 
   inline TOutput
   operator()(const TInput1 & A, const TInput2 & B) const
@@ -94,7 +90,8 @@ public:
  * \ingroup ITKImageIntensity
  */
 template <typename TInputImage1, typename TInputImage2, typename TOutputImage>
-class ConstrainedValueAdditionImageFilter : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
+class ITK_TEMPLATE_EXPORT ConstrainedValueAdditionImageFilter
+  : public BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ConstrainedValueAdditionImageFilter);

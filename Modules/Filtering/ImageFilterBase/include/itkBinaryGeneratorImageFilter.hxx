@@ -56,7 +56,7 @@ template <typename TInputImage1, typename TInputImage2, typename TOutputImage>
 void
 BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>::SetInput1(const Input1ImagePixelType & input1)
 {
-  typename DecoratedInput1ImagePixelType::Pointer newInput = DecoratedInput1ImagePixelType::New();
+  auto newInput = DecoratedInput1ImagePixelType::New();
   newInput->Set(input1);
   this->SetInput1(newInput);
 }
@@ -69,8 +69,9 @@ BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>::SetConstan
 }
 
 template <typename TInputImage1, typename TInputImage2, typename TOutputImage>
-const typename BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>::Input1ImagePixelType &
+auto
 BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>::GetConstant1() const
+  -> const Input1ImagePixelType &
 {
   const auto * input = dynamic_cast<const DecoratedInput1ImagePixelType *>(this->ProcessObject::GetInput(0));
   if (input == nullptr)
@@ -101,7 +102,7 @@ template <typename TInputImage1, typename TInputImage2, typename TOutputImage>
 void
 BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>::SetInput2(const Input2ImagePixelType & input2)
 {
-  typename DecoratedInput2ImagePixelType::Pointer newInput = DecoratedInput2ImagePixelType::New();
+  auto newInput = DecoratedInput2ImagePixelType::New();
   newInput->Set(input2);
   this->SetInput2(newInput);
 }
@@ -114,8 +115,9 @@ BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>::SetConstan
 }
 
 template <typename TInputImage1, typename TInputImage2, typename TOutputImage>
-const typename BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>::Input2ImagePixelType &
+auto
 BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>::GetConstant2() const
+  -> const Input2ImagePixelType &
 {
   const auto * input = dynamic_cast<const DecoratedInput2ImagePixelType *>(this->ProcessObject::GetInput(1));
   if (input == nullptr)

@@ -146,7 +146,7 @@ CLANG_SUPPRESS_Wfloat_equal
     // Duplicate logInputImage since we reuse the original at each iteration.
 
     using DuplicatorType = ImageDuplicator<RealImageType>;
-    typename DuplicatorType::Pointer duplicator = DuplicatorType::New();
+    auto duplicator = DuplicatorType::New();
     duplicator->SetInputImage(logInputImage);
     duplicator->Update();
 
@@ -166,7 +166,7 @@ CLANG_SUPPRESS_Wfloat_equal
 
     // Iterate until convergence or iterative exhaustion.
     unsigned int maximumNumberOfLevels = 1;
-    for (unsigned int d = 0; d < this->m_NumberOfFittingLevels.Size(); d++)
+    for (unsigned int d = 0; d < this->m_NumberOfFittingLevels.Size(); ++d)
     {
       if (this->m_NumberOfFittingLevels[d] > maximumNumberOfLevels)
       {
@@ -191,7 +191,7 @@ CLANG_SUPPRESS_Wfloat_equal
         this->SharpenImage(logUncorrectedImage, logSharpenedImage);
 
         using SubtracterType = SubtractImageFilter<RealImageType, RealImageType, RealImageType>;
-        typename SubtracterType::Pointer subtracter1 = SubtracterType::New();
+        auto subtracter1 = SubtracterType::New();
         subtracter1->SetInput1(logUncorrectedImage);
         subtracter1->SetInput2(logSharpenedImage);
 
@@ -206,7 +206,7 @@ CLANG_SUPPRESS_Wfloat_equal
         this->m_CurrentConvergenceMeasurement = this->CalculateConvergenceMeasurement(logBiasField, newLogBiasField);
         logBiasField = newLogBiasField;
 
-        typename SubtracterType::Pointer subtracter2 = SubtracterType::New();
+        auto subtracter2 = SubtracterType::New();
         subtracter2->SetInput1(logInputImage);
         subtracter2->SetInput2(logBiasField);
 
@@ -218,7 +218,7 @@ CLANG_SUPPRESS_Wfloat_equal
 
       using BSplineReconstructerType =
         BSplineControlPointImageFilter<BiasFieldControlPointLatticeType, ScalarImageType>;
-      typename BSplineReconstructerType::Pointer reconstructer = BSplineReconstructerType::New();
+      auto reconstructer = BSplineReconstructerType::New();
       reconstructer->SetInput(this->m_LogBiasFieldControlPointLattice);
       reconstructer->SetOrigin(logBiasField->GetOrigin());
       reconstructer->SetSpacing(logBiasField->GetSpacing());
@@ -229,7 +229,7 @@ CLANG_SUPPRESS_Wfloat_equal
 
       typename BSplineReconstructerType::ArrayType numberOfLevels;
       numberOfLevels.Fill(1);
-      for (unsigned int d = 0; d < ImageDimension; d++)
+      for (unsigned int d = 0; d < ImageDimension; ++d)
       {
         if (this->m_NumberOfFittingLevels[d] + 1 >= this->m_CurrentLevel &&
             this->m_CurrentLevel != maximumNumberOfLevels - 1)
@@ -241,8 +241,8 @@ CLANG_SUPPRESS_Wfloat_equal
     }
 
     using CustomBinaryFilter = itk::BinaryGeneratorImageFilter<InputImageType, RealImageType, OutputImageType>;
-    typename CustomBinaryFilter::Pointer expAndDivFilter = CustomBinaryFilter::New();
-    auto                                 expAndDivLambda =
+    auto expAndDivFilter = CustomBinaryFilter::New();
+    auto expAndDivLambda =
       [](const typename InputImageType::PixelType & input, const typename RealImageType::PixelType & biasField) ->
       typename OutputImageType::PixelType
     {
@@ -336,7 +336,7 @@ CLANG_SUPPRESS_Wfloat_equal
 
     vnl_vector<FFTComplexType> V(paddedHistogramSize, FFTComplexType(0.0, 0.0));
 
-    for (unsigned int n = 0; n < this->m_NumberOfHistogramBins; n++)
+    for (unsigned int n = 0; n < this->m_NumberOfHistogramBins; ++n)
     {
       V[n + histogramOffset] = H[n];
     }
@@ -359,7 +359,7 @@ CLANG_SUPPRESS_Wfloat_equal
 
     F[0] = FFTComplexType(scaleFactor, 0.0);
     auto halfSize = static_cast<unsigned int>(0.5 * paddedHistogramSize);
-    for (unsigned int n = 1; n <= halfSize; n++)
+    for (unsigned int n = 1; n <= halfSize; ++n)
     {
       F[n] = F[paddedHistogramSize - n] =
         FFTComplexType(scaleFactor * std::exp(-itk::Math::sqr(static_cast<RealType>(n)) * expFactor), 0.0);
@@ -379,7 +379,7 @@ CLANG_SUPPRESS_Wfloat_equal
     vnl_vector<FFTComplexType> Gf(paddedHistogramSize);
 
     const auto wienerNoiseValue = static_cast<FFTComputationType>(this->m_WienerFilterNoise);
-    for (unsigned int n = 0; n < paddedHistogramSize; n++)
+    for (unsigned int n = 0; n < paddedHistogramSize; ++n)
     {
       FFTComplexType c = vnl_complex_traits<FFTComplexType>::conjugate(Ff[n]);
       Gf[n] = c / (c * Ff[n] + wienerNoiseValue);
@@ -387,7 +387,7 @@ CLANG_SUPPRESS_Wfloat_equal
 
     vnl_vector<FFTComplexType> Uf(paddedHistogramSize);
 
-    for (unsigned int n = 0; n < paddedHistogramSize; n++)
+    for (unsigned int n = 0; n < paddedHistogramSize; ++n)
     {
       Uf[n] = Vf[n] * Gf[n].real();
     }
@@ -395,7 +395,7 @@ CLANG_SUPPRESS_Wfloat_equal
     vnl_vector<FFTComplexType> U(Uf);
 
     fft.bwd_transform(U);
-    for (unsigned int n = 0; n < paddedHistogramSize; n++)
+    for (unsigned int n = 0; n < paddedHistogramSize; ++n)
     {
       U[n] = FFTComplexType(std::max(U[n].real(), static_cast<FFTComputationType>(0.0)), 0.0);
     }
@@ -404,13 +404,13 @@ CLANG_SUPPRESS_Wfloat_equal
 
     vnl_vector<FFTComplexType> numerator(paddedHistogramSize);
 
-    for (unsigned int n = 0; n < paddedHistogramSize; n++)
+    for (unsigned int n = 0; n < paddedHistogramSize; ++n)
     {
       numerator[n] =
         FFTComplexType((binMinimum + (static_cast<RealType>(n) - histogramOffset) * histogramSlope) * U[n].real(), 0.0);
     }
     fft.fwd_transform(numerator);
-    for (unsigned int n = 0; n < paddedHistogramSize; n++)
+    for (unsigned int n = 0; n < paddedHistogramSize; ++n)
     {
       numerator[n] *= Ff[n];
     }
@@ -419,7 +419,7 @@ CLANG_SUPPRESS_Wfloat_equal
     vnl_vector<FFTComplexType> denominator(U);
 
     fft.fwd_transform(denominator);
-    for (unsigned int n = 0; n < paddedHistogramSize; n++)
+    for (unsigned int n = 0; n < paddedHistogramSize; ++n)
     {
       denominator[n] *= Ff[n];
     }
@@ -427,7 +427,7 @@ CLANG_SUPPRESS_Wfloat_equal
 
     vnl_vector<RealType> E(paddedHistogramSize);
 
-    for (unsigned int n = 0; n < paddedHistogramSize; n++)
+    for (unsigned int n = 0; n < paddedHistogramSize; ++n)
     {
       if (denominator[n].real() != 0.0)
       {
@@ -487,7 +487,7 @@ CLANG_SUPPRESS_Wfloat_equal
     const bool                                   filterHandlesMemory = false;
 
     using ImporterType = ImportImageFilter<RealType, ImageDimension>;
-    typename ImporterType::Pointer importer = ImporterType::New();
+    auto importer = ImporterType::New();
     importer->SetImportPointer(fieldEstimate->GetBufferPointer(), numberOfPixels, filterHandlesMemory);
     importer->SetRegion(fieldEstimate->GetBufferedRegion());
     importer->SetOrigin(fieldEstimate->GetOrigin());
@@ -541,12 +541,12 @@ CLANG_SUPPRESS_Wfloat_equal
       }
     }
 
-    typename BSplineFilterType::Pointer bspliner = BSplineFilterType::New();
+    auto bspliner = BSplineFilterType::New();
 
     typename BSplineFilterType::ArrayType numberOfControlPoints;
     typename BSplineFilterType::ArrayType numberOfFittingLevels;
     numberOfFittingLevels.Fill(1);
-    for (unsigned int d = 0; d < ImageDimension; d++)
+    for (unsigned int d = 0; d < ImageDimension; ++d)
     {
       if (!this->m_LogBiasFieldControlPointLattice)
       {
@@ -559,7 +559,7 @@ CLANG_SUPPRESS_Wfloat_equal
     }
 
     typename ScalarImageType::PointType parametricOrigin = fieldEstimate->GetOrigin();
-    for (unsigned int d = 0; d < ImageDimension; d++)
+    for (unsigned int d = 0; d < ImageDimension; ++d)
     {
       parametricOrigin[d] += (fieldEstimate->GetSpacing()[d] * fieldEstimate->GetLargestPossibleRegion().GetIndex()[d]);
     }
@@ -593,7 +593,7 @@ CLANG_SUPPRESS_Wfloat_equal
       using AdderType = AddImageFilter<BiasFieldControlPointLatticeType,
                                        BiasFieldControlPointLatticeType,
                                        BiasFieldControlPointLatticeType>;
-      typename AdderType::Pointer adder = AdderType::New();
+      auto adder = AdderType::New();
       adder->SetInput1(this->m_LogBiasFieldControlPointLattice);
       adder->SetInput2(phiLattice);
       adder->Update();
@@ -614,7 +614,7 @@ CLANG_SUPPRESS_Wfloat_equal
     const InputImageType * inputImage = this->GetInput();
 
     using BSplineReconstructerType = BSplineControlPointImageFilter<BiasFieldControlPointLatticeType, ScalarImageType>;
-    typename BSplineReconstructerType::Pointer reconstructer = BSplineReconstructerType::New();
+    auto reconstructer = BSplineReconstructerType::New();
     reconstructer->SetInput(controlPointLattice);
     reconstructer->SetOrigin(inputImage->GetOrigin());
     reconstructer->SetSpacing(inputImage->GetSpacing());
@@ -626,7 +626,7 @@ CLANG_SUPPRESS_Wfloat_equal
     biasFieldBsplineImage->Update();
 
     using SelectorType = VectorIndexSelectionCastImageFilter<ScalarImageType, RealImageType>;
-    typename SelectorType::Pointer selector = SelectorType::New();
+    auto selector = SelectorType::New();
     selector->SetInput(biasFieldBsplineImage);
     selector->SetIndex(0);
 
@@ -645,7 +645,7 @@ CLANG_SUPPRESS_Wfloat_equal
     const RealImageType * fieldEstimate1, const RealImageType * fieldEstimate2) const
   {
     using SubtracterType = SubtractImageFilter<RealImageType, RealImageType, RealImageType>;
-    typename SubtracterType::Pointer subtracter = SubtracterType::New();
+    auto subtracter = SubtracterType::New();
     subtracter->SetInput1(fieldEstimate1);
     subtracter->SetInput2(fieldEstimate2);
     subtracter->Update();

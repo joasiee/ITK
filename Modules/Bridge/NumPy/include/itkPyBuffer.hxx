@@ -70,8 +70,9 @@ PyBuffer<TImage>::_GetArrayViewFromImage(ImageType * image)
 }
 
 template <class TImage>
-const typename PyBuffer<TImage>::OutputImagePointer
+auto
 PyBuffer<TImage>::_GetImageViewFromArray(PyObject * arr, PyObject * shape, PyObject * numOfComponent)
+  -> const OutputImagePointer
 {
   PyObject * shapeseq = NULL;
   PyObject * item = NULL;
@@ -157,9 +158,9 @@ PyBuffer<TImage>::_GetImageViewFromArray(PyObject * arr, PyObject * shape, PyObj
 
   using InternalPixelType = typename TImage::InternalPixelType;
   using ImporterType = ImportImageContainer<SizeValueType, InternalPixelType>;
-  typename ImporterType::Pointer importer = ImporterType::New();
-  constexpr bool                 importImageFilterWillOwnTheBuffer = false;
-  InternalPixelType *            data = (InternalPixelType *)buffer;
+  auto                importer = ImporterType::New();
+  constexpr bool      importImageFilterWillOwnTheBuffer = false;
+  InternalPixelType * data = (InternalPixelType *)buffer;
   importer->SetImportPointer(data, numberOfPixels, importImageFilterWillOwnTheBuffer);
 
   OutputImagePointer output = TImage::New();

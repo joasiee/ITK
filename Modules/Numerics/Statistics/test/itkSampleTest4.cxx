@@ -47,13 +47,13 @@ public:
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
-  using MeasurementVectorType = typename Superclass::MeasurementVectorType;
+  using typename Superclass::MeasurementVectorType;
 
-  using TotalAbsoluteFrequencyType = typename Superclass::TotalAbsoluteFrequencyType;
+  using typename Superclass::TotalAbsoluteFrequencyType;
 
-  using AbsoluteFrequencyType = typename Superclass::AbsoluteFrequencyType;
+  using typename Superclass::AbsoluteFrequencyType;
 
-  using InstanceIdentifier = typename Superclass::InstanceIdentifier;
+  using typename Superclass::InstanceIdentifier;
 
   /** Get the size of the sample (number of measurements) */
   InstanceIdentifier
@@ -134,7 +134,7 @@ itkSampleTest4(int, char *[])
 
   using SampleType = itk::Statistics::SampleTest::MySample<MeasurementVectorType>;
 
-  SampleType::Pointer sample = SampleType::New();
+  auto sample = SampleType::New();
 
   std::cout << sample->GetNameOfClass() << std::endl;
   std::cout << sample->SampleType::Superclass::GetNameOfClass() << std::endl;
@@ -153,7 +153,7 @@ itkSampleTest4(int, char *[])
 
   MeasurementVectorType measure(MeasurementVectorSize);
 
-  for (unsigned int i = 0; i < MeasurementVectorSize; i++)
+  for (unsigned int i = 0; i < MeasurementVectorSize; ++i)
   {
     measure[i] = 29 * i * i;
   }
@@ -173,7 +173,7 @@ itkSampleTest4(int, char *[])
     return EXIT_FAILURE;
   }
 
-  for (unsigned int j = 0; j < MeasurementVectorSize; j++)
+  for (unsigned int j = 0; j < MeasurementVectorSize; ++j)
   {
     if (itk::Math::NotExactlyEquals(measureBack[j], measure[j]))
     {

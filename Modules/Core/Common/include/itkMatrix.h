@@ -218,8 +218,9 @@ public:
     return *this;
   }
 
-  /**For every operator=, there should be an equivalent copy constructor. */
-  inline Matrix(const vnl_matrix<T> & matrix)
+  /** Explicit constructor. Copies the elements from the specified
+   *  `vnl_matrix` (assuming it has the same dimensions). */
+  inline explicit Matrix(const vnl_matrix<T> & matrix)
     : m_Matrix(matrix)
   {}
 
@@ -229,9 +230,9 @@ public:
   {
     bool equal = true;
 
-    for (unsigned int r = 0; r < NRows; r++)
+    for (unsigned int r = 0; r < NRows; ++r)
     {
-      for (unsigned int c = 0; c < NColumns; c++)
+      for (unsigned int c = 0; c < NColumns; ++c)
       {
         if (Math::NotExactlyEquals(m_Matrix(r, c), matrix.m_Matrix(r, c)))
         {
@@ -243,11 +244,8 @@ public:
     return equal;
   }
 
-  inline bool
-  operator!=(const Self & matrix) const
-  {
-    return !this->operator==(matrix);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Self);
+
 
   inline const Self &
   operator=(const InternalMatrixType & matrix)
@@ -256,8 +254,8 @@ public:
     return *this;
   }
 
-  /**For every operator=, there should be an equivalent copy constructor. */
-  inline explicit Matrix(const InternalMatrixType & matrix)
+  /** Converting constructor (implicit). */
+  inline Matrix(const InternalMatrixType & matrix)
     : m_Matrix(matrix)
   {}
 

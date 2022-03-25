@@ -68,7 +68,7 @@ FFTWInverseFFTImageFilter<TInputImage, TOutputImage>::BeforeThreadedGenerateData
   unsigned int totalOutputSize = 1;
   unsigned int totalInputSize = 1;
 
-  for (unsigned i = 0; i < ImageDimension; i++)
+  for (unsigned i = 0; i < ImageDimension; ++i)
   {
     totalOutputSize *= outputSize[i];
     totalInputSize *= inputSize[i];
@@ -76,7 +76,7 @@ FFTWInverseFFTImageFilter<TInputImage, TOutputImage>::BeforeThreadedGenerateData
 
   // Cut the full complex image to just the portion needed by FFTW.
   using FullToHalfFilterType = FullToHalfHermitianImageFilter<InputImageType>;
-  typename FullToHalfFilterType::Pointer fullToHalfFilter = FullToHalfFilterType::New();
+  auto fullToHalfFilter = FullToHalfFilterType::New();
   fullToHalfFilter->SetInput(this->GetInput());
   fullToHalfFilter->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
   fullToHalfFilter->UpdateLargestPossibleRegion();
@@ -87,7 +87,7 @@ FFTWInverseFFTImageFilter<TInputImage, TOutputImage>::BeforeThreadedGenerateData
   typename FFTWProxyType::PlanType plan;
 
   int sizes[ImageDimension];
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     sizes[(ImageDimension - 1) - i] = outputSize[i];
   }

@@ -109,38 +109,38 @@ public:
 
   /** Index type alias support While this was already typdef'ed in the superclass
    * it needs to be redone here for this subclass to compile properly with gcc. */
-  using IndexType = typename Superclass::IndexType;
+  using typename Superclass::IndexType;
 
   /** Size type alias support While this was already typdef'ed in the superclass
    * it needs to be redone here for this subclass to compile properly with gcc. */
-  using SizeType = typename Superclass::SizeType;
+  using typename Superclass::SizeType;
 
   /** Offset type alias support While this was already typdef'ed in the superclass
    * it needs to be redone here for this subclass to compile properly with gcc. */
-  using OffsetType = typename Superclass::OffsetType;
+  using typename Superclass::OffsetType;
 
   /** Region type alias support */
-  using RegionType = typename Superclass::RegionType;
+  using typename Superclass::RegionType;
 
   /** Image type alias support While this was already typdef'ed in the superclass
    * it needs to be redone here for this subclass to compile properly with gcc. */
-  using ImageType = typename Superclass::ImageType;
+  using typename Superclass::ImageType;
 
   /** PixelContainer type alias support Used to refer to the container for
    * the pixel data. While this was already typdef'ed in the superclass
    * it needs to be redone here for this subclass to compile properly with gcc. */
-  using PixelContainer = typename Superclass::PixelContainer;
+  using typename Superclass::PixelContainer;
   using PixelContainerPointer = typename PixelContainer::Pointer;
 
   /** Internal Pixel Type */
-  using InternalPixelType = typename Superclass::InternalPixelType;
+  using typename Superclass::InternalPixelType;
 
   /** External Pixel Type */
-  using PixelType = typename Superclass::PixelType;
+  using typename Superclass::PixelType;
 
   /**  Accessor type that convert data between internal and external
    *  representations. */
-  using AccessorType = typename Superclass::AccessorType;
+  using typename Superclass::AccessorType;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(ImageRegionReverseConstIterator, ImageReverseConstIterator);
@@ -272,7 +272,7 @@ public:
       // Check to see if we are past the first pixel in the region
       // Note that --ind[0] moves to the previous pixel along the row.
       done = (--ind[0] == startIndex[0] - 1);
-      for (unsigned int i = 1; done && i < this->ImageIteratorDimension; i++)
+      for (unsigned int i = 1; done && i < this->ImageIteratorDimension; ++i)
       {
         done = (ind[i] == startIndex[i]);
       }
@@ -328,7 +328,7 @@ public:
       // Check to see if we are past the last pixel in the region
       // Note that ++ind[0] moves to the next pixel along the row.
       done = (++ind[0] == startIndex[0] + static_cast<OffsetValueType>(size[0]));
-      for (unsigned int i = 1; done && i < this->ImageIteratorDimension; i++)
+      for (unsigned int i = 1; done && i < this->ImageIteratorDimension; ++i)
       {
         done = (ind[i] == startIndex[i] + static_cast<OffsetValueType>(size[i]) - 1);
       }

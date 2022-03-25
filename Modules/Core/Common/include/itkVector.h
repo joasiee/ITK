@@ -137,6 +137,11 @@ public:
     : BaseArray(r)
   {}
 
+  /** Explicit constructor for std::array. */
+  explicit Vector(const std::array<ValueType, NVectorDimension> & stdArray)
+    : BaseArray(stdArray)
+  {}
+
   /** Pass-through assignment operator for the Array base class. */
   template <typename TVectorValueType>
   Vector &
@@ -154,7 +159,7 @@ public:
   inline const Self &
   operator*=(const Tt & value)
   {
-    for (unsigned int i = 0; i < NVectorDimension; i++)
+    for (unsigned int i = 0; i < NVectorDimension; ++i)
     {
       (*this)[i] = static_cast<ValueType>((*this)[i] * value);
     }
@@ -166,7 +171,7 @@ public:
   inline const Self &
   operator/=(const Tt & value)
   {
-    for (unsigned int i = 0; i < NVectorDimension; i++)
+    for (unsigned int i = 0; i < NVectorDimension; ++i)
     {
       (*this)[i] = static_cast<ValueType>((*this)[i] / value);
     }
@@ -204,7 +209,7 @@ public:
   {
     Self result;
 
-    for (unsigned int i = 0; i < NVectorDimension; i++)
+    for (unsigned int i = 0; i < NVectorDimension; ++i)
     {
       result[i] = static_cast<ValueType>((*this)[i] * value);
     }
@@ -219,7 +224,7 @@ public:
   {
     Self result;
 
-    for (unsigned int i = 0; i < NVectorDimension; i++)
+    for (unsigned int i = 0; i < NVectorDimension; ++i)
     {
       result[i] = static_cast<ValueType>((*this)[i] / value);
     }
@@ -235,11 +240,8 @@ public:
   {
     return Superclass::operator==(v);
   }
-  bool
-  operator!=(const Self & v) const
-  {
-    return !operator==(v);
-  }
+
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Self);
 
   /** Returns the Euclidean Norm of the vector  */
   RealValueType
@@ -273,7 +275,7 @@ public:
   void
   CastFrom(const Vector<TCoordRepB, NVectorDimension> & pa)
   {
-    for (unsigned int i = 0; i < NVectorDimension; i++)
+    for (unsigned int i = 0; i < NVectorDimension; ++i)
     {
       (*this)[i] = static_cast<T>(pa[i]);
     }
@@ -283,7 +285,7 @@ public:
   operator Vector<TCoordRepB, NVectorDimension>()
   {
     Vector<TCoordRepB, NVectorDimension> r;
-    for (unsigned int i = 0; i < NVectorDimension; i++)
+    for (unsigned int i = 0; i < NVectorDimension; ++i)
     {
       r[i] = static_cast<TCoordRepB>((*this)[i]);
     }
@@ -324,6 +326,26 @@ inline void
 swap(Vector<T, NVectorDimension> & a, Vector<T, NVectorDimension> & b)
 {
   a.swap(b);
+}
+
+
+/** Makes a Vector object, having the specified values as coordinates. */
+template <typename TValue, typename... TVariadic>
+auto
+MakeVector(const TValue firstValue, const TVariadic... otherValues)
+{
+  // Assert that the other values have the same type as the first value.
+  const auto assertSameType = [](const auto value) {
+    static_assert(std::is_same<decltype(value), const TValue>::value, "Each value must have the same type!");
+    return true;
+  };
+  const bool assertions[] = { true, assertSameType(otherValues)... };
+  (void)assertions;
+  (void)assertSameType;
+
+  constexpr unsigned                  dimension{ 1 + sizeof...(TVariadic) };
+  const std::array<TValue, dimension> stdArray{ { firstValue, otherValues... } };
+  return Vector<TValue, dimension>{ stdArray };
 }
 
 } // end namespace itk

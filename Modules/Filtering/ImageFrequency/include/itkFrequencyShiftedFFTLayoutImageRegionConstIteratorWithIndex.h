@@ -112,7 +112,8 @@ namespace itk
  *
  */
 template <typename TImage>
-class FrequencyShiftedFFTLayoutImageRegionConstIteratorWithIndex : public ImageRegionConstIteratorWithIndex<TImage>
+class ITK_TEMPLATE_EXPORT FrequencyShiftedFFTLayoutImageRegionConstIteratorWithIndex
+  : public ImageRegionConstIteratorWithIndex<TImage>
 {
 public:
   /** Standard class type alias. */
@@ -120,16 +121,16 @@ public:
   using Superclass = ImageRegionConstIteratorWithIndex<TImage>;
 
   /** Types inherited from the Superclass */
-  using IndexType = typename Superclass::IndexType;
-  using SizeType = typename Superclass::SizeType;
-  using OffsetType = typename Superclass::OffsetType;
-  using RegionType = typename Superclass::RegionType;
-  using ImageType = typename Superclass::ImageType;
-  using PixelContainer = typename Superclass::PixelContainer;
-  using PixelContainerPointer = typename Superclass::PixelContainerPointer;
-  using InternalPixelType = typename Superclass::InternalPixelType;
-  using PixelType = typename Superclass::PixelType;
-  using AccessorType = typename Superclass::AccessorType;
+  using typename Superclass::IndexType;
+  using typename Superclass::SizeType;
+  using typename Superclass::OffsetType;
+  using typename Superclass::RegionType;
+  using typename Superclass::ImageType;
+  using typename Superclass::PixelContainer;
+  using typename Superclass::PixelContainerPointer;
+  using typename Superclass::InternalPixelType;
+  using typename Superclass::PixelType;
+  using typename Superclass::AccessorType;
 
   using FrequencyType = typename ImageType::SpacingType;
   using FrequencyValueType = typename ImageType::SpacingValueType;
@@ -171,7 +172,7 @@ public:
     IndexType freqInd;
 
     freqInd.Fill(0);
-    for (unsigned int dim = 0; dim < TImage::ImageDimension; dim++)
+    for (unsigned int dim = 0; dim < TImage::ImageDimension; ++dim)
     {
       freqInd[dim] = this->m_PositionIndex[dim] - this->m_ZeroFrequencyIndex[dim];
     }
@@ -194,7 +195,7 @@ public:
     FrequencyType freq;
     IndexType     freqInd = this->GetFrequencyBin();
 
-    for (unsigned int dim = 0; dim < TImage::ImageDimension; dim++)
+    for (unsigned int dim = 0; dim < TImage::ImageDimension; ++dim)
     {
       freq[dim] = this->m_FrequencyOrigin[dim] + this->m_FrequencySpacing[dim] * freqInd[dim];
     }
@@ -207,7 +208,7 @@ public:
     FrequencyValueType w2(0);
     FrequencyType      w(this->GetFrequency());
 
-    for (unsigned int dim = 0; dim < TImage::ImageDimension; dim++)
+    for (unsigned int dim = 0; dim < TImage::ImageDimension; ++dim)
     {
       w2 += w[dim] * w[dim];
     }
@@ -250,7 +251,7 @@ private:
   {
     IndexType minIndex = this->m_Image->GetLargestPossibleRegion().GetIndex();
     SizeType  sizeImage = this->m_Image->GetLargestPossibleRegion().GetSize();
-    for (unsigned int dim = 0; dim < ImageType::ImageDimension; dim++)
+    for (unsigned int dim = 0; dim < ImageType::ImageDimension; ++dim)
     {
       this->m_ZeroFrequencyIndex[dim] =
         static_cast<FrequencyValueType>(minIndex[dim] + std::floor(sizeImage[dim] / 2.0));

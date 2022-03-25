@@ -48,7 +48,7 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Set
   const ArrayType & meshSize)
 {
   ArrayType numberOfControlPoints;
-  for (unsigned int d = 0; d < Dimension; d++)
+  for (unsigned int d = 0; d < Dimension; ++d)
   {
     numberOfControlPoints[d] = meshSize[d] + this->m_SplineOrder;
   }
@@ -64,7 +64,7 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Set
   const ArrayType & meshSize)
 {
   ArrayType numberOfControlPoints;
-  for (unsigned int d = 0; d < Dimension; d++)
+  for (unsigned int d = 0; d < Dimension; ++d)
   {
     numberOfControlPoints[d] = meshSize[d] + this->m_SplineOrder;
   }
@@ -81,7 +81,7 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Upd
   // Smooth the update field
   //
   bool smoothUpdateField = true;
-  for (unsigned int d = 0; d < Dimension; d++)
+  for (unsigned int d = 0; d < Dimension; ++d)
   {
     if (this->GetNumberOfControlPointsForTheUpdateField()[d] <= this->GetSplineOrder())
     {
@@ -106,7 +106,7 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Upd
   using ImporterType = ImportImageFilter<DisplacementVectorType, NDimensions>;
   const bool importFilterWillReleaseMemory = false;
 
-  typename ImporterType::Pointer importer = ImporterType::New();
+  auto importer = ImporterType::New();
   importer->SetImportPointer(updateFieldPointer, numberOfPixels, importFilterWillReleaseMemory);
   importer->SetRegion(velocityField->GetBufferedRegion());
   importer->SetOrigin(velocityField->GetOrigin());
@@ -130,13 +130,13 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Upd
   using RealImageType = Image<ScalarType, NDimensions>;
 
   using MultiplierType = MultiplyImageFilter<ConstantVelocityFieldType, RealImageType, ConstantVelocityFieldType>;
-  typename MultiplierType::Pointer multiplier = MultiplierType::New();
+  auto multiplier = MultiplierType::New();
   multiplier->SetInput(updateField);
   multiplier->SetConstant(factor);
   multiplier->Update();
 
   using AdderType = AddImageFilter<ConstantVelocityFieldType, ConstantVelocityFieldType, ConstantVelocityFieldType>;
-  typename AdderType::Pointer adder = AdderType::New();
+  auto adder = AdderType::New();
   adder->SetInput1(velocityField);
   adder->SetInput2(multiplier->GetOutput());
 
@@ -148,7 +148,7 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::Upd
   // Smooth the velocity field
   //
   bool smoothVelocityField = true;
-  for (unsigned int d = 0; d < Dimension; d++)
+  for (unsigned int d = 0; d < Dimension; ++d)
   {
     if (this->GetNumberOfControlPointsForTheConstantVelocityField()[d] <= this->GetSplineOrder())
     {
@@ -181,7 +181,7 @@ BSplineExponentialDiffeomorphicTransform<TParametersValueType, NDimensions>::BSp
   const ConstantVelocityFieldType * field,
   const ArrayType &                 numberOfControlPoints)
 {
-  typename BSplineFilterType::Pointer bspliner = BSplineFilterType::New();
+  auto bspliner = BSplineFilterType::New();
   bspliner->SetUseInputFieldToDefineTheBSplineDomain(true);
   bspliner->SetDisplacementField(field);
   bspliner->SetNumberOfControlPoints(numberOfControlPoints);

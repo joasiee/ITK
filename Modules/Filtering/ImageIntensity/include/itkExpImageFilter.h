@@ -37,16 +37,12 @@ public:
   Exp() = default;
   ~Exp() = default;
   bool
-  operator!=(const Exp &) const
+  operator==(const Exp &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const Exp & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Exp);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -68,7 +64,7 @@ public:
  * \ingroup ITKImageIntensity
  */
 template <typename TInputImage, typename TOutputImage>
-class ExpImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT ExpImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ExpImageFilter);

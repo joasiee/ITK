@@ -78,10 +78,10 @@ itkJensenHavrdaCharvatTsallisPointSetMetricRegistrationTest(int argc, char * arg
 
   using PointType = PointSetType::PointType;
 
-  PointSetType::Pointer fixedPoints = PointSetType::New();
+  auto fixedPoints = PointSetType::New();
   fixedPoints->Initialize();
 
-  PointSetType::Pointer movingPoints = PointSetType::New();
+  auto movingPoints = PointSetType::New();
   movingPoints->Initialize();
 
 
@@ -108,7 +108,7 @@ itkJensenHavrdaCharvatTsallisPointSetMetricRegistrationTest(int argc, char * arg
 
   // two circles with a small offset
   PointType offset;
-  for (unsigned int d = 0; d < Dimension; d++)
+  for (unsigned int d = 0; d < Dimension; ++d)
   {
     offset[d] = 2.0;
   }
@@ -138,12 +138,12 @@ itkJensenHavrdaCharvatTsallisPointSetMetricRegistrationTest(int argc, char * arg
   }
 
   using AffineTransformType = itk::AffineTransform<double, Dimension>;
-  AffineTransformType::Pointer transform = AffineTransformType::New();
+  auto transform = AffineTransformType::New();
   transform->SetIdentity();
 
   // Instantiate the metric
   using PointSetMetricType = itk::JensenHavrdaCharvatTsallisPointSetToPointSetMetricv4<PointSetType>;
-  PointSetMetricType::Pointer metric = PointSetMetricType::New();
+  auto metric = PointSetMetricType::New();
   metric->SetFixedPointSet(fixedPoints);
   metric->SetMovingPointSet(movingPoints);
   metric->SetPointSetSigma(1.0);
@@ -166,14 +166,14 @@ itkJensenHavrdaCharvatTsallisPointSetMetricRegistrationTest(int argc, char * arg
 
   // optimizer
   using OptimizerType = itk::GradientDescentOptimizerv4;
-  OptimizerType::Pointer optimizer = OptimizerType::New();
+  auto optimizer = OptimizerType::New();
   optimizer->SetMetric(metric);
   optimizer->SetNumberOfIterations(numberOfIterations);
   optimizer->SetScalesEstimator(shiftScaleEstimator);
   optimizer->SetMaximumStepSizeInPhysicalUnits(3.0);
 
   using CommandType = itkJensenHavrdaCharvatTsallisPointSetMetricRegistrationTestCommandIterationUpdate<OptimizerType>;
-  CommandType::Pointer observer = CommandType::New();
+  auto observer = CommandType::New();
   optimizer->AddObserver(itk::IterationEvent(), observer);
 
   optimizer->SetMinimumConvergenceValue(0.0);
@@ -192,7 +192,7 @@ itkJensenHavrdaCharvatTsallisPointSetMetricRegistrationTest(int argc, char * arg
   PointType::ValueType                             tolerance = 1e-2;
   AffineTransformType::InverseTransformBasePointer movingInverse = metric->GetMovingTransform()->GetInverseTransform();
   AffineTransformType::InverseTransformBasePointer fixedInverse = metric->GetFixedTransform()->GetInverseTransform();
-  for (unsigned int n = 0; n < metric->GetNumberOfComponents(); n++)
+  for (unsigned int n = 0; n < metric->GetNumberOfComponents(); ++n)
   {
     // compare the points in virtual domain
     PointType transformedMovingPoint = movingInverse->TransformPoint(movingPoints->GetPoint(n));

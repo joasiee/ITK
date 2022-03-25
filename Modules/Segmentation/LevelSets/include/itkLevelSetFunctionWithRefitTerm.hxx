@@ -56,8 +56,9 @@ LevelSetFunctionWithRefitTerm<TImageType, TSparseImageType>::PrintSelf(std::ostr
 }
 
 template <typename TImageType, typename TSparseImageType>
-typename LevelSetFunctionWithRefitTerm<TImageType, TSparseImageType>::TimeStepType
+auto
 LevelSetFunctionWithRefitTerm<TImageType, TSparseImageType>::ComputeGlobalTimeStep(void * GlobalData) const
+  -> TimeStepType
 {
   TimeStepType dt = Superclass::ComputeGlobalTimeStep(GlobalData);
 
@@ -84,18 +85,18 @@ LevelSetFunctionWithRefitTerm<TImageType, TSparseImageType>::ComputeCurvature(
   NormalVectorType normalvector;
   ScalarValueType  curvature;
 
-  for (j = 0; j < TImageType::ImageDimension; j++)
+  for (j = 0; j < TImageType::ImageDimension; ++j)
   {
     stride[j] = neighborhood.GetStride(j);
     indicator[j] = one << j;
   }
   curvature = NumericTraits<ScalarValueType>::ZeroValue();
 
-  for (counterN = 0; counterN < m_NumVertex; counterN++)
+  for (counterN = 0; counterN < m_NumVertex; ++counterN)
   {
     // compute position of normal vector
     positionN = center;
-    for (k = 0; k < TImageType::ImageDimension; k++)
+    for (k = 0; k < TImageType::ImageDimension; ++k)
     {
       if (counterN & indicator[k])
       {
@@ -103,13 +104,13 @@ LevelSetFunctionWithRefitTerm<TImageType, TSparseImageType>::ComputeCurvature(
       }
     }
     // compute the normal vector
-    for (j = 0; j < TImageType::ImageDimension; j++) // derivative axis
+    for (j = 0; j < TImageType::ImageDimension; ++j) // derivative axis
     {
       normalvector[j] = NumericTraits<ScalarValueType>::ZeroValue();
-      for (counterP = 0; counterP < m_NumVertex; counterP++)
+      for (counterP = 0; counterP < m_NumVertex; ++counterP)
       {
         positionP = positionN;
-        for (k = 0; k < TImageType::ImageDimension; k++)
+        for (k = 0; k < TImageType::ImageDimension; ++k)
         {
           if (counterP & indicator[k])
           {
@@ -128,7 +129,7 @@ LevelSetFunctionWithRefitTerm<TImageType, TSparseImageType>::ComputeCurvature(
     }   // end derivative axis
     normalvector = normalvector / (m_MinVectorNorm + normalvector.GetNorm());
     // add normal to curvature computation
-    for (j = 0; j < TImageType::ImageDimension; j++) // derivative axis
+    for (j = 0; j < TImageType::ImageDimension; ++j) // derivative axis
     {
       if (counterN & indicator[j])
       {

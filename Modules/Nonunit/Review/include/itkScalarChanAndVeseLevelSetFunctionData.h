@@ -58,7 +58,8 @@ namespace itk
  * \ingroup ITKReview
  */
 template <typename TInputImage, typename TFeatureImage>
-class ScalarChanAndVeseLevelSetFunctionData : public RegionBasedLevelSetFunctionData<TInputImage, TFeatureImage>
+class ITK_TEMPLATE_EXPORT ScalarChanAndVeseLevelSetFunctionData
+  : public RegionBasedLevelSetFunctionData<TInputImage, TFeatureImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ScalarChanAndVeseLevelSetFunctionData);
@@ -76,27 +77,27 @@ public:
   itkTypeMacro(ScalarChanAndVeseLevelSetFunctionData, RegionBasedLevelSetFunctionData);
 
   using InputImageType = TInputImage;
-  using InputImagePointer = typename Superclass::InputImagePointer;
-  using InputImageConstPointer = typename Superclass::InputImageConstPointer;
-  using InputPixelType = typename Superclass::InputPixelType;
-  using InputRegionType = typename Superclass::InputRegionType;
-  using InputSizeType = typename Superclass::InputSizeType;
-  using InputSizeValueType = typename Superclass::InputSizeValueType;
-  using InputSpacingType = typename Superclass::InputSpacingType;
-  using InputIndexType = typename Superclass::InputIndexType;
-  using InputIndexValueType = typename Superclass::InputIndexValueType;
-  using InputPointType = typename Superclass::InputPointType;
+  using typename Superclass::InputImagePointer;
+  using typename Superclass::InputImageConstPointer;
+  using typename Superclass::InputPixelType;
+  using typename Superclass::InputRegionType;
+  using typename Superclass::InputSizeType;
+  using typename Superclass::InputSizeValueType;
+  using typename Superclass::InputSpacingType;
+  using typename Superclass::InputIndexType;
+  using typename Superclass::InputIndexValueType;
+  using typename Superclass::InputPointType;
 
   using FeatureImageType = TFeatureImage;
-  using FeatureImagePointer = typename Superclass::FeatureImagePointer;
-  using FeatureImageConstPointer = typename Superclass::FeatureImageConstPointer;
-  using FeaturePixelType = typename Superclass::FeaturePixelType;
-  using FeatureRegionType = typename Superclass::FeatureRegionType;
-  using FeatureSizeType = typename Superclass::FeatureSizeType;
-  using FeatureSizeValueType = typename Superclass::FeatureSizeValueType;
-  using FeatureSpacingType = typename Superclass::FeatureSpacingType;
-  using FeatureIndexType = typename Superclass::FeatureIndexType;
-  using FeaturePointType = typename Superclass::FeaturePointType;
+  using typename Superclass::FeatureImagePointer;
+  using typename Superclass::FeatureImageConstPointer;
+  using typename Superclass::FeaturePixelType;
+  using typename Superclass::FeatureRegionType;
+  using typename Superclass::FeatureSizeType;
+  using typename Superclass::FeatureSizeValueType;
+  using typename Superclass::FeatureSpacingType;
+  using typename Superclass::FeatureIndexType;
+  using typename Superclass::FeaturePointType;
 
   double m_BackgroundConstantValues;
   double m_ForegroundConstantValues;

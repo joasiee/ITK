@@ -37,14 +37,14 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(FastMarchingBaseTestHelper, FastMarchingBase);
 
-  using Traits = typename Superclass::Traits;
-  using OutputDomainType = typename Superclass::OutputDomainType;
+  using typename Superclass::Traits;
+  using typename Superclass::OutputDomainType;
 
-  //  using NodeContainerType = typename Superclass::NodeContainerType;
-  using NodeType = typename Superclass::NodeType;
+  //  using typename Superclass::NodeContainerType;
+  using typename Superclass::NodeType;
 
-  using OutputPixelType = typename Superclass::OutputPixelType;
-  using LabelType = typename Superclass::LabelType;
+  using typename Superclass::OutputPixelType;
+  using typename Superclass::LabelType;
 
 protected:
   FastMarchingBaseTestHelper() = default;
@@ -115,10 +115,10 @@ itkFastMarchingBaseTest(int argc, char * argv[])
     constexpr unsigned Dimension = 3;
     using ImageType = itk::Image<PixelType, Dimension>;
 
-    ImageType::Pointer input = ImageType::New();
+    auto input = ImageType::New();
 
     using ImageFastMarching = itk::FastMarchingBaseTestHelper<ImageType, ImageType>;
-    ImageFastMarching::Pointer fmm = ImageFastMarching::New();
+    auto fmm = ImageFastMarching::New();
     fmm->SetInput(input);
 
     try
@@ -143,10 +143,10 @@ itkFastMarchingBaseTest(int argc, char * argv[])
     {
       using MeshType = itk::QuadEdgeMesh<PixelType, 3, itk::QuadEdgeMeshTraits<PixelType, 3, bool, bool>>;
 
-      MeshType::Pointer input = MeshType::New();
+      auto input = MeshType::New();
 
       using MeshFastMarching = itk::FastMarchingBaseTestHelper<MeshType, MeshType>;
-      MeshFastMarching::Pointer fmm = MeshFastMarching::New();
+      auto fmm = MeshFastMarching::New();
       fmm->SetInput(input);
 
       try

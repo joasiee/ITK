@@ -257,9 +257,9 @@ public:
   using PointType = itk::Point<double, 2>;
   using PointListType = std::list<PointType>;
   using MovingSpatialObjectType = TMovingSpatialObject;
-  using ParametersType = typename Superclass::ParametersType;
-  using DerivativeType = typename Superclass::DerivativeType;
-  using MeasureType = typename Superclass::MeasureType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::MeasureType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -782,7 +782,7 @@ main(int argc, char * argv[])
   parametersScale.set_size(3);
   parametersScale[0] = 1000; // angle scale
 
-  for (unsigned int i = 1; i < 3; i++)
+  for (unsigned int i = 1; i < 3; ++i)
   {
     parametersScale[i] = 2; // offset scale
   }

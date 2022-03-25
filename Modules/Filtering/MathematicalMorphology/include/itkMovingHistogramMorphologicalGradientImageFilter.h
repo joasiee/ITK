@@ -209,7 +209,7 @@ class MorphologicalGradientHistogram<signed char> : public VectorMorphologicalGr
 {};
 
 template <>
-class MorphologicalGradientHistogram<bool> : public VectorMorphologicalGradientHistogram<bool>
+class ITK_TEMPLATE_EXPORT MorphologicalGradientHistogram<bool> : public VectorMorphologicalGradientHistogram<bool>
 {};
 
 /// \endcond
@@ -266,7 +266,7 @@ public:
   using IndexType = typename TInputImage::IndexType;
   using PixelType = typename TInputImage::PixelType;
   using OffsetType = typename TInputImage::OffsetType;
-  using OutputImageRegionType = typename Superclass::OutputImageRegionType;
+  using typename Superclass::OutputImageRegionType;
   using OutputPixelType = typename TOutputImage::PixelType;
 
   using HistogramType = Function::MorphologicalGradientHistogram<PixelType>;

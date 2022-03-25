@@ -34,12 +34,12 @@ itkSurfaceSpatialObjectTest(int, char *[])
 
   SurfaceType::SurfacePointListType list;
   unsigned int                      i;
-  for (i = 0; i < 10; i++)
+  for (i = 0; i < 10; ++i)
   {
     SurfacePointType p;
     p.SetPositionInObjectSpace(i, i + 1, i + 2);
     VectorType normal;
-    for (unsigned int j = 0; j < 3; j++)
+    for (unsigned int j = 0; j < 3; ++j)
     {
       normal[j] = j;
     }
@@ -82,7 +82,7 @@ itkSurfaceSpatialObjectTest(int, char *[])
   i = 0;
   while (it != Surface->GetPoints().end())
   {
-    for (unsigned int d = 0; d < 3; d++)
+    for (unsigned int d = 0; d < 3; ++d)
     {
       if (itk::Math::NotExactlyEquals((*it).GetPositionInWorldSpace()[d], i + d))
       {
@@ -91,6 +91,12 @@ itkSurfaceSpatialObjectTest(int, char *[])
       }
 
       if (itk::Math::NotExactlyEquals((*it).GetNormalInObjectSpace()[d], d))
+      {
+        std::cout << "[FAILED]" << std::endl;
+        return EXIT_FAILURE;
+      }
+
+      if (itk::Math::NotExactlyEquals((*it).GetNormalInWorldSpace()[d], d))
       {
         std::cout << "[FAILED]" << std::endl;
         return EXIT_FAILURE;
@@ -163,10 +169,29 @@ itkSurfaceSpatialObjectTest(int, char *[])
     pOriginal.SetColor(0.5, 0.4, 0.3, 0.2);
     pOriginal.SetPositionInObjectSpace(42, 41, 43);
 
+
     // itk::SurfaceSpatialObjectPoint
     VectorType normal;
     normal.Fill(276);
     pOriginal.SetNormalInObjectSpace(normal);
+
+    Surface->AddPoint(pOriginal);
+
+    // Must get a copy of the added point. Each point contains a pointer
+    //   to the spatial object that it is a part of.  That assignment is
+    //   needed to determine the WorldSpace of the point - which is defined
+    //   by the tree of spatial objects it is a part of.
+    pOriginal = Surface->GetPoints().back();
+
+    for (size_t j = 0; j < 3; ++j)
+    {
+      ITK_TEST_EXPECT_TRUE(itk::Math::AlmostEquals(pOriginal.GetNormalInWorldSpace()[j], normal[j]));
+    }
+    pOriginal.SetNormalInWorldSpace(normal);
+    for (size_t j = 0; j < 3; ++j)
+    {
+      ITK_TEST_EXPECT_TRUE(itk::Math::AlmostEquals(pOriginal.GetNormalInObjectSpace()[j], normal[j]));
+    }
 
     // Copy
     SurfacePointType pCopy(pOriginal);
@@ -195,6 +220,8 @@ itkSurfaceSpatialObjectTest(int, char *[])
       {
         ITK_TEST_EXPECT_TRUE(
           itk::Math::AlmostEquals(pOriginal.GetNormalInObjectSpace()[j], pv.GetNormalInObjectSpace()[j]));
+        ITK_TEST_EXPECT_TRUE(
+          itk::Math::AlmostEquals(pOriginal.GetNormalInWorldSpace()[j], pv.GetNormalInObjectSpace()[j]));
       }
     }
   }

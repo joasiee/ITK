@@ -144,9 +144,9 @@ TIFFReaderInternal::Initialize()
       this->m_SubFiles = 0;
       this->m_IgnoredSubFiles = 0;
 
-      for (unsigned int page = 0; page < this->m_NumberOfPages; page++)
+      for (unsigned int page = 0; page < this->m_NumberOfPages; ++page)
       {
-        int32 subfiletype = 6;
+        int32_t subfiletype = 6;
         if (TIFFGetField(this->m_Image, TIFFTAG_SUBFILETYPE, &subfiletype))
         {
           if (subfiletype == 0)

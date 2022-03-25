@@ -47,23 +47,23 @@ public:
   itkNewMacro(Self);
 
   /** OutputType type alias support */
-  using OutputType = typename Superclass::OutputType;
+  using typename Superclass::OutputType;
 
   /** InputImageType type alias support */
-  using InputImageType = typename Superclass::InputImageType;
+  using typename Superclass::InputImageType;
 
   /** Dimension underlying input image. */
   static constexpr unsigned int ImageDimension = Superclass::ImageDimension;
 
   /** Point type alias support */
-  using PointType = typename Superclass::PointType;
+  using typename Superclass::PointType;
 
   /** Index type alias support */
-  using IndexType = typename Superclass::IndexType;
-  using IndexValueType = typename Superclass::IndexValueType;
+  using typename Superclass::IndexType;
+  using typename Superclass::IndexValueType;
 
   /** ContinuousIndex type alias support */
-  using ContinuousIndexType = typename Superclass::ContinuousIndexType;
+  using typename Superclass::ContinuousIndexType;
 
   /** Evaluate the function at specified Point position.*/
   OutputType
@@ -122,7 +122,7 @@ itkImageFunctionTest(int, char *[])
 
   using FunctionType = itk::TestImageFunction<ImageType, CoordRepType>;
 
-  ImageType::Pointer image = ImageType::New();
+  auto image = ImageType::New();
 
   IndexType start;
   start.Fill(1);
@@ -147,7 +147,7 @@ itkImageFunctionTest(int, char *[])
 
   image->Print(std::cout);
 
-  FunctionType::Pointer function = FunctionType::New();
+  auto function = FunctionType::New();
 
   /* Test SetInputImage & Accessors */
   function->SetInputImage(image);
@@ -156,7 +156,7 @@ itkImageFunctionTest(int, char *[])
   const FunctionType::ContinuousIndexType & endIndexC = function->GetEndContinuousIndex();
   const FunctionType::ContinuousIndexType & startIndexC = function->GetStartContinuousIndex();
 
-  for (unsigned int j = 0; j < Dimension; j++)
+  for (unsigned int j = 0; j < Dimension; ++j)
   {
     if (startIndex[j] != start[0] || endIndex[j] != static_cast<IndexType::IndexValueType>(start[0] + size[j] - 1) ||
         startIndexC[j] != start[0] - 0.5 || endIndexC[j] != start[0] + size[j] - 0.5)

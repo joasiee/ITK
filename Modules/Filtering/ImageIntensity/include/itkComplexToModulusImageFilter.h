@@ -38,16 +38,12 @@ public:
   ComplexToModulus() = default;
   ~ComplexToModulus() = default;
   bool
-  operator!=(const ComplexToModulus &) const
+  operator==(const ComplexToModulus &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const ComplexToModulus & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ComplexToModulus);
 
   inline TOutput
   operator()(const TInput & A) const
@@ -58,7 +54,7 @@ public:
 } // namespace Functor
 
 template <typename TInputImage, typename TOutputImage>
-class ComplexToModulusImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
+class ITK_TEMPLATE_EXPORT ComplexToModulusImageFilter : public UnaryGeneratorImageFilter<TInputImage, TOutputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ComplexToModulusImageFilter);

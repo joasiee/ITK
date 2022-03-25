@@ -63,8 +63,8 @@ struct DispatchFFTW_Forward_New<TSelfPointer, TInputImage, TOutputImage, float>
 #endif
 
 template <typename TInputImage, typename TOutputImage>
-typename ForwardFFTImageFilter<TInputImage, TOutputImage>::Pointer
-ForwardFFTImageFilter<TInputImage, TOutputImage>::New()
+auto
+ForwardFFTImageFilter<TInputImage, TOutputImage>::New() -> Pointer
 {
   Pointer smartPtr = ::itk::ObjectFactory<Self>::Create();
 
@@ -73,6 +73,11 @@ ForwardFFTImageFilter<TInputImage, TOutputImage>::New()
     smartPtr =
       DispatchFFTW_Forward_New<Pointer, TInputImage, TOutputImage, typename NumericTraits<OutputPixelType>::ValueType>::
         Apply();
+  }
+  else
+  {
+    // Correct extra reference count from ::itk::ObjectFactory<Self>::Create()
+    smartPtr->UnRegister();
   }
 
   return smartPtr;

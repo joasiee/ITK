@@ -109,7 +109,7 @@ itkSimplePointSetRegistrationTest(int itkNotUsed(argc), char * itkNotUsed(argv)[
   using PointSetType = itk::PointSet<unsigned int, Dimension>;
 
   using PointSetMetricType = itk::EuclideanDistancePointSetToPointSetMetricv4<PointSetType>;
-  PointSetMetricType::Pointer metric = PointSetMetricType::New();
+  auto metric = PointSetMetricType::New();
 
   using PointSetType = PointSetMetricType::FixedPointSetType;
   using PointType = PointSetType::PointType;
@@ -119,15 +119,15 @@ itkSimplePointSetRegistrationTest(int itkNotUsed(argc), char * itkNotUsed(argv)[
   using MovingImageType = itk::Image<PixelType, Dimension>;
 
 
-  PointSetType::Pointer fixedPoints = PointSetType::New();
+  auto fixedPoints = PointSetType::New();
   fixedPoints->Initialize();
 
-  PointSetType::Pointer movingPoints = PointSetType::New();
+  auto movingPoints = PointSetType::New();
   movingPoints->Initialize();
 
   // two circles with a small offset
   PointType offset;
-  for (unsigned int d = 0; d < PointSetType::PointDimension; d++)
+  for (unsigned int d = 0; d < PointSetType::PointDimension; ++d)
   {
     offset[d] = 2.0;
   }
@@ -172,7 +172,7 @@ itkSimplePointSetRegistrationTest(int itkNotUsed(argc), char * itkNotUsed(argv)[
   fixedImageDirection.SetIdentity();
   fixedImageSpacing.Fill(1);
 
-  FixedImageType::Pointer fixedImage = FixedImageType::New();
+  auto fixedImage = FixedImageType::New();
   fixedImage->SetRegions(fixedImageSize);
   fixedImage->SetOrigin(fixedImageOrigin);
   fixedImage->SetDirection(fixedImageDirection);
@@ -180,7 +180,7 @@ itkSimplePointSetRegistrationTest(int itkNotUsed(argc), char * itkNotUsed(argv)[
   fixedImage->Allocate();
 
   using AffineTransformType = itk::AffineTransform<double, PointSetType::PointDimension>;
-  AffineTransformType::Pointer transform = AffineTransformType::New();
+  auto transform = AffineTransformType::New();
   transform->SetIdentity();
 
   metric->SetFixedPointSet(fixedPoints);
@@ -201,7 +201,7 @@ itkSimplePointSetRegistrationTest(int itkNotUsed(argc), char * itkNotUsed(argv)[
 
   // optimizer
   using OptimizerType = itk::GradientDescentOptimizerv4;
-  OptimizerType::Pointer optimizer = OptimizerType::New();
+  auto optimizer = OptimizerType::New();
   optimizer->SetMetric(metric);
   optimizer->SetNumberOfIterations(numberOfIterations);
   optimizer->SetScalesEstimator(shiftScaleEstimator);
@@ -210,7 +210,7 @@ itkSimplePointSetRegistrationTest(int itkNotUsed(argc), char * itkNotUsed(argv)[
   optimizer->SetConvergenceWindowSize(10);
 
   using AffineRegistrationType = itk::ImageRegistrationMethodv4<FixedImageType, MovingImageType>;
-  AffineRegistrationType::Pointer affineSimple = AffineRegistrationType::New();
+  auto affineSimple = AffineRegistrationType::New();
   affineSimple->SetObjectName("affineSimple");
   affineSimple->SetFixedPointSet(fixedPoints);
   affineSimple->SetMovingPointSet(movingPoints);
@@ -219,7 +219,7 @@ itkSimplePointSetRegistrationTest(int itkNotUsed(argc), char * itkNotUsed(argv)[
   affineSimple->SetOptimizer(optimizer);
 
   using AffineCommandType = CommandIterationUpdate<AffineRegistrationType>;
-  AffineCommandType::Pointer affineObserver = AffineCommandType::New();
+  auto affineObserver = AffineCommandType::New();
   affineSimple->AddObserver(itk::MultiResolutionIterationEvent(), affineObserver);
 
   try
@@ -239,7 +239,7 @@ itkSimplePointSetRegistrationTest(int itkNotUsed(argc), char * itkNotUsed(argv)[
   PointType::ValueType                             tolerance = 1e-2;
   AffineTransformType::InverseTransformBasePointer affineInverseTransform =
     affineSimple->GetModifiableTransform()->GetInverseTransform();
-  for (unsigned int n = 0; n < movingPoints->GetNumberOfPoints(); n++)
+  for (unsigned int n = 0; n < movingPoints->GetNumberOfPoints(); ++n)
   {
     // compare the points in virtual domain
     PointType transformedMovingPoint = affineInverseTransform->TransformPoint(movingPoints->GetPoint(n));

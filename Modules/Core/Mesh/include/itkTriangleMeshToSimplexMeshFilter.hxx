@@ -76,7 +76,7 @@ TriangleMeshToSimplexMeshFilter<TInputMesh, TOutputMesh>::Initialize()
 
   InputPointType v1, v2, v3;
 
-  for (unsigned int idx1 = 0; idx1 < m_IdOffset; idx1++)
+  for (unsigned int idx1 = 0; idx1 < m_IdOffset; ++idx1)
   {
     m_FaceSet->insert(idx1);
 
@@ -293,8 +293,8 @@ TriangleMeshToSimplexMeshFilter<TInputMesh, TOutputMesh>::CreateCells()
 
     auto iterator1 = vertexNeighbors.begin();
 
-    typename MapType::Pointer tmpMap = MapType::New();
-    CellIdentifier            startIdx = NumericTraits<CellIdentifier>::max(), lastIdx = 0, wrongIdx = 0;
+    auto           tmpMap = MapType::New();
+    CellIdentifier startIdx = NumericTraits<CellIdentifier>::max(), lastIdx = 0, wrongIdx = 0;
 
     while (lastIdx != startIdx)
     {

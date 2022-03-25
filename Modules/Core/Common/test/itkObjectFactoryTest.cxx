@@ -20,14 +20,14 @@
 #include "itkImage.h"
 #include <list>
 
-#define CHECK_FOR_VALUE(a, b)                                                                                          \
-  {                                                                                                                    \
-    if (a != b)                                                                                                        \
-    {                                                                                                                  \
-      std::cerr << "Error in " #a << " expected " << b << " but got " << a << std::endl;                               \
-      return EXIT_FAILURE;                                                                                             \
-    }                                                                                                                  \
-  }                                                                                                                    \
+#define CHECK_FOR_VALUE(a, b)                                                            \
+  {                                                                                      \
+    if (a != b)                                                                          \
+    {                                                                                    \
+      std::cerr << "Error in " #a << " expected " << b << " but got " << a << std::endl; \
+      return EXIT_FAILURE;                                                               \
+    }                                                                                    \
+  }                                                                                      \
   ITK_MACROEND_NOOP_STATEMENT
 
 template <typename TPixel, unsigned int VImageDimension = 2>
@@ -108,7 +108,7 @@ public:
   static void
   RegisterOneFactory()
   {
-    TestFactory::Pointer factory = TestFactory::New();
+    auto factory = TestFactory::New();
     itk::ObjectFactoryBase::RegisterFactory(factory);
   }
 
@@ -146,7 +146,7 @@ TestNewImage(myPointer v, const char * expectedClassName)
 int
 itkObjectFactoryTest(int, char *[])
 {
-  TestFactory::Pointer factory = TestFactory::New();
+  auto factory = TestFactory::New();
   itk::ObjectFactoryBase::RegisterFactory(factory);
 
   // List all registered factories
@@ -165,7 +165,7 @@ itkObjectFactoryTest(int, char *[])
     std::list<std::string>::const_iterator n = names.begin();
     std::list<std::string>::const_iterator d = descriptions.begin();
     std::list<bool>::const_iterator        e = enableflags.begin();
-    for (std::list<std::string>::const_iterator o = overrides.begin(); o != overrides.end(); ++o, ++n, ++d, e++)
+    for (std::list<std::string>::const_iterator o = overrides.begin(); o != overrides.end(); ++o, ++n, ++d, ++e)
     {
       std::cout << "    Override " << *o << " with " << *n << std::endl
                 << "      described as \"" << *d << "\"" << std::endl

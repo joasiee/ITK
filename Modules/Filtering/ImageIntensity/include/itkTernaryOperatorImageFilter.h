@@ -51,7 +51,7 @@ namespace itk
    \code
 
    using TernaryType = itk::TernaryOperatorImageFilter< MaskType, ImageType >;
-   TernaryType::Pointer ternaryFilter = TernaryType::New();
+   auto ternaryFilter = TernaryType::New();
 
    ternaryFilter->SetInput1( maskImage );
    ternaryFilter->SetInput2( foregroundImage );
@@ -64,7 +64,7 @@ namespace itk
  * \ingroup ITKImageIntensity
  */
 template <typename TMask, typename TImage>
-class TernaryOperatorImageFilter : public TernaryGeneratorImageFilter<TMask, TImage, TImage, TImage>
+class ITK_TEMPLATE_EXPORT TernaryOperatorImageFilter : public TernaryGeneratorImageFilter<TMask, TImage, TImage, TImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(TernaryOperatorImageFilter);

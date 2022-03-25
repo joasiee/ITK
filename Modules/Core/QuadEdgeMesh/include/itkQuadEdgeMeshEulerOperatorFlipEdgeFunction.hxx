@@ -107,8 +107,8 @@ QuadEdgeMeshEulerOperatorFlipEdgeFunction<TMesh, TQEType>::CheckStatus(QEType * 
 }
 
 template <typename TMesh, typename TQEType>
-typename QuadEdgeMeshEulerOperatorFlipEdgeFunction<TMesh, TQEType>::OutputType
-QuadEdgeMeshEulerOperatorFlipEdgeFunction<TMesh, TQEType>::Evaluate(QEType * h)
+auto
+QuadEdgeMeshEulerOperatorFlipEdgeFunction<TMesh, TQEType>::Evaluate(QEType * h) -> OutputType
 {
   //
   //    X ---<-G---- X              X ---<-G---- X
@@ -153,8 +153,8 @@ QuadEdgeMeshEulerOperatorFlipEdgeFunction<TMesh, TQEType>::Evaluate(QEType * h)
 }
 
 template <typename TMesh, typename TQEType>
-typename QuadEdgeMeshEulerOperatorFlipEdgeFunction<TMesh, TQEType>::OutputType
-QuadEdgeMeshEulerOperatorFlipEdgeFunction<TMesh, TQEType>::Process(QEType * h)
+auto
+QuadEdgeMeshEulerOperatorFlipEdgeFunction<TMesh, TQEType>::Process(QEType * h) -> OutputType
 {
   // The following is not optimum, since we create a new face (with JoinFacet)
   // that is immediately deleted (with SplitFacet). Still we chose to write it
@@ -163,12 +163,12 @@ QuadEdgeMeshEulerOperatorFlipEdgeFunction<TMesh, TQEType>::Process(QEType * h)
   using JoinFacet = QuadEdgeMeshEulerOperatorJoinFacetFunction<MeshType, QEType>;
   using SplitFacet = QuadEdgeMeshEulerOperatorSplitFacetFunction<MeshType, QEType>;
 
-  QEType *                    G = h->GetLnext();
-  typename JoinFacet::Pointer joinFacet = JoinFacet::New();
+  QEType * G = h->GetLnext();
+  auto     joinFacet = JoinFacet::New();
   joinFacet->SetInput(this->m_Mesh);
   QEType * H = joinFacet->Evaluate(h)->GetLnext();
 
-  typename SplitFacet::Pointer splitFacet = SplitFacet::New();
+  auto splitFacet = SplitFacet::New();
   splitFacet->SetInput(this->m_Mesh);
 
   return (splitFacet->Evaluate(H, G));

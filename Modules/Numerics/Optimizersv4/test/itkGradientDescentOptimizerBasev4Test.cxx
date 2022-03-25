@@ -32,10 +32,10 @@ public:
   using Pointer = itk::SmartPointer<Self>;
   using ConstPointer = itk::SmartPointer<const Self>;
 
-  using MeasureType = typename Superclass::MeasureType;
-  using DerivativeType = typename Superclass::DerivativeType;
-  using ParametersType = typename Superclass::ParametersType;
-  using ParametersValueType = typename Superclass::ParametersValueType;
+  using typename Superclass::MeasureType;
+  using typename Superclass::DerivativeType;
+  using typename Superclass::ParametersType;
+  using typename Superclass::ParametersValueType;
 
   itkTypeMacro(GradientDescentOptimizerBasev4TestMetric, ObjectToObjectMetricBase);
 
@@ -170,8 +170,8 @@ itkGradientDescentOptimizerBasev4Test(int, char *[])
 
   using MetricType = GradientDescentOptimizerBasev4TestMetric<ImageType, ImageType>;
 
-  MetricType::Pointer                                  metric = MetricType::New();
-  GradientDescentOptimizerBasev4TestOptimizer::Pointer optimizer = GradientDescentOptimizerBasev4TestOptimizer::New();
+  auto metric = MetricType::New();
+  auto optimizer = GradientDescentOptimizerBasev4TestOptimizer::New();
 
   /* exercise some methods */
   optimizer->SetMetric(metric);

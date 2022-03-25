@@ -66,9 +66,9 @@ RecursiveMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>::GenerateD
   using ResampleShrinkerType = ResampleImageFilter<TOutputImage, TOutputImage>;
   using ShrinkerType = ShrinkImageFilter<TOutputImage, TOutputImage>;
 
-  typename CasterType::Pointer   caster = CasterType::New();
-  typename CopierType::Pointer   copier = CopierType::New();
-  typename SmootherType::Pointer smoother = SmootherType::New();
+  auto caster = CasterType::New();
+  auto copier = CopierType::New();
+  auto smoother = SmootherType::New();
 
   typename ImageToImageType::Pointer shrinkerFilter;
   //
@@ -86,9 +86,9 @@ RecursiveMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>::GenerateD
   {
     resampleShrinker = ResampleShrinkerType::New();
     using LinearInterpolatorType = itk::LinearInterpolateImageFunction<OutputImageType, double>;
-    typename LinearInterpolatorType::Pointer interpolator = LinearInterpolatorType::New();
+    auto interpolator = LinearInterpolatorType::New();
     using IdentityTransformType = itk::IdentityTransform<double, OutputImageType::ImageDimension>;
-    typename IdentityTransformType::Pointer identityTransform = IdentityTransformType::New();
+    auto identityTransform = IdentityTransformType::New();
     resampleShrinker->SetInterpolator(interpolator);
     resampleShrinker->SetDefaultPixelValue(0);
     resampleShrinker->SetTransform(identityTransform);
@@ -124,7 +124,7 @@ RecursiveMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>::GenerateD
 
     // Check shrink factors and compute variances
     allOnes = true;
-    for (idim = 0; idim < ImageDimension; idim++)
+    for (idim = 0; idim < ImageDimension; ++idim)
     {
       if (ilevel == static_cast<int>(this->GetNumberOfLevels()) - 1)
       {
@@ -267,13 +267,13 @@ RecursiveMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>::GenerateO
   IndexType  requestedIndex;
 
   // compute requested regions for lower levels
-  for (ilevel = refLevel + 1; ilevel < static_cast<int>(this->GetNumberOfLevels()); ilevel++)
+  for (ilevel = refLevel + 1; ilevel < static_cast<int>(this->GetNumberOfLevels()); ++ilevel)
   {
     requestedRegion = this->GetOutput(ilevel - 1)->GetRequestedRegion();
     requestedSize = requestedRegion.GetSize();
     requestedIndex = requestedRegion.GetIndex();
 
-    for (idim = 0; idim < static_cast<int>(ImageDimension); idim++)
+    for (idim = 0; idim < static_cast<int>(ImageDimension); ++idim)
     {
       factors[idim] = this->GetSchedule()[ilevel - 1][idim] / this->GetSchedule()[ilevel][idim];
 
@@ -310,7 +310,7 @@ RecursiveMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>::GenerateO
     requestedSize = requestedRegion.GetSize();
     requestedIndex = requestedRegion.GetIndex();
 
-    for (idim = 0; idim < static_cast<int>(ImageDimension); idim++)
+    for (idim = 0; idim < static_cast<int>(ImageDimension); ++idim)
     {
       factors[idim] = this->GetSchedule()[ilevel][idim] / this->GetSchedule()[ilevel + 1][idim];
 
@@ -380,7 +380,7 @@ RecursiveMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>::GenerateI
   RegionType   baseRegion;
 
   unsigned int idim;
-  for (idim = 0; idim < ImageDimension; idim++)
+  for (idim = 0; idim < ImageDimension; ++idim)
   {
     unsigned int factor = this->GetSchedule()[refLevel][idim];
     baseIndex[idim] *= static_cast<IndexValueType>(factor);
@@ -400,7 +400,7 @@ RecursiveMultiResolutionPyramidImageFilter<TInputImage, TOutputImage>::GenerateI
   RegionType inputRequestedRegion = baseRegion;
   refLevel = 0;
 
-  for (idim = 0; idim < TInputImage::ImageDimension; idim++)
+  for (idim = 0; idim < TInputImage::ImageDimension; ++idim)
   {
     oper->SetDirection(idim);
     oper->SetVariance(itk::Math::sqr(0.5 * static_cast<float>(this->GetSchedule()[refLevel][idim])));

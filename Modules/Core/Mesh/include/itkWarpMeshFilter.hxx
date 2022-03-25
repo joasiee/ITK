@@ -35,8 +35,9 @@ WarpMeshFilter<TInputMesh, TOutputMesh, TDisplacementField>::WarpMeshFilter()
 }
 
 template <typename TInputMesh, typename TOutputMesh, typename TDisplacementField>
-const typename WarpMeshFilter<TInputMesh, TOutputMesh, TDisplacementField>::DisplacementFieldType *
+auto
 WarpMeshFilter<TInputMesh, TOutputMesh, TDisplacementField>::GetDisplacementField() const
+  -> const DisplacementFieldType *
 {
   return itkDynamicCastInDebugMode<const DisplacementFieldType *>(this->ProcessObject::GetInput(1));
 }
@@ -114,7 +115,7 @@ WarpMeshFilter<TInputMesh, TOutputMesh, TDisplacementField>::GenerateData()
     const auto             index = fieldPtr->TransformPhysicalPointToIndex(originalPoint);
     displacement = fieldPtr->GetPixel(index);
 
-    for (unsigned int i = 0; i < Dimension; i++)
+    for (unsigned int i = 0; i < Dimension; ++i)
     {
       displacedPoint[i] = originalPoint[i] + displacement[i];
     }
@@ -134,7 +135,7 @@ WarpMeshFilter<TInputMesh, TOutputMesh, TDisplacementField>::GenerateData()
 
   unsigned int maxDimension = TInputMesh::MaxTopologicalDimension;
 
-  for (unsigned int dim = 0; dim < maxDimension; dim++)
+  for (unsigned int dim = 0; dim < maxDimension; ++dim)
   {
     outputMesh->SetBoundaryAssignments(dim, inputMesh->GetBoundaryAssignments(dim));
   }

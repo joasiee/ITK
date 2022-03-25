@@ -38,7 +38,7 @@ itkFEMElement3DC0LinearTetrahedronStrainTest(int argc, char * argv[])
   itk::FEMFactoryBase::GetFactory()->RegisterDefaultTypes();
 
   using Solver3DType = itk::fem::Solver<3>;
-  Solver3DType::Pointer solver = Solver3DType::New();
+  auto solver = Solver3DType::New();
 
   using FEMSpatialObjectReaderType = itk::FEMSpatialObjectReader<3>;
   using FEMSpatialObjectReaderPointer = FEMSpatialObjectReaderType::Pointer;
@@ -86,7 +86,7 @@ itkFEMElement3DC0LinearTetrahedronStrainTest(int argc, char * argv[])
                               0.0f, 0.0f, 0.0f, 4.33333e-05f, 7.01453e-22f, -8.70691e-38f };
 
   bool foundError = false;
-  for (int i = 0; i < numDOF; i++)
+  for (int i = 0; i < numDOF; ++i)
   {
     soln[i] = solver->GetSolution(i);
     // std::cout << "Solution[" << i << "]:" << soln[i] << std::endl;
@@ -104,7 +104,7 @@ itkFEMElement3DC0LinearTetrahedronStrainTest(int argc, char * argv[])
   }
 
   // to write the deformed mesh
-  FEMObjectSpatialObjectType::Pointer femSODef = FEMObjectSpatialObjectType::New();
+  auto femSODef = FEMObjectSpatialObjectType::New();
   femSODef->SetFEMObject(solver->GetOutput());
   using FEMSpatialObjectWriterType = itk::FEMSpatialObjectWriter<3>;
   using FEMSpatialObjectWriterPointer = FEMSpatialObjectWriterType::Pointer;

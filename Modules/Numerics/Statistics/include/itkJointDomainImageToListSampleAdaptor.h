@@ -116,13 +116,13 @@ public:
   /** the number of components in a measurement vector */
   static constexpr unsigned int MeasurementVectorSize = ImageJointDomainTraitsType::Dimension;
 
-  using MeasurementVectorSizeType = typename Superclass::MeasurementVectorSizeType;
+  using typename Superclass::MeasurementVectorSizeType;
 
   /** type alias for Measurement vector, measurement,
    * Instance Identifier, frequency, size, size element value */
-  using AbsoluteFrequencyType = typename Superclass::AbsoluteFrequencyType;
-  using TotalAbsoluteFrequencyType = typename Superclass::TotalAbsoluteFrequencyType;
-  using InstanceIdentifier = typename Superclass::InstanceIdentifier;
+  using typename Superclass::AbsoluteFrequencyType;
+  using typename Superclass::TotalAbsoluteFrequencyType;
+  using typename Superclass::InstanceIdentifier;
 
   /** Image type alias */
   using ImageType = TImage;
@@ -234,16 +234,12 @@ public:
     }
 
     bool
-    operator!=(const ConstIterator & it) const
-    {
-      return (m_InstanceIdentifier != it.m_InstanceIdentifier);
-    }
-
-    bool
     operator==(const ConstIterator & it) const
     {
       return (m_InstanceIdentifier == it.m_InstanceIdentifier);
     }
+
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ConstIterator);
 
   protected:
     // This method should only be available to the ListSample class

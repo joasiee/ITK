@@ -113,11 +113,11 @@ itkRegularStepGradientDescentOptimizerTest(int, char *[])
 
 
   // Declaration of a itkOptimizer
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
 
 
   // Declaration of the CostFunction
-  RSGCostFunction::Pointer costFunction = RSGCostFunction::New();
+  auto costFunction = RSGCostFunction::New();
 
 
   itkOptimizer->SetCostFunction(costFunction);
@@ -170,7 +170,7 @@ itkRegularStepGradientDescentOptimizerTest(int, char *[])
   //
   bool   pass = true;
   double trueParameters[2] = { 2, -2 };
-  for (unsigned int j = 0; j < 2; j++)
+  for (unsigned int j = 0; j < 2; ++j)
   {
     if (itk::Math::abs(finalPosition[j] - trueParameters[j]) > 0.01)
     {
@@ -213,7 +213,7 @@ itkRegularStepGradientDescentOptimizerTest(int, char *[])
     // check results to see if it is within range
     //
     pass = true;
-    for (unsigned int j = 0; j < 2; j++)
+    for (unsigned int j = 0; j < 2; ++j)
     {
       if (itk::Math::abs(finalPosition[j] - trueParameters[j]) > 0.01)
       {

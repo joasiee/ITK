@@ -80,7 +80,7 @@ InvertDisplacementFieldImageFilter<TInputImage, TOutputImage>::GenerateData()
   if (this->GetInverseFieldInitialEstimate())
   {
     using DuplicatorType = ImageDuplicator<InverseDisplacementFieldType>;
-    typename DuplicatorType::Pointer duplicator = DuplicatorType::New();
+    auto duplicator = DuplicatorType::New();
     duplicator->SetInputImage(this->GetInverseFieldInitialEstimate());
     duplicator->Update();
 
@@ -94,7 +94,7 @@ InvertDisplacementFieldImageFilter<TInputImage, TOutputImage>::GenerateData()
     inverseDisplacementField->FillBuffer(zeroVector);
   }
 
-  for (unsigned int d = 0; d < ImageDimension; d++)
+  for (unsigned int d = 0; d < ImageDimension; ++d)
   {
     this->m_DisplacementFieldSpacing[d] = displacementField->GetSpacing()[d];
   }
@@ -117,7 +117,7 @@ InvertDisplacementFieldImageFilter<TInputImage, TOutputImage>::GenerateData()
                                << ", max error norm = " << this->m_MaxErrorNorm);
 
     using ComposerType = ComposeDisplacementFieldsImageFilter<DisplacementFieldType>;
-    typename ComposerType::Pointer composer = ComposerType::New();
+    auto composer = ComposerType::New();
     composer->SetDisplacementField(displacementField);
     composer->SetWarpingField(inverseDisplacementField);
 
@@ -195,7 +195,7 @@ InvertDisplacementFieldImageFilter<TInputImage, TOutputImage>::DynamicThreadedGe
       typename DisplacementFieldType::IndexType index = ItI.GetIndex();
       if (this->m_EnforceBoundaryCondition)
       {
-        for (unsigned int d = 0; d < ImageDimension; d++)
+        for (unsigned int d = 0; d < ImageDimension; ++d)
         {
           if (index[d] == startIndex[d] || index[d] == static_cast<IndexValueType>(size[d]) - startIndex[d] - 1)
           {

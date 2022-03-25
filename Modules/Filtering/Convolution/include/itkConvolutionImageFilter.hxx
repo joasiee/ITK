@@ -39,7 +39,7 @@ ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::GenerateData()
   this->AllocateOutputs();
 
   // Create a process accumulator for tracking the progress of this minipipeline
-  ProgressAccumulator::Pointer progress = ProgressAccumulator::New();
+  auto progress = ProgressAccumulator::New();
   progress->SetMiniPipelineFilter(this);
 
   // Build a mini-pipeline that involves a
@@ -52,7 +52,7 @@ ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::GenerateData()
     using RealImageType = Image<RealPixelType, ImageDimension>;
 
     using NormalizeFilterType = NormalizeToConstantImageFilter<KernelImageType, RealImageType>;
-    typename NormalizeFilterType::Pointer normalizeFilter = NormalizeFilterType::New();
+    auto normalizeFilter = NormalizeFilterType::New();
     normalizeFilter->SetConstant(NumericTraits<RealPixelType>::OneValue());
     normalizeFilter->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
     normalizeFilter->SetInput(this->GetKernelImage());
@@ -96,7 +96,7 @@ ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::ComputeConvolut
 
   // Flip the kernel
   using FlipperType = FlipImageFilter<TImage>;
-  typename FlipperType::Pointer           flipper = FlipperType::New();
+  auto                                    flipper = FlipperType::New();
   typename FlipperType::FlipAxesArrayType axesArray;
   axesArray.Fill(true);
   flipper->SetFlipAxes(axesArray);
@@ -106,7 +106,7 @@ ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::ComputeConvolut
   {
     // Pad the kernel if necessary to an odd size in each dimension.
     using PadImageFilterType = ConstantPadImageFilter<TImage, TImage>;
-    typename PadImageFilterType::Pointer kernelPadImageFilter = PadImageFilterType::New();
+    auto kernelPadImageFilter = PadImageFilterType::New();
     kernelPadImageFilter->SetConstant(NumericTraits<KernelImagePixelType>::ZeroValue());
     kernelPadImageFilter->SetPadLowerBound(this->GetKernelPadSize());
     kernelPadImageFilter->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
@@ -126,12 +126,12 @@ ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::ComputeConvolut
   KernelSizeType radius = this->GetKernelRadius(kernelImage);
   kernelOperator.CreateToRadius(radius);
 
-  typename InputImageType::Pointer localInput = InputImageType::New();
+  auto localInput = InputImageType::New();
   localInput->Graft(this->GetInput());
 
   // The NeighborhoodOperatorImageFilter does all the work.
   using ConvolutionFilterType = NeighborhoodOperatorImageFilter<InputImageType, OutputImageType, KernelImagePixelType>;
-  typename ConvolutionFilterType::Pointer convolutionFilter = ConvolutionFilterType::New();
+  auto convolutionFilter = ConvolutionFilterType::New();
   convolutionFilter->SetOperator(kernelOperator);
   convolutionFilter->OverrideBoundaryCondition(this->GetBoundaryCondition());
   convolutionFilter->SetInput(localInput);
@@ -192,7 +192,7 @@ ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::GetKernelNeedsP
   InputRegionType         kernelRegion = kernel->GetLargestPossibleRegion();
   InputSizeType           kernelSize = kernelRegion.GetSize();
 
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     if (kernelSize[i] % 2 == 0) // Check if dimension is even
     {
@@ -204,15 +204,15 @@ ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::GetKernelNeedsP
 }
 
 template <typename TInputImage, typename TKernelImage, typename TOutputImage>
-typename ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::KernelSizeType
-ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::GetKernelPadSize() const
+auto
+ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::GetKernelPadSize() const -> KernelSizeType
 {
   const KernelImageType * kernel = this->GetKernelImage();
   KernelRegionType        kernelRegion = kernel->GetLargestPossibleRegion();
   KernelSizeType          kernelSize = kernelRegion.GetSize();
   KernelSizeType          padSize;
 
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     // Pad by 1 if the size fo the image in this dimension is even.
     padSize[i] = 1 - (kernelSize[i] % 2);
@@ -223,12 +223,13 @@ ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::GetKernelPadSiz
 
 template <typename TInputImage, typename TKernelImage, typename TOutputImage>
 template <typename TImage>
-typename ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::KernelSizeType
+auto
 ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::GetKernelRadius(const TImage * kernelImage) const
+  -> KernelSizeType
 {
   // Compute the kernel radius.
   KernelSizeType radius;
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     radius[i] = kernelImage->GetLargestPossibleRegion().GetSize()[i] / 2;
   }

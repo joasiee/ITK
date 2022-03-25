@@ -27,6 +27,8 @@
 #include "itkWeakPointer.h"
 #include "itkNeighborhoodAccessorFunctor.h"
 
+#include <type_traits> // For is_same
+
 namespace itk
 {
 /** \class Image
@@ -126,44 +128,44 @@ public:
   using NeighborhoodAccessorFunctorType = NeighborhoodAccessorFunctor<Self>;
 
   /** Type of image dimension */
-  using ImageDimensionType = typename Superclass::ImageDimensionType;
+  using typename Superclass::ImageDimensionType;
 
   /** Index type alias support. An index is used to access pixel values. */
-  using IndexType = typename Superclass::IndexType;
-  using IndexValueType = typename Superclass::IndexValueType;
+  using typename Superclass::IndexType;
+  using typename Superclass::IndexValueType;
 
   /** Offset type alias support. An offset is used to access pixel values. */
-  using OffsetType = typename Superclass::OffsetType;
+  using typename Superclass::OffsetType;
 
   /** Size type alias support. A size is used to define region bounds. */
-  using SizeType = typename Superclass::SizeType;
-  using SizeValueType = typename Superclass::SizeValueType;
+  using typename Superclass::SizeType;
+  using typename Superclass::SizeValueType;
 
   /** Container used to store pixels in the image. */
   using PixelContainer = ImportImageContainer<SizeValueType, PixelType>;
 
   /** Direction type alias support. A matrix of direction cosines. */
-  using DirectionType = typename Superclass::DirectionType;
+  using typename Superclass::DirectionType;
 
   /** Region type alias support. A region is used to specify a subset of an image.
    */
-  using RegionType = typename Superclass::RegionType;
+  using typename Superclass::RegionType;
 
   /** Spacing type alias support.  Spacing holds the size of a pixel.  The
    * spacing is the geometric distance between image samples. */
-  using SpacingType = typename Superclass::SpacingType;
-  using SpacingValueType = typename Superclass::SpacingValueType;
+  using typename Superclass::SpacingType;
+  using typename Superclass::SpacingValueType;
 
   /** Origin type alias support.  The origin is the geometric coordinates
    * of the index (0,0). */
-  using PointType = typename Superclass::PointType;
+  using typename Superclass::PointType;
 
   /** A pointer to the pixel container. */
   using PixelContainerPointer = typename PixelContainer::Pointer;
   using PixelContainerConstPointer = typename PixelContainer::ConstPointer;
 
   /** Offset type alias (relative position between indices) */
-  using OffsetValueType = typename Superclass::OffsetValueType;
+  using typename Superclass::OffsetValueType;
 
   /**
    * example usage:
@@ -318,9 +320,15 @@ public:
   unsigned int
   GetNumberOfComponentsPerPixel() const override;
 
-  /** Returns (image1 == image2). */
-  friend bool
-  operator==(const Image & lhs, const Image & rhs)
+  /** Returns (image1 == image2).
+   * \note `operator==` and `operator!=` are defined as function templates
+   * (rather than as non-templates), just to allow template instantiation of
+   * `itk::Image` for non-EqualityComparable pixel types.
+   */
+  template <typename TEqualityComparable>
+  friend std::enable_if_t<std::is_same<TEqualityComparable, TPixel>::value, bool>
+  operator==(const Image<TEqualityComparable, VImageDimension> & lhs,
+             const Image<TEqualityComparable, VImageDimension> & rhs)
   {
     if ((lhs.GetBufferedRegion() != rhs.GetBufferedRegion()) || (lhs.m_Spacing != rhs.m_Spacing) ||
         (lhs.m_Origin != rhs.m_Origin) || (lhs.m_Direction != rhs.m_Direction) ||
@@ -349,16 +357,18 @@ public:
       return false;
     }
 
-    const TPixel * const lhsBufferPointer = lhsBuffer.GetBufferPointer();
-    const TPixel * const rhsBufferPointer = rhsBuffer.GetBufferPointer();
+    const TEqualityComparable * const lhsBufferPointer = lhsBuffer.GetBufferPointer();
+    const TEqualityComparable * const rhsBufferPointer = rhsBuffer.GetBufferPointer();
 
     return ((lhsBufferPointer == rhsBufferPointer) ||
             std::equal(lhsBufferPointer, lhsBufferPointer + bufferSize, rhsBufferPointer));
   }
 
   /** Returns (image1 != image2). */
-  friend bool
-  operator!=(const Image & lhs, const Image & rhs)
+  template <typename TEqualityComparable>
+  friend std::enable_if_t<std::is_same<TEqualityComparable, TPixel>::value, bool>
+  operator!=(const Image<TEqualityComparable, VImageDimension> & lhs,
+             const Image<TEqualityComparable, VImageDimension> & rhs)
   {
     return !(lhs == rhs);
   }

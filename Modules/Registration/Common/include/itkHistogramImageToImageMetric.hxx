@@ -53,8 +53,8 @@ HistogramImageToImageMetric<TFixedImage, TMovingImage>::SetUpperBound(const Meas
 }
 
 template <typename TFixedImage, typename TMovingImage>
-const typename HistogramImageToImageMetric<TFixedImage, TMovingImage>::MeasurementVectorType &
-HistogramImageToImageMetric<TFixedImage, TMovingImage>::GetUpperBound() const
+auto
+HistogramImageToImageMetric<TFixedImage, TMovingImage>::GetUpperBound() const -> const MeasurementVectorType &
 {
   return m_UpperBound;
 }
@@ -69,8 +69,8 @@ HistogramImageToImageMetric<TFixedImage, TMovingImage>::SetLowerBound(const Meas
 }
 
 template <typename TFixedImage, typename TMovingImage>
-const typename HistogramImageToImageMetric<TFixedImage, TMovingImage>::MeasurementVectorType &
-HistogramImageToImageMetric<TFixedImage, TMovingImage>::GetLowerBound() const
+auto
+HistogramImageToImageMetric<TFixedImage, TMovingImage>::GetLowerBound() const -> const MeasurementVectorType &
 {
   return m_LowerBound;
 }
@@ -167,8 +167,9 @@ HistogramImageToImageMetric<TFixedImage, TMovingImage>::SetTransform(TransformTy
 }
 
 template <typename TFixedImage, typename TMovingImage>
-typename HistogramImageToImageMetric<TFixedImage, TMovingImage>::MeasureType
+auto
 HistogramImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & parameters) const
+  -> MeasureType
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
 
@@ -197,13 +198,13 @@ HistogramImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const Tran
   derivative = DerivativeType(ParametersDimension);
   derivative.Fill(NumericTraits<typename DerivativeType::ValueType>::ZeroValue());
 
-  typename HistogramType::Pointer pHistogram = HistogramType::New();
+  auto pHistogram = HistogramType::New();
   pHistogram->SetMeasurementVectorSize(2);
   this->ComputeHistogram(parameters, *pHistogram);
 
-  for (unsigned int i = 0; i < ParametersDimension; i++)
+  for (unsigned int i = 0; i < ParametersDimension; ++i)
   {
-    typename HistogramType::Pointer pHistogram2 = HistogramType::New();
+    auto pHistogram2 = HistogramType::New();
     pHistogram2->SetMeasurementVectorSize(2);
     this->CopyHistogram(*pHistogram2, *pHistogram);
 
@@ -328,12 +329,12 @@ HistogramImageToImageMetric<TFixedImage, TMovingImage>::CopyHistogram(HistogramT
 
   typename HistogramType::SizeType size = source.GetSize();
 
-  for (unsigned int i = 0; i < min.Size(); i++)
+  for (unsigned int i = 0; i < min.Size(); ++i)
   {
     min[i] = source.GetBinMin(i, 0);
   }
 
-  for (unsigned int i = 0; i < max.Size(); i++)
+  for (unsigned int i = 0; i < max.Size(); ++i)
   {
     max[i] = source.GetBinMax(i, size[i] - 1);
   }

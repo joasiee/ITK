@@ -53,11 +53,14 @@ itkLaplacianImageFilterTest(int argc, char * argv[])
   using OutputImageType = itk::Image<OutputPixelType, Dimension>;
 
   using ReaderType = itk::ImageFileReader<InputImageType>;
-  ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   reader->SetFileName(argv[1]);
 
   ITK_TRY_EXPECT_NO_EXCEPTION(reader->Update());
 
+  // Assign a spacing other than [1,1] for testing
+  itk::Vector<float, 2> spacing{ { { 0.5, 5.0 } } };
+  reader->GetOutput()->SetSpacing(spacing);
 
   // Set up filter
   itk::LaplacianImageFilter<InputImageType, InputImageType>::Pointer filter =
@@ -90,13 +93,13 @@ itkLaplacianImageFilterTest(int argc, char * argv[])
 
 
   using RescaleType = itk::RescaleIntensityImageFilter<InputImageType, OutputImageType>;
-  RescaleType::Pointer rescaler = RescaleType::New();
+  auto rescaler = RescaleType::New();
   rescaler->SetInput(filter->GetOutput());
   rescaler->SetOutputMinimum(itk::NumericTraits<OutputPixelType>::min());
   rescaler->SetOutputMaximum(itk::NumericTraits<OutputPixelType>::max());
 
   using WriterType = itk::ImageFileWriter<OutputImageType>;
-  WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   writer->SetFileName(argv[2]);
   writer->SetInput(rescaler->GetOutput());
 

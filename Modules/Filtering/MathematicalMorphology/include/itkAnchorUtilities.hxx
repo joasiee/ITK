@@ -57,14 +57,14 @@ DoAnchorFace(const TImage *                            input,
   // using ItType = ImageRegionConstIteratorWithIndex<TImage>;
   // ItType it(input, face);
 
-  typename TImage::Pointer dumbImg = TImage::New();
+  auto dumbImg = TImage::New();
   dumbImg->SetRegions(face);
 
   TLine NormLine = line;
   NormLine.Normalize();
   // set a generous tolerance
   float tol = 1.0 / LineOffsets.size();
-  for (unsigned int it = 0; it < face.GetNumberOfPixels(); it++)
+  for (unsigned int it = 0; it < face.GetNumberOfPixels(); ++it)
   {
     typename TImage::IndexType Ind = dumbImg->ComputeIndex(it);
     unsigned                   start, end;

@@ -257,8 +257,8 @@ Octree<TPixel, ColorTableSize, MappingFunctionType>::BuildFromImage(ImageType * 
 }
 
 template <typename TPixel, unsigned int ColorTableSize, typename MappingFunctionType>
-typename Octree<TPixel, ColorTableSize, MappingFunctionType>::ImageTypePointer
-Octree<TPixel, ColorTableSize, MappingFunctionType>::GetImage()
+auto
+Octree<TPixel, ColorTableSize, MappingFunctionType>::GetImage() -> ImageTypePointer
 {
   typename ImageType::SizeType imageSize = { { 0, 0, 0 } };
   SizeValueType                sizes[3];
@@ -270,19 +270,19 @@ Octree<TPixel, ColorTableSize, MappingFunctionType>::GetImage()
   typename ImageType::RegionType      region;
   region.SetSize(imageSize);
   region.SetIndex(imageIndex);
-  typename ImageType::Pointer img = ImageType::New();
+  auto img = ImageType::New();
   img->SetLargestPossibleRegion(region);
   img->SetBufferedRegion(region);
   img->SetRequestedRegion(region);
   img->Allocate();
   typename ImageType::IndexType setIndex;
-  for (unsigned int i = 0; i < m_TrueDims[0]; i++)
+  for (unsigned int i = 0; i < m_TrueDims[0]; ++i)
   {
     setIndex[0] = i;
-    for (unsigned int j = 0; j < m_TrueDims[0]; j++)
+    for (unsigned int j = 0; j < m_TrueDims[0]; ++j)
     {
       setIndex[1] = j;
-      for (unsigned int k = 0; k < m_TrueDims[0]; k++)
+      for (unsigned int k = 0; k < m_TrueDims[0]; ++k)
       {
         setIndex[2] = k;
         img->SetPixel(setIndex, (TPixel)this->GetValue(i, j, k));

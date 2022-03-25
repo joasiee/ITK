@@ -86,8 +86,8 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::SetThreadData(int thr
 }
 
 template <typename TInputImage, typename TOutputImage>
-typename PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ThreadDataStruct
-PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::GetThreadData(int threadId)
+auto
+PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::GetThreadData(int threadId) -> ThreadDataStruct
 {
   if (threadId < static_cast<int>(m_ThreadData.size()))
   {
@@ -281,8 +281,8 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::Initialize()
   this->EmptyCaches();
 
   // initialize thread data struct
-  const unsigned int numThreads = this->GetNumberOfWorkUnits();
-  for (unsigned int thread = 0; thread < numThreads; ++thread)
+  const unsigned int numWorkUnits = this->GetNumberOfWorkUnits();
+  for (unsigned int thread = 0; thread < numWorkUnits; ++thread)
   {
     ThreadDataStruct newStruct;
     newStruct.entropyFirstDerivative.SetSize(m_NumIndependentComponents);
@@ -373,7 +373,7 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::Initialize()
   if (m_Sampler.IsNull())
   {
     using SamplerType = itk::Statistics::SpatialNeighborSubsampler<PatchSampleType, InputImageRegionType>;
-    typename SamplerType::Pointer defaultSampler = SamplerType::New();
+    auto defaultSampler = SamplerType::New();
 
     defaultSampler->SetRadius(25);
     this->SetSampler(defaultSampler);
@@ -477,7 +477,7 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::InitializePatchWeight
   typename WeightsImageType::SizeType physicalSize;
   physicalSize.Fill(physicalDiameter);
   typename WeightsImageType::RegionType physicalRegion(physicalSize);
-  typename WeightsImageType::Pointer    physicalWeightsImage = WeightsImageType::New();
+  auto                                  physicalWeightsImage = WeightsImageType::New();
   physicalWeightsImage->SetRegions(physicalRegion);
   physicalWeightsImage->SetSpacing(physicalSpacing);
   physicalWeightsImage->Allocate();
@@ -494,7 +494,7 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::InitializePatchWeight
     curIndex = pwIt.GetIndex();
     // Compute distances of each pixel from center pixel
     Vector<DistanceType, ImageDimension> distanceVector;
-    for (unsigned int d = 0; d < ImageDimension; d++)
+    for (unsigned int d = 0; d < ImageDimension; ++d)
     {
       distanceVector[d] = static_cast<DistanceType>(curIndex[d]) - static_cast<DistanceType>(centerIndex[d]);
     }
@@ -532,9 +532,9 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::InitializePatchWeight
   using TransformType = itk::IdentityTransform<double, ImageDimension>;
   using InterpolatorType = itk::LinearInterpolateImageFunction<WeightsImageType, double>;
 
-  typename ResampleFilterType::Pointer resampler = ResampleFilterType::New();
-  typename InterpolatorType::Pointer   interpolator = InterpolatorType::New();
-  typename TransformType::Pointer      transform = TransformType::New();
+  auto resampler = ResampleFilterType::New();
+  auto interpolator = InterpolatorType::New();
+  auto transform = TransformType::New();
   transform->SetIdentity();
 
   resampler->SetTransform(transform);
@@ -591,7 +591,7 @@ void
 PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::DispatchedMinMax(const TInputImageType * img)
 {
   using MinMaxFilter = MinimumMaximumImageFilter<TInputImageType>;
-  typename MinMaxFilter::Pointer minmax = MinMaxFilter::New();
+  auto minmax = MinMaxFilter::New();
   minmax->SetInput(img);
   minmax->Modified();
   minmax->Update();
@@ -608,10 +608,10 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::DispatchedArrayMinMax
   using AdaptorType = NthElementImageAdaptor<TInputImageType, PixelValueType>;
   using MinMaxFilter = MinimumMaximumImageFilter<AdaptorType>;
 
-  typename AdaptorType::Pointer adaptor = AdaptorType::New();
+  auto adaptor = AdaptorType::New();
   adaptor->SetImage(const_cast<InputImageType *>(img));
 
-  typename MinMaxFilter::Pointer minmax = MinMaxFilter::New();
+  auto minmax = MinMaxFilter::New();
 
   for (unsigned int pc = 0; pc < m_NumPixelComponents; ++pc)
   {
@@ -645,8 +645,8 @@ template <typename TInputImage, typename TOutputImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::RiemannianMinMaxThreaderCallback(void * arg)
 {
-  const unsigned int threadId = ((MultiThreaderBase::WorkUnitInfo *)(arg))->WorkUnitID;
-  const unsigned int threadCount = ((MultiThreaderBase::WorkUnitInfo *)(arg))->NumberOfWorkUnits;
+  const unsigned int workUnitID = ((MultiThreaderBase::WorkUnitInfo *)(arg))->WorkUnitID;
+  const unsigned int workUnitCount = ((MultiThreaderBase::WorkUnitInfo *)(arg))->NumberOfWorkUnits;
 
   const ThreadFilterStruct * str = (ThreadFilterStruct *)(((MultiThreaderBase::WorkUnitInfo *)(arg))->UserData);
 
@@ -655,13 +655,13 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::RiemannianMinMaxThrea
   // Using the SplitRequestedRegion method from itk::ImageSource.
   InputImageRegionType splitRegion;
 
-  const unsigned int total = str->Filter->SplitRequestedRegion(threadId, threadCount, splitRegion);
+  const unsigned int total = str->Filter->SplitRequestedRegion(workUnitID, workUnitCount, splitRegion);
 
-  if (threadId < total)
+  if (workUnitID < total)
   {
     str->Filter->SetThreadData(
-      threadId,
-      str->Filter->ThreadedRiemannianMinMax(splitRegion, threadId, str->Img, str->Filter->GetThreadData(threadId)));
+      workUnitID,
+      str->Filter->ThreadedRiemannianMinMax(splitRegion, workUnitID, str->Img, str->Filter->GetThreadData(workUnitID)));
   }
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
@@ -1143,8 +1143,9 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ComputeLogMapAndWeigh
 }
 
 template <typename TInputImage, typename TOutputImage>
-typename PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::RealType
+auto
 PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::AddEuclideanUpdate(const RealType & a, const RealType & b)
+  -> RealType
 {
   RealType result = m_ZeroPixel;
 
@@ -1339,7 +1340,7 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::InitializeIteration()
 
     // Provide a sampler to the thread
     m_ThreadData[thread].sampler = dynamic_cast<BaseSamplerType *>(m_Sampler->Clone().GetPointer());
-    typename ListAdaptorType::Pointer searchList = ListAdaptorType::New();
+    auto searchList = ListAdaptorType::New();
     searchList->SetImage(this->m_OutputImage);
     searchList->SetRadius(radius);
     m_ThreadData[thread].sampler->SetSeed(thread);
@@ -1370,8 +1371,8 @@ template <typename TInputImage, typename TOutputImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ApplyUpdateThreaderCallback(void * arg)
 {
-  const unsigned int threadId = ((MultiThreaderBase::WorkUnitInfo *)(arg))->WorkUnitID;
-  const unsigned int threadCount = ((MultiThreaderBase::WorkUnitInfo *)(arg))->NumberOfWorkUnits;
+  const unsigned int workUnitID = ((MultiThreaderBase::WorkUnitInfo *)(arg))->WorkUnitID;
+  const unsigned int workUnitCount = ((MultiThreaderBase::WorkUnitInfo *)(arg))->NumberOfWorkUnits;
 
   const ThreadFilterStruct * str = (ThreadFilterStruct *)(((MultiThreaderBase::WorkUnitInfo *)(arg))->UserData);
 
@@ -1380,11 +1381,11 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ApplyUpdateThreaderCa
   // Using the SplitRequestedRegion method from itk::ImageSource.
   InputImageRegionType splitRegion;
 
-  const unsigned int total = str->Filter->SplitRequestedRegion(threadId, threadCount, splitRegion);
+  const unsigned int total = str->Filter->SplitRequestedRegion(workUnitID, workUnitCount, splitRegion);
 
-  if (threadId < total)
+  if (workUnitID < total)
   {
-    str->Filter->ThreadedApplyUpdate(splitRegion, threadId);
+    str->Filter->ThreadedApplyUpdate(splitRegion, workUnitID);
   }
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
@@ -1482,8 +1483,8 @@ template <typename TInputImage, typename TOutputImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ComputeSigmaUpdateThreaderCallback(void * arg)
 {
-  const unsigned int threadId = ((MultiThreaderBase::WorkUnitInfo *)(arg))->WorkUnitID;
-  const unsigned int threadCount = ((MultiThreaderBase::WorkUnitInfo *)(arg))->NumberOfWorkUnits;
+  const unsigned int workUnitID = ((MultiThreaderBase::WorkUnitInfo *)(arg))->WorkUnitID;
+  const unsigned int workUnitCount = ((MultiThreaderBase::WorkUnitInfo *)(arg))->NumberOfWorkUnits;
 
   const ThreadFilterStruct * str = (ThreadFilterStruct *)(((MultiThreaderBase::WorkUnitInfo *)(arg))->UserData);
 
@@ -1492,12 +1493,13 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ComputeSigmaUpdateThr
   // Using the SplitRequestedRegion method from itk::ImageSource.
   InputImageRegionType splitRegion;
 
-  const unsigned int total = str->Filter->SplitRequestedRegion(threadId, threadCount, splitRegion);
+  const unsigned int total = str->Filter->SplitRequestedRegion(workUnitID, workUnitCount, splitRegion);
 
-  if (threadId < total)
+  if (workUnitID < total)
   {
     str->Filter->SetThreadData(
-      threadId, str->Filter->ThreadedComputeSigmaUpdate(splitRegion, threadId, str->Filter->GetThreadData(threadId)));
+      workUnitID,
+      str->Filter->ThreadedComputeSigmaUpdate(splitRegion, workUnitID, str->Filter->GetThreadData(workUnitID)));
   }
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
@@ -1533,7 +1535,7 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ThreadedComputeSigmaU
   const OutputImageType * output = this->m_OutputImage;
   const InputImageType *  inputImage = this->m_InputImage;
 
-  typename ListAdaptorType::Pointer inList = ListAdaptorType::New();
+  auto inList = ListAdaptorType::New();
   inList->SetImage(output);
   inList->SetRadius(radius);
 
@@ -1815,8 +1817,8 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ThreadedComputeSigmaU
 }
 
 template <typename TInputImage, typename TOutputImage>
-typename PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::RealArrayType
-PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ResolveSigmaUpdate()
+auto
+PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ResolveSigmaUpdate() -> RealArrayType
 {
   RealArrayType sigmaUpdate(m_NumIndependentComponents);
 
@@ -1917,8 +1919,8 @@ template <typename TInputImage, typename TOutputImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ComputeImageUpdateThreaderCallback(void * arg)
 {
-  const unsigned int threadId = ((MultiThreaderBase::WorkUnitInfo *)(arg))->WorkUnitID;
-  const unsigned int threadCount = ((MultiThreaderBase::WorkUnitInfo *)(arg))->NumberOfWorkUnits;
+  const unsigned int workUnitID = ((MultiThreaderBase::WorkUnitInfo *)(arg))->WorkUnitID;
+  const unsigned int workUnitCount = ((MultiThreaderBase::WorkUnitInfo *)(arg))->NumberOfWorkUnits;
 
   const ThreadFilterStruct * str = (ThreadFilterStruct *)(((MultiThreaderBase::WorkUnitInfo *)(arg))->UserData);
 
@@ -1927,12 +1929,13 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ComputeImageUpdateThr
   // Using the SplitRequestedRegion method from itk::ImageSource.
   InputImageRegionType splitRegion;
 
-  const unsigned int total = str->Filter->SplitRequestedRegion(threadId, threadCount, splitRegion);
+  const unsigned int total = str->Filter->SplitRequestedRegion(workUnitID, workUnitCount, splitRegion);
 
-  if (threadId < total)
+  if (workUnitID < total)
   {
     str->Filter->SetThreadData(
-      threadId, str->Filter->ThreadedComputeImageUpdate(splitRegion, threadId, str->Filter->GetThreadData(threadId)));
+      workUnitID,
+      str->Filter->ThreadedComputeImageUpdate(splitRegion, workUnitID, str->Filter->GetThreadData(workUnitID)));
   }
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
@@ -1969,7 +1972,7 @@ PatchBasedDenoisingImageFilter<TInputImage, TOutputImage>::ThreadedComputeImageU
   OutputImageType *      output = this->m_OutputImage;
   const InputImageType * inputImage = this->m_InputImage;
 
-  typename ListAdaptorType::Pointer inList = ListAdaptorType::New();
+  auto inList = ListAdaptorType::New();
   inList->SetImage(output);
   inList->SetRadius(radius);
 

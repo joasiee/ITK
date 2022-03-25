@@ -60,7 +60,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
   {
     std::cout << "Test default constructor... ";
 
-    TransformType::Pointer transform = TransformType::New();
+    auto transform = TransformType::New();
 
     VectorType axis(1.5);
 
@@ -96,8 +96,8 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
 
   {
     std::cout << "Test initial rotation matrix " << std::endl;
-    TransformType::Pointer transform = TransformType::New();
-    MatrixType             matrix = transform->GetMatrix();
+    auto       transform = TransformType::New();
+    MatrixType matrix = transform->GetMatrix();
     std::cout << "Matrix = " << std::endl;
     std::cout << matrix << std::endl;
   }
@@ -107,7 +107,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
   {
     bool Ok = true;
 
-    TransformType::Pointer rotation = TransformType::New();
+    auto rotation = TransformType::New();
 
     itk::Vector<double, 3> axis(1);
 
@@ -119,7 +119,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
     TransformType::OffsetType offset = rotation->GetOffset();
     std::cout << "pure Rotation test:  ";
     std::cout << offset << std::endl;
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       if (std::fabs(offset[i] - 0.0) > epsilon)
       {
@@ -146,7 +146,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
 
       TransformType::OutputPointType r;
       r = rotation->TransformPoint(p);
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -176,7 +176,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
 
       TransformType::OutputVectorType r;
       r = rotation->TransformVector(p);
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -206,7 +206,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
 
       TransformType::OutputCovariantVectorType r;
       r = rotation->TransformCovariantVector(p);
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -239,7 +239,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
 
       TransformType::OutputVnlVectorType r;
       r = rotation->TransformVector(p);
-      for (unsigned int i = 0; i < 3; i++)
+      for (unsigned int i = 0; i < 3; ++i)
       {
         if (std::fabs(q[i] - r[i]) > epsilon)
         {
@@ -265,7 +265,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
   {
     bool Ok = true;
 
-    TransformType::Pointer transform = TransformType::New();
+    auto transform = TransformType::New();
 
     itk::Vector<double, 3> axis(1);
 
@@ -282,7 +282,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
 
     TransformType::OutputPointType transformedPoint;
     transformedPoint = transform->TransformPoint(center);
-    for (unsigned int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       if (std::fabs(center[i] - transformedPoint[i]) > epsilon)
       {
@@ -328,7 +328,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
     ParametersType parameters2 = transform->GetParameters();
 
     const double tolerance = 1e-8;
-    for (unsigned int p = 0; p < np; p++)
+    for (unsigned int p = 0; p < np; ++p)
     {
       if (std::fabs(parameters[p] - parameters2[p]) > tolerance)
       {
@@ -341,7 +341,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
 
   {
     std::cout << " Exercise the SetIdentity() method " << std::endl;
-    TransformType::Pointer transform = TransformType::New();
+    auto transform = TransformType::New();
 
     itk::Vector<double, 3> axis(1);
 
@@ -380,7 +380,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
     ParametersType parameters2 = transform->GetParameters();
 
     const double tolerance = 1e-8;
-    for (unsigned int p = 0; p < np; p++)
+    for (unsigned int p = 0; p < np; ++p)
     {
       std::cout << parameters[p] << " = " << parameters2[p] << std::endl;
       if (std::fabs(parameters[p] - parameters2[p]) > tolerance)
@@ -394,7 +394,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
 
   {
     std::cout << " Exercise the Scaling methods " << std::endl;
-    TransformType::Pointer transform = TransformType::New();
+    auto transform = TransformType::New();
 
     itk::Vector<double, 3> axis(1);
     const double           angle = (std::atan(1.0) / 45.0) * 30.0; // turn 30 degrees
@@ -425,7 +425,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
     TransformType::ScaleVectorType rscale = transform->GetScale();
 
     const double tolerance = 1e-8;
-    for (unsigned int j = 0; j < 3; j++)
+    for (unsigned int j = 0; j < 3; ++j)
     {
       if (std::fabs(rscale[j] - scale[j]) > tolerance)
       {
@@ -458,7 +458,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
     parameters[11] = skew[2];
 
     ParametersType parameters2 = transform->GetParameters();
-    for (unsigned int p = 0; p < np; p++)
+    for (unsigned int p = 0; p < np; ++p)
     {
       std::cout << parameters[p] << " = " << parameters2[p] << std::endl;
       if (std::fabs(parameters[p] - parameters2[p]) > tolerance)
@@ -470,17 +470,17 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
     std::cout << "Scale parameters check Passed !" << std::endl;
 
     std::cout << " Exercise the SetMatrix() method" << std::endl;
-    TransformType::Pointer transform2 = TransformType::New();
+    auto transform2 = TransformType::New();
     transform2->SetFixedParameters(transform->GetFixedParameters());
     transform2->SetMatrix(transform->GetMatrix());
     transform2->SetOffset(transform->GetOffset());
 
-    TransformType::Pointer transform3 = TransformType::New();
+    auto transform3 = TransformType::New();
     transform3->SetFixedParameters(transform2->GetFixedParameters());
     transform3->SetParameters(transform2->GetParameters());
 
     ParametersType parameters3 = transform3->GetParameters();
-    for (unsigned int p = 0; p < np; p++)
+    for (unsigned int p = 0; p < np; ++p)
     {
       std::cout << parameters[p] << " = " << parameters3[p] << std::endl;
       if (std::fabs(parameters[p] - parameters3[p]) > tolerance)
@@ -492,7 +492,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
     std::cout << "SetMatrix parameters do match!" << std::endl;
 
     int diff = 0;
-    for (unsigned int p = 0; p < 100; p++)
+    for (unsigned int p = 0; p < 100; ++p)
     {
       TransformType::InputPointType pnt;
       for (unsigned int i = 0; i < 3; ++i)
@@ -535,7 +535,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
     }
     std::cout << "SetMatrix() points check Passed !" << std::endl;
 
-    TransformType::Pointer tInverse = TransformType::New();
+    auto tInverse = TransformType::New();
     if (!transform->GetInverse(tInverse))
     {
       std::cout << "Cannot create inverse transform" << std::endl;
@@ -549,7 +549,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
     pnt[0] = 10;
     pnt[1] = 20;
     pnt[2] = -10;
-    TransformType::Pointer idT = TransformType::New();
+    auto idT = TransformType::New();
     for (unsigned int mc = 0; mc < np; ++mc)
     {
       std::cout << "Testing parameter #" << mc << std::endl;

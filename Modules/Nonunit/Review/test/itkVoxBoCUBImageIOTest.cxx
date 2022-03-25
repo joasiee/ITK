@@ -20,6 +20,7 @@
 #include "itkImageFileWriter.h"
 
 #include "itkVoxBoCUBImageIOFactory.h"
+#include "itkTestingMacros.h"
 
 int
 itkVoxBoCUBImageIOTest(int argc, char * argv[])
@@ -27,7 +28,8 @@ itkVoxBoCUBImageIOTest(int argc, char * argv[])
 
   if (argc < 3)
   {
-    std::cerr << "Usage: " << argv[0] << " InputImage OutputImage" << std::endl;
+    std::cerr << "Missing Parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " InputImage OutputImage" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -39,23 +41,17 @@ itkVoxBoCUBImageIOTest(int argc, char * argv[])
 
   itk::VoxBoCUBImageIOFactory::RegisterOneFactory();
 
-  ReaderType::Pointer reader = ReaderType::New();
-  WriterType::Pointer writer = WriterType::New();
+  auto reader = ReaderType::New();
+  auto writer = WriterType::New();
 
   reader->SetFileName(argv[1]);
   writer->SetFileName(argv[2]);
 
   writer->SetInput(reader->GetOutput());
 
-  try
-  {
-    writer->Update();
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    std::cerr << excp << std::endl;
-    return EXIT_FAILURE;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(writer->Update());
 
+
+  std::cout << "Test finished." << std::endl;
   return EXIT_SUCCESS;
 }

@@ -117,11 +117,11 @@ itkGradientDescentOptimizerTest(int, char *[])
 
 
   // Declaration of a itkOptimizer
-  OptimizerType::Pointer itkOptimizer = OptimizerType::New();
+  auto itkOptimizer = OptimizerType::New();
 
 
   // Declaration of the CostFunction
-  gradientCostFunction::Pointer costFunction = gradientCostFunction::New();
+  auto costFunction = gradientCostFunction::New();
 
 
   itkOptimizer->SetCostFunction(costFunction);
@@ -166,7 +166,7 @@ itkGradientDescentOptimizerTest(int, char *[])
   //
   bool   pass = true;
   double trueParameters[2] = { 2, -2 };
-  for (unsigned int j = 0; j < 2; j++)
+  for (unsigned int j = 0; j < 2; ++j)
   {
     if (itk::Math::abs(finalPosition[j] - trueParameters[j]) > 0.01)
       pass = false;

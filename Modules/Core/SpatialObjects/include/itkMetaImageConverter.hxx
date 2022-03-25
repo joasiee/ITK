@@ -26,8 +26,8 @@
 namespace itk
 {
 template <unsigned int NDimensions, typename PixelType, typename TSpatialObjectType>
-typename MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::MetaObjectType *
-MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::CreateMetaObject()
+auto
+MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::CreateMetaObject() -> MetaObjectType *
 {
   return dynamic_cast<MetaObjectType *>(new ImageMetaObjectType);
 }
@@ -40,10 +40,11 @@ MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::GetMetaObjectSub
 }
 
 template <unsigned int NDimensions, typename PixelType, typename TSpatialObjectType>
-typename MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::ImageType::Pointer
-MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::AllocateImage(const ImageMetaObjectType * image)
+auto
+MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::AllocateImage(const ImageMetaObjectType * image) ->
+  typename ImageType::Pointer
 {
-  typename ImageType::Pointer rval = ImageType::New();
+  auto rval = ImageType::New();
 
   using SizeType = typename ImageType::SizeType;
   using SpacingType = typename ImageType::SpacingType;
@@ -52,7 +53,7 @@ MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::AllocateImage(co
   SizeType    size;
   SpacingType spacing;
 
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     size[i] = image->DimSize()[i];
     if (Math::ExactlyEquals(image->ElementSpacing()[i], NumericTraits<typename SpacingType::ValueType>::ZeroValue()))
@@ -80,8 +81,9 @@ MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::AllocateImage(co
 
 /** Convert a metaImage into an ImageMaskSpatialObject  */
 template <unsigned int NDimensions, typename PixelType, typename TSpatialObjectType>
-typename MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::SpatialObjectPointer
+auto
 MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::MetaObjectToSpatialObject(const MetaObjectType * mo)
+  -> SpatialObjectPointer
 {
   const auto * imageMO = dynamic_cast<const ImageMetaObjectType *>(mo);
 
@@ -112,8 +114,9 @@ MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::MetaObjectToSpat
 
 /** Convert an Image SpatialObject into a metaImage */
 template <unsigned int NDimensions, typename PixelType, typename TSpatialObjectType>
-typename MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::MetaObjectType *
+auto
 MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::SpatialObjectToMetaObject(const SpatialObjectType * so)
+  -> MetaObjectType *
 {
   const ImageSpatialObjectConstPointer imageSO = dynamic_cast<const ImageSpatialObjectType *>(so);
 
@@ -128,7 +131,7 @@ MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::SpatialObjectToM
   float spacing[NDimensions];
   int   size[NDimensions];
 
-  for (unsigned int i = 0; i < NDimensions; i++)
+  for (unsigned int i = 0; i < NDimensions; ++i)
   {
     size[i] = SOImage->GetLargestPossibleRegion().GetSize()[i];
     spacing[i] = SOImage->GetSpacing()[i];

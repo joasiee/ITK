@@ -97,14 +97,14 @@ public:
 
   /** Cast the container to a STL container type */
   STLContainerType &
-  CastToSTLContainer() ITK_NOEXCEPT
+  CastToSTLContainer() noexcept
   {
     return *this;
   }
 
   /** Cast the container to a const STL container type */
   const STLContainerType &
-  CastToSTLConstContainer() const ITK_NOEXCEPT
+  CastToSTLConstContainer() const noexcept
   {
     return *this;
   }
@@ -211,21 +211,16 @@ public:
     {
       return m_Iter == r.m_Iter;
     }
-    bool
-    operator!=(const Iterator & r) const
-    {
-      return m_Iter != r.m_Iter;
-    }
+
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Iterator);
+
     bool
     operator==(const ConstIterator & r) const
     {
       return m_Iter == r.m_Iter;
     }
-    bool
-    operator!=(const ConstIterator & r) const
-    {
-      return m_Iter != r.m_Iter;
-    }
+
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ConstIterator);
 
     /** Get the index into the MapContainer associated with this iterator.   */
     ElementIdentifier
@@ -301,21 +296,16 @@ public:
     {
       return m_Iter == r.m_Iter;
     }
-    bool
-    operator!=(const Iterator & r) const
-    {
-      return m_Iter != r.m_Iter;
-    }
+
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Iterator);
+
     bool
     operator==(const ConstIterator & r) const
     {
       return m_Iter == r.m_Iter;
     }
-    bool
-    operator!=(const ConstIterator & r) const
-    {
-      return m_Iter != r.m_Iter;
-    }
+
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(ConstIterator);
 
     /** Get the index into the MapContainer associated with this iterator.   */
     ElementIdentifier

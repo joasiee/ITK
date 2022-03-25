@@ -96,11 +96,11 @@ itkAntiAliasBinaryImageFilterTest(int argc, char * argv[])
     itk::AntiAliasBinaryImageFilter<BinaryImageType, RealImageType>::New();
 
   // Create a binary image of a sphere.
-  BinaryImageType::Pointer               image = BinaryImageType::New();
+  auto                                   image = BinaryImageType::New();
   BinaryImageType::RegionType            region;
   BinaryImageType::RegionType::SizeType  sz;
   BinaryImageType::RegionType::IndexType idx;
-  for (unsigned k = 0; k < 3; k++)
+  for (unsigned k = 0; k < 3; ++k)
   {
     sz[k] = 64;
     idx[k] = 0;
@@ -141,7 +141,7 @@ itkAntiAliasBinaryImageFilterTest(int argc, char * argv[])
   else
   {
     using WriterType = itk::ImageFileWriter<RealImageType>;
-    WriterType::Pointer writer = WriterType::New();
+    auto writer = WriterType::New();
     writer->SetInput(antialiaser->GetOutput());
     writer->SetFileName(outputImage);
     ITK_TRY_EXPECT_NO_EXCEPTION(writer->Update());

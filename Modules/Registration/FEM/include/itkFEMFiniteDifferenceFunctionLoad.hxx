@@ -72,7 +72,7 @@ FiniteDifferenceFunctionLoad<TMoving, TFixed>::InitializeIteration()
 
   if (!m_DifferenceFunction)
   {
-    typename defaultRegistrationFunctionType::Pointer drfp = defaultRegistrationFunctionType::New();
+    auto drfp = defaultRegistrationFunctionType::New();
     this->SetMetric(static_cast<FiniteDifferenceFunctionType *>(drfp));
   }
 
@@ -121,8 +121,9 @@ FiniteDifferenceFunctionLoad<TMoving, TFixed>::SetCurrentEnergy(double e)
 }
 
 template <typename TMoving, typename TFixed>
-typename FiniteDifferenceFunctionLoad<TMoving, TFixed>::Float
+auto
 FiniteDifferenceFunctionLoad<TMoving, TFixed>::EvaluateMetricGivenSolution(ElementContainerType * el, Float step)
+  -> Float
 {
   Float energy = 0.0, defe = 0.0;
 
@@ -145,10 +146,10 @@ FiniteDifferenceFunctionLoad<TMoving, TFixed>::EvaluateMetricGivenSolution(Eleme
   gPos.fill(0.0);
 
   solmat.set_size(numNodes * ImageDimension, 1);
-  for (unsigned int elt = 0; elt < el->Size(); elt++)
+  for (unsigned int elt = 0; elt < el->Size(); ++elt)
   {
     element = el->GetElement(elt);
-    for (unsigned int i = 0; i < m_NumberOfIntegrationPoints; i++)
+    for (unsigned int i = 0; i < m_NumberOfIntegrationPoints; ++i)
     {
       element->GetIntegrationPointAndWeight(i, ip, w, m_NumberOfIntegrationPoints);
       // FIXME REMOVE WHEN ELEMENT NEW IS BASE CLASS
@@ -156,11 +157,11 @@ FiniteDifferenceFunctionLoad<TMoving, TFixed>::EvaluateMetricGivenSolution(Eleme
 
       float solval, posval;
       Float detJ = element->JacobianDeterminant(ip);
-      for (unsigned int f = 0; f < ImageDimension; f++)
+      for (unsigned int f = 0; f < ImageDimension; ++f)
       {
         solval = 0.0;
         posval = 0.0;
-        for (unsigned int n = 0; n < numNodes; n++)
+        for (unsigned int n = 0; n < numNodes; ++n)
         {
           posval += shapef[n] * ((element->GetNodeCoordinates(n))[f]);
           float nodeval =
@@ -185,7 +186,7 @@ FiniteDifferenceFunctionLoad<TMoving, TFixed>::EvaluateMetricGivenSolution(Eleme
       {
         // Do nothing: we don't care if the metric region is outside the image
       }
-      for (unsigned int n = 0; n < numNodes; n++)
+      for (unsigned int n = 0; n < numNodes; ++n)
       {
         itk::fem::Element::Float temp = shapef[n] * tempe * w * detJ;
         energy += temp;
@@ -199,8 +200,8 @@ FiniteDifferenceFunctionLoad<TMoving, TFixed>::EvaluateMetricGivenSolution(Eleme
 }
 
 template <typename TMoving, typename TFixed>
-typename FiniteDifferenceFunctionLoad<TMoving, TFixed>::FEMVectorType
-FiniteDifferenceFunctionLoad<TMoving, TFixed>::Fe(FEMVectorType Gpos)
+auto
+FiniteDifferenceFunctionLoad<TMoving, TFixed>::Fe(FEMVectorType Gpos) -> FEMVectorType
 {
 
   // We assume the vector input is of size 2*ImageDimension.
@@ -233,7 +234,7 @@ FiniteDifferenceFunctionLoad<TMoving, TFixed>::Fe(FEMVectorType Gpos)
   typename TMoving::PointType physicalPoint;
 
   bool inimage = true;
-  for (unsigned int k = 0; k < ImageDimension; k++)
+  for (unsigned int k = 0; k < ImageDimension; ++k)
   {
     if (itk::Math::isnan(Gpos[k]) || itk::Math::isinf(Gpos[k]) || std::fabs(Gpos[k]) > 1.e33)
     {
@@ -245,7 +246,7 @@ FiniteDifferenceFunctionLoad<TMoving, TFixed>::Fe(FEMVectorType Gpos)
 
   m_FixedImage->TransformPhysicalPointToIndex(physicalPoint, oindex);
 
-  for (unsigned int k = 0; k < ImageDimension; k++)
+  for (unsigned int k = 0; k < ImageDimension; ++k)
   {
     if (oindex[k] > static_cast<OIndexValueType>(m_FixedSize[k] - 1) || oindex[k] < 0)
     {
@@ -263,7 +264,7 @@ FiniteDifferenceFunctionLoad<TMoving, TFixed>::Fe(FEMVectorType Gpos)
 
   void * globalData = nullptr;
   OutVec = m_DifferenceFunction->ComputeUpdate(nD, globalData);
-  for (unsigned int k = 0; k < ImageDimension; k++)
+  for (unsigned int k = 0; k < ImageDimension; ++k)
   {
     if (itk::Math::isnan(OutVec[k]) || itk::Math::isinf(OutVec[k]))
     {
@@ -297,16 +298,16 @@ FiniteDifferenceFunctionLoad<TMoving, TFixed>::ApplyLoad(Element::ConstPointer e
   F.fill(0.0);
   shapef.set_size(numNodes);
   gip.set_size(numDegreesOfFreedom);
-  for (unsigned int i = 0; i < numIntegrationPoints; i++)
+  for (unsigned int i = 0; i < numIntegrationPoints; ++i)
   {
     element->GetIntegrationPointAndWeight(i, ip, w, order);
 
     shapef = element->ShapeFunctions(ip);
     detJ = element->JacobianDeterminant(ip);
-    for (unsigned int f = 0; f < numDegreesOfFreedom; f++)
+    for (unsigned int f = 0; f < numDegreesOfFreedom; ++f)
     {
       float posval = 0.0;
-      for (unsigned int n = 0; n < numNodes; n++)
+      for (unsigned int n = 0; n < numNodes; ++n)
       {
         posval += shapef[n] * ((element->GetNodeCoordinates(n))[f]);
       }
@@ -321,9 +322,9 @@ FiniteDifferenceFunctionLoad<TMoving, TFixed>::ApplyLoad(Element::ConstPointer e
 
     force = this->Fe(gip);
     // Calculate the equivalent nodal loads
-    for (unsigned int n = 0; n < numNodes; n++)
+    for (unsigned int n = 0; n < numNodes; ++n)
     {
-      for (unsigned int d = 0; d < numDegreesOfFreedom; d++)
+      for (unsigned int d = 0; d < numDegreesOfFreedom; ++d)
       {
         itk::fem::Element::Float temp = shapef[n] * force[d] * w * detJ;
         F[n * numDegreesOfFreedom + d] += temp;

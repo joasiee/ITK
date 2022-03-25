@@ -48,7 +48,7 @@ namespace itk
  * \ingroup ITKCommon
  */
 template <typename TInput = float, typename TOutput = double>
-class HeavisideStepFunctionBase : public FunctionBase<TInput, TOutput>
+class ITK_TEMPLATE_EXPORT HeavisideStepFunctionBase : public FunctionBase<TInput, TOutput>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(HeavisideStepFunctionBase);
@@ -62,8 +62,8 @@ public:
   itkTypeMacro(HeavisideStepFunctionBase, FunctionBase);
 
 
-  using InputType = typename Superclass::InputType;
-  using OutputType = typename Superclass::OutputType;
+  using typename Superclass::InputType;
+  using typename Superclass::OutputType;
 
   /** Evaluate at the specified input position */
   OutputType

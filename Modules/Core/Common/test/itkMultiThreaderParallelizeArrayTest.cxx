@@ -59,16 +59,16 @@ itkMultiThreaderParallelizeArrayTest(int argc, char * argv[])
   }
   if (argc >= 2)
   {
-    unsigned threadCount = static_cast<unsigned>(std::stoi(argv[1]));
-    mt->SetNumberOfWorkUnits(threadCount);
+    unsigned workUnitCount = static_cast<unsigned>(std::stoi(argv[1]));
+    mt->SetNumberOfWorkUnits(workUnitCount);
   }
 
   constexpr unsigned    size = 1029;
   std::vector<unsigned> vec(size);
 
   using SomeProcessObject = itk::AbsImageFilter<itk::Image<char>, itk::Image<char>>;
-  SomeProcessObject::Pointer progressPO = SomeProcessObject::New();
-  ShowProgress::Pointer      showProgress = ShowProgress::New();
+  auto progressPO = SomeProcessObject::New();
+  auto showProgress = ShowProgress::New();
   progressPO->AddObserver(itk::ProgressEvent(), showProgress);
   mt->ParallelizeArray(
     1, size, [&vec](int i) { vec[i] = i; }, progressPO);
@@ -80,7 +80,7 @@ itkMultiThreaderParallelizeArrayTest(int argc, char * argv[])
     result = EXIT_FAILURE;
   }
 
-  for (unsigned i = 1; i < size; i++)
+  for (unsigned i = 1; i < size; ++i)
   {
     if (vec[i] != i)
     {

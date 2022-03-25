@@ -35,16 +35,12 @@ public:
   TensorRelativeAnisotropyFunction() = default;
   ~TensorRelativeAnisotropyFunction() = default;
   bool
-  operator!=(const TensorRelativeAnisotropyFunction &) const
+  operator==(const TensorRelativeAnisotropyFunction &) const
   {
-    return false;
+    return true;
   }
 
-  bool
-  operator==(const TensorRelativeAnisotropyFunction & other) const
-  {
-    return !(*this != other);
-  }
+  ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(TensorRelativeAnisotropyFunction);
 
   inline RealValueType
   operator()(const TInput & x) const
@@ -90,7 +86,7 @@ public:
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
-  using OutputImageType = typename Superclass::OutputImageType;
+  using typename Superclass::OutputImageType;
   using OutputPixelType = typename TOutputImage::PixelType;
   using InputPixelType = typename TInputImage::PixelType;
   using InputValueType = typename InputPixelType::ValueType;

@@ -40,7 +40,7 @@ void
 ConstantVelocityFieldTransformParametersAdaptor<TTransform>::SetRequiredSize(const SizeType & size)
 {
   bool isModified = false;
-  for (SizeValueType d = 0; d < ConstantVelocityFieldDimension; d++)
+  for (SizeValueType d = 0; d < ConstantVelocityFieldDimension; ++d)
   {
     if (Math::NotExactlyEquals(this->m_RequiredFixedParameters[d], size[d]))
     {
@@ -57,11 +57,11 @@ ConstantVelocityFieldTransformParametersAdaptor<TTransform>::SetRequiredSize(con
 }
 
 template <typename TTransform>
-const typename ConstantVelocityFieldTransformParametersAdaptor<TTransform>::SizeType
-ConstantVelocityFieldTransformParametersAdaptor<TTransform>::GetRequiredSize() const
+auto
+ConstantVelocityFieldTransformParametersAdaptor<TTransform>::GetRequiredSize() const -> const SizeType
 {
   SizeType size;
-  for (SizeValueType d = 0; d < ConstantVelocityFieldDimension; d++)
+  for (SizeValueType d = 0; d < ConstantVelocityFieldDimension; ++d)
   {
     size[d] = static_cast<SizeValueType>(this->m_RequiredFixedParameters[d]);
   }
@@ -73,7 +73,7 @@ void
 ConstantVelocityFieldTransformParametersAdaptor<TTransform>::SetRequiredOrigin(const PointType & origin)
 {
   bool isModified = false;
-  for (SizeValueType d = 0; d < ConstantVelocityFieldDimension; d++)
+  for (SizeValueType d = 0; d < ConstantVelocityFieldDimension; ++d)
   {
     if (Math::NotExactlyEquals(this->m_RequiredFixedParameters[ConstantVelocityFieldDimension + d], origin[d]))
     {
@@ -90,11 +90,11 @@ ConstantVelocityFieldTransformParametersAdaptor<TTransform>::SetRequiredOrigin(c
 }
 
 template <typename TTransform>
-const typename ConstantVelocityFieldTransformParametersAdaptor<TTransform>::PointType
-ConstantVelocityFieldTransformParametersAdaptor<TTransform>::GetRequiredOrigin() const
+auto
+ConstantVelocityFieldTransformParametersAdaptor<TTransform>::GetRequiredOrigin() const -> const PointType
 {
   PointType origin;
-  for (SizeValueType d = 0; d < ConstantVelocityFieldDimension; d++)
+  for (SizeValueType d = 0; d < ConstantVelocityFieldDimension; ++d)
   {
     origin[d] = this->m_RequiredFixedParameters[ConstantVelocityFieldDimension + d];
   }
@@ -106,7 +106,7 @@ void
 ConstantVelocityFieldTransformParametersAdaptor<TTransform>::SetRequiredSpacing(const SpacingType & spacing)
 {
   bool isModified = false;
-  for (SizeValueType d = 0; d < ConstantVelocityFieldDimension; d++)
+  for (SizeValueType d = 0; d < ConstantVelocityFieldDimension; ++d)
   {
     if (Math::NotExactlyEquals(this->m_RequiredFixedParameters[2 * ConstantVelocityFieldDimension + d], spacing[d]))
     {
@@ -123,11 +123,11 @@ ConstantVelocityFieldTransformParametersAdaptor<TTransform>::SetRequiredSpacing(
 }
 
 template <typename TTransform>
-const typename ConstantVelocityFieldTransformParametersAdaptor<TTransform>::SpacingType
-ConstantVelocityFieldTransformParametersAdaptor<TTransform>::GetRequiredSpacing() const
+auto
+ConstantVelocityFieldTransformParametersAdaptor<TTransform>::GetRequiredSpacing() const -> const SpacingType
 {
   SpacingType spacing;
-  for (SizeValueType d = 0; d < ConstantVelocityFieldDimension; d++)
+  for (SizeValueType d = 0; d < ConstantVelocityFieldDimension; ++d)
   {
     spacing[d] = this->m_RequiredFixedParameters[2 * ConstantVelocityFieldDimension + d];
   }
@@ -139,9 +139,9 @@ void
 ConstantVelocityFieldTransformParametersAdaptor<TTransform>::SetRequiredDirection(const DirectionType & direction)
 {
   bool isModified = false;
-  for (SizeValueType di = 0; di < ConstantVelocityFieldDimension; di++)
+  for (SizeValueType di = 0; di < ConstantVelocityFieldDimension; ++di)
   {
-    for (SizeValueType dj = 0; dj < ConstantVelocityFieldDimension; dj++)
+    for (SizeValueType dj = 0; dj < ConstantVelocityFieldDimension; ++dj)
     {
       if (Math::NotExactlyEquals(this->m_RequiredFixedParameters[3 * ConstantVelocityFieldDimension +
                                                                  (di * ConstantVelocityFieldDimension + dj)],
@@ -162,13 +162,13 @@ ConstantVelocityFieldTransformParametersAdaptor<TTransform>::SetRequiredDirectio
 }
 
 template <typename TTransform>
-const typename ConstantVelocityFieldTransformParametersAdaptor<TTransform>::DirectionType
-ConstantVelocityFieldTransformParametersAdaptor<TTransform>::GetRequiredDirection() const
+auto
+ConstantVelocityFieldTransformParametersAdaptor<TTransform>::GetRequiredDirection() const -> const DirectionType
 {
   DirectionType direction;
-  for (SizeValueType di = 0; di < ConstantVelocityFieldDimension; di++)
+  for (SizeValueType di = 0; di < ConstantVelocityFieldDimension; ++di)
   {
-    for (SizeValueType dj = 0; dj < ConstantVelocityFieldDimension; dj++)
+    for (SizeValueType dj = 0; dj < ConstantVelocityFieldDimension; ++dj)
     {
       direction[di][dj] =
         this
@@ -199,15 +199,15 @@ ConstantVelocityFieldTransformParametersAdaptor<TTransform>::AdaptTransformParam
   const DirectionType newFieldDirection = this->GetRequiredDirection();
 
   using IdentityTransformType = IdentityTransform<ParametersValueType, ConstantVelocityFieldDimension>;
-  typename IdentityTransformType::Pointer identityTransform = IdentityTransformType::New();
+  auto identityTransform = IdentityTransformType::New();
   identityTransform->SetIdentity();
 
   using LinearInterpolatorType = LinearInterpolateImageFunction<ConstantVelocityFieldType, ParametersValueType>;
-  typename LinearInterpolatorType::Pointer interpolator = LinearInterpolatorType::New();
+  auto interpolator = LinearInterpolatorType::New();
   interpolator->SetInputImage(this->m_Transform->GetConstantVelocityField());
 
   using ResamplerType = ResampleImageFilter<ConstantVelocityFieldType, ConstantVelocityFieldType, ParametersValueType>;
-  typename ResamplerType::Pointer resampler = ResamplerType::New();
+  auto resampler = ResamplerType::New();
   resampler->SetInput(this->m_Transform->GetConstantVelocityField());
   resampler->SetOutputDirection(newFieldDirection);
   resampler->SetOutputOrigin(newFieldOrigin);

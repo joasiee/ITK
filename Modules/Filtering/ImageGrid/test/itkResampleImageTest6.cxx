@@ -28,6 +28,15 @@ int
 itkResampleImageTest6(int argc, char * argv[])
 {
 
+  if (argc < 2)
+  {
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
+    std::cout << " scaling outputFilename" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+
   // Resample a Vector image
   constexpr unsigned int NDimensions = 2;
 
@@ -46,12 +55,6 @@ itkResampleImageTest6(int argc, char * argv[])
   using AffineTransformType = itk::AffineTransform<CoordRepType, NDimensions>;
   using InterpolatorType = itk::LinearInterpolateImageFunction<ImageType, CoordRepType>;
   using WriterType = itk::ImageFileWriter<ImageType>;
-
-  if (argc < 2)
-  {
-    std::cout << "Usage: " << argv[0] << " scaling outputFilename" << std::endl;
-    return EXIT_FAILURE;
-  }
 
   float scaling = std::stod(argv[1]);
 
@@ -91,11 +94,11 @@ itkResampleImageTest6(int argc, char * argv[])
   std::cout << "Done." << std::endl;
 
   // Create an affine transformation
-  AffineTransformType::Pointer aff = AffineTransformType::New();
+  auto aff = AffineTransformType::New();
   aff->Scale(0.9);
 
   // Create a linear interpolation image function
-  InterpolatorType::Pointer interp = InterpolatorType::New();
+  auto interp = InterpolatorType::New();
   interp->SetInputImage(image);
 
   // Create and configure a resampling filter
@@ -138,7 +141,7 @@ itkResampleImageTest6(int argc, char * argv[])
 
   std::cout << "Resampling from " << size << " to " << osize << " took " << clock.GetMean() << " s" << std::endl;
 
-  WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   writer->SetInput(resample->GetOutput());
   writer->SetFileName(argv[2]);
   writer->Update();

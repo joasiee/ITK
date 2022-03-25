@@ -19,6 +19,7 @@
 #include "itkSpatialNeighborSubsampler.h"
 #include "itkImageToNeighborhoodSampleAdaptor.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
+#include "itkTestingMacros.h"
 
 int
 itkSpatialNeighborSubsamplerTest(int, char *[])
@@ -73,8 +74,8 @@ itkSpatialNeighborSubsamplerTest(int, char *[])
   using SamplerType = itk::Statistics::SpatialNeighborSubsampler<AdaptorType, RegionType>;
   using IteratorType = itk::ImageRegionConstIteratorWithIndex<ImageType>;
 
-  ImageType::Pointer inImage = ImageType::New();
-  SizeType           sz;
+  auto     inImage = ImageType::New();
+  SizeType sz;
   sz.Fill(25);
   IndexType idx;
   idx.Fill(0);
@@ -96,10 +97,14 @@ itkSpatialNeighborSubsamplerTest(int, char *[])
   regionConstraint.SetSize(szConstraint);
   regionConstraint.SetIndex(idxConstraint);
 
-  AdaptorType::Pointer sample = AdaptorType::New();
+  auto sample = AdaptorType::New();
   sample->SetImage(inImage);
 
-  SamplerType::Pointer sampler_orig = SamplerType::New();
+  auto sampler_orig = SamplerType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(sampler_orig, SpatialNeighborSubsampler, RegionConstrainedSubsampler);
+
+
   sampler_orig->SetSample(sample);
   sampler_orig->SetSampleRegion(region);
   sampler_orig->SetRegionConstraint(regionConstraint);

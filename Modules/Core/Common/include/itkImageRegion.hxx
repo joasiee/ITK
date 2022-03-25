@@ -33,11 +33,11 @@
 namespace itk
 {
 template <unsigned int VImageDimension>
-typename ImageRegion<VImageDimension>::IndexType
-ImageRegion<VImageDimension>::GetUpperIndex() const
+auto
+ImageRegion<VImageDimension>::GetUpperIndex() const -> IndexType
 {
   IndexType idx;
-  for (unsigned int i = 0; i < VImageDimension; i++)
+  for (unsigned int i = 0; i < VImageDimension; ++i)
   {
     idx[i] = m_Index[i] + m_Size[i] - 1;
   }
@@ -49,7 +49,7 @@ template <unsigned int VImageDimension>
 void
 ImageRegion<VImageDimension>::SetUpperIndex(const IndexType & idx)
 {
-  for (unsigned int i = 0; i < VImageDimension; i++)
+  for (unsigned int i = 0; i < VImageDimension; ++i)
   {
     m_Size[i] = idx[i] - m_Index[i] + 1;
   }
@@ -62,7 +62,7 @@ ImageRegion<VImageDimension>::ComputeOffsetTable(OffsetTableType offsetTable) co
   OffsetValueType num = 1;
 
   offsetTable[0] = num;
-  for (unsigned int i = 0; i < ImageDimension; i++)
+  for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     num *= m_Size[i];
     offsetTable[i + 1] = num;
@@ -70,12 +70,12 @@ ImageRegion<VImageDimension>::ComputeOffsetTable(OffsetTableType offsetTable) co
 }
 
 template <unsigned int VImageDimension>
-typename ImageRegion<VImageDimension>::SizeValueType
-ImageRegion<VImageDimension>::GetNumberOfPixels() const
+auto
+ImageRegion<VImageDimension>::GetNumberOfPixels() const -> SizeValueType
 {
   SizeValueType numPixels = 1;
 
-  for (unsigned int i = 0; i < VImageDimension; i++)
+  for (unsigned int i = 0; i < VImageDimension; ++i)
   {
     numPixels *= m_Size[i];
   }
@@ -112,7 +112,7 @@ template <unsigned int VImageDimension>
 void
 ImageRegion<VImageDimension>::PadByRadius(const SizeType & radius)
 {
-  for (unsigned int i = 0; i < VImageDimension; i++)
+  for (unsigned int i = 0; i < VImageDimension; ++i)
   {
     m_Size[i] += 2 * radius[i];
     m_Index[i] -= static_cast<OffsetValueType>(radius[i]);
@@ -123,7 +123,7 @@ template <unsigned int VImageDimension>
 void
 ImageRegion<VImageDimension>::PadByRadius(const IndexValueArrayType radius)
 {
-  for (unsigned int i = 0; i < VImageDimension; i++)
+  for (unsigned int i = 0; i < VImageDimension; ++i)
   {
     m_Size[i] += 2 * radius[i];
     m_Index[i] -= static_cast<OffsetValueType>(radius[i]);
@@ -149,7 +149,7 @@ bool
 ImageRegion<VImageDimension>::ShrinkByRadius(const SizeType & radius)
 {
   bool shrunkSuccessfully = true;
-  for (unsigned int i = 0; i < VImageDimension; i++)
+  for (unsigned int i = 0; i < VImageDimension; ++i)
   {
     if (m_Size[i] <= 2 * radius[i])
     {
@@ -169,7 +169,7 @@ bool
 ImageRegion<VImageDimension>::ShrinkByRadius(const IndexValueArrayType radius)
 {
   bool shrunkSuccessfully = true;
-  for (unsigned int i = 0; i < VImageDimension; i++)
+  for (unsigned int i = 0; i < VImageDimension; ++i)
   {
     if (static_cast<IndexValueType>(m_Size[i]) <= 2 * radius[i])
     {
@@ -193,7 +193,7 @@ ImageRegion<VImageDimension>::Crop(const Self & region)
   bool            cropPossible = true;
 
   // Can we crop?
-  for (i = 0; i < VImageDimension && cropPossible; i++)
+  for (i = 0; i < VImageDimension && cropPossible; ++i)
   {
     // Is left edge of current region to the right of the right edge
     // of the region to crop with? (if so, we cannot crop)
@@ -216,7 +216,7 @@ ImageRegion<VImageDimension>::Crop(const Self & region)
   }
 
   // we can crop, so crop
-  for (i = 0; i < VImageDimension; i++)
+  for (i = 0; i < VImageDimension; ++i)
   {
     // first check the start index
     if (m_Index[i] < region.GetIndex()[i])
@@ -245,8 +245,8 @@ ImageRegion<VImageDimension>::Crop(const Self & region)
 }
 
 template <unsigned int VImageDimension>
-typename ImageRegion<VImageDimension>::SliceRegion
-ImageRegion<VImageDimension>::Slice(const unsigned int dim) const
+auto
+ImageRegion<VImageDimension>::Slice(const unsigned int dim) const -> SliceRegion
 {
   if (dim >= VImageDimension)
   {
@@ -260,7 +260,7 @@ ImageRegion<VImageDimension>::Slice(const unsigned int dim) const
   sliceIndex.Fill(0);
   sliceSize.Fill(0);
   unsigned int ii = 0;
-  for (unsigned int i = 0; i < VImageDimension; i++)
+  for (unsigned int i = 0; i < VImageDimension; ++i)
   {
     if (i != dim)
     {

@@ -49,7 +49,7 @@ itkGradientRecursiveGaussianFilterSpeedTest(int argc, char * argv[])
   using myRegionType = itk::ImageRegion<myDimension>;
 
   // Create the image
-  myImageType::Pointer inputImage = myImageType::New();
+  auto inputImage = myImageType::New();
 
 
   // Define their size, and start index
@@ -110,7 +110,7 @@ itkGradientRecursiveGaussianFilterSpeedTest(int argc, char * argv[])
 
 
   // Create a  Filter
-  myFilterType::Pointer filter = myFilterType::New();
+  auto filter = myFilterType::New();
 
 
   // Connect the input images
@@ -118,7 +118,7 @@ itkGradientRecursiveGaussianFilterSpeedTest(int argc, char * argv[])
 
 
   // loop
-  for (int i = 0; i < reps; i++)
+  for (int i = 0; i < reps; ++i)
   {
     // Select the value of Sigma
     filter->SetSigma(2.5 + reps / 100.0);

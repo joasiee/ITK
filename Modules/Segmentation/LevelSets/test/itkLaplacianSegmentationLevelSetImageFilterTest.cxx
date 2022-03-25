@@ -17,6 +17,7 @@
  *=========================================================================*/
 
 #include "itkLaplacianSegmentationLevelSetImageFilter.h"
+#include "itkTestingMacros.h"
 
 
 namespace LSIFTN
@@ -151,7 +152,6 @@ protected:
 int
 itkLaplacianSegmentationLevelSetImageFilterTest(int, char *[])
 {
-  std::cout << "Last modified 11/08/02" << std::endl;
 
   LSIFTN::ImageType::RegionType            reg;
   LSIFTN::ImageType::RegionType::SizeType  sz;
@@ -180,6 +180,10 @@ itkLaplacianSegmentationLevelSetImageFilterTest(int, char *[])
 
   itk::LaplacianSegmentationLevelSetImageFilter<::LSIFTN::SeedImageType, ::LSIFTN::ImageType>::Pointer filter =
     itk::LaplacianSegmentationLevelSetImageFilter<::LSIFTN::SeedImageType, ::LSIFTN::ImageType>::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(filter, LaplacianSegmentationLevelSetImageFilter, SegmentationLevelSetImageFilter);
+
+
   filter->SetInput(seedImage);
   filter->SetFeatureImage(inputImage);
 

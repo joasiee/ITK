@@ -40,7 +40,7 @@ itkScalarImageToTextureFeaturesFilterTest(int, char *[])
   using InputImageIterator = itk::ImageRegionIterator<InputImageType>;
 
 
-  InputImageType::Pointer image = InputImageType::New();
+  auto image = InputImageType::New();
 
   InputImageType::SizeType inputImageSize = { { IMGWIDTH, IMGHEIGHT } };
 
@@ -66,7 +66,7 @@ itkScalarImageToTextureFeaturesFilterTest(int, char *[])
   // setup the iterator
   InputImageIterator imageIt(image, image->GetBufferedRegion());
 
-  for (int i = 0; i < 5; i++)
+  for (int i = 0; i < 5; ++i)
     for (int j = 0; j < 5; j++, ++imageIt)
     {
       imageIt.Set(j % 2 + 1);
@@ -81,14 +81,14 @@ itkScalarImageToTextureFeaturesFilterTest(int, char *[])
   //  1 1 1 1 1
   //--------------------------------------------------------------------------
 
-  InputImageType::Pointer mask = InputImageType::New();
+  auto mask = InputImageType::New();
   mask->SetRegions(region);
   mask->Allocate();
 
   // setup the iterator
   InputImageIterator maskIt(mask, mask->GetBufferedRegion());
   maskIt.GoToBegin();
-  for (int i = 0; i < 5; i++)
+  for (int i = 0; i < 5; ++i)
     for (int j = 0; j < 5; j++, ++maskIt)
     {
       maskIt.Set(1);
@@ -106,7 +106,7 @@ itkScalarImageToTextureFeaturesFilterTest(int, char *[])
       itk::Statistics::ScalarImageToTextureFeaturesFilter<InputImageType, itk::Statistics::DenseFrequencyContainer2>;
 
     // First test: just use the defaults.
-    TextureFilterType::Pointer texFilter = TextureFilterType::New();
+    auto texFilter = TextureFilterType::New();
 
     // Invoke update before adding an input. An exception should be
     // thrown.

@@ -37,7 +37,7 @@ itkCentralDifferenceImageFunctionOnVectorSpeedTestRun(char * argv[])
   using PixelType = itk::Vector<float, vecLength>;
   using ImageType = itk::Image<PixelType, ImageDimension>;
 
-  typename ImageType::Pointer  image = ImageType::New();
+  auto                         image = ImageType::New();
   typename ImageType::SizeType size;
   size.Fill(imageSize);
   typename ImageType::RegionType region(size);
@@ -54,7 +54,7 @@ itkCentralDifferenceImageFunctionOnVectorSpeedTestRun(char * argv[])
   while (!iter.IsAtEnd())
   {
     PixelType pix;
-    for (unsigned int n = 0; n < vecLength; n++)
+    for (unsigned int n = 0; n < vecLength; ++n)
     {
       pix[n] = counter; //(n+1) + counter;
     }
@@ -70,7 +70,7 @@ itkCentralDifferenceImageFunctionOnVectorSpeedTestRun(char * argv[])
   using FunctionType = itk::CentralDifferenceImageFunction<ImageType, CoordRepType, DerivativeType>;
   using OutputType = typename FunctionType::OutputType;
 
-  typename FunctionType::Pointer function = FunctionType::New();
+  auto function = FunctionType::New();
 
   function->SetInputImage(image);
 
@@ -83,7 +83,7 @@ itkCentralDifferenceImageFunctionOnVectorSpeedTestRun(char * argv[])
   std::cout << "UseImageDirection: " << function->GetUseImageDirection() << std::endl;
 
   /// loop
-  for (int l = 0; l < reps; l++)
+  for (int l = 0; l < reps; ++l)
   {
     iter.GoToBegin();
     while (!iter.IsAtEnd())

@@ -31,7 +31,7 @@ itkFixedCenterOfRotationAffineTransformTest(int, char *[])
   FCoRAffine2DType::InputVectorType vector2;
   FCoRAffine2DType::InputPointType  point2;
 
-  FCoRAffine2DType::Pointer id2 = FCoRAffine2DType::New();
+  auto id2 = FCoRAffine2DType::New();
   matrix2 = id2->GetMatrixComponent();
   vector2 = id2->GetOffsetComponent();
   point2 = id2->GetCenterOfRotationComponent();
@@ -39,9 +39,9 @@ itkFixedCenterOfRotationAffineTransformTest(int, char *[])
   std::cout << "Instantiation of an identity Transform: ";
 
   bool fail = false;
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
-    for (unsigned int j = 0; j < 2; j++)
+    for (unsigned int j = 0; j < 2; ++j)
     {
       if ((i != j) && (matrix2.GetVnlMatrix().get(i, j) != 0.0))
       {
@@ -78,7 +78,7 @@ itkFixedCenterOfRotationAffineTransformTest(int, char *[])
   point2[0] = 1.0;
   point2[1] = 1.0;
 
-  FCoRAffine2DType::Pointer aff2 = FCoRAffine2DType::New();
+  auto aff2 = FCoRAffine2DType::New();
   aff2->SetCenterOfRotationComponent(point2);
   aff2->SetMatrixComponent(matrix2);
   aff2->SetOffsetComponent(vector2);
@@ -201,7 +201,7 @@ itkFixedCenterOfRotationAffineTransformTest(int, char *[])
   offset[1] = 4;
   FCoRAffine2DType::InputVectorType v = matrix * (point - point2);
 
-  for (unsigned int i = 0; i < 2; i++)
+  for (unsigned int i = 0; i < 2; ++i)
   {
     expectedPoint[i] = v[i] + point2[i] + offset[i];
   }

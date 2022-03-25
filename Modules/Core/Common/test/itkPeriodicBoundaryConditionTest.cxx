@@ -20,6 +20,7 @@
 
 #include "itkPeriodicBoundaryCondition.h"
 #include "itkVectorImage.h"
+#include "itkTestingMacros.h"
 
 using ImageType = itk::Image<int, 2>;
 using RegionType = ImageType::RegionType;
@@ -121,17 +122,17 @@ int
 itkPeriodicBoundaryConditionTest(int, char *[])
 {
   // Test an image to cover one operator() method.
-  ImageType::Pointer image = ImageType::New();
-  RegionType         imageRegion;
-  SizeType           imageSize = { { 5, 5 } };
-  IndexType          imageIndex = { { 0, 0 } };
+  auto       image = ImageType::New();
+  RegionType imageRegion;
+  SizeType   imageSize = { { 5, 5 } };
+  IndexType  imageIndex = { { 0, 0 } };
   imageRegion.SetSize(imageSize);
   imageRegion.SetIndex(imageIndex);
   image->SetRegions(imageRegion);
   image->Allocate();
 
   // Test a vector image to cover the other operator() method.
-  VectorImageType::Pointer vectorImage = VectorImageType::New();
+  auto vectorImage = VectorImageType::New();
   vectorImage->SetRegions(imageRegion);
   vectorImage->SetNumberOfComponentsPerPixel(1);
   vectorImage->Allocate();
@@ -290,6 +291,7 @@ itkPeriodicBoundaryConditionTest(int, char *[])
   ImageType::RegionType testRegion(testSize);
   testImage->SetRegions(testRegion);
   testImage->Allocate();
+  testImage->FillBuffer(1);
 
   using BoundaryConditionType = itk::PeriodicBoundaryCondition<ImageType, ImageType>;
   using IterType = itk::ConstNeighborhoodIterator<ImageType, BoundaryConditionType>;
@@ -302,16 +304,17 @@ itkPeriodicBoundaryConditionTest(int, char *[])
   back.push_back({ { 0, 0 } });
   testIter.SetNeedToUseBoundaryCondition(true);
   testIter.GoToBegin();
+  float sum = 0.0f;
   while (!testIter.IsAtEnd())
   {
-    float sum = 0;
     for (auto & j : back)
     {
       const float d = testIter.GetPixel(j);
-      sum += d * d;
+      sum += d;
     }
     ++testIter;
   }
+  ITK_TEST_EXPECT_EQUAL(sum, testSize[0] * testSize[1] * 3);
 
   return EXIT_SUCCESS;
 }

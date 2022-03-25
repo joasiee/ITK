@@ -32,7 +32,7 @@ itkVTKPolyDataReaderTest(int argc, char * argv[])
   using MeshType = itk::Mesh<float, 3>;
   using ReaderType = itk::VTKPolyDataReader<MeshType>;
 
-  ReaderType::Pointer polyDataReader = ReaderType::New();
+  auto polyDataReader = ReaderType::New();
 
   using PointType = ReaderType::PointType;
 
@@ -76,7 +76,7 @@ itkVTKPolyDataReaderTest(int argc, char * argv[])
     return EXIT_FAILURE;
   }
 
-  for (unsigned int i = 0; i < numberOfPoints; i++)
+  for (unsigned int i = 0; i < numberOfPoints; ++i)
   {
     mesh->GetPoint(i, &point);
   }

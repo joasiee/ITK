@@ -40,7 +40,7 @@ itkChangeLabelImageFilterTest(int, char *[])
 
   // Use a random image source as input
   using SourceType = itk::RandomImageSource<InputImageType>;
-  SourceType::Pointer source = SourceType::New();
+  auto source = SourceType::New();
 
   InputImageType::SizeValueType sizeArray[ImageDimension] = { 3, 3, 3 };
 
@@ -55,12 +55,12 @@ itkChangeLabelImageFilterTest(int, char *[])
 
 
   // Create a filter
-  FilterType::Pointer filter = FilterType::New();
+  auto filter = FilterType::New();
 
   // Eliminate most labels
   InputPixelType background = 0;
   InputPixelType maxRemainingLabel = 2;
-  for (InputPixelType i = maxRemainingLabel; i <= upper; i++)
+  for (InputPixelType i = maxRemainingLabel; i <= upper; ++i)
   {
     filter->SetChange(i, background);
   }

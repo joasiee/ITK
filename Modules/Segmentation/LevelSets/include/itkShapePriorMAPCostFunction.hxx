@@ -54,8 +54,9 @@ ShapePriorMAPCostFunction<TFeatureImage, TOutputPixel>::PrintSelf(std::ostream &
  *
  */
 template <typename TFeatureImage, typename TOutputPixel>
-typename ShapePriorMAPCostFunction<TFeatureImage, TOutputPixel>::MeasureType
+auto
 ShapePriorMAPCostFunction<TFeatureImage, TOutputPixel>::ComputeLogInsideTerm(const ParametersType & parameters) const
+  -> MeasureType
 {
   this->m_ShapeFunction->SetParameters(parameters);
 
@@ -104,7 +105,7 @@ ShapePriorMAPCostFunction<TFeatureImage, TOutputPixel>::ComputeLogShapePriorTerm
   // assume the shape parameters is from a independent gaussian distributions
   MeasureType measure = 0.0;
 
-  for (unsigned int j = 0; j < this->m_ShapeFunction->GetNumberOfShapeParameters(); j++)
+  for (unsigned int j = 0; j < this->m_ShapeFunction->GetNumberOfShapeParameters(); ++j)
   {
     measure += itk::Math::sqr((parameters[j] - m_ShapeParameterMeans[j]) / m_ShapeParameterStandardDeviations[j]);
   }
@@ -116,8 +117,9 @@ ShapePriorMAPCostFunction<TFeatureImage, TOutputPixel>::ComputeLogShapePriorTerm
  *
  */
 template <typename TFeatureImage, typename TOutputPixel>
-typename ShapePriorMAPCostFunction<TFeatureImage, TOutputPixel>::MeasureType
+auto
 ShapePriorMAPCostFunction<TFeatureImage, TOutputPixel>::ComputeLogGradientTerm(const ParametersType & parameters) const
+  -> MeasureType
 {
   this->m_ShapeFunction->SetParameters(parameters);
 

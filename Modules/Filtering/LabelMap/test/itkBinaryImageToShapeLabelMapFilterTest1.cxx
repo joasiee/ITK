@@ -29,7 +29,8 @@ itkBinaryImageToShapeLabelMapFilterTest1(int argc, char * argv[])
 
   if (argc != 8)
   {
-    std::cerr << "Usage: " << argv[0];
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
     std::cerr << " inputBinaryImage outputShapeLabelMap";
     std::cerr << " fullyConnected(0/1) foregroundValue backgroundValue";
     std::cerr << " feretDiameter, perimeter";
@@ -46,12 +47,12 @@ itkBinaryImageToShapeLabelMapFilterTest1(int argc, char * argv[])
 
   // reading image to file
   using ReaderType = itk::ImageFileReader<ImageType>;
-  ReaderType::Pointer reader = ReaderType::New();
+  auto reader = ReaderType::New();
   reader->SetFileName(argv[1]);
 
   // converting binary image to shape label map
   using I2LType = itk::BinaryImageToShapeLabelMapFilter<ImageType, LabelMapType>;
-  I2LType::Pointer         i2l = I2LType::New();
+  auto                     i2l = I2LType::New();
   itk::SimpleFilterWatcher watcher1(i2l);
 
   i2l->SetInput(reader->GetOutput());
@@ -107,13 +108,13 @@ itkBinaryImageToShapeLabelMapFilterTest1(int argc, char * argv[])
 
 
   using L2IType = itk::LabelMapToLabelImageFilter<LabelMapType, ImageType>;
-  L2IType::Pointer         l2i = L2IType::New();
+  auto                     l2i = L2IType::New();
   itk::SimpleFilterWatcher watcher2(l2i);
 
   l2i->SetInput(i2l->GetOutput());
 
   using WriterType = itk::ImageFileWriter<ImageType>;
-  WriterType::Pointer writer = WriterType::New();
+  auto writer = WriterType::New();
   writer->SetInput(l2i->GetOutput());
   writer->SetFileName(argv[2]);
   writer->UseCompressionOn();

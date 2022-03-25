@@ -47,8 +47,8 @@ VectorMeanImageFunction<TInputImage, TCoordRep>::PrintSelf(std::ostream & os, In
  *
  */
 template <typename TInputImage, typename TCoordRep>
-typename VectorMeanImageFunction<TInputImage, TCoordRep>::RealType
-VectorMeanImageFunction<TInputImage, TCoordRep>::EvaluateAtIndex(const IndexType & index) const
+auto
+VectorMeanImageFunction<TInputImage, TCoordRep>::EvaluateAtIndex(const IndexType & index) const -> RealType
 {
 
   using PixelType = typename TInputImage::PixelType;
@@ -86,14 +86,14 @@ VectorMeanImageFunction<TInputImage, TCoordRep>::EvaluateAtIndex(const IndexType
       sum = static_cast<RealType>(NumericTraits<PixelType>::ZeroValue(p));
     }
 
-    for (unsigned int dim = 0; dim < VectorDimension; dim++)
+    for (unsigned int dim = 0; dim < VectorDimension; ++dim)
     {
       sum[dim] += static_cast<PixelComponentRealType>(p[dim]);
     }
   }
 
   const unsigned int VectorDimension = NumericTraits<RealType>::GetLength(sum);
-  for (unsigned int dim = 0; dim < VectorDimension; dim++)
+  for (unsigned int dim = 0; dim < VectorDimension; ++dim)
   {
     sum[dim] /= double(it.Size());
   }

@@ -52,8 +52,8 @@ GrayscaleGeodesicErodeImageFilter<TInputImage, TOutputImage>::SetMarkerImage(con
 }
 
 template <typename TInputImage, typename TOutputImage>
-const typename GrayscaleGeodesicErodeImageFilter<TInputImage, TOutputImage>::MarkerImageType *
-GrayscaleGeodesicErodeImageFilter<TInputImage, TOutputImage>::GetMarkerImage()
+auto
+GrayscaleGeodesicErodeImageFilter<TInputImage, TOutputImage>::GetMarkerImage() -> const MarkerImageType *
 {
   return this->GetInput(0);
 }
@@ -67,8 +67,8 @@ GrayscaleGeodesicErodeImageFilter<TInputImage, TOutputImage>::SetMaskImage(const
 }
 
 template <typename TInputImage, typename TOutputImage>
-const typename GrayscaleGeodesicErodeImageFilter<TInputImage, TOutputImage>::MaskImageType *
-GrayscaleGeodesicErodeImageFilter<TInputImage, TOutputImage>::GetMaskImage()
+auto
+GrayscaleGeodesicErodeImageFilter<TInputImage, TOutputImage>::GetMaskImage() -> const MaskImageType *
 {
   return this->GetInput(1);
 }
@@ -193,7 +193,7 @@ GrayscaleGeodesicErodeImageFilter<TInputImage, TOutputImage>::GenerateData()
   singleIteration->GetOutput()->SetRequestedRegion(this->GetOutput()->GetRequestedRegion());
 
   // Create a process accumulator for tracking the progress of this minipipeline
-  ProgressAccumulator::Pointer progress = ProgressAccumulator::New();
+  auto progress = ProgressAccumulator::New();
   progress->SetMiniPipelineFilter(this);
   progress->RegisterInternalFilter(singleIteration, 1.0f);
 
@@ -342,7 +342,7 @@ GrayscaleGeodesicErodeImageFilter<TInputImage, TOutputImage>::DynamicThreadedGen
 
       // Erode by checking the face connected neighbors (and center pixel)
       typename NeighborhoodIteratorType::ConstIterator sIt;
-      for (sIt = markerIt.Begin(); !sIt.IsAtEnd(); sIt++)
+      for (sIt = markerIt.Begin(); !sIt.IsAtEnd(); ++sIt)
       {
         // a pixel in the neighborhood
         value = sIt.Get();

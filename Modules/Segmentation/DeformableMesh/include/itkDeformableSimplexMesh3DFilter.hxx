@@ -228,8 +228,8 @@ DeformableSimplexMesh3DFilter<TInputMesh, TOutputMesh>::SetGradient(const Gradie
 
 /* Get the gradient image as an input */
 template <typename TInputMesh, typename TOutputMesh>
-const typename DeformableSimplexMesh3DFilter<TInputMesh, TOutputMesh>::GradientImageType *
-DeformableSimplexMesh3DFilter<TInputMesh, TOutputMesh>::GetGradient() const
+auto
+DeformableSimplexMesh3DFilter<TInputMesh, TOutputMesh>::GetGradient() const -> const GradientImageType *
 {
   const auto * gradientImage = dynamic_cast<const GradientImageType *>(this->ProcessObject::GetInput(1));
 
@@ -462,7 +462,7 @@ DeformableSimplexMesh3DFilter<TInputMesh, TOutputMesh>::ComputeExternalForce(Sim
 
   if (mag > 0.5)
   {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; ++i)
     {
       vec_for[i] = (0.5 * vec_for[i]) / mag;
     }

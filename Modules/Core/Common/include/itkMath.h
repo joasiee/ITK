@@ -101,23 +101,23 @@ static constexpr float float_sqrteps = vnl_math::float_sqrteps;
 /** A useful macro to generate a template floating point to integer
  *  conversion templated on the return type and using either the 32
  *  bit, the 64 bit or the vanilla version */
-#define itkTemplateFloatingToIntegerMacro(name)                                                                        \
-  template <typename TReturn, typename TInput>                                                                         \
-  inline TReturn name(TInput x)                                                                                        \
-  {                                                                                                                    \
-                                                                                                                       \
-    if (sizeof(TReturn) <= 4)                                                                                          \
-    {                                                                                                                  \
-      return static_cast<TReturn>(Detail::name##_32(x));                                                               \
-    }                                                                                                                  \
-    else if (sizeof(TReturn) <= 8)                                                                                     \
-    {                                                                                                                  \
-      return static_cast<TReturn>(Detail::name##_64(x));                                                               \
-    }                                                                                                                  \
-    else                                                                                                               \
-    {                                                                                                                  \
-      return static_cast<TReturn>(Detail::name##_base<TReturn, TInput>(x));                                            \
-    }                                                                                                                  \
+#define itkTemplateFloatingToIntegerMacro(name)                             \
+  template <typename TReturn, typename TInput>                              \
+  inline TReturn name(TInput x)                                             \
+  {                                                                         \
+                                                                            \
+    if (sizeof(TReturn) <= 4)                                               \
+    {                                                                       \
+      return static_cast<TReturn>(Detail::name##_32(x));                    \
+    }                                                                       \
+    else if (sizeof(TReturn) <= 8)                                          \
+    {                                                                       \
+      return static_cast<TReturn>(Detail::name##_64(x));                    \
+    }                                                                       \
+    else                                                                    \
+    {                                                                       \
+      return static_cast<TReturn>(Detail::name##_base<TReturn, TInput>(x)); \
+    }                                                                       \
   }
 
 /** \brief Round towards nearest integer
@@ -774,7 +774,7 @@ GreatestPrimeFactor(unsigned long long n);
  */
 template <typename TReturnType = std::uintmax_t>
 constexpr TReturnType
-UnsignedProduct(const std::uintmax_t a, const std::uintmax_t b) ITK_NOEXCEPT
+UnsignedProduct(const std::uintmax_t a, const std::uintmax_t b) noexcept
 {
   static_assert(std::is_unsigned<TReturnType>::value, "UnsignedProduct only supports unsigned return types");
 
@@ -796,7 +796,7 @@ UnsignedProduct(const std::uintmax_t a, const std::uintmax_t b) ITK_NOEXCEPT
  */
 template <typename TReturnType = std::uintmax_t>
 constexpr TReturnType
-UnsignedPower(const std::uintmax_t base, const std::uintmax_t exponent) ITK_NOEXCEPT
+UnsignedPower(const std::uintmax_t base, const std::uintmax_t exponent) noexcept
 {
   static_assert(std::is_unsigned<TReturnType>::value, "UnsignedPower only supports unsigned return types");
 

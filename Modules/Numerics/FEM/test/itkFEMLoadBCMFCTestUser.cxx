@@ -37,10 +37,10 @@ itkFEMLoadBCMFCTestUser(int argc, char *[])
   itk::FEMFactoryBase::RegisterDefaultTypes();
 
   using Solver2DType = itk::fem::Solver<2>;
-  Solver2DType::Pointer solver = Solver2DType::New();
+  auto solver = Solver2DType::New();
 
   using FEMObjectType = itk::fem::FEMObject<2>;
-  FEMObjectType::Pointer femObject = FEMObjectType::New();
+  auto femObject = FEMObjectType::New();
 
   itk::fem::LinearSystemWrapperVNL vnlSolver;
 
@@ -212,7 +212,7 @@ itkFEMLoadBCMFCTestUser(int argc, char *[])
   float expectedResult[10] = { 0.283525f, 0.0f, 0.283525f, 1.70115f, 0.283525f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 
   bool foundError = false;
-  for (int i = 0; i < numDOF; i++)
+  for (int i = 0; i < numDOF; ++i)
   {
     soln[i] = solver->GetSolution(i);
     // std::cout << "Solution[" << i << "]:" << soln[i] << std::endl;
@@ -232,7 +232,7 @@ itkFEMLoadBCMFCTestUser(int argc, char *[])
   // to write the deformed mesh
   // Testing the fe mesh validity
   /* using FEMObjectSpatialObjectType = itk::FEMObjectSpatialObject<2>;
-   FEMObjectSpatialObjectType::Pointer femSODef = FEMObjectSpatialObjectType::New();
+   auto femSODef = FEMObjectSpatialObjectType::New();
    femSODef->SetFEMObject(solver->GetOutput());
    using FEMSpatialObjectWriterType = itk::FEMSpatialObjectWriter<2>;
    using FEMSpatialObjectWriterPointer = FEMSpatialObjectWriterType::Pointer;
