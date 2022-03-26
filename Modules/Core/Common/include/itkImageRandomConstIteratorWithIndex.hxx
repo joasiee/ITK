@@ -45,6 +45,20 @@ ImageRandomConstIteratorWithIndex<TImage>::ImageRandomConstIteratorWithIndex(con
   m_Generator = Statistics::MersenneTwisterRandomVariateGenerator::New();
 }
 
+/** Constructor establishes an iterator to walk a particular image and a
+ * particular region of that image. */
+template <typename TImage>
+ImageRandomConstIteratorWithIndex<TImage>::ImageRandomConstIteratorWithIndex(const ImageType *    ptr,
+                                                                             const RegionType &   region,
+                                                                             GeneratorTypePointer generator)
+  : ImageConstIteratorWithIndex<TImage>(ptr, region)
+{
+  m_NumberOfPixelsInRegion = region.GetNumberOfPixels();
+  m_NumberOfSamplesRequested = 0L;
+  m_NumberOfSamplesDone = 0L;
+  m_Generator = generator;
+}
+
 /**  Set the number of samples to extract from the region */
 template <typename TImage>
 void
