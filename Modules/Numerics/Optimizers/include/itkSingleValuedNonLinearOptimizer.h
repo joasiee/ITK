@@ -71,6 +71,8 @@ public:
 
   /** Get the cost function. */
   itkGetModifiableObjectMacro(CostFunction, CostFunctionType);
+  
+  itkSetMacro(Value, MeasureType);
 
   /** Get the cost function value at the given parameters. */
   MeasureType
@@ -87,6 +89,7 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   CostFunctionPointer m_CostFunction;
+  MeasureType         m_Value;
 };
 } // end namespace itk
 
