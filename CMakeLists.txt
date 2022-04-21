@@ -10,6 +10,7 @@
 # CMake versions greater than the ITK_NEWEST_VALIDATED_POLICIES_VERSION policies will
 # continue to generate policy warnings "CMake Warning (dev)...Policy CMP0XXX is not set:"
 #
+include(CMakeDefaultCache.txt)
 set(ITK_OLDEST_VALIDATED_POLICIES_VERSION "3.16.3")
 set(ITK_NEWEST_VALIDATED_POLICIES_VERSION "3.19.7")
 cmake_minimum_required(VERSION ${ITK_OLDEST_VALIDATED_POLICIES_VERSION}...${ITK_NEWEST_VALIDATED_POLICIES_VERSION} FATAL_ERROR)
