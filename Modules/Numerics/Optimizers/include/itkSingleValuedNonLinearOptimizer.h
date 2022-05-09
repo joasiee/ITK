@@ -82,6 +82,9 @@ public:
   MeasureType
   GetValue(const ParametersType & parameters, const int fosIndex) const;
 
+  void
+  SetTransformParameters(const ParametersType & parameters);
+
 protected:
   SingleValuedNonLinearOptimizer();
   ~SingleValuedNonLinearOptimizer() override = default;

@@ -92,6 +92,22 @@ SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters, cons
 }
 
 void
+SingleValuedNonLinearOptimizer::SetTransformParameters(const ParametersType & parameters)
+{
+  itkDebugMacro("Setting Transform Parameters to: " << parameters);
+
+  if (!m_CostFunction)
+  {
+    ExceptionObject ex;
+    ex.SetLocation(__FILE__);
+    ex.SetDescription("The costfunction must be set prior to calling SetTransformParameters");
+    throw ex;
+  }
+
+  this->GetCostFunction()->SetTransformParameters(parameters);
+}
+
+void
 SingleValuedNonLinearOptimizer::PrintSelf(std::ostream & os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

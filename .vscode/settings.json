@@ -1,0 +1,25 @@
+{
+    "files.associations": {
+        "compare": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "exception": "cpp",
+        "iterator": "cpp",
+        "memory": "cpp",
+        "memory_resource": "cpp",
+        "string_view": "cpp",
+        "functional": "cpp",
+        "initializer_list": "cpp",
+        "istream": "cpp",
+        "new": "cpp",
+        "ostream": "cpp",
+        "sstream": "cpp",
+        "stdexcept": "cpp",
+        "system_error": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "typeinfo": "cpp",
+        "*.txx": "cpp"
+    }
+}

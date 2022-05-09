@@ -38,6 +38,11 @@ SingleValuedCostFunction::GetValue(const ParametersType & parameters, const int 
 }
 
 void
+SingleValuedCostFunction::SetTransformParameters(const ParametersType & parameters) const
+{
+  (void)parameters;
+}
+void
 SingleValuedCostFunction::InitPartialEvaluations(int ** sets, int * set_length, int length)
 {
   (void)sets;

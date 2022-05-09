@@ -210,7 +210,7 @@ public:
 
   /** Set the parameters defining the Transform. */
   void
-  SetTransformParameters(const ParametersType & parameters) const;
+  SetTransformParameters(const ParametersType & parameters) const override;
 
   /** Return the number of parameters required by the Transform */
   unsigned int

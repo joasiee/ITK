@@ -67,6 +67,9 @@ public:
   virtual MeasureType
   GetValue(const ParametersType & parameters, const int fosIndex) const;
 
+  virtual void
+  SetTransformParameters(const ParametersType & parameters) const;
+
   /** Initializes partial evaluations data structures. */
   virtual void
   InitPartialEvaluations(int ** sets, int * set_length, int length);
