@@ -29,12 +29,14 @@ SingleValuedCostFunction::GetValueAndDerivative(const ParametersType & parameter
 }
 
 
-SingleValuedCostFunction::MeasureType
+Solution
 SingleValuedCostFunction::GetValue(const ParametersType & parameters, const int fosIndex) const
 {
   (void)fosIndex;
   itkWarningMacro(<< Self::GetNameOfClass() << ": Missing partial evaluations implementation.");
-  return this->GetValue(parameters);
+  Solution res{};
+  res.Set(this->GetValue(parameters));
+  return res;
 }
 
 void
