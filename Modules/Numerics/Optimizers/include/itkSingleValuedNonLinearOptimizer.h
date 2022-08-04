@@ -79,7 +79,7 @@ public:
   GetValue(const ParametersType & parameters) const;
 
   /** Get the cost function value at the given parameters using partial evaluations. */
-  Solution
+  Evaluation
   GetValue(const ParametersType & parameters, const int fosIndex) const;
 
   void

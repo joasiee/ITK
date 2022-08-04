@@ -20,7 +20,7 @@
 
 #include "itkCostFunction.h"
 #include "itkNumericTraits.h"
-#include "itkPartialSolution.h"
+#include "itkEvaluation.h"
 #include "ITKOptimizersExport.h"
 
 namespace itk
@@ -65,7 +65,7 @@ public:
   GetValue(const ParametersType & parameters) const = 0;
 
   /** This method returns the value of the cost function when it is evaluated partially. */
-  virtual Solution
+  virtual Evaluation
   GetValue(const ParametersType & parameters, const int fosIndex) const;
 
   virtual void

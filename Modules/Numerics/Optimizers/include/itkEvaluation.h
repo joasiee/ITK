@@ -1,6 +1,6 @@
 #include <array>
 
-class Solution
+class Evaluation
 {
 public:
   virtual double
@@ -23,11 +23,11 @@ private:
 };
 
 template <unsigned int NumberOfOperands>
-class PartialSolution : Solution
+class PartialEvaluation : Evaluation
 {
 public:
-  PartialSolution() = default;
-  PartialSolution(std::array<double, NumberOfOperands> && operands)
+  PartialEvaluation() = default;
+  PartialEvaluation(std::array<double, NumberOfOperands> && operands)
     : m_Operands{ operands }
   {}
 
@@ -42,8 +42,8 @@ public:
     return this->Peek();
   }
 
-  PartialSolution &
-  operator+=(const PartialSolution & rhs)
+  PartialEvaluation &
+  operator+=(const PartialEvaluation & rhs)
   {
     for (unsigned int i = 0; i < NumberOfOperands; ++i)
     {
@@ -52,8 +52,8 @@ public:
     return *this;
   }
 
-  PartialSolution &
-  operator-=(const PartialSolution & rhs)
+  PartialEvaluation &
+  operator-=(const PartialEvaluation & rhs)
   {
     for (unsigned int i = 0; i < NumberOfOperands; ++i)
     {
@@ -62,15 +62,15 @@ public:
     return *this;
   }
 
-  friend PartialSolution
-  operator+(PartialSolution lhs, const PartialSolution & rhs)
+  friend PartialEvaluation
+  operator+(PartialEvaluation lhs, const PartialEvaluation & rhs)
   {
     lhs += rhs;
     return lhs;
   }
 
-  friend PartialSolution
-  operator-(PartialSolution lhs, const PartialSolution & rhs)
+  friend PartialEvaluation
+  operator-(PartialEvaluation lhs, const PartialEvaluation & rhs)
   {
     lhs -= rhs;
     return lhs;

@@ -75,7 +75,7 @@ SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters) cons
 /**
  * Get the cost function value at the given parameters using partial evaluations
  */
-Solution
+Evaluation
 SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters, const int fosIndex) const
 {
   itkDebugMacro("Computing CostFunction value at " << parameters);
