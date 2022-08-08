@@ -13,48 +13,46 @@ public:
     return m_Value;
   }
 
-  double
-  Peek()
-  {
-    return m_Value;
-  }
-
   void
   Set(double value)
   {
     m_Value = value;
   }
 
-  Evaluation &
-  operator+=(const Evaluation & rhs)
+protected:
+  double m_Value{};
+};
+
+class SimpleEvaluation : public Evaluation
+{
+public:
+  SimpleEvaluation &
+  operator+=(const SimpleEvaluation & rhs)
   {
     m_Value += rhs.m_Value;
     return *this;
   }
 
-  Evaluation &
-  operator-=(const Evaluation & rhs)
+  SimpleEvaluation &
+  operator-=(const SimpleEvaluation & rhs)
   {
     m_Value -= rhs.m_Value;
     return *this;
   }
 
-  friend Evaluation
-  operator+(Evaluation lhs, const Evaluation & rhs)
+  friend SimpleEvaluation
+  operator+(SimpleEvaluation lhs, const SimpleEvaluation & rhs)
   {
     lhs += rhs;
     return lhs;
   }
 
-  friend Evaluation
-  operator-(Evaluation lhs, const Evaluation & rhs)
+  friend SimpleEvaluation
+  operator-(SimpleEvaluation lhs, const SimpleEvaluation & rhs)
   {
     lhs -= rhs;
     return lhs;
   }
-
-protected:
-  double m_Value{};
 };
 
 template <unsigned int NumberOfOperands>
@@ -74,7 +72,7 @@ public:
     {
       m_Value += m_Operands[i];
     }
-    return Peek();
+    return m_Value;
   }
 
   PartialEvaluation &
