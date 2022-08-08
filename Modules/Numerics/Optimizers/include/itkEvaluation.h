@@ -1,5 +1,7 @@
 #include <array>
 
+namespace itk
+{
 class Evaluation
 {
 public:
@@ -9,21 +11,21 @@ public:
   double
   Peek()
   {
-    return this->m_Value;
+    return m_Value;
   }
 
   void
   Set(double value)
   {
-    this->m_Value = value;
+    m_Value = value;
   }
 
-private:
-    double m_Value{};
+protected:
+  double m_Value{};
 };
 
 template <unsigned int NumberOfOperands>
-class PartialEvaluation : Evaluation
+class PartialEvaluation : public Evaluation
 {
 public:
   PartialEvaluation() = default;
@@ -34,12 +36,12 @@ public:
   double
   Evaluate() override
   {
-    this->m_Value = 0.0;
+    m_Value = 0.0;
     for (unsigned int i = 0; i < NumberOfOperands; ++i)
     {
-      this->m_Value += this->m_Operands[i];
+      m_Value += m_Operands[i];
     }
-    return this->Peek();
+    return Peek();
   }
 
   PartialEvaluation &
@@ -47,7 +49,7 @@ public:
   {
     for (unsigned int i = 0; i < NumberOfOperands; ++i)
     {
-      this->m_Operands[i] += rhs.m_Operands[i];
+      m_Operands[i] += rhs.m_Operands[i];
     }
     return *this;
   }
@@ -57,7 +59,7 @@ public:
   {
     for (unsigned int i = 0; i < NumberOfOperands; ++i)
     {
-      this->m_Operands[i] -= rhs.m_Operands[i];
+      m_Operands[i] -= rhs.m_Operands[i];
     }
     return *this;
   }
@@ -76,6 +78,19 @@ public:
     return lhs;
   }
 
+  double &
+  operator[](std::size_t idx)
+  {
+    return m_Operands[idx];
+  }
+
+  double
+  operator[](std::size_t idx) const
+  {
+    return m_Operands[idx];
+  }
+
 private:
   std::array<double, NumberOfOperands> m_Operands{};
 };
+} // namespace itk
