@@ -8,7 +8,10 @@ class Evaluation
 {
 public:
   virtual double
-  Evaluate();
+  Evaluate()
+  {
+    return m_Value;
+  }
 
   double
   Peek()
@@ -20,6 +23,34 @@ public:
   Set(double value)
   {
     m_Value = value;
+  }
+
+  Evaluation &
+  operator+=(const Evaluation & rhs)
+  {
+    m_Value += rhs.m_Value;
+    return *this;
+  }
+
+  Evaluation &
+  operator-=(const Evaluation & rhs)
+  {
+    m_Value -= rhs.m_Value;
+    return *this;
+  }
+
+  friend Evaluation
+  operator+(Evaluation lhs, const Evaluation & rhs)
+  {
+    lhs += rhs;
+    return lhs;
+  }
+
+  friend Evaluation
+  operator-(Evaluation lhs, const Evaluation & rhs)
+  {
+    lhs -= rhs;
+    return lhs;
   }
 
 protected:
