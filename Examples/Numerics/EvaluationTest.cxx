@@ -1,40 +1,22 @@
 #include <iostream>
 #include "itkEvaluation.h"
 
-namespace itk
-{
-class SimplePartialEvaluation : public PartialEvaluation<2>
-{
-public:
-  double
-  Evaluate() override
-  {
-    return (*this)[0] + (*this)[1];
-  }
-};
-} // namespace itk
-
 int
 main(int argc, char const * argv[])
 {
   using namespace itk;
-  SimpleEvaluation eval1;
-  SimpleEvaluation eval2;
 
-  eval1.Set(50.0);
-  eval2.Set(60.0);
+  Evaluation a1{1};
+  a1[0] = 5.0;
+  Evaluation a2{1};
+  a2[0] = 7.0;
+  Evaluation r1 = a1 + a2;
 
-  std::cout << (eval1 - eval2).Evaluate() << std::endl;
+  CostFunctionTest * costFunction = new SimpleCostFunctionTest;
 
-  SimplePartialEvaluation seval1;
-  seval1[0] = 10.0;
-  seval1[1] = 5.0;
+  std::cout << costFunction->GetValue(r1) << std::endl;
 
-  Evaluation * seval2 = &seval1;
-
-  std::cout << seval1.Evaluate() << std::endl;
-  std::cout << seval2->Evaluate() << std::endl;
-
+  delete costFunction;
 
   return 0;
 }

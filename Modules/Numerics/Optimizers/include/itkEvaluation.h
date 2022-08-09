@@ -1,109 +1,49 @@
 #pragma once
 
 #include <array>
+#include <vector>
+#include <numeric>
 
 namespace itk
 {
 class Evaluation
 {
 public:
-  virtual double
-  Evaluate()
-  {
-    return m_Value;
-  }
-
-  void
-  Set(double value)
-  {
-    m_Value = value;
-  }
-
-protected:
-  double m_Value{};
-};
-
-class SimpleEvaluation : public Evaluation
-{
-public:
-  SimpleEvaluation &
-  operator+=(const SimpleEvaluation & rhs)
-  {
-    m_Value += rhs.m_Value;
-    return *this;
-  }
-
-  SimpleEvaluation &
-  operator-=(const SimpleEvaluation & rhs)
-  {
-    m_Value -= rhs.m_Value;
-    return *this;
-  }
-
-  friend SimpleEvaluation
-  operator+(SimpleEvaluation lhs, const SimpleEvaluation & rhs)
-  {
-    lhs += rhs;
-    return lhs;
-  }
-
-  friend SimpleEvaluation
-  operator-(SimpleEvaluation lhs, const SimpleEvaluation & rhs)
-  {
-    lhs -= rhs;
-    return lhs;
-  }
-};
-
-template <unsigned int NumberOfOperands>
-class PartialEvaluation : public Evaluation
-{
-public:
-  PartialEvaluation() = default;
-  PartialEvaluation(std::array<double, NumberOfOperands> && operands)
-    : m_Operands{ operands }
+  Evaluation() = default;
+  Evaluation(const unsigned int n_operands)
+    : m_Operands(n_operands, 0.0)
+    , m_NumberOfOperands(n_operands)
   {}
 
-  double
-  Evaluate() override
+  Evaluation &
+  operator+=(const Evaluation & rhs)
   {
-    m_Value = 0.0;
-    for (unsigned int i = 0; i < NumberOfOperands; ++i)
-    {
-      m_Value += m_Operands[i];
-    }
-    return m_Value;
-  }
-
-  PartialEvaluation &
-  operator+=(const PartialEvaluation & rhs)
-  {
-    for (unsigned int i = 0; i < NumberOfOperands; ++i)
+    for (unsigned int i = 0; i < m_NumberOfOperands; ++i)
     {
       m_Operands[i] += rhs.m_Operands[i];
     }
     return *this;
   }
 
-  PartialEvaluation &
-  operator-=(const PartialEvaluation & rhs)
+  Evaluation &
+  operator-=(const Evaluation & rhs)
   {
-    for (unsigned int i = 0; i < NumberOfOperands; ++i)
+    for (unsigned int i = 0; i < m_NumberOfOperands; ++i)
     {
       m_Operands[i] -= rhs.m_Operands[i];
     }
     return *this;
   }
 
-  friend PartialEvaluation
-  operator+(PartialEvaluation lhs, const PartialEvaluation & rhs)
+  friend Evaluation
+  operator+(Evaluation lhs, const Evaluation & rhs)
   {
     lhs += rhs;
     return lhs;
   }
 
-  friend PartialEvaluation
-  operator-(PartialEvaluation lhs, const PartialEvaluation & rhs)
+  friend Evaluation
+  operator-(Evaluation lhs, const Evaluation & rhs)
   {
     lhs -= rhs;
     return lhs;
@@ -122,6 +62,26 @@ public:
   }
 
 private:
-  std::array<double, NumberOfOperands> m_Operands{};
+  std::vector<double> m_Operands;
+  unsigned int        m_NumberOfOperands;
 };
+
+class CostFunctionTest
+{
+public:
+  virtual double
+  GetValue(const Evaluation & evaluation) = 0;
+};
+
+class SimpleCostFunctionTest : public CostFunctionTest
+{
+public:
+  double
+  GetValue(const Evaluation & evaluation)
+  {
+    return evaluation[0];
+  }
+};
+
+
 } // namespace itk

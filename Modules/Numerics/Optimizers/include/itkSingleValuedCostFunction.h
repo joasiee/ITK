@@ -66,7 +66,10 @@ public:
 
   /** This method returns the value of the cost function when it is evaluated partially. */
   virtual Evaluation
-  GetValue(const ParametersType & parameters, const int fosIndex) const;
+  GetValue(const ParametersType & parameters, int fosIndex) const;
+
+  virtual MeasureType
+  GetValue(const Evaluation & evaluation) const;
 
   virtual void
   SetTransformParameters(const ParametersType & parameters) const;
