@@ -53,7 +53,7 @@ SingleValuedCostFunction::SetTransformParameters(const ParametersType & paramete
   (void)parameters;
 }
 void
-SingleValuedCostFunction::InitPartialEvaluations(int ** sets, int * set_length, int length)
+SingleValuedCostFunction::InitPartialEvaluations(int ** sets, int * set_length, int length, int pop_size)
 {
   (void)sets;
   (void)set_length;
