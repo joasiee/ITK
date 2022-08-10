@@ -75,8 +75,8 @@ SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters) cons
 /**
  * Get the cost function value at the given parameters using partial evaluations
  */
-Evaluation
-SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters, int fosIndex) const
+SingleValuedNonLinearOptimizer::MeasureType
+SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters, int fosIndex, int individualIndex) const
 {
   itkDebugMacro("Computing CostFunction value at " << parameters);
 
@@ -88,12 +88,14 @@ SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters, int 
     throw ex;
   }
 
-  return this->GetCostFunction()->GetValue(parameters, fosIndex);
+  return this->GetCostFunction()->GetValue(parameters, fosIndex, individualIndex);
 }
 
-SingleValuedNonLinearOptimizer::MeasureType
-SingleValuedNonLinearOptimizer::GetValue(const Evaluation & evaluation) const
+void
+SingleValuedNonLinearOptimizer::PreloadPartialEvaluation(const ParametersType & parameters, int fosIndex)
 {
+  itkDebugMacro("Pre-computing partial cost function evaluation at " << parameters);
+
   if (!m_CostFunction)
   {
     ExceptionObject ex;
@@ -102,7 +104,39 @@ SingleValuedNonLinearOptimizer::GetValue(const Evaluation & evaluation) const
     throw ex;
   }
 
-  return this->GetCostFunction()->GetValue(evaluation);
+  this->GetCostFunction()->PreloadPartialEvaluation(parameters, fosIndex);
+}
+
+void
+SingleValuedNonLinearOptimizer::SavePartialEvaluation(int individualIndex)
+{
+  itkDebugMacro("Saving partial cost function evaluation at index " << individualIndex);
+
+  if (!m_CostFunction)
+  {
+    ExceptionObject ex;
+    ex.SetLocation(__FILE__);
+    ex.SetDescription("The costfunction must be set prior to calling GetValue");
+    throw ex;
+  }
+
+  this->GetCostFunction()->SavePartialEvaluation(individualIndex);
+}
+
+void
+SingleValuedNonLinearOptimizer::CopyPartialEvaluation(int toCopy, int toChange)
+{
+  itkDebugMacro("Copying partial cost function evaluation at index " << toCopy << " to index at " << toChange);
+
+  if (!m_CostFunction)
+  {
+    ExceptionObject ex;
+    ex.SetLocation(__FILE__);
+    ex.SetDescription("The costfunction must be set prior to calling GetValue");
+    throw ex;
+  }
+
+  this->GetCostFunction()->CopyPartialEvaluation(toCopy, toChange);
 }
 
 void

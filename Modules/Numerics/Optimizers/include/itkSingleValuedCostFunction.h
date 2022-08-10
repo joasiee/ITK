@@ -65,11 +65,42 @@ public:
   GetValue(const ParametersType & parameters) const = 0;
 
   /** This method returns the value of the cost function when it is evaluated partially. */
-  virtual Evaluation
-  GetValue(const ParametersType & parameters, int fosIndex) const;
+  virtual MeasureType
+  GetValue(const ParametersType & parameters, int fosIndex, int individualIndex) const;
 
   virtual MeasureType
-  GetValue(const Evaluation & evaluation) const;
+  GetValue(const Evaluation & evaluation) const
+  {
+    (void)evaluation;
+    return NumericTraits<MeasureType>::Zero;
+  }
+
+  virtual Evaluation
+  GetValuePartial(const ParametersType & parameters, int fosIndex) const;
+
+  /** Calculates and stores the partial evaluation using current/old parameters. This evaluation is then used in
+   * GetValue(params, index). This way the calls in optimizers's can still be done in a unified fashion across both the
+   * single and combination metrics.
+   */
+  virtual void
+  PreloadPartialEvaluation(const ParametersType & parameters, int fosIndex) const
+  {
+    (void)parameters;
+    (void)fosIndex;
+  }
+
+  virtual void
+  SavePartialEvaluation(int individualIndex)
+  {
+    (void)individualIndex;
+  }
+
+  virtual void
+  CopyPartialEvaluation(int toCopy, int toChange)
+  {
+    (void)toCopy;
+    (void)toChange;
+  }
 
   virtual void
   SetTransformParameters(const ParametersType & parameters) const;

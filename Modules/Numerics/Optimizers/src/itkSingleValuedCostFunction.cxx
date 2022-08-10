@@ -29,22 +29,21 @@ SingleValuedCostFunction::GetValueAndDerivative(const ParametersType & parameter
 }
 
 
-Evaluation
-SingleValuedCostFunction::GetValue(const ParametersType & parameters, int fosIndex) const
+SingleValuedCostFunction::MeasureType
+SingleValuedCostFunction::GetValue(const ParametersType & parameters, int fosIndex, int individualIndex) const
 {
   (void)fosIndex;
-  (void) parameters;
-  itkWarningMacro(<< Self::GetNameOfClass() << ": Missing partial evaluations implementation.");
-  Evaluation res;
-  return res;
+  (void)individualIndex;
+  itkDebugMacro(<< Self::GetNameOfClass() << ": Missing partial evaluations implementation.");
+  return this->GetValue(parameters);
 }
 
-typename SingleValuedCostFunction::MeasureType
-SingleValuedCostFunction::GetValue(const Evaluation & evaluation) const
+Evaluation
+SingleValuedCostFunction::GetValuePartial(const ParametersType & parameters, int fosIndex) const
 {
-  (void)evaluation;
-  itkWarningMacro(<< Self::GetNameOfClass() << ": Missing partial evaluations implementation.");
-  return 0.0;
+  (void)fosIndex;
+  itkDebugMacro(<< Self::GetNameOfClass() << ": Missing partial evaluations implementation.");
+  return this->GetValue(parameters);
 }
 
 void
@@ -58,7 +57,8 @@ SingleValuedCostFunction::InitPartialEvaluations(int ** sets, int * set_length, 
   (void)sets;
   (void)set_length;
   (void)length;
-  itkWarningMacro(<< Self::GetNameOfClass() << ": Missing partial evaluations implementation.");
+  (void)pop_size;
+  itkDebugMacro(<< Self::GetNameOfClass() << ": Missing partial evaluations implementation.");
 }
 
 SingleValuedCostFunction::~SingleValuedCostFunction() = default;

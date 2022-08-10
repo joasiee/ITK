@@ -79,11 +79,14 @@ public:
   GetValue(const ParametersType & parameters) const;
 
   /** Get the cost function value at the given parameters using partial evaluations. */
-  Evaluation
-  GetValue(const ParametersType & parameters, int fosIndex) const;
-
   MeasureType
-  GetValue(const Evaluation & evaluation) const;
+  GetValue(const ParametersType & parameters, int fosIndex, int individualIndex) const;
+
+  void PreloadPartialEvaluation(const ParametersType & parameters, int fosIndex);
+
+  void SavePartialEvaluation (int individualIndex);
+
+  void CopyPartialEvaluation (int toCopy, int toChange);
 
   void
   SetTransformParameters(const ParametersType & parameters);
