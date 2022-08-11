@@ -20,7 +20,7 @@
 
 #include "itkCostFunction.h"
 #include "itkNumericTraits.h"
-#include "itkEvaluation.h"
+#include "itkIntermediateResults.h"
 #include "ITKOptimizersExport.h"
 
 namespace itk
@@ -69,13 +69,13 @@ public:
   GetValue(const ParametersType & parameters, int fosIndex, int individualIndex) const;
 
   virtual MeasureType
-  GetValue(const Evaluation & evaluation) const
+  GetValue(const IntermediateResults & evaluation) const
   {
     (void)evaluation;
     return NumericTraits<MeasureType>::Zero;
   }
 
-  virtual Evaluation
+  virtual IntermediateResults
   GetValuePartial(const ParametersType & parameters, int fosIndex) const;
 
   /** Calculates and stores the partial evaluation using current/old parameters. This evaluation is then used in

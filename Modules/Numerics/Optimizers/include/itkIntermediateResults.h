@@ -6,17 +6,17 @@
 
 namespace itk
 {
-class Evaluation
+class IntermediateResults
 {
 public:
-  Evaluation() = default;
-  Evaluation(const unsigned int n_operands)
+  IntermediateResults() = default;
+  IntermediateResults(const unsigned int n_operands)
     : m_Operands(n_operands, 0.0)
     , m_NumberOfOperands(n_operands)
   {}
 
-  Evaluation &
-  operator+=(const Evaluation & rhs)
+  IntermediateResults &
+  operator+=(const IntermediateResults & rhs)
   {
     for (unsigned int i = 0; i < m_NumberOfOperands; ++i)
     {
@@ -25,8 +25,8 @@ public:
     return *this;
   }
 
-  Evaluation &
-  operator-=(const Evaluation & rhs)
+  IntermediateResults &
+  operator-=(const IntermediateResults & rhs)
   {
     for (unsigned int i = 0; i < m_NumberOfOperands; ++i)
     {
@@ -35,15 +35,15 @@ public:
     return *this;
   }
 
-  friend Evaluation
-  operator+(Evaluation lhs, const Evaluation & rhs)
+  friend IntermediateResults
+  operator+(IntermediateResults lhs, const IntermediateResults & rhs)
   {
     lhs += rhs;
     return lhs;
   }
 
-  friend Evaluation
-  operator-(Evaluation lhs, const Evaluation & rhs)
+  friend IntermediateResults
+  operator-(IntermediateResults lhs, const IntermediateResults & rhs)
   {
     lhs -= rhs;
     return lhs;
@@ -70,14 +70,14 @@ class CostFunctionTest
 {
 public:
   virtual double
-  GetValue(const Evaluation & evaluation) = 0;
+  GetValue(const IntermediateResults & evaluation) = 0;
 };
 
 class SimpleCostFunctionTest : public CostFunctionTest
 {
 public:
   double
-  GetValue(const Evaluation & evaluation)
+  GetValue(const IntermediateResults & evaluation)
   {
     return evaluation[0];
   }

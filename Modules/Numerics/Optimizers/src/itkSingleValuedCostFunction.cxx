@@ -38,7 +38,7 @@ SingleValuedCostFunction::GetValue(const ParametersType & parameters, int fosInd
   return this->GetValue(parameters);
 }
 
-Evaluation
+IntermediateResults
 SingleValuedCostFunction::GetValuePartial(const ParametersType & parameters, int fosIndex) const
 {
   (void)fosIndex;
