@@ -75,9 +75,6 @@ public:
     return NumericTraits<MeasureType>::Zero;
   }
 
-  virtual IntermediateResults
-  GetValuePartial(const ParametersType & parameters, int fosIndex) const;
-
   /** Calculates and stores the partial evaluation using current/old parameters. This evaluation is then used in
    * GetValue(params, index). This way the calls in optimizers's can still be done in a unified fashion across both the
    * single and combination metrics.

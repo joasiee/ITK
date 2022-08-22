@@ -38,14 +38,6 @@ SingleValuedCostFunction::GetValue(const ParametersType & parameters, int fosInd
   return this->GetValue(parameters);
 }
 
-IntermediateResults
-SingleValuedCostFunction::GetValuePartial(const ParametersType & parameters, int fosIndex) const
-{
-  (void)fosIndex;
-  itkDebugMacro(<< Self::GetNameOfClass() << ": Missing partial evaluations implementation.");
-  return this->GetValue(parameters);
-}
-
 void
 SingleValuedCostFunction::SetTransformParameters(const ParametersType & parameters) const
 {
