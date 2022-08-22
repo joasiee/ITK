@@ -68,13 +68,6 @@ public:
   virtual MeasureType
   GetValue(const ParametersType & parameters, int fosIndex, int individualIndex) const;
 
-  virtual MeasureType
-  GetValue(const IntermediateResults & evaluation) const
-  {
-    (void)evaluation;
-    return NumericTraits<MeasureType>::Zero;
-  }
-
   /** Calculates and stores the partial evaluation using current/old parameters. This evaluation is then used in
    * GetValue(params, index). This way the calls in optimizers's can still be done in a unified fashion across both the
    * single and combination metrics.
