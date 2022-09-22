@@ -95,10 +95,6 @@ public:
   virtual void
   SetTransformParameters(const ParametersType & parameters) const;
 
-  /** Initializes partial evaluations data structures. */
-  virtual void
-  InitPartialEvaluations(int ** sets, int * set_length, int length, int pop_size);
-
   /** This method returns the derivative of the cost function corresponding
    * to the specified parameters.   */
   virtual void

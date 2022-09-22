@@ -43,15 +43,6 @@ SingleValuedCostFunction::SetTransformParameters(const ParametersType & paramete
 {
   (void)parameters;
 }
-void
-SingleValuedCostFunction::InitPartialEvaluations(int ** sets, int * set_length, int length, int pop_size)
-{
-  (void)sets;
-  (void)set_length;
-  (void)length;
-  (void)pop_size;
-  itkDebugMacro(<< Self::GetNameOfClass() << ": Missing partial evaluations implementation.");
-}
 
 SingleValuedCostFunction::~SingleValuedCostFunction() = default;
 } // namespace itk
