@@ -68,6 +68,20 @@ public:
   virtual MeasureType
   GetValue(const ParametersType & parameters, int fosIndex, int individualIndex) const;
 
+  virtual void
+  InitSubfunctionSamplers(int pop_size)
+  {
+    (void)pop_size;
+  }
+
+  virtual void
+  InitFOSMapping(int ** sets, int * set_length, int length)
+  {
+    (void)sets;
+    (void)set_length;
+    (void)length;
+  }
+
   /** Calculates and stores the partial evaluation using current/old parameters. This evaluation is then used in
    * GetValue(params, index). This way the calls in optimizers's can still be done in a unified fashion across both the
    * single and combination metrics.
