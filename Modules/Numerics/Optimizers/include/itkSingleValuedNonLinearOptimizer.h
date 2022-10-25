@@ -78,9 +78,12 @@ public:
   MeasureType
   GetValue(const ParametersType & parameters) const;
 
+  MeasureType
+  GetValue(const ParametersType & parameters, MeasureType & constraintValue) const;
+
   /** Get the cost function value at the given parameters using partial evaluations. */
   MeasureType
-  GetValue(const ParametersType & parameters, int fosIndex, int individualIndex) const;
+  GetValue(const ParametersType & parameters, int fosIndex, int individualIndex, MeasureType & constraintValue) const;
 
   void PreloadPartialEvaluation(const ParametersType & parameters, int fosIndex);
 

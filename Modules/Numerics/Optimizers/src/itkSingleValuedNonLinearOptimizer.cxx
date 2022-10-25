@@ -73,10 +73,10 @@ SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters) cons
 }
 
 /**
- * Get the cost function value at the given parameters using partial evaluations
+ * Get the constrained cost function value at the given parameters
  */
 SingleValuedNonLinearOptimizer::MeasureType
-SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters, int fosIndex, int individualIndex) const
+SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters, MeasureType & constraintValue) const
 {
   itkDebugMacro("Computing CostFunction value at " << parameters);
 
@@ -88,7 +88,26 @@ SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters, int 
     throw ex;
   }
 
-  return this->GetCostFunction()->GetValue(parameters, fosIndex, individualIndex);
+  return this->GetCostFunction()->GetValue(parameters, constraintValue);
+}
+
+/**
+ * Get the cost function value at the given parameters using a partial evaluation
+ */
+SingleValuedNonLinearOptimizer::MeasureType
+SingleValuedNonLinearOptimizer::GetValue(const ParametersType & parameters, int fosIndex, int individualIndex, MeasureType & constraintValue) const
+{
+  itkDebugMacro("Computing CostFunction value at " << parameters);
+
+  if (!m_CostFunction)
+  {
+    ExceptionObject ex;
+    ex.SetLocation(__FILE__);
+    ex.SetDescription("The costfunction must be set prior to calling GetValue");
+    throw ex;
+  }
+
+  return this->GetCostFunction()->GetValue(parameters, fosIndex, individualIndex, constraintValue);
 }
 
 void
@@ -100,7 +119,7 @@ SingleValuedNonLinearOptimizer::PreloadPartialEvaluation(const ParametersType & 
   {
     ExceptionObject ex;
     ex.SetLocation(__FILE__);
-    ex.SetDescription("The costfunction must be set prior to calling GetValue");
+    ex.SetDescription("The costfunction must be set prior to calling PreloadPartialEvaluation");
     throw ex;
   }
 
@@ -116,7 +135,7 @@ SingleValuedNonLinearOptimizer::SavePartialEvaluation(int individualIndex)
   {
     ExceptionObject ex;
     ex.SetLocation(__FILE__);
-    ex.SetDescription("The costfunction must be set prior to calling GetValue");
+    ex.SetDescription("The costfunction must be set prior to calling SavePartialEvaluation");
     throw ex;
   }
 
@@ -132,7 +151,7 @@ SingleValuedNonLinearOptimizer::CopyPartialEvaluation(int toCopy, int toChange)
   {
     ExceptionObject ex;
     ex.SetLocation(__FILE__);
-    ex.SetDescription("The costfunction must be set prior to calling GetValue");
+    ex.SetDescription("The costfunction must be set prior to calling CopyPartialEvaluation");
     throw ex;
   }
 

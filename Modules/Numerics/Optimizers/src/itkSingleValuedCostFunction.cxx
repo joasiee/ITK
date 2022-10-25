@@ -28,14 +28,22 @@ SingleValuedCostFunction::GetValueAndDerivative(const ParametersType & parameter
   this->GetDerivative(parameters, derivative);
 }
 
+SingleValuedCostFunction::MeasureType
+SingleValuedCostFunction::GetValue(const ParametersType & parameters, MeasureType & constraintValue) const
+{
+  constraintValue = 0.0;
+  itkDebugMacro(<< Self::GetNameOfClass() << ": Missing constrained getvalue implementation.");
+  return this->GetValue(parameters);
+}
+
 
 SingleValuedCostFunction::MeasureType
-SingleValuedCostFunction::GetValue(const ParametersType & parameters, int fosIndex, int individualIndex) const
+SingleValuedCostFunction::GetValue(const ParametersType & parameters, int fosIndex, int individualIndex, MeasureType & constraintValue) const
 {
   (void)fosIndex;
   (void)individualIndex;
   itkDebugMacro(<< Self::GetNameOfClass() << ": Missing partial evaluations implementation.");
-  return this->GetValue(parameters);
+  return this->GetValue(parameters, constraintValue);
 }
 
 void

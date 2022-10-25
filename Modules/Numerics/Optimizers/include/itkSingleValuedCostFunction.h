@@ -64,9 +64,12 @@ public:
   virtual MeasureType
   GetValue(const ParametersType & parameters) const = 0;
 
+  virtual MeasureType
+  GetValue(const ParametersType & parameters, MeasureType & constraintValue) const;
+
   /** This method returns the value of the cost function when it is evaluated partially. */
   virtual MeasureType
-  GetValue(const ParametersType & parameters, int fosIndex, int individualIndex) const;
+  GetValue(const ParametersType & parameters, int fosIndex, int individualIndex, MeasureType & constraintValue) const;
 
   virtual void
   InitSubfunctionSamplers(int pop_size)

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <array>
-#include <vector>
 #include <numeric>
+#include "itkArray.h"
 
 namespace itk
 {
@@ -11,8 +10,8 @@ class IntermediateResults
 public:
   IntermediateResults() = default;
   IntermediateResults(const unsigned int n_operands)
-    : m_Operands(n_operands, 0.0)
-    , m_NumberOfOperands(n_operands)
+    : m_Operands(n_operands + 1, 0.0)
+    , m_NumberOfOperands(n_operands + 1)
   {}
 
   IntermediateResults &
@@ -61,9 +60,21 @@ public:
     return m_Operands[idx];
   }
 
+  void
+  SetConstraintValue(const double constraintValue)
+  {
+    m_Operands[m_NumberOfOperands - 1] = constraintValue;
+  }
+
+  double
+  GetConstraintValue() const
+  {
+    return m_Operands[m_NumberOfOperands - 1];
+  }
+
 private:
-  std::vector<double> m_Operands;
-  unsigned int        m_NumberOfOperands;
+  Array<double> m_Operands;
+  unsigned int  m_NumberOfOperands;
 };
 
 class CostFunctionTest
