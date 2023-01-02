@@ -5,13 +5,21 @@
 
 namespace itk
 {
+
+struct Constraints
+{
+  double       missedPixelPct;
+  unsigned int bsplineFolds;
+};
+
+
 class IntermediateResults
 {
 public:
   IntermediateResults() = default;
   IntermediateResults(const unsigned int n_operands)
-    : m_Operands(n_operands + 1, 0.0)
-    , m_NumberOfOperands(n_operands + 1)
+    : m_Operands(n_operands, 0.0)
+    , m_NumberOfOperands(n_operands)
   {}
 
   IntermediateResults &
@@ -21,6 +29,10 @@ public:
     {
       m_Operands[i] += rhs.m_Operands[i];
     }
+
+    constraints.missedPixelPct += rhs.constraints.missedPixelPct;
+    constraints.bsplineFolds += rhs.constraints.bsplineFolds;
+
     return *this;
   }
 
@@ -31,6 +43,10 @@ public:
     {
       m_Operands[i] -= rhs.m_Operands[i];
     }
+
+    constraints.missedPixelPct -= rhs.constraints.missedPixelPct;
+    constraints.bsplineFolds -= rhs.constraints.bsplineFolds;
+
     return *this;
   }
 
@@ -60,17 +76,9 @@ public:
     return m_Operands[idx];
   }
 
-  void
-  SetConstraintValue(const double constraintValue)
-  {
-    m_Operands[m_NumberOfOperands - 1] = constraintValue;
-  }
 
-  double
-  GetConstraintValue() const
-  {
-    return m_Operands[m_NumberOfOperands - 1];
-  }
+public:
+  Constraints constraints;
 
 private:
   Array<double> m_Operands;
