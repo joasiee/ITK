@@ -8,8 +8,8 @@ namespace itk
 
 struct Constraints
 {
-  double       missedPixelPct;
-  unsigned int bsplineFolds;
+  double       missedPixelPct{ 0.0 };
+  unsigned int bsplineFolds{ 0 };
 };
 
 
