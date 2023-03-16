@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -152,7 +152,7 @@ GaussianDerivativeImageFunction<TInputImage, TOutput>::RecomputeGaussianKernel()
   else
   {
     using SpacingType = typename TInputImage::SpacingType;
-    const SpacingType spacing = m_UseImageSpacing ? inputImage->GetSpacing() : SpacingType(1);
+    const SpacingType spacing = m_UseImageSpacing ? inputImage->GetSpacing() : MakeFilled<SpacingType>(1);
 
     for (unsigned int direction = 0; direction < Self::ImageDimension; ++direction)
     {

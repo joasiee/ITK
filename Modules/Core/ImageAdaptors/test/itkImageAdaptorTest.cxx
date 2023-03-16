@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,7 @@
  *  Accessors
  *
  *  The example shows how an Adaptor can be used to
- *  get acces only to thered component of an RGBPixel image
+ *  get access only to the red component of an RGBPixel image
  *  giving the appearance of being just a 'float' image
  *
  *  That will allow to pass the red component of this
@@ -72,9 +72,7 @@ itkImageAdaptorTest(int, char *[])
   auto myImage = myImageType::New();
 
 
-  myImage->SetLargestPossibleRegion(region);
-  myImage->SetBufferedRegion(region);
-  myImage->SetRequestedRegion(region);
+  myImage->SetRegions(region);
   myImage->Allocate();
 
   myIteratorType it1(myImage, myImage->GetRequestedRegion());

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -75,7 +75,7 @@ itkBSplineScatteredDataPointSetToImageFilterTest(int argc, char * argv[])
       unsigned long i = pointSet->GetNumberOfPoints();
       pointSet->SetPoint(i, point);
 
-      PointSetType::PixelType V(DataDimension);
+      auto V = itk::MakeFilled<PointSetType::PixelType>(DataDimension);
       V[0] = static_cast<RealType>(It.Get());
       pointSet->SetPointData(i, V);
     }
@@ -103,7 +103,7 @@ itkBSplineScatteredDataPointSetToImageFilterTest(int argc, char * argv[])
   ITK_TEST_SET_GET_VALUE(splineOrderArray, filter->GetSplineOrder());
 
 
-  unsigned numberOfLevels = 0u;
+  unsigned int numberOfLevels = 0u;
   ITK_TRY_EXPECT_EXCEPTION(filter->SetNumberOfLevels(numberOfLevels));
 
   FilterType::ArrayType numberOfLevelsArray;

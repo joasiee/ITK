@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -312,7 +312,7 @@ protected:
   RescaleLandmarkStiffnessMatrix(double oldPointTensorPonderation);
 
   /**
-   * Calculate KU, which will  be added on the righ hand side to reach
+   * Calculate KU, which will  be added on the right hand side to reach
    * the effect of zeroing mesh energy
    */
   void

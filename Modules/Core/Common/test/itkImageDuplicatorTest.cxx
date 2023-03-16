@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -208,17 +208,20 @@ itkImageDuplicatorTest(int, char *[])
       itk::RGBPixel<unsigned char> pixel = it4.Get();
       if (pixel.GetRed() != r)
       {
-        std::cout << "Error: Pixel R value mismatched: " << (float)pixel.GetRed() << " vs. " << (float)r << std::endl;
+        std::cout << "Error: Pixel R value mismatched: " << static_cast<float>(pixel.GetRed()) << " vs. "
+                  << static_cast<float>(r) << std::endl;
         return EXIT_FAILURE;
       }
       if (pixel.GetGreen() != g)
       {
-        std::cout << "Error: Pixel G value mismatched: " << (float)pixel.GetGreen() << " vs. " << (float)g << std::endl;
+        std::cout << "Error: Pixel G value mismatched: " << static_cast<float>(pixel.GetGreen()) << " vs. "
+                  << static_cast<float>(g) << std::endl;
         return EXIT_FAILURE;
       }
       if (pixel.GetBlue() != b)
       {
-        std::cout << "Error: Pixel B value mismatched: " << (float)pixel.GetBlue() << " vs. " << (float)b << std::endl;
+        std::cout << "Error: Pixel B value mismatched: " << static_cast<float>(pixel.GetBlue()) << " vs. "
+                  << static_cast<float>(b) << std::endl;
         return EXIT_FAILURE;
       }
       r++;

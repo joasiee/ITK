@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -178,7 +178,7 @@ VectorConfidenceConnectedImageFilter<TInputImage, TOutputImage>::GenerateData()
         }
       }
     }
-    si++;
+    ++si;
   }
 
   if (seed_cnt == 0)
@@ -223,7 +223,7 @@ VectorConfidenceConnectedImageFilter<TInputImage, TOutputImage>::GenerateData()
         m_Multiplier = distance;
       }
     }
-    si++;
+    ++si;
   }
 
   // Finally setup the eventually modified multiplier. That is actually the
@@ -329,7 +329,7 @@ VectorConfidenceConnectedImageFilter<TInputImage, TOutputImage>::GenerateData()
         progress.CompletedPixel(); // potential exception thrown here
       }
     }
-    catch (ProcessAborted &)
+    catch (const ProcessAborted &)
     {
       break; // interrupt the iterations loop
     }

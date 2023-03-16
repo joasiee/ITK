@@ -57,9 +57,9 @@ are also now used in ITK. As a consequence, due to limitations in C++11 support
 Visual Studio 2013 (MSVC 12.0) and other older C++ complilers cannot be used to build ITK from 5.0 and forward.
 
 Errors similar to `error: conversion from 'int' to 'typename InterpolatorType::Pointer'` are a result of further
-type safty for dealing with pointers. Enhancements in nullptr behavior in ITKv5 provide more clear
+type safety for dealing with pointers. Enhancements in nullptr behavior in ITKv5 provide more clear
 type checking and respect the nullptr identifier.  The 'long 0' value
-known as NULL causes an abiguity for overload compilations of the ITKv5 smartpointers. To be backwards compatible
+known as NULL causes an ambiguity for overload compilations of the ITKv5 smartpointers. To be backwards compatible
 with pre C++11 compilers use the `ITK_NULLPTR` designation, otherwise replace NULL and 0 initialization of
 `itk::SmartPointer` with nullptr.
 
@@ -154,24 +154,24 @@ how to remove dependence on barrier by using ParallelizeImageRegion.
 ```cpp
 ThreadedGenerateData()
 {
-  //code1 (parallel)
+  // code1 (parallel)
   myBarrier->Wait();
-  if (threadId==0)
-    {
-    //code2 single-threaded
-    }
-  //code3 (parallel)
+  if (threadId == 0)
+  {
+    // code2 single-threaded
+  }
+  // code3 (parallel)
 }
 ```
 
 after refactoring to not use barrier:
 ```cpp
-GenerateData() //Not Threaded
+GenerateData() // Not Threaded
 {
   this->AllocateOutputs();
   this->BeforeThreadedGenerateData();
   ParallelizeImageRegion(code1 as lambda)
-  //code2 single-threaded
+  // code2 single-threaded
   ParallelizeImageRegion(code3 as lambda)
   this->AfterThreadedGenerateData();
 }
@@ -212,7 +212,7 @@ An external module example that demonstrates this can be found in
 [this commit](https://github.com/InsightSoftwareConsortium/ITKBoneMorphometry/pull/32/commits/a8014c186ac53837362a0cb9db46ae224b8e9584).
 
 Before, using `itk::Array`:
-```C++
+```cpp
 // Members:
 Array<SizeValueType> m_NumVoxelsInsideMask;
 BeforeThreadedGenerateData()
@@ -222,8 +222,7 @@ BeforeThreadedGenerateData()
   m_NumVoxelsInsideMask.Fill(0);
 }
 
-ThreadedGenerateData(const RegionType & outputRegionForThread,
-                     ThreadIdType threadId)
+ThreadedGenerateData(const RegionType & outputRegionForThread, ThreadIdType threadId)
 {
   // Do algorithm per threadId
   // Store the results per thread at the end
@@ -233,17 +232,16 @@ ThreadedGenerateData(const RegionType & outputRegionForThread,
 AfterThreadedGenerateData()
 {
   // Retrieve and sum all the results per thread.
-  ThreadIdType numberOfThreads = this->GetNumberOfThreads();
+  ThreadIdType  numberOfThreads = this->GetNumberOfThreads();
   SizeValueType numVoxelsInsideMask = 0;
-  for (unsigned int i = 0; i < numberOfThreads; ++i )
-    {
+  for (unsigned int i = 0; i < numberOfThreads; ++i)
+  {
     numVoxelsInsideMask += m_NumVoxelsInsideMask[i];
-    }
+  }
 }
-
 ```
 After, using `std::atomic`:
-```C++
+```cpp
 // Members:
 std::atomic<SizeValueType> m_NumVoxelsInsideMask;
 BeforeThreadedGenerateData()
@@ -296,7 +294,7 @@ an external module that transitioned to the new threading model can be found in
 The variables `ITK_MAX_THREADS` and `ITK_DEFAULT_THREAD_ID` are now in the `itk::` namespace.
 Backwards compatibility is currently supported by exposing these to the global namespace
 with
-```C++
+```cpp
   using itk::ITK_MAX_THREADS;
   using itk::ITK_DEFAULT_THREAD_ID;
 ```
@@ -305,7 +303,7 @@ Spatial Objects Refactoring
 ---------------------------
 The SpatialObject classes were refactored to address issues and inconsistencies that had arisen over the years.  The severity of these issues and inconsistencies was such that the classes provided incorrect and/or unexpected behaviors that made their proper usage problematic.
 
-The most noteable change is that dependencies on VNL Tree data structures and the requirement that every SpatialObject be defined
+The most notable change is that dependencies on VNL Tree data structures and the requirement that every SpatialObject be defined
 in an object space were eliminated.   The VNL Tree data structures introduced unnecessary complexity, additional (redundant)
 transformations, and dependencies on VNL in the API that ITKv5 seeks to eliminate.   The elimination of a dependency on an IndexSpace
 simplified the set of transformations that each SpatialObject needed to maintain and made the API of every SpatialObject more consistent
@@ -356,7 +354,7 @@ As implied above, the changes to SpatialObject are extensive.   They include the
 * `RemoveChild()` and `RemoveAllChildren()` fixed to remove all pointers to / from those children to / from the tree
 * Helper functions simplify the specification of `IsInsideInObjectSpace()`, `ValueAtInObjectSpace()`, and other computations that potentially traverse an SO tree.
 * Derived classes typically only need to implement `IsInsideInObjectSpace()` and `ComputeMyBoundingBoxInObjectSpace()` member functions. Logic for `ValueAtInObjectSpace()`, `IsInsideInWorldSpace()` and such is improved.
-* PointBasedSpatialObjects had a PointListType type declaration.  This was confusing because it refered to a list of SpatialObjectPoints and not ITK::Points.  So, to avoid such confusion, now TubeSpatialObjects define TubePointListType, BlobSpatialObjects define BlobPointListType, and so forth.
+* PointBasedSpatialObjects had a PointListType type declaration.  This was confusing because it referred to a list of SpatialObjectPoints and not ITK::Points.  So, to avoid such confusion, now TubeSpatialObjects define TubePointListType, BlobSpatialObjects define BlobPointListType, and so forth.
 * `ImageMaskSpatialObject::GetAxisAlignedBoundingBoxRegion()` was removed. `ImageMaskSpatialObject::ComputeMyBoundingBoxInIndexSpace()` should be used instead.
 * `SpatialObjectReader::GetScene` was renamed to `GetGroup` along with changing the type from `ScenePointer` to `GroupPointer`.
   * Elements of a `Group` are now `Children`, so `scene->GetObjects` now becomes `group->GetChildren`
@@ -424,7 +422,7 @@ which return a `reverse_iterator`, compatible with the Standard C++ Library.
 `itk::StatisticsImageFilter`, `itk::LabelStatisticsImageFilter` and
 `itk::MinimumMaximumImageFilter` no longer produce an image as their
 primary output, as it was a shallow copy of the primary
-input. Additionally, minor API changes have occoured related to the
+input. Additionally, minor API changes have occurred related to the
 decorated output methods to conform to ITK conventions.
 
 `itk::NiftiImageIO` was changed to support different kinds of Analyze file conventions.
@@ -447,6 +445,23 @@ See commit [commit 212cae5](https://github.com/InsightSoftwareConsortium/ITK/com
 With ITK 5.3, the `GetNumberOfWeights()` member functions of `itk::BSplineBaseTransform` and `itk::BSplineInterpolationWeightFunction`
 are replaced by static constexpr data members named `NumberOfWeights`, and the `GetSupportSize()` member function of
 `itk::BSplineInterpolationWeightFunction` is replaced by a static constexpr data member named `SupportSize`.
+
+With ITK 5.3, SpatialOrientation was updated to a strongly typed enumeration (see below for details).
+The namespece itself is only available in legacy mode. Some classes were renamed:
+* `itk::SpatialOrientation::CoordinateTerms` became `itk::SpatialOrientationEnums::CoordinateTerms`.
+* `itk::SpatialOrientation::CoordinateMajornessTerms` became `itk::SpatialOrientationEnums::CoordinateMajornessTerms`.
+* `itk::SpatialOrientation::ValidCoordinateOrientationFlags` became `itk::SpatialOrientationEnums::ValidCoordinateOrientations`.
+
+Since ITK 5.3, `OrientationAdapterBase` is deprecated. In ITKv6 it will be available in `ITKDeprecated` module.
+SpatialOrientationAdapter no longer inherits from it.
+
+Enumeration member names (`ITK_COORDINATE_UNKNOWN`, `ITK_COORDINATE_Right`, `ITK_COORDINATE_PrimaryMinor`, `ITK_COORDINATE_ORIENTATION_RIP` etc) are unchanged.
+
+Implicit conversion of a single scalar value to a container (which would _fill_ the container by the
+scalar value) is discouraged. With ITK 5.3, when having `ITK_LEGACY_REMOVE=ON`, the constructors of
+`Point`, `RGBPixel`, `RGBAPixel`, and `Vector` that accept a single scalar value as argument are
+declared `explicit`. ITK 5.3 has included a preferable alternative to these constructors:
+`itk::MakeFilled<ContainerType>(value)`.
 
 Consolidated Vector Filter
 --------------------------
@@ -500,7 +515,7 @@ scoping, provide clean, readable code, facilitate wrapping in languages such
 as Python, and enable printing enum values to `std::ostream` with
 `operator<<`, and support templates, enums that we previously declared as:
 
-```
+```cpp
 // itkClassName.h
 namespace itk
 {
@@ -508,21 +523,20 @@ namespace itk
 class ClassName
 {
 public:
-
   enum Choices
   {
-     One,
-     Two,
-     Three
+    One,
+    Two,
+    Three
   };
 };
 
-}
+} // namespace itk
 ```
 
 are now declared as:
 
-```
+```cpp
 // itkClassName.h
 namespace itk
 {
@@ -530,7 +544,7 @@ namespace itk
 class ClassNameEnums
 {
 public:
-  enum class Choices: uint8_t
+  enum class Choices : uint8_t
   {
     One,
     Two,
@@ -543,7 +557,6 @@ operator<<(std::ostream & out, const ClassNameEnums::Choices value);
 class ClassName
 {
 public:
-
   using ChoicesEnum = ClassNameEnums::Choices;
 #if !defined(ITK_LEGACY_REMOVE)
   using Choices = ChoicesEnum;
@@ -553,7 +566,7 @@ public:
 #endif
 };
 
-}
+} // namespace itk
 
 // itkClassName.cxx
 namespace itk

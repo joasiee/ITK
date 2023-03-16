@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@
 #include "itkGradientDescentOptimizer.h"
 
 #include "itkImageRegistrationMethodImageSource.h"
+#include "itkTestingMacros.h"
 
 /**
  *  This program tests one instantiation of the itk::ImageRegistrationMethod class
@@ -35,13 +36,14 @@ itkImageRegistrationMethodTest_1(int argc, char * argv[])
 
   bool pass = true;
 
-  constexpr unsigned int dimension = 2;
+  constexpr unsigned int Dimension = 2;
+  using PixelType = float;
 
   // Fixed Image Type
-  using FixedImageType = itk::Image<float, dimension>;
+  using FixedImageType = itk::Image<PixelType, Dimension>;
 
   // Moving Image Type
-  using MovingImageType = itk::Image<float, dimension>;
+  using MovingImageType = itk::Image<PixelType, Dimension>;
 
   // Size Type
   using SizeType = MovingImageType::SizeType;
@@ -49,9 +51,9 @@ itkImageRegistrationMethodTest_1(int argc, char * argv[])
 
   // ImageSource
   using ImageSourceType = itk::testhelper::
-    ImageRegistrationMethodImageSource<FixedImageType::PixelType, MovingImageType::PixelType, dimension>;
+    ImageRegistrationMethodImageSource<FixedImageType::PixelType, MovingImageType::PixelType, Dimension>;
   // Transform Type
-  using TransformType = itk::AffineTransform<double, dimension>;
+  using TransformType = itk::AffineTransform<double, Dimension>;
   using ParametersType = TransformType::ParametersType;
 
   // Optimizer Type
@@ -76,6 +78,9 @@ itkImageRegistrationMethodTest_1(int argc, char * argv[])
   auto registration = RegistrationType::New();
 
   auto imageSource = ImageSourceType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(imageSource, ImageRegistrationMethodImageSource, Object);
+
 
   SizeType size;
   size[0] = 100;
@@ -130,9 +135,9 @@ itkImageRegistrationMethodTest_1(int argc, char * argv[])
     std::cout << "learningRate = " << learningRate << std::endl;
   }
 
-  for (unsigned int i = 0; i < dimension; ++i)
+  for (unsigned int i = 0; i < Dimension; ++i)
   {
-    scales[i + dimension * dimension] = translationScale;
+    scales[i + Dimension * Dimension] = translationScale;
   }
 
   optimizer->SetScales(scales);

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@
 
 #include "itkMatrix.h"
 #include "itkMath.h"
+#include "itkTestingMacros.h"
 
 int
 itkMatrixTest(int, char *[])
@@ -210,8 +211,8 @@ itkMatrixTest(int, char *[])
       {
         for (unsigned int c = 0; c < nc; ++c)
         {
-          const auto fr = (double)r;
-          const auto fc = (double)c;
+          const auto fr = static_cast<double>(r);
+          const auto fc = static_cast<double>(c);
           m1[r][c] = fr + fc;
           m2[r][c] = fr - fc;
         }
@@ -334,34 +335,10 @@ itkMatrixTest(int, char *[])
   using LargeMatrixType = itk::Matrix<NumericType, 7, 7>;
   LargeMatrixType matrixBad;
   matrixBad.Fill(2.0);
-  bool caught = false;
-  try
-  {
-    matrixBad.GetInverse();
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    std::cout << "Caught expected exception!" << std::endl;
-    std::cout << excp;
-    caught = true;
-  }
-  if (!caught)
-  {
-    std::cout << "Failed to catch expected exception!" << std::endl;
-    return EXIT_FAILURE;
-  }
+  ITK_TRY_EXPECT_EXCEPTION(matrixBad.GetInverse());
 
   matrixBad.SetIdentity();
-  try
-  {
-    matrixBad.GetInverse();
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    std::cout << "Caught unexpected exception!" << std::endl;
-    std::cout << excp;
-    return EXIT_FAILURE;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(matrixBad.GetInverse());
 
   {
     /*

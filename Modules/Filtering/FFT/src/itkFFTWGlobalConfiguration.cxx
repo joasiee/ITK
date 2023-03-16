@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -110,7 +110,7 @@ FFTWGlobalConfiguration::GetPlanRigorValue(const std::string & name)
 }
 
 std::string
-FFTWGlobalConfiguration::GetPlanRigorName(const int & value)
+FFTWGlobalConfiguration::GetPlanRigorName(const int value)
 {
   switch (value)
   {
@@ -372,7 +372,7 @@ HardwareWisdomFilenameGenerator::GetUseSteppingCode() const
 }
 
 
-FFTWGlobalConfiguration ::FFTWGlobalConfiguration()
+FFTWGlobalConfiguration::FFTWGlobalConfiguration()
   : m_WisdomCacheBase("")
 {
   { // Configure default method for creating WISDOM_CACHE files
@@ -385,7 +385,7 @@ FFTWGlobalConfiguration ::FFTWGlobalConfiguration()
     }
     else
     {
-      // In the abscence of explicit specification, point to
+      // In the absence of explicit specification, point to
       // the DefaultFilenameGenerator for creating the name
       auto * DefaultFilenameGenerator = new HardwareWisdomFilenameGenerator;
       this->m_WisdomFilenameGenerator = DefaultFilenameGenerator;
@@ -744,7 +744,7 @@ FFTWGlobalConfiguration::GetLockMutex()
 }
 
 void
-FFTWGlobalConfiguration::SetNewWisdomAvailable(const bool & v)
+FFTWGlobalConfiguration::SetNewWisdomAvailable(const bool v)
 {
   itkInitGlobalsMacro(PimplGlobals);
   GetInstance()->m_NewWisdomAvailable = v;
@@ -758,7 +758,7 @@ FFTWGlobalConfiguration::GetNewWisdomAvailable()
 }
 
 void
-FFTWGlobalConfiguration::SetPlanRigor(const int & v)
+FFTWGlobalConfiguration::SetPlanRigor(const int v)
 {
   itkInitGlobalsMacro(PimplGlobals);
   // use that method to check the value
@@ -781,7 +781,7 @@ FFTWGlobalConfiguration::SetPlanRigor(const std::string & name)
 }
 
 void
-FFTWGlobalConfiguration::SetReadWisdomCache(const bool & v)
+FFTWGlobalConfiguration::SetReadWisdomCache(const bool v)
 {
   itkInitGlobalsMacro(PimplGlobals);
   GetInstance()->m_ReadWisdomCache = v;
@@ -799,7 +799,7 @@ FFTWGlobalConfiguration::GetReadWisdomCache()
 }
 
 void
-FFTWGlobalConfiguration::SetWriteWisdomCache(const bool & v)
+FFTWGlobalConfiguration::SetWriteWisdomCache(const bool v)
 {
   itkInitGlobalsMacro(PimplGlobals);
   GetInstance()->m_WriteWisdomCache = v;

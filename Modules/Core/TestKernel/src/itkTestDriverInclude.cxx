@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -86,7 +86,7 @@ usage()
   std::cerr << std::endl;
   std::cerr << "  --add-before-env NAME VALUE" << std::endl;
   std::cerr << "      Add a VALUE to the variable name in the environment." << std::endl;
-  std::cerr << "      The seperator used is the default one on the system." << std::endl;
+  std::cerr << "      The separator used is the default one on the system." << std::endl;
   std::cerr << "      This option can be used several times." << std::endl;
   std::cerr << std::endl;
   std::cerr << "  --add-before-env-with-sep NAME VALUE SEP" << std::endl;
@@ -199,7 +199,7 @@ ProcessArguments(int * argc, ArgumentStringType * argv, ProcessedOutputType * pr
       // convert hash to all lowercase letters
       std::transform(md5hash0.begin(), md5hash0.end(), md5hash0.begin(), my_to_lower);
 
-      // chech that the hash is of expected format
+      // check that the hash is of expected format
       if (md5hash0.size() != 32 || md5hash0.find_first_not_of("0123456789abcdef") != std::string::npos)
       {
         std::cerr << "Warning: argument does not appear to be a valid md5 hash \"" << md5hash0 << "\"." << std::endl;
@@ -538,11 +538,11 @@ RegressionTestHelper(const char *       testImageFilename,
     std::cout << "</DartMeasurement>" << std::endl;
   }
 
-  // if there are discrepencies, create an diff image
+  // if there are discrepancies, create an diff image
   if ((status > numberOfPixelsTolerance) && reportErrors)
   {
 
-    // Report actuall image error to best baseline
+    // Report actual image error to best baseline
     std::cout << "<DartMeasurement name=\"ImageError\" type=\"numeric/double\">";
     std::cout << status;
     std::cout << "</DartMeasurement>" << std::endl;
@@ -951,7 +951,7 @@ HashTestImage(const char * testImageFilename, const std::vector<std::string> & b
   }
   catch (...)
   {
-    std::cerr << "Unknow error during rescale and writing of " << testName.str() << std::endl;
+    std::cerr << "Unknown error during rescale and writing of " << testName.str() << std::endl;
   }
 
   std::cout << "<DartMeasurementFile name=\"TestImage\" type=\"image/png\">";

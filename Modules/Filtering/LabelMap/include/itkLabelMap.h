@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,7 @@
 namespace itk
 {
 /**
- *\class LabelMap
+ * \class LabelMap
  *  \brief Templated n-dimensional image to store labeled objects.
  *
  * LabelMap is an image class specialized in storing the labeled
@@ -233,7 +233,7 @@ public:
 
   /**
    * Add a label object to the image. If a label object already has the label,
-   * it is overriden.
+   * it is overridden.
    */
   void
   AddLabelObject(LabelObjectType * labelObject);
@@ -307,7 +307,7 @@ public:
   Optimize();
 
   /**
-   *\class ConstIterator
+   * \class ConstIterator
    * \brief A forward iterator over the LabelObjects of a LabelMap
    * \ingroup ITKLabelMap
    */
@@ -394,7 +394,7 @@ public:
   };
 
   /**
-   *\class Iterator
+   * \class Iterator
    * \brief A forward iterator over the LabelObjects of a LabelMap
    * \ingroup ITKLabelMap
    */

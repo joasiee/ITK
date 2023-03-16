@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -252,8 +252,8 @@ ImageSink<TInputImage>::StreamedGenerateData(unsigned int inputRequestedRegionNu
 
   // calculate the progress range for this streamed chunk
   const ThreadIdType  total = this->GetNumberOfInputRequestedRegions();
-  const float         oldProgress = float(inputRequestedRegionNumber) / (total);
-  const float         newProgress = float(inputRequestedRegionNumber + 1) / (total);
+  const float         oldProgress = static_cast<float>(inputRequestedRegionNumber) / (total);
+  const float         newProgress = static_cast<float>(inputRequestedRegionNumber + 1) / (total);
   ProgressTransformer pt(oldProgress, newProgress, this);
 
 

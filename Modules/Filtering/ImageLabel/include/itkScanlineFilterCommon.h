@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -143,7 +143,7 @@ protected:
     SizeValueType stride = 1;
     RegionType    requestedRegion = m_EnclosingFilter->GetOutput()->GetRequestedRegion();
     // ignore x axis, which is always full size
-    for (unsigned dim = 1; dim < ImageDimension; ++dim)
+    for (unsigned int dim = 1; dim < ImageDimension; ++dim)
     {
       itkAssertOrThrowMacro(requestedRegion.GetIndex(dim) <= index[dim], "Index must be within the requested region!");
       linearIndex += (index[dim] - requestedRegion.GetIndex(dim)) * stride;
@@ -169,7 +169,7 @@ protected:
       {
         cIt->label = label;
         m_UnionFind[label] = label;
-        label++;
+        ++label;
       }
     }
   }
@@ -236,7 +236,7 @@ protected:
     // This checks whether the line encodings are really neighbors. The first
     // dimension gets ignored because the encodings are along that axis.
     SizeValueType diffSum = 0;
-    for (unsigned i = 1; i < OutputImageDimension; ++i)
+    for (unsigned int i = 1; i < OutputImageDimension; ++i)
     {
       SizeValueType diff = itk::Math::abs(A[i] - B[i]);
       if (diff > 1)
@@ -476,7 +476,7 @@ protected:
     SizeValueType         lastLine = wud.lastLine;
     if (!strictlyLess)
     {
-      lastLine++;
+      ++lastLine;
       // make sure we are not wrapping around
       itkAssertInDebugAndIgnoreInReleaseMacro(lastLine >= wud.lastLine);
     }

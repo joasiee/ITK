@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -118,17 +118,13 @@ itkScalarImageToCooccurrenceMatrixFilterTest(int, char *[])
 
     if (filter->GetInput() != nullptr)
     {
-      std::cerr << "GetInput() should return nullptr since the input is\
-                    not set yet "
-                << std::endl;
+      std::cerr << "GetInput() should return nullptr since the input is not set yet " << std::endl;
       passed = false;
     }
 
     if (filter->GetMaskImage() != nullptr)
     {
-      std::cerr << "GetMaskImage() should return nullptr since the mask image is\
-                    not set yet "
-                << std::endl;
+      std::cerr << "GetMaskImage() should return nullptr since the mask image is not set yet " << std::endl;
       passed = false;
     }
 

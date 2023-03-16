@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,8 +34,8 @@
 //  patient is respected when you process data sets that contain personal
 //  information. Privacy issues are regulated in the United States by the
 //  HIPAA norms\footnote{The Health Insurance Portability and Accountability
-//  Act of 1996. \url{http://www.cms.hhs.gov/hipaa/}}. You would probably find
-//  similar legislation in every country.
+//  Act of 1996. \url{https://www.cms.hhs.gov/hipaa/}}. You would probably
+//  find similar legislation in every country.
 //
 //  \index{HIPAA!Privacy}
 //  \index{HIPAA!Dicom}
@@ -99,7 +99,7 @@ main(int argc, char * argv[])
   //  Software Guide : EndLatex
 
   // Software Guide : BeginCodeSnippet
-  using PixelType = signed short;
+  using PixelType = short;
   constexpr unsigned int Dimension = 3;
 
   using ImageType = itk::Image<PixelType, Dimension>;
@@ -143,7 +143,7 @@ main(int argc, char * argv[])
     namesGenerator->GetInputFileNames();
   // Software Guide : EndCodeSnippet
 
-  std::size_t numberOfFileNames = filenames.size();
+  size_t numberOfFileNames = filenames.size();
   std::cout << numberOfFileNames << std::endl;
   for (unsigned int fni = 0; fni < numberOfFileNames; ++fni)
   {
@@ -232,7 +232,7 @@ main(int argc, char * argv[])
   // Software Guide : EndLatex
 
   // Software Guide : BeginCodeSnippet
-  using OutputPixelType = signed short;
+  using OutputPixelType = short;
   constexpr unsigned int OutputDimension = 2;
 
   using Image2DType = itk::Image<OutputPixelType, OutputDimension>;

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,9 +23,43 @@
 #include "itkMetaDataObject.h"
 #include "itkArray.h"
 #include "itkPrintHelper.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 #include "itk_minc2.h"
 
+#include <memory> // For unique_ptr.
+
+extern "C"
+{
+  void
+  MINCIOFreeTmpDimHandle(unsigned int size, midimhandle_t * ptr)
+  {
+    int          error = 0;
+    unsigned int x = 0;
+    if (!ptr)
+    {
+      /*
+       * Should never happen.
+       */
+#ifndef NDEBUG
+      printf("MINCIOFreeTmpDimHandle: ptr is null pointer");
+#endif
+      return;
+    }
+    for (; x < size; ++x)
+    {
+      error = mifree_dimension_handle(ptr[x]);
+#ifndef NDEBUG
+      if (error != MI_NOERROR)
+      {
+        printf("MINCIOFreeTmpDimHandle: mifree_dimension_handle(ptr[%u]) returned %d", x, error);
+      }
+#else
+      (void)error;
+#endif
+    }
+  }
+}
 
 namespace itk
 {
@@ -70,8 +104,8 @@ MINCImageIO::Read(void * buffer)
   const unsigned int nDims = this->GetNumberOfDimensions();
   const unsigned int nComp = this->GetNumberOfComponents();
 
-  auto * start = new misize_t[nDims + (nComp > 1 ? 1 : 0)];
-  auto * count = new misize_t[nDims + (nComp > 1 ? 1 : 0)];
+  const auto start = make_unique_for_overwrite<misize_t[]>(nDims + (nComp > 1 ? 1 : 0));
+  const auto count = make_unique_for_overwrite<misize_t[]>(nDims + (nComp > 1 ? 1 : 0));
 
   for (unsigned int i = 0; i < nDims; ++i)
   {
@@ -127,19 +161,13 @@ MINCImageIO::Read(void * buffer)
       break;
     default:
       itkDebugMacro(<< "Could read datatype " << this->GetComponentType());
-      delete[] start;
-      delete[] count;
       return;
   }
 
-  if (miget_real_value_hyperslab(this->m_MINCPImpl->m_Volume, volume_data_type, start, count, buffer) < 0)
+  if (miget_real_value_hyperslab(this->m_MINCPImpl->m_Volume, volume_data_type, start.get(), count.get(), buffer) < 0)
   {
-    delete[] start;
-    delete[] count;
     itkExceptionMacro(<< " Can not get real value hyperslab!!\n");
   }
-  delete[] start;
-  delete[] count;
 }
 
 void
@@ -428,7 +456,7 @@ MINCImageIO::ReadImageInformation()
   {
     if (this->m_MINCPImpl->m_DimensionIndices[i] != -1) // this dimension is present
     {
-      spatial_dimension_count++;
+      ++spatial_dimension_count;
     }
   }
 
@@ -488,8 +516,8 @@ MINCImageIO::ReadImageInformation()
       this->SetDirection(i - 1, _dir);
       this->SetSpacing(i - 1, _sep);
 
-      spatial_dimension++;
-      usable_dimensions++;
+      ++spatial_dimension;
+      ++usable_dimensions;
     }
   }
 
@@ -503,7 +531,7 @@ MINCImageIO::ReadImageInformation()
     misize_t _sz;
     miget_dimension_size(this->m_MINCPImpl->m_MincApparentDims[usable_dimensions], &_sz);
     numberOfComponents = _sz;
-    usable_dimensions++;
+    ++usable_dimensions;
   }
 
   if (this->m_MINCPImpl->m_DimensionIndices[4] != -1) // have time dimension
@@ -516,7 +544,7 @@ MINCImageIO::ReadImageInformation()
     misize_t _sz;
     miget_dimension_size(this->m_MINCPImpl->m_MincApparentDims[usable_dimensions], &_sz);
     numberOfComponents = _sz;
-    usable_dimensions++;
+    ++usable_dimensions;
   }
 
   // Set apparent dimension order to the MINC2 api
@@ -652,7 +680,7 @@ MINCImageIO::ReadImageInformation()
   this->SetNumberOfComponents(numberOfComponents);
   this->ComputeStrides();
 
-  // create metadata object to store usefull additional information
+  // create metadata object to store useful additional information
   MetaDataDictionary & thisDic = GetMetaDataDictionary();
   thisDic.Clear();
 
@@ -664,14 +692,13 @@ MINCImageIO::ReadImageInformation()
   size_t minc_history_length = 0;
   if (miget_attr_length(this->m_MINCPImpl->m_Volume, "", "history", &minc_history_length) == MI_NOERROR)
   {
-    auto * minc_history = new char[minc_history_length + 1];
+    const auto minc_history = make_unique_for_overwrite<char[]>(minc_history_length + 1);
     if (miget_attr_values(
-          this->m_MINCPImpl->m_Volume, MI_TYPE_STRING, "", "history", minc_history_length + 1, minc_history) ==
+          this->m_MINCPImpl->m_Volume, MI_TYPE_STRING, "", "history", minc_history_length + 1, minc_history.get()) ==
         MI_NOERROR)
     {
-      EncapsulateMetaData<std::string>(thisDic, "history", std::string(minc_history));
+      EncapsulateMetaData<std::string>(thisDic, "history", std::string(minc_history.get()));
     }
-    delete[] minc_history;
   }
 
   if (this->m_MINCPImpl->m_DimensionIndices[4] != -1) // have time dimension
@@ -767,14 +794,13 @@ MINCImageIO::ReadImageInformation()
             {
               case MI_TYPE_STRING:
               {
-                auto * tmp = new char[att_length + 1];
+                const auto tmp = make_unique_for_overwrite<char[]>(att_length + 1);
                 if (miget_attr_values(
-                      this->m_MINCPImpl->m_Volume, att_data_type, group_name, attribute, att_length + 1, tmp) ==
+                      this->m_MINCPImpl->m_Volume, att_data_type, group_name, attribute, att_length + 1, tmp.get()) ==
                     MI_NOERROR)
                 {
-                  EncapsulateMetaData<std::string>(thisDic, entry_key, std::string(tmp));
+                  EncapsulateMetaData<std::string>(thisDic, entry_key, std::string(tmp.get()));
                 }
-                delete[] tmp;
               }
               break;
               case MI_TYPE_FLOAT:
@@ -914,7 +940,7 @@ MINCImageIO::WriteImageInformation()
     miset_dimension_separation(this->m_MINCPImpl->m_MincApparentDims[this->m_MINCPImpl->m_NDims - minc_dimensions - 1],
                                tstep);
 
-    minc_dimensions++;
+    ++minc_dimensions;
   }
   else if (nComp > 1)
   {
@@ -923,7 +949,7 @@ MINCImageIO::WriteImageInformation()
                        MI_DIMATTR_REGULARLY_SAMPLED,
                        nComp,
                        &this->m_MINCPImpl->m_MincApparentDims[this->m_MINCPImpl->m_NDims - minc_dimensions - 1]);
-    minc_dimensions++;
+    ++minc_dimensions;
   }
 
   micreate_dimension(MIxspace,
@@ -931,7 +957,7 @@ MINCImageIO::WriteImageInformation()
                      MI_DIMATTR_REGULARLY_SAMPLED,
                      this->GetDimensions(0),
                      &this->m_MINCPImpl->m_MincApparentDims[this->m_MINCPImpl->m_NDims - minc_dimensions - 1]);
-  minc_dimensions++;
+  ++minc_dimensions;
 
   if (nDims > 1)
   {
@@ -940,7 +966,7 @@ MINCImageIO::WriteImageInformation()
                        MI_DIMATTR_REGULARLY_SAMPLED,
                        this->GetDimensions(1),
                        &this->m_MINCPImpl->m_MincApparentDims[this->m_MINCPImpl->m_NDims - minc_dimensions - 1]);
-    minc_dimensions++;
+    ++minc_dimensions;
   }
 
   if (nDims > 2)
@@ -950,11 +976,12 @@ MINCImageIO::WriteImageInformation()
                        MI_DIMATTR_REGULARLY_SAMPLED,
                        this->GetDimensions(2),
                        &this->m_MINCPImpl->m_MincApparentDims[this->m_MINCPImpl->m_NDims - minc_dimensions - 1]);
-    minc_dimensions++;
+    ++minc_dimensions;
   }
 
   if (nDims > 3)
   {
+    MINCIOFreeTmpDimHandle(minc_dimensions, this->m_MINCPImpl->m_MincApparentDims);
     itkExceptionMacro(<< "Unfortunately, only up to 3D volume are supported now.");
   }
 
@@ -1038,6 +1065,7 @@ MINCImageIO::WriteImageInformation()
       this->m_MINCPImpl->m_Volume_type = MI_TYPE_DOUBLE;
       break;
     default:
+      MINCIOFreeTmpDimHandle(minc_dimensions, this->m_MINCPImpl->m_MincApparentDims);
       itkExceptionMacro(<< "Could read datatype " << this->GetComponentType());
   }
 
@@ -1165,6 +1193,7 @@ MINCImageIO::WriteImageInformation()
   mivolumeprops_t hprops;
   if (minew_volume_props(&hprops) < 0)
   {
+    MINCIOFreeTmpDimHandle(minc_dimensions, this->m_MINCPImpl->m_MincApparentDims);
     itkExceptionMacro(<< "Could not allocate MINC properties");
   }
 
@@ -1172,11 +1201,15 @@ MINCImageIO::WriteImageInformation()
   {
     if (miset_props_compression_type(hprops, MI_COMPRESS_ZLIB) < 0)
     {
+      MINCIOFreeTmpDimHandle(minc_dimensions, this->m_MINCPImpl->m_MincApparentDims);
+      mifree_volume_props(hprops);
       itkExceptionMacro(<< "Could not set MINC compression");
     }
 
     if (miset_props_zlib_compression(hprops, this->GetCompressionLevel()) < 0)
     {
+      MINCIOFreeTmpDimHandle(minc_dimensions, this->m_MINCPImpl->m_MincApparentDims);
+      mifree_volume_props(hprops);
       itkExceptionMacro(<< "Could not set MINC compression level");
     }
   }
@@ -1184,6 +1217,8 @@ MINCImageIO::WriteImageInformation()
   {
     if (miset_props_compression_type(hprops, MI_COMPRESS_NONE) < 0)
     {
+      MINCIOFreeTmpDimHandle(minc_dimensions, this->m_MINCPImpl->m_MincApparentDims);
+      mifree_volume_props(hprops);
       itkExceptionMacro(<< "Could not set MINC compression");
     }
   }
@@ -1197,23 +1232,28 @@ MINCImageIO::WriteImageInformation()
                       &this->m_MINCPImpl->m_Volume) < 0)
   {
     // Error opening the volume
+    MINCIOFreeTmpDimHandle(minc_dimensions, this->m_MINCPImpl->m_MincApparentDims);
+    mifree_volume_props(hprops);
     itkExceptionMacro(<< "Could not open file \"" << m_FileName.c_str() << "\".");
   }
 
   if (micreate_volume_image(this->m_MINCPImpl->m_Volume) < 0)
   {
     // Error opening the volume
+    mifree_volume_props(hprops);
     itkExceptionMacro(<< "Could not create image in  file \"" << m_FileName.c_str() << "\".");
   }
 
   if (miset_apparent_dimension_order(
         this->m_MINCPImpl->m_Volume, minc_dimensions, this->m_MINCPImpl->m_MincApparentDims) < 0)
   {
+    mifree_volume_props(hprops);
     itkExceptionMacro(<< " Can't set apparent dimension order!");
   }
 
   if (miset_slice_scaling_flag(this->m_MINCPImpl->m_Volume, 0) < 0)
   {
+    mifree_volume_props(hprops);
     itkExceptionMacro(<< "Could not set slice scaling flag");
   }
 
@@ -1226,19 +1266,19 @@ MINCImageIO::WriteImageInformation()
   for (MetaDataDictionary::ConstIterator it = thisDic.Begin(); it != thisDic.End(); ++it)
   {
     // don't store some internal ITK junk
-    if ((*it).first == "ITK_InputFilterName" || (*it).first == "NRRD_content" || (*it).first == "NRRD_centerings[0]" ||
-        (*it).first == "NRRD_centerings[1]" || (*it).first == "NRRD_centerings[2]" ||
-        (*it).first == "NRRD_centerings[3]" || (*it).first == "NRRD_kinds[0]" || (*it).first == "NRRD_kinds[1]" ||
-        (*it).first == "NRRD_kinds[2]" || (*it).first == "NRRD_kinds[3]" || (*it).first == "NRRD_space")
+    if (it->first == "ITK_InputFilterName" || it->first == "NRRD_content" || it->first == "NRRD_centerings[0]" ||
+        it->first == "NRRD_centerings[1]" || it->first == "NRRD_centerings[2]" || it->first == "NRRD_centerings[3]" ||
+        it->first == "NRRD_kinds[0]" || it->first == "NRRD_kinds[1]" || it->first == "NRRD_kinds[2]" ||
+        it->first == "NRRD_kinds[3]" || it->first == "NRRD_space")
       continue;
 
-    const char *         d = strchr((*it).first.c_str(), ':');
-    MetaDataObjectBase * bs = (*it).second;
+    const char *         d = strchr(it->first.c_str(), ':');
+    MetaDataObjectBase * bs = it->second;
     const char *         tname = bs->GetMetaDataObjectTypeName();
 
     if (d)
     {
-      std::string var((*it).first.c_str(), d - (*it).first.c_str());
+      std::string var(it->first.c_str(), d - it->first.c_str());
       std::string att(d + 1);
 
       // VF:THIS is not good OO style at all :(
@@ -1286,7 +1326,7 @@ MINCImageIO::WriteImageInformation()
         itkDebugMacro(<< "Unsupported metadata type:" << tname);
       }
     }
-    else if ((*it).first == "history")
+    else if (it->first == "history")
     {
       const std::string & tmp = dynamic_cast<MetaDataObject<std::string> *>(bs)->GetMetaDataObjectValue();
       miset_attr_values(this->m_MINCPImpl->m_Volume, MI_TYPE_STRING, "", "history", tmp.length() + 1, tmp.c_str());
@@ -1309,10 +1349,10 @@ get_buffer_min_max(const void * _buffer, size_t len, double & buf_min, double & 
   buf_min = buf_max = buf[0];
   for (size_t i = 0; i < len; ++i)
   {
-    if (buf[i] < (double)buf_min)
-      buf_min = (double)buf[i];
-    if (buf[i] > (double)buf_max)
-      buf_max = (double)buf[i];
+    if (buf[i] < static_cast<double>(buf_min))
+      buf_min = static_cast<double>(buf[i]);
+    if (buf[i] > static_cast<double>(buf_max))
+      buf_max = static_cast<double>(buf[i]);
   }
 }
 
@@ -1323,8 +1363,8 @@ MINCImageIO::Write(const void * buffer)
   const unsigned int nComp = this->GetNumberOfComponents();
   size_t             buffer_length = 1;
 
-  auto * start = new misize_t[nDims + (nComp > 1 ? 1 : 0)];
-  auto * count = new misize_t[nDims + (nComp > 1 ? 1 : 0)];
+  const auto start = make_unique_for_overwrite<misize_t[]>(nDims + (nComp > 1 ? 1 : 0));
+  const auto count = make_unique_for_overwrite<misize_t[]>(nDims + (nComp > 1 ? 1 : 0));
 
   for (unsigned int i = 0; i < nDims; ++i)
   {
@@ -1392,10 +1432,9 @@ MINCImageIO::Write(const void * buffer)
       get_buffer_min_max<double>(buffer, buffer_length, buffer_min, buffer_max);
       break;
     default:
-      delete[] start;
-      delete[] count;
       itkExceptionMacro(<< "Could not read datatype " << this->GetComponentType());
   }
+
   this->WriteImageInformation();
 
   // by default valid range will be equal to range, to avoid scaling
@@ -1424,17 +1463,12 @@ MINCImageIO::Write(const void * buffer)
   }
 
   if (miset_real_value_hyperslab(
-        this->m_MINCPImpl->m_Volume, volume_data_type, start, count, const_cast<void *>(buffer)) < 0)
+        this->m_MINCPImpl->m_Volume, volume_data_type, start.get(), count.get(), const_cast<void *>(buffer)) < 0)
   {
-    delete[] start;
-    delete[] count;
     itkExceptionMacro(<< " Can not set real value hyperslab!!\n");
   }
   // TODO: determine what to do if we are streming
   this->CloseVolume();
-
-  delete[] start;
-  delete[] count;
 }
 
 } // end namespace itk

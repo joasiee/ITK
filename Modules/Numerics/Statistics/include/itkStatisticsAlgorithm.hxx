@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -69,7 +69,7 @@ Partition(TSubsample *                               sample,
       {
         break;
       }
-      moveToBackIndex--;
+      --moveToBackIndex;
     }
 
     //
@@ -82,7 +82,7 @@ Partition(TSubsample *                               sample,
       {
         break;
       }
-      moveToFrontIndex++;
+      ++moveToFrontIndex;
     }
 
     if (moveToFrontIndex < moveToBackIndex)
@@ -113,7 +113,7 @@ Partition(TSubsample *                               sample,
       {
         break;
       }
-      moveToBackIndex--;
+      --moveToBackIndex;
     }
 
     //
@@ -126,7 +126,7 @@ Partition(TSubsample *                               sample,
       {
         break;
       }
-      moveToFrontIndex++;
+      ++moveToFrontIndex;
     }
 
     if (moveToFrontIndex < moveToBackIndex)
@@ -157,7 +157,7 @@ Partition(TSubsample *                               sample,
       {
         break;
       }
-      moveToBackIndex--;
+      --moveToBackIndex;
     }
 
     //
@@ -170,7 +170,7 @@ Partition(TSubsample *                               sample,
       {
         break;
       }
-      moveToFrontIndex++;
+      ++moveToFrontIndex;
     }
 
     if (moveToFrontIndex < moveToBackIndex)
@@ -260,8 +260,7 @@ FindSampleBound(const TSample *                           sample,
 
   if (sample->Size() == 0)
   {
-    itkGenericExceptionMacro(<< "Attempting to compute bounds of a sample list containing no\
-       measurement vectors");
+    itkGenericExceptionMacro(<< "Attempting to compute bounds of a sample list containing no measurement vectors");
   }
 
   min = begin.GetMeasurementVector();

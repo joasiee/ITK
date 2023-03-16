@@ -6,7 +6,7 @@
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
-#         http://www.apache.org/licenses/LICENSE-2.0.txt
+#         https://www.apache.org/licenses/LICENSE-2.0.txt
 #
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
 
 # Writes the date and time in RFC 2822 format to stdout
 
-import  time
+import time
 import sys
-sys.stdout.write(time.strftime('%a, %d %b %Y %H:%M:%S +0000', time.gmtime()))
+
+sys.stdout.write(time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime()))

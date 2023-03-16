@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,29 +35,24 @@ itkVTKPolyDataReaderTest(int argc, char * argv[])
 
   auto polyDataReader = ReaderType::New();
 
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(polyDataReader, VTKPolyDataReader, MeshSource);
+
+
   using PointType = ReaderType::PointType;
 
-  polyDataReader->SetFileName(argv[1]);
+  std::string filename = argv[1];
+  polyDataReader->SetFileName(filename);
+  ITK_TEST_SET_GET_VALUE(filename, polyDataReader->GetFileName());
 
-  try
-  {
-    polyDataReader->Update();
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    std::cerr << "Error during Update() " << std::endl;
-    std::cerr << excp << std::endl;
-    return EXIT_FAILURE;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(polyDataReader->Update());
 
-  std::cout << "polyDataReader:" << std::endl;
-  std::cout << polyDataReader << std::endl;
+
+  std::cout << "Version: " << polyDataReader->GetVersion() << std::endl;
+  std::cout << "Header: " << polyDataReader->GetHeader() << std::endl;
 
   MeshType::Pointer mesh = polyDataReader->GetOutput();
 
   PointType point;
-
-  std::cout << "Testing itk::VTKPolyDataReader" << std::endl;
 
   unsigned int numberOfPoints = mesh->GetNumberOfPoints();
   unsigned int numberOfCells = mesh->GetNumberOfCells();

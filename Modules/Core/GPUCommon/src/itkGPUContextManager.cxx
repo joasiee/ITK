@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -99,7 +99,7 @@ GPUContextManager::~GPUContextManager()
 cl_command_queue
 GPUContextManager::GetCommandQueue(int i)
 {
-  if (i < 0 || i >= (int)m_NumberOfDevices)
+  if (i < 0 || i >= static_cast<int>(m_NumberOfDevices))
   {
     printf("Error: requested queue id is not available. Default queue will be used (queue id = 0)\n");
     return m_CommandQueue[0];
@@ -113,7 +113,7 @@ GPUContextManager::GetCommandQueue(int i)
 cl_device_id
 GPUContextManager::GetDeviceId(int i)
 {
-  if (i < 0 || i >= (int)m_NumberOfDevices)
+  if (i < 0 || i >= static_cast<int>(m_NumberOfDevices))
   {
     printf("Error: requested queue id is not available. Default queue will be used (queue id = 0)\n");
     return m_Devices[0];

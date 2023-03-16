@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,7 +43,7 @@ Expect_data_returns_pointer_to_first_element(T & container)
 class ObjectCounter
 {
 private:
-  static std::size_t m_Count;
+  static size_t m_Count;
 
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ObjectCounter);
@@ -52,14 +52,14 @@ public:
 
   ~ObjectCounter() { --m_Count; }
 
-  static std::size_t
+  static size_t
   GetCount()
   {
     return m_Count;
   }
 };
 
-std::size_t ObjectCounter::m_Count{};
+size_t ObjectCounter::m_Count{};
 
 
 } // namespace

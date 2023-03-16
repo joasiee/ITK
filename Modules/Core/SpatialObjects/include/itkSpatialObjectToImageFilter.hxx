@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -90,7 +90,7 @@ SpatialObjectToImageFilter<TInputSpatialObject, TOutputImage>::SetSpacing(const 
 
   for (i = 0; i < TOutputImage::ImageDimension; ++i)
   {
-    if (Math::NotExactlyEquals((double)spacing[i], m_Spacing[i]))
+    if (Math::NotExactlyEquals(static_cast<double>(spacing[i]), m_Spacing[i]))
     {
       break;
     }
@@ -143,7 +143,7 @@ SpatialObjectToImageFilter<TInputSpatialObject, TOutputImage>::SetSpacing(const 
 
   for (i = 0; i < OutputImageDimension; ++i)
   {
-    if (Math::NotExactlyEquals((double)spacing[i], m_Spacing[i]))
+    if (Math::NotExactlyEquals(static_cast<double>(spacing[i]), m_Spacing[i]))
     {
       break;
     }
@@ -177,7 +177,7 @@ SpatialObjectToImageFilter<TInputSpatialObject, TOutputImage>::SetOrigin(const P
 
   for (i = 0; i < OutputImageDimension; ++i)
   {
-    if (Math::NotExactlyEquals((double)origin[i], m_Origin[i]))
+    if (Math::NotExactlyEquals(static_cast<double>(origin[i]), m_Origin[i]))
     {
       break;
     }
@@ -224,7 +224,7 @@ SpatialObjectToImageFilter<TInputSpatialObject, TOutputImage>::SetOrigin(const f
 
   for (i = 0; i < OutputImageDimension; ++i)
   {
-    if (Math::NotExactlyEquals((double)origin[i], m_Origin[i]))
+    if (Math::NotExactlyEquals(static_cast<double>(origin[i]), m_Origin[i]))
     {
       break;
     }
@@ -313,11 +313,9 @@ SpatialObjectToImageFilter<TInputSpatialObject, TOutputImage>::GenerateData()
 
   region.SetIndex(m_Index);
 
-  OutputImage->SetLargestPossibleRegion(region); //
-  OutputImage->SetBufferedRegion(region);        // set the region
-  OutputImage->SetRequestedRegion(region);       //
-  OutputImage->SetSpacing(m_Spacing);            // set spacing
-  OutputImage->SetOrigin(m_Origin);              //   and origin
+  OutputImage->SetRegions(region);    // set the region
+  OutputImage->SetSpacing(m_Spacing); // set spacing
+  OutputImage->SetOrigin(m_Origin);   //   and origin
   OutputImage->SetDirection(m_Direction);
   OutputImage->Allocate(); // allocate the image
 

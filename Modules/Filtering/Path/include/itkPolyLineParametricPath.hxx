@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,10 +36,12 @@ PolyLineParametricPath<VDimension>::Evaluate(const InputType & input) const -> O
       ->ElementAt(m_VertexList->Size() - 1); // the last vertex
   }
 
-  const VertexType vertex0 = static_cast<const VertexListType *>(this->m_VertexList)->ElementAt(int(input));
-  const VertexType vertex1 = static_cast<const VertexListType *>(this->m_VertexList)->ElementAt(int(input) + 1);
+  const VertexType vertex0 =
+    static_cast<const VertexListType *>(this->m_VertexList)->ElementAt(static_cast<int>(input));
+  const VertexType vertex1 =
+    static_cast<const VertexListType *>(this->m_VertexList)->ElementAt(static_cast<int>(input) + 1);
 
-  const double fractionOfLineSegment = input - int(input);
+  const double fractionOfLineSegment = input - static_cast<int>(input);
 
   const PointType outputPoint = vertex0 + (vertex1 - vertex0) * fractionOfLineSegment;
 

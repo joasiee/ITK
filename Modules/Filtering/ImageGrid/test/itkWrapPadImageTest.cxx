@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -135,7 +135,7 @@ itkWrapPadImageTest(int, char *[])
   passed = true;
   size = requestedRegion.GetSize();
   index = requestedRegion.GetIndex();
-  if ((index[0] != (0 - (long)lowerBound[0])) || (index[1] != (0 - (long)lowerBound[1])) ||
+  if ((index[0] != (0 - static_cast<long>(lowerBound[0]))) || (index[1] != (0 - static_cast<long>(lowerBound[1]))) ||
       (size[0] != (8 + lowerBound[0] + upperBound[0])) || (size[1] != (12 + lowerBound[1] + upperBound[1])))
   {
     passed = false;
@@ -200,7 +200,7 @@ itkWrapPadImageTest(int, char *[])
     passed = true;
     size = requestedRegion.GetSize();
     index = requestedRegion.GetIndex();
-    if ((index[0] != (0 - (long)lowerBound[0])) || (index[1] != (0 - (long)lowerBound[1])) ||
+    if ((index[0] != (0 - static_cast<long>(lowerBound[0]))) || (index[1] != (0 - static_cast<long>(lowerBound[1]))) ||
         (size[0] != (8 + lowerBound[0] + upperBound[0])) || (size[1] != (12 + lowerBound[1] + upperBound[1])))
     {
       passed = false;
@@ -277,7 +277,7 @@ itkWrapPadImageTest(int, char *[])
     passed = true;
     size = requestedRegion.GetSize();
     index = requestedRegion.GetIndex();
-    if ((index[0] != (0 - (long)lowerBound[0])) || (index[1] != (0 - (long)lowerBound[1])) ||
+    if ((index[0] != (0 - static_cast<long>(lowerBound[0]))) || (index[1] != (0 - static_cast<long>(lowerBound[1]))) ||
         (size[0] != (8 + lowerBound[0] + upperBound[0])) || (size[1] != (12 + lowerBound[1] + upperBound[1])))
     {
       passed = false;

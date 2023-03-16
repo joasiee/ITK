@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -74,7 +74,7 @@ srcPattern(unsigned long offset)
 namespace
 {
 
-// The following classe is used to support callbacks
+// The following class is used to support callbacks
 // on the filter in the pipeline that follows later
 class ShowProgressObject
 {
@@ -371,7 +371,7 @@ itkHistogramMatchingImageFilterTest()
         << "ERROR: Reached code that should have aborted due to thrown exception of missing ReferenceHistogram\n"
         << __FILE__ << ":" << __LINE__ << std::endl;
     }
-    catch (itk::ExceptionObject &)
+    catch (const itk::ExceptionObject &)
     {
       std::cout << "Test caught known exception for SetReferenceHistogram correctly, NO FAILURE!" << std::endl;
     }
@@ -391,7 +391,7 @@ itkHistogramMatchingImageFilterTest()
       std::cout << "ERROR: Reached code that should have aborted due to thrown exception of missing ReferenceImage\n"
                 << __FILE__ << ":" << __LINE__ << std::endl;
     }
-    catch (itk::ExceptionObject &)
+    catch (const itk::ExceptionObject &)
     {
       std::cout << "Test caught known exception for SetReferenceImage correctly, NO FAILURE!" << std::endl;
     }

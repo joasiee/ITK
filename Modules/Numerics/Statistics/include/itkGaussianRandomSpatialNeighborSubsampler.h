@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,7 @@ namespace itk
 namespace Statistics
 {
 /**
- *\class GaussianRandomSpatialNeighborSubsampler
+ * \class GaussianRandomSpatialNeighborSubsampler
  * \brief A subsampler that randomly selects points
  * according to a gaussian distribution
  * within the specified radius of the query point.
@@ -113,7 +113,7 @@ protected:
 
   /** method to randomly generate an integer in the closed range
    * [0, upperBound]
-   * usign a gaussian selection method. */
+   * using a gaussian selection method. */
   RandomIntType
   GetIntegerVariate(RandomIntType lowerBound, RandomIntType upperBound, RandomIntType mean) override;
 

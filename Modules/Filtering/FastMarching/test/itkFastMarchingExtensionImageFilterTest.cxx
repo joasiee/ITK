@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -273,7 +273,7 @@ itkFastMarchingExtensionImageFilterTest(int, char *[])
     }
     distance = std::sqrt(distance);
 
-    outputValue = (float)iterator.Get();
+    outputValue = static_cast<float>(iterator.Get());
 
     if (itk::Math::NotAlmostEquals(distance, 0.0))
     {
@@ -288,8 +288,8 @@ itkFastMarchingExtensionImageFilterTest(int, char *[])
 
       if (auxIterator.Get() != vector[0])
       {
-        std::cout << auxIterator.GetIndex() << " got aux value of " << (double)auxIterator.Get()
-                  << " but it should be  " << (double)vector[0] << std::endl;
+        std::cout << auxIterator.GetIndex() << " got aux value of " << static_cast<double>(auxIterator.Get())
+                  << " but it should be  " << static_cast<double>(vector[0]) << std::endl;
         passed = false;
         break;
       }

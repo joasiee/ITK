@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -62,7 +62,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
 
     auto transform = TransformType::New();
 
-    VectorType axis(1.5);
+    auto axis = itk::MakeFilled<VectorType>(1.5);
 
     ValueType angle = 120.0 * std::atan(1.0) / 45.0;
 
@@ -109,7 +109,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
 
     auto rotation = TransformType::New();
 
-    itk::Vector<double, 3> axis(1);
+    auto axis = itk::MakeFilled<itk::Vector<double, 3>>(1);
 
     const double angle = (std::atan(1.0) / 45.0) * 120.0; // turn 120 degrees
 
@@ -267,7 +267,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
 
     auto transform = TransformType::New();
 
-    itk::Vector<double, 3> axis(1);
+    auto axis = itk::MakeFilled<itk::Vector<double, 3>>(1);
 
     const double angle = (std::atan(1.0) / 45.0) * 30.0; // turn 30 degrees
 
@@ -343,7 +343,7 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
     std::cout << " Exercise the SetIdentity() method " << std::endl;
     auto transform = TransformType::New();
 
-    itk::Vector<double, 3> axis(1);
+    auto axis = itk::MakeFilled<itk::Vector<double, 3>>(1);
 
     const double angle = (std::atan(1.0) / 45.0) * 30.0; // turn 30 degrees
 
@@ -396,8 +396,8 @@ itkComposeScaleSkewVersor3DTransformTest(int, char *[])
     std::cout << " Exercise the Scaling methods " << std::endl;
     auto transform = TransformType::New();
 
-    itk::Vector<double, 3> axis(1);
-    const double           angle = (std::atan(1.0) / 45.0) * 30.0; // turn 30 degrees
+    auto         axis = itk::MakeFilled<itk::Vector<double, 3>>(1);
+    const double angle = (std::atan(1.0) / 45.0) * 30.0; // turn 30 degrees
     transform->SetRotation(axis, angle);
 
     TransformType::InputPointType center;

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -75,7 +75,7 @@ itkScalarImageKmeansImageFilter3DTest(int argc, char * argv[])
     return EXIT_FAILURE;
   }
 
-  using PixelType = signed short;
+  using PixelType = short;
   constexpr unsigned int Dimension = 3;
 
   using ImageType = itk::Image<PixelType, Dimension>;
@@ -185,7 +185,7 @@ itkScalarImageKmeansImageFilter3DTest(int argc, char * argv[])
   auto kmeansFilter = KMeansFilterType::New();
   kmeansFilter->SetInput(clippedBrainT1Pointer);
 
-  constexpr unsigned int useNonContiguousLabels = 1;
+  constexpr bool useNonContiguousLabels = true;
 
   RealPixelType backgroundInitialMean = imageExclusion;
   //  RealPixelType bloodInitialMean = imageMax;    // ARTERIAL blood.

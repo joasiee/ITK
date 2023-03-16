@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,8 +19,8 @@
 //  Software Guide : BeginLatex
 //
 //  In order to initialize deformable registration algorithm it is often
-//  convenient to generate a displacemnt field from a set of feature
-//  correspondances provided by the user. The following example illustrates
+//  convenient to generate a displacement field from a set of feature
+//  correspondences provided by the user. The following example illustrates
 //  how to use the \doxygen{itkLandmarkDisplacementFieldSource} class in order
 //  to generate a displacement field from the specification of two sets of
 //  landmarks. Landmarks from one set are associated one-to-one to the

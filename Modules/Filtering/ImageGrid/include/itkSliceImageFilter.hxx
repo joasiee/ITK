@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -249,13 +249,14 @@ SliceImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
     outputSpacing[i] = inputSpacing[i] * itk::Math::abs(m_Step[i]);
 
     // clamp start, inclusive start interval
-    IndexValueType start = std::max(m_Start[i], inputIndex[i] - int(m_Step[i] < 0));
-    start = std::min(start, static_cast<IndexValueType>(inputIndex[i] + inputSize[i]) - int(m_Step[i] < 0));
+    IndexValueType start = std::max(m_Start[i], inputIndex[i] - static_cast<int>(m_Step[i] < 0));
+    start =
+      std::min(start, static_cast<IndexValueType>(inputIndex[i] + inputSize[i]) - static_cast<int>(m_Step[i] < 0));
 
     // clamp stop as open interval
     // Based on the sign of the step include 1 after the end.
-    IndexValueType stop = std::max(m_Stop[i], inputIndex[i] - int(m_Step[i] < 0));
-    stop = std::min(stop, static_cast<IndexValueType>(inputIndex[i] + inputSize[i]) - int(m_Step[i] < 0));
+    IndexValueType stop = std::max(m_Stop[i], inputIndex[i] - static_cast<int>(m_Step[i] < 0));
+    stop = std::min(stop, static_cast<IndexValueType>(inputIndex[i] + inputSize[i]) - static_cast<int>(m_Step[i] < 0));
 
     // If both the numerator and the denominator have the same sign,
     // then the range is a valid and non-zero sized. Truncation is the

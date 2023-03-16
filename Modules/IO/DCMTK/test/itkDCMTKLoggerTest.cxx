@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -59,7 +59,8 @@ itkDCMTKLoggerTest(int, char *[])
   }
 
   // use C-style cast because C++ casts complain.
-  auto illegalVal = (itk::DCMTKImageIO::LogLevelEnum)((unsigned)itk::DCMTKImageIO::LogLevelEnum::OFF_LOG_LEVEL + 99);
+  auto illegalVal =
+    (itk::DCMTKImageIO::LogLevelEnum)(static_cast<unsigned int>(itk::DCMTKImageIO::LogLevelEnum::OFF_LOG_LEVEL) + 99);
 
   ITK_TRY_EXPECT_EXCEPTION(TestLogLevel(io, illegalVal));
 

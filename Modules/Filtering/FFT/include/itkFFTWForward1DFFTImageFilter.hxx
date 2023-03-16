@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,8 +33,7 @@ namespace itk
 
 template <typename TInputImage, typename TOutputImage>
 FFTWForward1DFFTImageFilter<TInputImage, TOutputImage>::FFTWForward1DFFTImageFilter()
-  : m_PlanComputed(false)
-  , m_LastImageSize(0)
+
 {
   // We cannot split over the FFT direction
   this->m_ImageRegionSplitter = ImageRegionSplitterDirection::New();
@@ -109,7 +108,7 @@ FFTWForward1DFFTImageFilter<TInputImage, TOutputImage>::BeforeThreadedGenerateDa
         m_InputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
         m_OutputBufferArray[i] = new typename FFTW1DProxyType::ComplexType[lineSize];
       }
-      catch (std::bad_alloc &)
+      catch (const std::bad_alloc &)
       {
         itkExceptionMacro("Problem allocating memory for internal computations");
       }

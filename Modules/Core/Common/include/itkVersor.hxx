@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,7 +45,7 @@ Versor<T>::Versor(const Self & v)
 
 /** Assignment Operator */
 template <typename T>
-const Versor<T> &
+Versor<T> &
 Versor<T>::operator=(const Self & v)
 {
   m_X = v.m_X;
@@ -209,8 +209,7 @@ Versor<T>::Normalize()
   if (itk::Math::abs(tensor) < 1e-20)
   {
     ExceptionObject except;
-    except.SetDescription("Attempt to normalize a \
-                           itk::Versor with zero tensor");
+    except.SetDescription("Attempt to normalize a itk::Versor with zero tensor");
     except.SetLocation(__FILE__);
     throw except;
   }
@@ -444,7 +443,7 @@ Versor<T>::Set(const VectorType & axis)
     throw exception;
   }
 
-  const ValueType cosangle2 = std::sqrt(NumericTraits<double>::OneValue() - sinangle2 * sinangle2);
+  const ValueType cosangle2 = std::sqrt(1.0 - sinangle2 * sinangle2);
 
   m_X = axis[0];
   m_Y = axis[1];

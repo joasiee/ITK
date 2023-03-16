@@ -6,7 +6,7 @@
 #   you may not use this file except in compliance with the License.
 #   You may obtain a copy of the License at
 #
-#          http://www.apache.org/licenses/LICENSE-2.0.txt
+#          https://www.apache.org/licenses/LICENSE-2.0.txt
 #
 #   Unless required by applicable law or agreed to in writing, software
 #   distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
 #
 # ==========================================================================*/
 
+import enum
 import re
 from typing import Optional, Union, Dict, Any, List, Tuple, Sequence, TYPE_CHECKING
 from sys import stderr as system_error_stream
@@ -36,12 +37,12 @@ fileiotype = Union[str, bytes, os.PathLike]
 import itk.support.types as itkt
 
 from .helpers import wasm_type_from_image_type, image_type_from_wasm_type
+from .helpers import wasm_type_from_mesh_type, mesh_type_from_wasm_type, python_to_js
+from .helpers import wasm_type_from_pointset_type, pointset_type_from_wasm_type
+
+from .xarray import xarray_from_image, image_from_xarray
 
 if TYPE_CHECKING:
-    try:
-        import xarray as xr
-    except ImportError:
-        pass
     try:
         import vtk
     except ImportError:
@@ -98,6 +99,12 @@ __all__ = [
     "imread",
     "meshwrite",
     "meshread",
+    "mesh_from_dict",
+    "dict_from_mesh",
+    "pointset_from_dict",
+    "dict_from_pointset",
+    "transform_from_dict",
+    "dict_from_transform",
     "transformwrite",
     "transformread",
     "search",
@@ -255,12 +262,18 @@ def _get_itk_pixelid(numpy_array_type):
 
     import itk
 
+    def _long_type():
+        if os.name == "nt":
+            return itk.ULL
+        else:
+            return itk.UL
+
     # This is a Mapping from numpy array types to itk pixel types.
     _np_itk = {
         np.uint8: itk.UC,
         np.uint16: itk.US,
         np.uint32: itk.UI,
-        np.uint64: itk.UL,
+        np.uint64: _long_type(),
         np.int8: itk.SC,
         np.int16: itk.SS,
         np.int32: itk.SI,
@@ -310,7 +323,15 @@ def GetArrayFromImage(
     update: bool = True,
     ttype=None,
 ) -> np.ndarray:
-    """Get an array with the content of the image buffer"""
+    """Get an array with the content of the image buffer.
+
+    When *keep_axes* is *False*, the NumPy array will have C-order
+    indexing. This is the reverse of how indices are specified in ITK,
+    i.e. k,j,i versus i,j,k. However C-order indexing is expected by most
+    algorithms in NumPy / SciPy.
+
+    This is a deep copy of the image buffer and is completely safe and without potential side effects.
+    """
     return _GetArrayFromImage(
         image_or_filter, "GetArrayFromImage", keep_axes, update, ttype
     )
@@ -325,7 +346,13 @@ def GetArrayViewFromImage(
     update: bool = True,
     ttype=None,
 ) -> np.ndarray:
-    """Get an array view with the content of the image buffer"""
+    """Get an array view with the content of the image buffer.
+
+    When *keep_axes* is *False*, the NumPy array will have C-order
+    indexing. This is the reverse of how indices are specified in ITK,
+    i.e. k,j,i versus i,j,k. However C-order indexing is expected by most
+    algorithms in NumPy / SciPy.
+    """
     return _GetArrayFromImage(
         image_or_filter, "GetArrayViewFromImage", keep_axes, update, ttype
     )
@@ -334,7 +361,8 @@ def GetArrayViewFromImage(
 array_view_from_image = GetArrayViewFromImage
 
 
-def _GetImageFromArray(arr: ArrayLike, function_name: str, is_vector: bool, ttype):
+def _GetImageFromArray(arr: ArrayLike, function_name: str, is_vector: bool,
+        ttype, need_contiguous:bool = True):
     """Get an ITK image from a Python array."""
     import itk
 
@@ -385,13 +413,36 @@ def _GetImageFromArray(arr: ArrayLike, function_name: str, is_vector: bool, ttyp
 Please specify an output type via the 'ttype' keyword parameter."""
         )
     templatedFunction = getattr(itk.PyBuffer[keys[0]], function_name)
-    return templatedFunction(arr, is_vector)
+    if function_name == "GetImageViewFromArray":
+        return templatedFunction(arr, is_vector, need_contiguous)
+    else:
+        return templatedFunction(arr, is_vector)
+
 
 
 def GetImageFromArray(
     arr: ArrayLike, is_vector: bool = False, ttype=None
 ) -> "itkt.ImageBase":
-    """Get an ITK image from a Python array."""
+    """Get an ITK image from a Python array.
+
+    This is a deep copy of the NumPy array buffer and is completely safe without potential
+    side effects.
+
+    If is_vector is True, then a 3D array will be treated as a 2D vector image,
+    otherwise it will be treated as a 3D image.
+
+    If the array uses Fortran-order indexing, i.e. i,j,k, the Image Size
+    will have the same dimensions as the array shape. If the array uses
+    C-order indexing, i.e. k,j,i, the image Size will have the dimensions
+    reversed from the array shape.
+
+    Therefore, since the *np.transpose* operator on a 2D array simply
+    inverts the indexing scheme, the Image representation will be the
+    same for an array and its transpose. If flipping is desired, see
+    *np.reshape*.
+
+    ttype can be used te specify a specific itk.Image type.
+    """
     return _GetImageFromArray(arr, "GetImageFromArray", is_vector, ttype)
 
 
@@ -399,10 +450,29 @@ image_from_array = GetImageFromArray
 
 
 def GetImageViewFromArray(
-    arr: ArrayLike, is_vector: bool = False, ttype=None
+    arr: ArrayLike, is_vector: bool = False, ttype=None, need_contiguous=True
 ) -> "itkt.ImageBase":
-    """Get an ITK image view from a Python array."""
-    return _GetImageFromArray(arr, "GetImageViewFromArray", is_vector, ttype)
+    """Get an ITK image view (shared pixel buffer memory) from a Python array.
+
+    If is_vector is True, then a 3D array will be treated as a 2D vector image,
+    otherwise it will be treated as a 3D image.
+
+    If the array uses Fortran-order indexing, i.e. i,j,k, the Image Size
+    will have the same dimensions as the array shape. If the array uses
+    C-order indexing, i.e. k,j,i, the image Size will have the dimensions
+    reversed from the array shape.
+
+    Therefore, since the *np.transpose* operator on a 2D array simply
+    inverts the indexing scheme, the Image representation will be the
+    same for an array and its transpose. If flipping is desired, see
+    *np.reshape*.
+
+    By default, a warning is issued if this function is called on a non-contiguous
+    array, since a copy is performed and care must be taken to keep a reference
+    to the copied array. This warning can be suppressed with need_contiguous=False
+    """
+    return _GetImageFromArray(arr, "GetImageViewFromArray", is_vector, ttype,
+            need_contiguous=need_contiguous)
 
 
 image_view_from_array = GetImageViewFromArray
@@ -469,7 +539,10 @@ def vector_container_from_array(arr: ArrayLike, ttype=None) -> "itkt.VectorConta
         arr = np.asarray(arr)
 
     # Return VectorContainer with 64-bit index type
-    IndexType = itk.ULL
+    if os.name == "nt":
+        IndexType = itk.ULL
+    else:
+        IndexType = itk.UL
 
     # Find container type
     if ttype is not None:
@@ -607,105 +680,6 @@ def GetMatrixFromArray(arr: ArrayLike) -> "itkt.Matrix":
 matrix_from_array = GetMatrixFromArray
 
 
-def xarray_from_image(l_image: "itkt.ImageOrImageSource") -> "xr.DataArray":
-    """Convert an itk.Image to an xarray.DataArray.
-
-    Origin and spacing metadata is preserved in the xarray's coords. The
-    Direction is set in the `direction` attribute.
-    Dims are labeled as `x`, `y`, `z`, `t`, and `c`.
-
-    This interface is and behavior is experimental and is subject to possible
-    future changes."""
-    import xarray as xr
-    import itk
-    import numpy as np
-
-    array_view = itk.array_view_from_image(l_image)
-    l_spacing = itk.spacing(l_image)
-    l_origin = itk.origin(l_image)
-    l_size = itk.size(l_image)
-    direction = np.flip(itk.array_from_matrix(l_image.GetDirection()))
-    image_dimension = l_image.GetImageDimension()
-
-    image_dims: Tuple[str, str, str] = ("x", "y", "z", "t")
-    coords = {}
-    for l_index, dim in enumerate(image_dims[:image_dimension]):
-        coords[dim] = np.linspace(
-            l_origin[l_index],
-            l_origin[l_index] + (l_size[l_index] - 1) * l_spacing[l_index],
-            l_size[l_index],
-            dtype=np.float64,
-        )
-
-    dims = list(reversed(image_dims[:image_dimension]))
-    components = l_image.GetNumberOfComponentsPerPixel()
-    if components > 1:
-        dims.append("c")
-        coords["c"] = np.arange(components, dtype=np.uint32)
-
-    direction = np.flip(itk.array_from_matrix(l_image.GetDirection()))
-    attrs = {"direction": direction}
-    metadata = dict(l_image)
-    ignore_keys = set(["direction", "origin", "spacing"])
-    for key in metadata:
-        if not key in ignore_keys:
-            attrs[key] = metadata[key]
-    data_array = xr.DataArray(array_view, dims=dims, coords=coords, attrs=attrs)
-    return data_array
-
-
-def image_from_xarray(data_array: "xr.DataArray") -> "itkt.ImageBase":
-    """Convert an xarray.DataArray to an itk.Image.
-
-    Metadata encoded with xarray_from_image is applied to the itk.Image.
-
-    This interface is and behavior is experimental and is subject to possible
-    future changes."""
-    import numpy as np
-    import itk
-
-    if not {"t", "z", "y", "x", "c"}.issuperset(data_array.dims):
-        raise ValueError('Unsupported dims, supported dims: "t", "z", "y", "x", "c".')
-
-    image_dims = list({"t", "z", "y", "x"}.intersection(set(data_array.dims)))
-    image_dims.sort(reverse=True)
-    image_dimension = len(image_dims)
-    ordered_dims = ("t", "z", "y", "x")[-image_dimension:]
-    is_vector = "c" in data_array.dims
-    if is_vector:
-        ordered_dims = ordered_dims + ("c",)
-
-    values = data_array.values
-    if ordered_dims != data_array.dims:
-        dest = list(builtins.range(len(ordered_dims)))
-        source = dest.copy()
-        for ii in builtins.range(len(ordered_dims)):
-            source[ii] = data_array.dims.index(ordered_dims[ii])
-        values = np.moveaxis(values, source, dest).copy()
-    itk_image = itk.image_view_from_array(values, is_vector=is_vector)
-
-    l_origin = [0.0] * image_dimension
-    l_spacing = [1.0] * image_dimension
-    for l_index, dim in enumerate(image_dims):
-        coords = data_array.coords[dim]
-        if coords.shape[0] > 1:
-            l_origin[l_index] = float(coords[0])
-            l_spacing[l_index] = float(coords[1]) - float(coords[0])
-    l_spacing.reverse()
-    itk_image.SetSpacing(l_spacing)
-    l_origin.reverse()
-    itk_image.SetOrigin(l_origin)
-    if "direction" in data_array.attrs:
-        direction = data_array.attrs["direction"]
-        itk_image.SetDirection(np.flip(direction))
-    ignore_keys = set(["direction", "origin", "spacing"])
-    for key in data_array.attrs:
-        if not key in ignore_keys:
-            itk_image[key] = data_array.attrs[key]
-
-    return itk_image
-
-
 def vtk_image_from_image(l_image: "itkt.ImageOrImageSource") -> "vtk.vtkImageData":
     """Convert an itk.Image to a vtk.vtkImageData."""
     import itk
@@ -814,15 +788,16 @@ def dict_from_image(image: "itkt.Image") -> Dict:
     """Serialize a Python itk.Image object to a pickable Python dictionary."""
     import itk
 
-    pixel_arr = itk.array_view_from_image(image)
+    pixel_arr = itk.array_from_image(image)
     imageType = wasm_type_from_image_type(image)
     return dict(
         imageType=imageType,
+        name=image.GetObjectName(),
         origin=tuple(image.GetOrigin()),
         spacing=tuple(image.GetSpacing()),
         size=tuple(image.GetBufferedRegion().GetSize()),
         direction=np.asarray(image.GetDirection()),
-        data=pixel_arr
+        data=pixel_arr,
     )
 
 
@@ -830,15 +805,306 @@ def image_from_dict(image_dict: Dict) -> "itkt.Image":
     """Deserialize an dictionary representing an itk.Image object."""
     import itk
 
-    ImageType = image_type_from_wasm_type(image_dict['imageType'])
-    image = itk.PyBuffer[ImageType].GetImageViewFromArray(image_dict['data'])
-    image.SetOrigin(image_dict['origin'])
-    image.SetSpacing(image_dict['spacing'])
-    image.SetDirection(image_dict['direction'])
+    ImageType = image_type_from_wasm_type(image_dict["imageType"])
+    image = itk.PyBuffer[ImageType].GetImageViewFromArray(image_dict["data"])
+    image.SetOrigin(image_dict["origin"])
+    image.SetSpacing(image_dict["spacing"])
+    image.SetDirection(image_dict["direction"])
+    image.SetObjectName(image_dict["name"])
     return image
 
 
-# return an image
+def mesh_from_dict(mesh_dict: Dict) -> "itkt.Mesh":
+    """Deserialize an dictionary representing an itk.Mesh object."""
+    import itk
+
+    MeshType = mesh_type_from_wasm_type(mesh_dict["meshType"])
+    mesh = MeshType.New()
+
+    mesh.SetObjectName(mesh_dict["name"])
+
+    points = mesh_dict["points"]
+    points = itk.vector_container_from_array(points)
+    mesh.SetPoints(points)
+
+    point_data = mesh_dict["pointData"]
+    point_data = itk.vector_container_from_array(point_data)
+    mesh.SetPointData(point_data)
+
+    cells = mesh_dict["cells"]
+    cells = itk.vector_container_from_array(cells)
+    mesh.SetCellsArray(cells)
+
+    cell_data = mesh_dict["cellData"]
+    cell_data = itk.vector_container_from_array(cell_data)
+    mesh.SetCellData(cell_data)
+
+    return mesh
+
+
+def dict_from_mesh(mesh: "itkt.Mesh") -> Dict:
+    """Serialize a Python itk.Mesh object to a pickable Python dictionary."""
+    import itk
+
+    mesh_template = itk.template(mesh)
+    pixel_type, mangle, pixel_type_components = wasm_type_from_mesh_type(mesh)
+
+    number_of_points = mesh.GetNumberOfPoints()
+    number_of_cells = mesh.GetNumberOfCells()
+
+    if number_of_cells == 0:
+        cells_array = np.array([], np.uint)
+    else:
+        cells_array = itk.array_from_vector_container(mesh.GetCellsArray())
+
+    if number_of_points == 0:
+        points_array = np.array([], np.float32)
+    else:
+        points_array = itk.array_from_vector_container(mesh.GetPoints()).flatten()
+
+    point_data = mesh.GetPointData()
+    if point_data.Size() == 0:
+        point_data_numpy = np.array([], mangle)
+    else:
+        point_data_numpy = itk.array_from_vector_container(point_data)
+
+    cell_data = mesh.GetCellData()
+    if cell_data.Size() == 0:
+        cell_data_numpy = np.array([], mangle)
+    else:
+        cell_data_numpy = itk.array_from_vector_container(cell_data)
+
+    if os.name == "nt":
+        cell_component_type = python_to_js(itk.ULL)
+    else:
+        cell_component_type = python_to_js(itk.UL)
+
+    point_component_type = python_to_js(itk.F)
+
+    # Currently use the same data type for point and cell data
+    mesh_type = dict()
+    mesh_type["dimension"] = mesh_template[1][1]
+    mesh_type["pointComponentType"] = point_component_type
+    mesh_type["pointPixelComponentType"] = mangle
+    mesh_type["pointPixelType"] = pixel_type
+    mesh_type["pointPixelComponents"] = pixel_type_components
+    mesh_type["cellComponentType"] = cell_component_type
+    mesh_type["cellPixelComponentType"] = mangle
+    mesh_type["cellPixelType"] = pixel_type
+    mesh_type["cellPixelComponents"] = pixel_type_components
+
+    cell_buffer_size = cells_array.size
+
+    return dict(
+        meshType=mesh_type,
+        name=mesh.GetObjectName(),
+        numberOfPoints=number_of_points,
+        points=points_array,
+        numberOfPointPixels=point_data.Size(),
+        pointData=point_data_numpy,
+        numberOfCells=number_of_cells,
+        cells=cells_array,
+        numberOfCellPixels=cell_data.Size(),
+        cellData=cell_data_numpy,
+        cellBufferSize=cell_buffer_size,
+    )
+
+
+def pointset_from_dict(pointset_dict: Dict) -> "itkt.PointSet":
+    """Deserialize an dictionary representing an itk.PointSet object."""
+    import itk
+
+    MeshType = pointset_type_from_wasm_type(pointset_dict["pointSetType"])
+    mesh = MeshType.New()
+
+    mesh.SetObjectName(pointset_dict["name"])
+
+    points = pointset_dict["points"]
+    points = itk.vector_container_from_array(points)
+    mesh.SetPoints(points)
+
+    point_data = pointset_dict["pointData"]
+    point_data = itk.vector_container_from_array(point_data)
+    mesh.SetPointData(point_data)
+    return mesh
+
+
+def dict_from_pointset(pointset: "itkt.PointSet") -> Dict:
+    """Serialize a Python itk.PointSet object to a pickable Python dictionary."""
+    import itk
+
+    pointset_template = itk.template(pointset)
+    pixel_type, mangle, pixel_type_components = wasm_type_from_pointset_type(pointset)
+
+    number_of_points = pointset.GetNumberOfPoints()
+
+    if number_of_points == 0:
+        points_array = np.array([], np.float32)
+    else:
+        points_array = itk.array_from_vector_container(
+            pointset.GetPoints()
+        ).flatten()
+
+    point_data = pointset.GetPointData()
+    if point_data.Size() == 0:
+        point_data_numpy = np.array([], mangle)
+    else:
+        point_data_numpy = itk.array_from_vector_container(point_data)
+
+    if os.name == "nt":
+        cell_component_type = python_to_js(itk.ULL)
+    else:
+        cell_component_type = python_to_js(itk.UL)
+
+    point_component_type = python_to_js(itk.F)
+
+    # Currently use the same data type for point and cell data
+    pointset_type = dict()
+    pointset_type["dimension"] = pointset_template[1][1]
+    pointset_type["pointComponentType"] = point_component_type
+    pointset_type["pointPixelComponentType"] = mangle
+    pointset_type["pointPixelType"] = pixel_type
+    pointset_type["pointPixelComponents"] = pixel_type_components
+
+    return dict(
+        pointSetType=pointset_type,
+        name=pointset.GetObjectName(),
+        numberOfPoints=number_of_points,
+        points=points_array,
+        numberOfPointPixels=point_data.Size(),
+        pointData=point_data_numpy,
+    )
+
+
+def dict_from_transform(transform: "itkt.TransformBase") -> Dict:
+    import itk
+
+    def update_transform_dict(current_transform):
+        current_transform_type = current_transform.GetTransformTypeAsString()
+        current_transform_type_split = current_transform_type.split("_")
+        component = itk.template(current_transform)
+
+        in_transform_dict = dict()
+        in_transform_dict["name"] = current_transform.GetObjectName()
+
+        datatype_dict = {"double": itk.D, "float": itk.F}
+        in_transform_dict["parametersValueType"] = python_to_js(
+            datatype_dict[current_transform_type_split[1]]
+        )
+        in_transform_dict["inputDimension"] = int(current_transform_type_split[2])
+        in_transform_dict["outputDimension"] = int(current_transform_type_split[3])
+        in_transform_dict["transformName"] = current_transform_type_split[0]
+
+        in_transform_dict["inputSpaceName"] = current_transform.GetInputSpaceName()
+        in_transform_dict["outputSpaceName"] = current_transform.GetOutputSpaceName()
+
+        # To avoid copying the parameters for the Composite Transform
+        # as it is a copy of child transforms.
+        if "Composite" not in current_transform_type_split[0]:
+            p = np.array(current_transform.GetParameters())
+            in_transform_dict["parameters"] = p
+
+            fp = np.array(current_transform.GetFixedParameters())
+            in_transform_dict["fixedParameters"] = fp
+
+            in_transform_dict["numberOfParameters"] = p.shape[0]
+            in_transform_dict["numberOfFixedParameters"] = fp.shape[0]
+
+        return in_transform_dict
+
+    dict_array = []
+    transform_type = transform.GetTransformTypeAsString()
+    if "CompositeTransform" in transform_type:
+        # Add the transforms inside the composite transform
+        # range is over-ridden so using this hack to create a list
+        for i, _ in enumerate([0] * transform.GetNumberOfTransforms()):
+            current_transform = transform.GetNthTransform(i)
+            dict_array.append(update_transform_dict(current_transform))
+    else:
+        dict_array.append(update_transform_dict(transform))
+
+    return dict_array
+
+
+def transform_from_dict(transform_dict: Dict) -> "itkt.TransformBase":
+    import itk
+
+    def set_parameters(transform, transform_parameters, transform_fixed_parameters, data_type):
+        # First set fixed parameters then parameters
+        o1 = itk.OptimizerParameters[data_type](list(transform_fixed_parameters))
+        transform.SetFixedParameters(o1)
+
+        o2 = itk.OptimizerParameters[data_type](list(transform_parameters))
+        transform.SetParameters(o2)
+
+    # For checking transforms which don't take additional parameters while instantiation
+    def special_transform_check(transform_name):
+        if "2D" in transform_name or "3D" in transform_name:
+            return True
+
+        check_list = ["VersorTransform", "QuaternionRigidTransform"]
+        for t in check_list:
+            if transform_name == t:
+                return True
+        return False
+
+    parametersValueType_dict = {"float32": itk.F, "float64": itk.D}
+
+    # Loop over all the transforms in the dictionary
+    transforms_list = []
+    for i, _ in enumerate(transform_dict):
+        data_type = parametersValueType_dict[transform_dict[i]["parametersValueType"]]
+
+        # No template parameter needed for transforms having 2D or 3D name
+        # Also for some selected transforms
+        if special_transform_check(transform_dict[i]["transformName"]):
+            transform_template = getattr(itk, transform_dict[i]["transformName"])
+            transform = transform_template[data_type].New()
+        # Currently only BSpline Transform has 3 template parameters
+        # For future extensions the information will have to be encoded in
+        # the transformName variable. The transform object once added in a
+        # composite transform lose the information for other template parameters ex. BSpline.
+        # The Spline order is fixed as 3 here.
+        elif transform_dict[i]["transformName"] == "BSplineTransform":
+            transform_template = getattr(itk, transform_dict[i]["transformName"])
+            transform = transform_template[
+                data_type, transform_dict[i]["inputDimension"], 3
+            ].New()
+        else:
+            transform_template = getattr(itk, transform_dict[i]["transformName"])
+            if len(transform_template.items()[0][0]) > 2:
+                transform = transform_template[
+                    data_type, transform_dict[i]["inputDimension"], transform_dict[i]["outputDimension"]
+                ].New()
+            else:
+                transform = transform_template[
+                    data_type, transform_dict[i]["inputDimension"]
+                ].New()
+
+        transform.SetObjectName(transform_dict[i]["name"])
+        transform.SetInputSpaceName(transform_dict[i]["inputSpaceName"])
+        transform.SetOutputSpaceName(transform_dict[i]["outputSpaceName"])
+
+        set_parameters(
+            transform,
+            transform_dict[i]["parameters"],
+            transform_dict[i]["fixedParameters"],
+            data_type
+        )
+        transforms_list.append(transform)
+
+    # If array has length more than 1 then it's a composite transform
+    if len(transforms_list) > 1:
+        # Create a Composite Transform object
+        # and add all the transforms in it.
+        data_type = parametersValueType_dict[transform_dict[0]["parametersValueType"]]
+        transform = itk.CompositeTransform[data_type, transforms_list[0]['inputDimension']].New()
+        for current_transform in transforms_list:
+            transform.AddTransform(current_transform)
+    else:
+        transform = transforms_list[0]
+
+    return transform
 
 
 def image_intensity_min_max(image_or_filter: "itkt.ImageOrImageSource"):
@@ -911,7 +1177,7 @@ def imwrite(
 
 
 def imread(
-    filename: fileiotype,
+    filename: Union[fileiotype, Sequence[Union[str, os.PathLike]]],
     pixel_type: Optional["itkt.PixelTypes"] = None,
     fallback_only: bool = False,
     imageio: Optional["itkt.ImageIOBase"] = None,
@@ -974,7 +1240,7 @@ def imread(
     if type(filename) not in [list, tuple]:
         import os
 
-        if os.path.isdir(filename):
+        if os.path.isdir(filename) and imageio is None:
             # read DICOM series of 1 image in a folder, refer to: https://github.com/RSIP-Vision/medio
             names_generator = itk.GDCMSeriesFileNames.New()
             names_generator.SetUseSeriesDetails(True)
@@ -993,7 +1259,7 @@ def imread(
         template_reader_type = itk.ImageSeriesReader
         io_filename = f"{filename[0]}"
         increase_dimension = True
-        kwargs = {"FileNames": [f"{f}" for f in filename]}
+        kwargs = {"FileNames": [f"{str(f)}" for f in filename]}
     else:
         template_reader_type = itk.ImageFileReader
         io_filename = f"{filename}"
@@ -1450,8 +1716,7 @@ class templated_class:
     # and is a copy/paste from DictMixin
     # only methods to edit dictionary are not there
     def __iter__(self) -> str:
-        for k in self.keys():
-            yield k
+        yield from self.keys()
 
     def has_key(self, key: str):
         return key in self.__templates__
@@ -1717,7 +1982,7 @@ def attribute_dict(inputobject, name: str):
 
 
 def number_of_objects(image_or_filter) -> int:
-    """Returns the number of objets in the image.
+    """Returns the number of objects in the image.
 
     img: the input LabelImage
     """

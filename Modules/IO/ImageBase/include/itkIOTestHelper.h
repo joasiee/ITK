@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,7 +52,7 @@ public:
       {
         std::cout << "Caught an exception: " << std::endl;
         std::cout << err << " " << __FILE__ << " " << __LINE__ << std::endl;
-        throw err;
+        throw;
       }
       catch (...)
       {
@@ -75,33 +75,63 @@ public:
 
   template <typename ImageType, typename ImageIOType>
   static void
-  WriteImage(typename ImageType::Pointer & image,
+  WriteImage(typename ImageType::Pointer   image,
              const std::string &           filename,
              typename ImageIOType::Pointer imageio = nullptr)
   {
-
+    const bool create_local_io_object{ imageio.IsNull() };
     using WriterType = itk::ImageFileWriter<ImageType>;
-    auto writer = WriterType::New();
-
-    if (imageio.IsNull())
-    {
-      imageio = ImageIOType::New();
+    { // Test valid filename writing
+      if (create_local_io_object)
+      {
+        imageio = ImageIOType::New();
+      }
+      auto writer = WriterType::New();
+      writer->SetImageIO(imageio);
+      writer->SetFileName(filename);
+      writer->SetInput(image);
+      try
+      {
+        writer->Update();
+      }
+      catch (const itk::ExceptionObject & err)
+      {
+        std::cerr << "Exception Object caught: " << std::endl << err << std::endl;
+        throw;
+      }
     }
 
-    writer->SetImageIO(imageio);
+    {                             // Test if writing to an invalid location causes exception to be thrown:
+      imageio = imageio->Clone(); // A new io object is needed because the HDF5 io object is single use.  A new IO
+                                  // object is needed to re-intialize the internal state.
 
-    writer->SetFileName(filename.c_str());
+      const std::string bad_root_path{ "/a_blatantly_obvious/bad_file_path/that/should/never/exist/on/the/computer/" };
+      const std::string bad_filename{ bad_root_path + filename };
+      bool              exception_correctly_caught = false;
 
-    writer->SetInput(image);
-
-    try
-    {
-      writer->Update();
-    }
-    catch (const itk::ExceptionObject & err)
-    {
-      std::cerr << "Exception Object caught: " << std::endl << err << std::endl;
-      throw;
+      auto writer = WriterType::New();
+      writer->SetImageIO(imageio);
+      writer->SetFileName(bad_filename);
+      writer->SetInput(image);
+      try
+      {
+        writer->Update();
+      }
+      catch (const itk::ExceptionObject & /* err */)
+      {
+        // This is the correct behavior
+        std::cout << "Correctly caught exception for attempting to write to an invalid file." << std::endl;
+        exception_correctly_caught = true;
+      }
+      catch (...)
+      {
+        itkGenericExceptionMacro(<< "IO library exception not converted to an itk::ExceptionObject.");
+      }
+      if (!exception_correctly_caught)
+      {
+        itkGenericExceptionMacro(<< "Invalid file writing path did not throw an exception: " << bad_filename << " with "
+                                 << imageio->GetNameOfClass());
+      }
     }
   }
 

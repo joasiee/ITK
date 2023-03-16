@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -178,7 +178,7 @@ ObjectToObjectMultiMetricv4<TFixedDimension, TMovingDimension, TVirtualImage, TI
       {
         if (composite->GetNthTransformToOptimize(static_cast<SizeValueType>(n)))
         {
-          count++;
+          ++count;
           transform = composite->GetNthTransformConstPointer(static_cast<SizeValueType>(n));
         }
       }
@@ -223,7 +223,7 @@ ObjectToObjectMultiMetricv4<TFixedDimension, TMovingDimension, TVirtualImage, TI
     {
       this->m_MetricQueue[j]->Initialize();
     }
-    catch (ExceptionObject & exc)
+    catch (const ExceptionObject & exc)
     {
       std::string msg("Caught exception initializing metric: \n");
       msg += exc.what();

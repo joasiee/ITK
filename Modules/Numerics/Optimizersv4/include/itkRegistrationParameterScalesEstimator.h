@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@
 
 namespace itk
 {
-/**\class RegistrationParameterScalesEstimatorEnums
+/** \class RegistrationParameterScalesEstimatorEnums
  * \brief This class contains all the enum classes used by RegistrationParameterScalesEstimator class.
  * \ingroup ITKOptimizersv4
  */
@@ -39,7 +39,7 @@ class RegistrationParameterScalesEstimatorEnums
 {
 public:
   /**
-   *\class SamplingStrategy
+   * \class SamplingStrategy
    * \ingroup ITKOptimizersv4
    * The strategies to sample physical points in the virtual domain. */
   enum class SamplingStrategy : uint8_t
@@ -57,7 +57,7 @@ extern ITKOptimizersv4_EXPORT std::ostream &
                               operator<<(std::ostream & out, const RegistrationParameterScalesEstimatorEnums::SamplingStrategy value);
 
 /**
- *\class RegistrationParameterScalesEstimator
+ * \class RegistrationParameterScalesEstimator
  *  \brief Implements a registration helper class for estimating scales of
  * transform parameters and step sizes.
  *
@@ -90,7 +90,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(RegistrationParameterScalesEstimator, Superclass);
+  itkTypeMacro(RegistrationParameterScalesEstimator, OptimizerParameterScalesEstimatorTemplate);
 
   /** Type of scales */
   using typename Superclass::ScalesType;

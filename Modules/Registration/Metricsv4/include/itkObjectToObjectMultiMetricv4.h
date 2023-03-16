@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -186,8 +186,8 @@ public:
   GetDerivative(DerivativeType &) const override;
 
   /** Evaluate the metric value and derivative.
-   * \note \param value will contain the value of only the *first* metric on return.
-   * \param derivative holds the combined derivative on return.
+   * \param firstValue will contain the value of only the *first* metric on return.
+   * \param derivativeResult holds the combined derivative on return.
    *
    * \sa GetValueArray
    * \sa GetWeightedValue */

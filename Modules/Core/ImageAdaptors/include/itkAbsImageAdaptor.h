@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,7 @@ namespace itk
 namespace Accessor
 {
 /**
- *\class AbsPixelAccessor
+ * \class AbsPixelAccessor
  * \brief Give access to the itk::Math::abs() function of a value
  *
  * AbsPixelAccessor is templated over an internal type and an
@@ -63,7 +63,7 @@ public:
 } // end namespace Accessor
 
 /**
- *\class AbsImageAdaptor
+ * \class AbsImageAdaptor
  * \brief Presents an image as being composed of the itk::Math::abs() of its pixels
  *
  * Additional casting is performed according to the input and output image

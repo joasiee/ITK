@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@
 #ifndef itkDirectFourierReconstructionImageToImageFilter_hxx
 #define itkDirectFourierReconstructionImageToImageFilter_hxx
 
+#include "itkMakeUniqueForOverwrite.h"
 
 namespace itk
 {
@@ -214,7 +215,7 @@ DirectFourierReconstructionImageToImageFilter<TInputImage, TOutputImage>::Genera
   FFT->SetInput(projectionLine);
 
   // Setup FFT Line interpolator stack
-  auto * FFTLineInterpolator = new FFTLineInterpolatorType::Pointer[alpha_size];
+  const auto FFTLineInterpolator = make_unique_for_overwrite<FFTLineInterpolatorType::Pointer[]>(alpha_size);
   for (unsigned int alpha = 0; alpha < alpha_size; ++alpha)
   {
     FFTLineInterpolator[alpha] = FFTLineInterpolatorType::New();
@@ -413,8 +414,6 @@ DirectFourierReconstructionImageToImageFilter<TInputImage, TOutputImage>::Genera
 
     inputIt.NextSlice();
   } // while ( !inputIt.IsAtEnd() )
-
-  delete[] FFTLineInterpolator;
 }
 } // namespace itk
 

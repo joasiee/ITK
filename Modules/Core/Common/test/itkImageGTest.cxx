@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -166,7 +166,7 @@ TEST(Image, EqualToItself)
   Expect_new_object_equal_to_itself<itk::Image<int>>();
   Expect_new_object_equal_to_itself<itk::Image<double, 3>>();
 
-  // Tests an object that is allocated and intialized.
+  // Tests an object that is allocated and initialized.
   Expect_allocated_initialized_image_equal_to_itself<itk::Image<int>>();
   Expect_allocated_initialized_image_equal_to_itself<itk::Image<double, 3>>();
 }

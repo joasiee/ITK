@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,7 +45,7 @@ itkPromoteType(int, char *[])
   // This conversion always preserves the value.
   //
   // The following implicit conversions are classified as integral promotions:
-  // * signed char or signed short can be converted to int.
+  // * signed char or short can be converted to int.
   // * unsigned char or unsigned short can be converted to int if it can hold
   //   its entire value range, and unsigned int otherwise.
   // * char can be converted to int or unsigned int depending on the underlying

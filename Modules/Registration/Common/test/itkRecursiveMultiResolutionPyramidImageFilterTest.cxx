@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -75,7 +75,7 @@ itkRecursiveMultiResolutionPyramidImageFilterTest(int argc, char * argv[])
   //------------------------------------------------------------
 
   // Allocate Images
-  using PixelType = signed short;
+  using PixelType = short;
   using InputImageType = itk::Image<PixelType, 3>;
   using OutputImageType = itk::Image<float, 3>;
   enum
@@ -105,9 +105,7 @@ itkRecursiveMultiResolutionPyramidImageFilterTest(int argc, char * argv[])
   region.SetIndex(index);
 
   auto imgTarget = InputImageType::New();
-  imgTarget->SetLargestPossibleRegion(region);
-  imgTarget->SetBufferedRegion(region);
-  imgTarget->SetRequestedRegion(region);
+  imgTarget->SetRegions(region);
   imgTarget->Allocate();
 
   // Fill images with a 3D gaussian with some directional pattern
@@ -115,9 +113,9 @@ itkRecursiveMultiResolutionPyramidImageFilterTest(int argc, char * argv[])
   using Iterator = itk::ImageRegionIterator<InputImageType>;
 
   itk::Point<double, 3> center;
-  center[0] = (double)region.GetSize()[0] / 2.0;
-  center[1] = (double)region.GetSize()[1] / 2.0;
-  center[2] = (double)region.GetSize()[2] / 2.0;
+  center[0] = static_cast<double>(region.GetSize()[0]) / 2.0;
+  center[1] = static_cast<double>(region.GetSize()[1]) / 2.0;
+  center[2] = static_cast<double>(region.GetSize()[2]) / 2.0;
 
   itk::Point<double, 3>  p;
   itk::Vector<double, 3> d;
@@ -142,7 +140,7 @@ itkRecursiveMultiResolutionPyramidImageFilterTest(int argc, char * argv[])
   double transCenter[3];
   for (unsigned int j = 0; j < 3; ++j)
   {
-    transCenter[j] = -0.5 * double(size[j]);
+    transCenter[j] = -0.5 * static_cast<double>(size[j]);
   }
 
   imgTarget->SetOrigin(transCenter);
@@ -273,7 +271,7 @@ itkRecursiveMultiResolutionPyramidImageFilterTest(int argc, char * argv[])
 
   for (j = 0; j < ImageDimension; ++j)
   {
-    if (itk::Math::NotAlmostEquals(outputSpacing[j], inputSpacing[j] * (double)schedule[testLevel][j]))
+    if (itk::Math::NotAlmostEquals(outputSpacing[j], inputSpacing[j] * static_cast<double>(schedule[testLevel][j])))
     {
       break;
     }

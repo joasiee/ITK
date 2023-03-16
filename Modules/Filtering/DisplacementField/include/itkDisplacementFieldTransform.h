@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,6 +21,7 @@
 #include "itkTransform.h"
 
 #include "itkImage.h"
+#include "itkVectorImage.h"
 #include "itkMatrixOffsetTransformBase.h"
 #include "itkImageVectorOptimizerParametersHelper.h"
 #include "itkVectorInterpolateImageFunction.h"
@@ -33,7 +34,7 @@ namespace itk
  * a displacement field.
  *
  * The displacement field stores vectors of displacements, with
- * dimension \c NDimensions. Transformation is performed at a given
+ * dimension \c VDimension. Transformation is performed at a given
  * point by adding the displacement at that point to the input point.
  *
  * T(x, p), x is the position, p is the local parameter at position x.
@@ -51,8 +52,8 @@ namespace itk
  * The displacement field is defined using an itkImage, and must be set
  * before use by the user, using \c SetDisplacementField. The image has
  * the same dimensionality as the input and output spaces, defined by
- * template parameter \c NDimensions, and is an image of vectors of
- * type \c OutputVectorType, with dimensionality NDimensions as well.
+ * template parameter \c VDimension, and is an image of vectors of
+ * type \c OutputVectorType, with dimensionality VDimension as well.
  *
  * An interpolator of type \c VectorInterpolateImageFunction is used with
  * the displacement field image. By default,
@@ -82,15 +83,15 @@ namespace itk
  *
  * \ingroup ITKDisplacementField
  */
-template <typename TParametersValueType, unsigned int NDimensions>
-class ITK_TEMPLATE_EXPORT DisplacementFieldTransform : public Transform<TParametersValueType, NDimensions, NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
+class ITK_TEMPLATE_EXPORT DisplacementFieldTransform : public Transform<TParametersValueType, VDimension, VDimension>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(DisplacementFieldTransform);
 
   /** Standard class type aliases. */
   using Self = DisplacementFieldTransform;
-  using Superclass = Transform<TParametersValueType, NDimensions, NDimensions>;
+  using Superclass = Transform<TParametersValueType, VDimension, VDimension>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -153,10 +154,11 @@ public:
   using typename Superclass::DerivativeType;
 
   /** Dimension of the domain spaces. */
-  static constexpr unsigned int Dimension = NDimensions;
+  static constexpr unsigned int Dimension = VDimension;
 
   /** Define the displacement field type and corresponding interpolator type. */
   using DisplacementFieldType = Image<OutputVectorType, Dimension>;
+  using VectorImageDisplacementFieldType = VectorImage<TParametersValueType, Dimension>;
   using DisplacementFieldPointer = typename DisplacementFieldType::Pointer;
   using DisplacementFieldConstPointer = typename DisplacementFieldType::ConstPointer;
 
@@ -181,6 +183,9 @@ public:
    * container. */
   virtual void
   SetDisplacementField(DisplacementFieldType * field);
+  virtual void
+       SetDisplacementField(VectorImageDisplacementFieldType * field);
+  void SetDisplacementField(std::nullptr_t) = delete;
   itkGetModifiableObjectMacro(DisplacementField, DisplacementFieldType);
 
   /** Get/Set the inverse displacement field. This must be supplied by the user for
@@ -296,7 +301,7 @@ public:
 
   /**
    * Compute the jacobian with respect to the parameters at a point.
-   * Simply returns identity matrix, sized [NDimensions, NDimensions].
+   * Simply returns identity matrix, sized [VDimension, VDimension].
    *
    * T(x, p), x is the position, p is the local parameter at position x.
    * Take a 2D example, x = (x0, x1), p = (p0, p1) and T(x, p) is defined as:
@@ -323,7 +328,7 @@ public:
 
   /**
    * Compute the jacobian with respect to the parameters at an index.
-   * Simply returns identity matrix, sized [NDimensions, NDimensions].
+   * Simply returns identity matrix, sized [VDimension, VDimension].
    * See \c ComputeJacobianWithRespectToParameters( InputPointType, ... )
    * for rationale.
    */

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -256,10 +256,12 @@ main(int, char *[])
   auto decisionRule = DecisionRuleType::New();
 
   DecisionRuleType::PriorProbabilityVectorType aPrioris;
-  aPrioris.push_back((double)classSamples[0]->GetTotalFrequency() /
-                     (double)sample->GetTotalFrequency());
-  aPrioris.push_back((double)classSamples[1]->GetTotalFrequency() /
-                     (double)sample->GetTotalFrequency());
+  aPrioris.push_back(
+    static_cast<double>(classSamples[0]->GetTotalFrequency()) /
+    static_cast<double>(sample->GetTotalFrequency()));
+  aPrioris.push_back(
+    static_cast<double>(classSamples[1]->GetTotalFrequency()) /
+    static_cast<double>(sample->GetTotalFrequency()));
   decisionRule->SetPriorProbabilities(aPrioris);
 
   using ClassifierType = itk::Statistics::SampleClassifierFilter<SampleType>;

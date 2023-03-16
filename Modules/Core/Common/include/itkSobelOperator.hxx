@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,7 +46,7 @@ SobelOperator<TPixel, VDimension, TAllocator>::Fill(const CoefficientVector & co
           pos = center + z * this->GetStride(2) + y * this->GetStride(1) + x * this->GetStride(0);
           this->operator[](pos) = static_cast<TPixel>(coeff[i]);
 
-          i++;
+          ++i;
         }
       }
     }
@@ -61,7 +61,7 @@ SobelOperator<TPixel, VDimension, TAllocator>::Fill(const CoefficientVector & co
         pos = center + y * this->GetStride(1) + x * this->GetStride(0);
         this->operator[](pos) = static_cast<TPixel>(coeff[i]);
 
-        i++;
+        ++i;
       }
     }
   }

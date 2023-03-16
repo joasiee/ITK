@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -152,8 +152,8 @@ VTKImageExport<TInputImage>::WholeExtentCallback()
   // Fill in the known portion of the extent.
   for (; i < InputImageDimension; ++i)
   {
-    m_WholeExtent[i * 2] = int(index[i]);
-    m_WholeExtent[i * 2 + 1] = int(index[i] + size[i]) - 1;
+    m_WholeExtent[i * 2] = static_cast<int>(index[i]);
+    m_WholeExtent[i * 2 + 1] = static_cast<int>(index[i] + size[i]) - 1;
   }
   // Fill in the extent for dimensions up to three.
   for (; i < 3; ++i)
@@ -393,8 +393,8 @@ VTKImageExport<TInputImage>::DataExtentCallback()
   unsigned int i = 0;
   for (; i < InputImageDimension; ++i)
   {
-    m_DataExtent[i * 2] = int(index[i]);
-    m_DataExtent[i * 2 + 1] = int(index[i] + size[i]) - 1;
+    m_DataExtent[i * 2] = static_cast<int>(index[i]);
+    m_DataExtent[i * 2 + 1] = static_cast<int>(index[i] + size[i]) - 1;
   }
   for (; i < 3; ++i)
   {

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,14 +26,14 @@ namespace itk
 {
 namespace Testing
 {
-/**\class HashImageFilterEnums
+/** \class HashImageFilterEnums
  * \brief Enum classes for HashImageFilter
  * \ingroup ITKTestKernel
  * */
 class HashImageFilterEnums
 {
 public:
-  /**\class HashFunction
+  /** \class HashFunction
    * \ingroup ITKTestKernel
    * Describes the hash function
    */
@@ -47,7 +47,7 @@ extern std::ostream &
 operator<<(std::ostream & out, HashImageFilterEnums::HashFunction value);
 
 /**
- *\class HashImageFilter
+ * \class HashImageFilter
  * \brief Generates a md5 hash string from an image.
  *
  * \note This class utilizes low level buffer pointer access, to work

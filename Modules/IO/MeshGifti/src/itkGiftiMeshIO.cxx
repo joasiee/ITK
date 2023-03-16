@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -153,7 +153,7 @@ GiftiMeshIO::ReadMeshInformation()
   // Whether reading is successful
   if (m_GiftiImage == nullptr)
   {
-    itkExceptionMacro(<< this->GetFileName() << " is not recognized as a GIFTI file");
+    itkExceptionMacro(<< this->GetFileName() << " is not recognized as a GIfTI file");
   }
 
   // Number of data array
@@ -239,8 +239,8 @@ GiftiMeshIO::ReadMeshInformation()
           else
           {
             gifti_free_image(m_GiftiImage);
-            itkExceptionMacro(<< "Could not read input gifti image because inconsistency of number of point data or "
-                                 "number of cell data "
+            itkExceptionMacro(<< "Could not read input GIfTI image because the number of point data or "
+                                 "number of cell data in the image are not consistent with the current values in "
                               << this->m_FileName);
           }
         }
@@ -288,8 +288,8 @@ GiftiMeshIO::ReadMeshInformation()
           else
           {
             gifti_free_image(m_GiftiImage);
-            itkExceptionMacro(<< "Could not read input gifti image because inconsistency of number of point data or "
-                                 "number of cell data "
+            itkExceptionMacro(<< "Could not read input GIfTI image because the number of point data or "
+                                 "number of cell data in the image are not consistent with the current values in "
                               << this->m_FileName);
           }
         }
@@ -403,8 +403,8 @@ GiftiMeshIO::ReadMeshInformation()
           else
           {
             gifti_free_image(m_GiftiImage);
-            itkExceptionMacro(<< "Could not read input gifti image because inconsistency of number of point data or "
-                                 "number of cell data "
+            itkExceptionMacro(<< "Could not read input GIfTI image because the number of point data or "
+                                 "number of cell data in the image are not consistent with the current values in "
                               << this->m_FileName);
           }
         }
@@ -447,7 +447,7 @@ GiftiMeshIO::ReadPoints(void * buffer)
   // Whether reading is successful
   if (m_GiftiImage == nullptr)
   {
-    itkExceptionMacro(<< this->GetFileName() << " is not recognized as a GIFTI file");
+    itkExceptionMacro(<< this->GetFileName() << " is not recognized as a GIfTI file");
   }
 
   // Number of data array
@@ -473,7 +473,7 @@ GiftiMeshIO::ReadCells(void * buffer)
   // Whter reading is successful
   if (m_GiftiImage == nullptr)
   {
-    itkExceptionMacro(<< this->GetFileName() << " is not recognized as a GIFTI file");
+    itkExceptionMacro(<< this->GetFileName() << " is not recognized as a GIfTI file");
   }
 
   // Number of data array
@@ -621,7 +621,7 @@ GiftiMeshIO::ReadPointData(void * buffer)
   // Whether reading is successful
   if (m_GiftiImage == nullptr)
   {
-    itkExceptionMacro(<< this->GetFileName() << " is not recognized as a GIFTI file");
+    itkExceptionMacro(<< this->GetFileName() << " is not recognized as a GIfTI file");
   }
   // Read point data
   for (int ii = 0; ii < m_GiftiImage->numDA; ++ii)
@@ -647,10 +647,10 @@ GiftiMeshIO::ReadCellData(void * buffer)
   // Get gifti image pointer
   m_GiftiImage = gifti_read_image(this->GetFileName(), true);
 
-  // Whter reading is successful
+  // Whether reading is successful
   if (m_GiftiImage == nullptr)
   {
-    itkExceptionMacro(<< this->GetFileName() << " is not recognized as a GIFTI file");
+    itkExceptionMacro(<< this->GetFileName() << " is not recognized as a GIfTI file");
   }
 
   // Read cell data
@@ -679,22 +679,22 @@ GiftiMeshIO::WriteMeshInformation()
 
   if (this->m_UpdatePoints)
   {
-    nda++;
+    ++nda;
   }
 
   if (this->m_UpdateCells)
   {
-    nda++;
+    ++nda;
   }
 
   if (this->m_UpdatePointData)
   {
-    nda++;
+    ++nda;
   }
 
   if (this->m_UpdateCellData)
   {
-    nda++;
+    ++nda;
   }
 
   // Create a new gifti image
@@ -704,7 +704,7 @@ GiftiMeshIO::WriteMeshInformation()
   // Whter reading is successful
   if (m_GiftiImage == nullptr)
   {
-    itkExceptionMacro(<< "Could not create a new gifti image");
+    itkExceptionMacro(<< "Could not create a new GIfTI image");
   }
 
   // write labelTable using labelMap and colorMap
@@ -712,32 +712,38 @@ GiftiMeshIO::WriteMeshInformation()
   LabelNameContainerPointer labelMap;
   if (ExposeMetaData<LabelNameContainerPointer>(metaDic, "labelContainer", labelMap))
   {
-    gifti_clear_LabelTable(&m_GiftiImage->labeltable);
-    m_GiftiImage->labeltable.length = labelMap->Size();
-
-    m_GiftiImage->labeltable.key = (int *)malloc(labelMap->Size() * sizeof(int));
-    m_GiftiImage->labeltable.label = (char **)malloc(labelMap->Size() * sizeof(char *));
-
-    unsigned int mm = 0;
-    for (LabelNameContainer::ConstIterator lt = labelMap->Begin(); lt != labelMap->End(); ++lt)
+    if (labelMap)
     {
-      m_GiftiImage->labeltable.key[mm] = lt->Index();
-      m_GiftiImage->labeltable.label[mm] = gifti_strdup(lt->Value().c_str());
-      mm++;
+      gifti_clear_LabelTable(&m_GiftiImage->labeltable);
+      m_GiftiImage->labeltable.length = labelMap->Size();
+
+      m_GiftiImage->labeltable.key = (int *)malloc(labelMap->Size() * sizeof(int));
+      m_GiftiImage->labeltable.label = (char **)malloc(labelMap->Size() * sizeof(char *));
+
+      unsigned int mm = 0;
+      for (LabelNameContainer::ConstIterator lt = labelMap->Begin(); lt != labelMap->End(); ++lt)
+      {
+        m_GiftiImage->labeltable.key[mm] = lt->Index();
+        m_GiftiImage->labeltable.label[mm] = gifti_strdup(lt->Value().c_str());
+        ++mm;
+      }
     }
 
     LabelColorContainerPointer colorMap;
     if (ExposeMetaData<LabelColorContainerPointer>(metaDic, "colorContainer", colorMap))
     {
-      m_GiftiImage->labeltable.rgba = (float *)malloc(colorMap->Size() * 4 * sizeof(float));
-      unsigned int kk = 0;
-      for (LabelColorContainer::ConstIterator lt = colorMap->Begin(); lt != colorMap->End(); ++lt)
+      if (colorMap)
       {
-        for (int nn = 0; nn < 4; ++nn)
+        m_GiftiImage->labeltable.rgba = (float *)malloc(colorMap->Size() * 4 * sizeof(float));
+        unsigned int kk = 0;
+        for (LabelColorContainer::ConstIterator lt = colorMap->Begin(); lt != colorMap->End(); ++lt)
         {
-          m_GiftiImage->labeltable.rgba[kk * 4 + nn] = lt->Value().GetNthComponent(nn);
+          for (int nn = 0; nn < 4; ++nn)
+          {
+            m_GiftiImage->labeltable.rgba[kk * 4 + nn] = lt->Value().GetNthComponent(nn);
+          }
+          ++kk;
         }
-        kk++;
       }
     }
   }
@@ -745,7 +751,7 @@ GiftiMeshIO::WriteMeshInformation()
   nda = 0;
   int dalist[1];
 
-  // Update points dataarray information
+  // Update points data array information
   if (this->m_UpdatePoints)
   {
     // used data array list for points

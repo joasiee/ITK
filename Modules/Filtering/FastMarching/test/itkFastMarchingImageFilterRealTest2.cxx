@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -50,7 +50,7 @@ itkFastMarchingImageFilterRealTest2(int itkNotUsed(argc), char * itkNotUsed(argv
 
   // Create a Fast Marching image filter object
   using PixelType = float;
-  constexpr unsigned Dimension = 2;
+  constexpr unsigned int Dimension = 2;
 
   using FloatImageType = itk::Image<PixelType, Dimension>;
 
@@ -153,18 +153,36 @@ itkFastMarchingImageFilterRealTest2(int itkNotUsed(argc), char * itkNotUsed(argv
   using AdaptorType = itk::FastMarchingImageToNodePairContainerAdaptor<FloatImageType, FloatImageType, FloatImageType>;
 
   auto adaptor = AdaptorType::New();
-  adaptor->SetIsForbiddenImageBinaryMask(true);
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(adaptor, FastMarchingImageToNodePairContainerAdaptor, Object);
+
+
+  bool isForbiddenImageBinaryMask = true;
+  ITK_TEST_SET_GET_BOOLEAN(adaptor, IsForbiddenImageBinaryMask, isForbiddenImageBinaryMask);
 
   adaptor->SetAliveImage(aliveImage.GetPointer());
-  adaptor->SetAliveValue(0.0);
+  ITK_TEST_SET_GET_VALUE(aliveImage.GetPointer(), adaptor->GetAliveImage());
+
+  typename AdaptorType::OutputPixelType aliveValue = 0.0;
+  adaptor->SetAliveValue(aliveValue);
+  ITK_TEST_SET_GET_VALUE(aliveValue, adaptor->GetAliveValue());
 
   adaptor->SetTrialImage(trialImage.GetPointer());
-  adaptor->SetTrialValue(1.0);
+  ITK_TEST_SET_GET_VALUE(trialImage.GetPointer(), adaptor->GetTrialImage());
+
+  typename AdaptorType::OutputPixelType trialValue = 1.0;
+  adaptor->SetTrialValue(trialValue);
+  ITK_TEST_SET_GET_VALUE(trialValue, adaptor->GetTrialValue());
 
   adaptor->SetForbiddenImage(maskImage.GetPointer());
-  adaptor->Update();
+  ITK_TEST_SET_GET_VALUE(maskImage.GetPointer(), adaptor->GetForbiddenImage());
+
+  ITK_TRY_EXPECT_NO_EXCEPTION(adaptor->Update());
+
 
   marcher->SetForbiddenPoints(adaptor->GetForbiddenPoints());
+  ITK_TEST_SET_GET_VALUE(adaptor->GetForbiddenPoints(), marcher->GetForbiddenPoints());
+
   marcher->SetAlivePoints(adaptor->GetAlivePoints());
   marcher->SetTrialPoints(adaptor->GetTrialPoints());
 

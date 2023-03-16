@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -188,7 +188,7 @@ protected:
     if (m_Process)
     {
       std::lock_guard<std::mutex> outputSerializer(m_ProgressOutput);
-      m_Steps++;
+      ++m_Steps;
       if (!m_Quiet)
       {
         std::cout << " | " << m_Process->GetProgress() << std::flush;
@@ -231,7 +231,7 @@ protected:
   ShowIteration()
   {
     std::cout << " #" << std::flush;
-    m_Iterations++;
+    ++m_Iterations;
   }
 
   /** Callback method to show the StartEvent */

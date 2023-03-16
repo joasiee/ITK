@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,6 +29,7 @@
 #include "itksys/SystemTools.hxx"
 #include "itksys/RegularExpression.hxx"
 #include "itkByteSwapper.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 namespace itk
 {
@@ -79,7 +80,7 @@ StimulateImageIO::CanReadFile(const char * filename)
   {
     this->OpenFileForReading(file, fname);
   }
-  catch (ExceptionObject &)
+  catch (const ExceptionObject &)
   {
     return false;
   }
@@ -127,7 +128,7 @@ StimulateImageIO::Read(void * buffer)
     {
       this->OpenFileForReading(file_data, m_DataFileName);
     }
-    catch (ExceptionObject &)
+    catch (const ExceptionObject &)
     {
       // option 2:
       m_DataFileName = m_FileName;
@@ -136,7 +137,7 @@ StimulateImageIO::Read(void * buffer)
       {
         this->OpenFileForReading(file_data, m_DataFileName);
       }
-      catch (ExceptionObject &)
+      catch (const ExceptionObject &)
       {
         itkExceptionMacro(<< "No Data file was specified in header (spr) file and guessing file data name failed.");
       }
@@ -537,30 +538,33 @@ StimulateImageIO::Write(const void * buffer)
 
   file << "\ndataType: ";
   {
-    auto * tempmemory = new char[numberOfBytes];
-    memcpy(tempmemory, buffer, numberOfBytes);
+    const auto tempmemory = make_unique_for_overwrite<char[]>(numberOfBytes);
+    memcpy(tempmemory.get(), buffer, numberOfBytes);
     switch (this->GetComponentType())
     {
       case IOComponentEnum::CHAR:
         file << "BYTE";
-        ByteSwapper<char>::SwapRangeFromSystemToBigEndian(reinterpret_cast<char *>(tempmemory), numberOfComponents);
+        ByteSwapper<char>::SwapRangeFromSystemToBigEndian(reinterpret_cast<char *>(tempmemory.get()),
+                                                          numberOfComponents);
         break;
       case IOComponentEnum::SHORT:
         file << "WORD";
-        ByteSwapper<short int>::SwapRangeFromSystemToBigEndian(reinterpret_cast<short int *>(tempmemory),
-                                                               numberOfComponents);
+        ByteSwapper<short>::SwapRangeFromSystemToBigEndian(reinterpret_cast<short *>(tempmemory.get()),
+                                                           numberOfComponents);
         break;
       case IOComponentEnum::INT:
         file << "LWORD";
-        ByteSwapper<int>::SwapRangeFromSystemToBigEndian(reinterpret_cast<int *>(tempmemory), numberOfComponents);
+        ByteSwapper<int>::SwapRangeFromSystemToBigEndian(reinterpret_cast<int *>(tempmemory.get()), numberOfComponents);
         break;
       case IOComponentEnum::FLOAT:
         file << "REAL";
-        ByteSwapper<float>::SwapRangeFromSystemToBigEndian(reinterpret_cast<float *>(tempmemory), numberOfComponents);
+        ByteSwapper<float>::SwapRangeFromSystemToBigEndian(reinterpret_cast<float *>(tempmemory.get()),
+                                                           numberOfComponents);
         break;
       case IOComponentEnum::DOUBLE:
         file << "COMPLEX";
-        ByteSwapper<double>::SwapRangeFromSystemToBigEndian(reinterpret_cast<double *>(tempmemory), numberOfComponents);
+        ByteSwapper<double>::SwapRangeFromSystemToBigEndian(reinterpret_cast<double *>(tempmemory.get()),
+                                                            numberOfComponents);
         break;
       default:
         break;
@@ -580,8 +584,7 @@ StimulateImageIO::Write(const void * buffer)
     this->OpenFileForWriting(file_data, m_DataFileName);
 
     // Write the actual pixel data
-    file_data.write(static_cast<const char *>(tempmemory), numberOfBytes);
-    delete[] tempmemory;
+    file_data.write(static_cast<const char *>(tempmemory.get()), numberOfBytes);
     file_data.close();
   }
   file.close();

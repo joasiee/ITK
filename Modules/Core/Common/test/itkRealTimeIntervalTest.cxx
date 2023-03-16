@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,12 +55,14 @@ itkRealTimeIntervalTest(int, char *[])
   double timeInMicroSeconds = interval0.GetTimeInMicroSeconds();
   double timeInMilliSeconds = interval0.GetTimeInMilliSeconds();
   double timeInSeconds = interval0.GetTimeInSeconds();
+  double timeInMinutes = interval0.GetTimeInMinutes();
   double timeInHours = interval0.GetTimeInHours();
   double timeInDays = interval0.GetTimeInDays();
 
   CHECK_FOR_VALUE(timeInMicroSeconds, 0.0);
   CHECK_FOR_VALUE(timeInMilliSeconds, 0.0);
   CHECK_FOR_VALUE(timeInSeconds, 0.0);
+  CHECK_FOR_VALUE(timeInMinutes, 0.0);
   CHECK_FOR_VALUE(timeInHours, 0.0);
   CHECK_FOR_VALUE(timeInDays, 0.0);
 

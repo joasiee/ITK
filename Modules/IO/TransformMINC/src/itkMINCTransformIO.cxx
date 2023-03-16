@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -248,7 +248,7 @@ MINCTransformIOTemplate<TParametersValueType>::WriteOneTransform(const int      
       using MincWriterType = ImageFileWriter<GridImageType>;
       auto * _grid_transform = static_cast<DisplacementFieldTransformType *>(const_cast<TransformType *>(curTransform));
       char   tmp[1024];
-      sprintf(tmp, "%s_grid_%d.mnc", xfm_file_base, serial);
+      snprintf(tmp, sizeof(tmp), "%s_grid_%d.mnc", xfm_file_base, serial);
       ++serial;
 
       auto mincIO = MINCImageIO::New();
@@ -321,7 +321,7 @@ MINCTransformIOTemplate<TParametersValueType>::Write()
   int serial = 0;
   for (typename ConstTransformListType::const_iterator it = transformList.begin(); it != end; ++it, ++count)
   {
-    this->WriteOneTransform(count, (*it).GetPointer(), xfm, xfm_file_base.c_str(), serial);
+    this->WriteOneTransform(count, it->GetPointer(), xfm, xfm_file_base.c_str(), serial);
   }
 
   VIO_General_transform transform = xfm.back();

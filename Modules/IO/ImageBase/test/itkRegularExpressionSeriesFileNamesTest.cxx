@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -57,7 +57,7 @@ itkRegularExpressionSeriesFileNamesTest(int argc, char * argv[])
   std::cout << "Normal Sort--------" << std::endl;
   for (nit = names.begin(); nit != names.end(); ++nit)
   {
-    std::cout << "File: " << (*nit).c_str() << std::endl;
+    std::cout << "File: " << nit->c_str() << std::endl;
   }
 
   // Show only those files with numbers in the names
@@ -73,7 +73,7 @@ itkRegularExpressionSeriesFileNamesTest(int argc, char * argv[])
   std::cout << "Numeric sort on only files with numbers in the names--------" << std::endl;
   for (nit = names.begin(); nit != names.end(); ++nit)
   {
-    std::cout << "File: " << (*nit).c_str() << std::endl;
+    std::cout << "File: " << nit->c_str() << std::endl;
   }
 
 
@@ -92,7 +92,7 @@ itkRegularExpressionSeriesFileNamesTest(int argc, char * argv[])
             << std::endl;
   for (nit = names.begin(); nit != names.end(); ++nit)
   {
-    std::cout << "File: " << (*nit).c_str() << std::endl;
+    std::cout << "File: " << nit->c_str() << std::endl;
   }
 
   // Show only those files with numbers in the names followed by other
@@ -109,7 +109,7 @@ itkRegularExpressionSeriesFileNamesTest(int argc, char * argv[])
             << std::endl;
   for (nit = names.begin(); nit != names.end(); ++nit)
   {
-    std::cout << "File: " << (*nit).c_str() << std::endl;
+    std::cout << "File: " << nit->c_str() << std::endl;
   }
 
 

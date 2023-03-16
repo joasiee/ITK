@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,7 +36,7 @@ itkNiftiImageIOTest2(int argc, char * argv[])
   char * prefix = argv[3];
   int    test_success = 0;
 
-  using ImageType = itk::Image<signed short, 3>;
+  using ImageType = itk::Image<short, 3>;
   using ImagePointer = ImageType::Pointer;
 
   if ((strcmp(arg1, "true") == 0) && WriteNiftiTestFiles(prefix) == -1)
@@ -56,7 +56,7 @@ itkNiftiImageIOTest2(int argc, char * argv[])
     input = imageReader->GetOutput();
     input = itk::IOTestHelper::ReadImage<ImageType>(std::string(arg2));
   }
-  catch (itk::ExceptionObject &)
+  catch (const itk::ExceptionObject &)
   {
     test_success = 1;
   }

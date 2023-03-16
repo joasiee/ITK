@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -65,7 +65,7 @@ DCMTKImageIO::DCMTKImageIO()
 }
 
 void
-DCMTKImageIO ::SetLogLevel(LogLevelEnum level)
+DCMTKImageIO::SetLogLevel(LogLevelEnum level)
 {
   switch (level)
   {
@@ -96,7 +96,7 @@ DCMTKImageIO ::SetLogLevel(LogLevelEnum level)
 }
 
 DCMTKImageIO::LogLevelEnum
-DCMTKImageIO ::GetLogLevel() const
+DCMTKImageIO::GetLogLevel() const
 {
   dcmtk::log4cplus::Logger rootLogger = dcmtk::log4cplus::Logger::getRoot();
   switch (rootLogger.getLogLevel())
@@ -224,7 +224,7 @@ DCMTKImageIO::CanReadFile(const char * filename)
     {
       this->OpenFileForReading(file, filename);
     }
-    catch (ExceptionObject &)
+    catch (const ExceptionObject &)
     {
       return false;
     }
@@ -247,7 +247,7 @@ DCMTKImageIO::CanWriteFile(const char * itkNotUsed(name))
 }
 
 void
-DCMTKImageIO ::OpenDicomImage()
+DCMTKImageIO::OpenDicomImage()
 {
   if (this->m_DImage != nullptr)
   {
@@ -271,7 +271,7 @@ DCMTKImageIO ::OpenDicomImage()
 
 //------------------------------------------------------------------------------
 void
-DCMTKImageIO ::Read(void * buffer)
+DCMTKImageIO::Read(void * buffer)
 {
   this->OpenDicomImage();
   if (m_DImage->getStatus() != EIS_Normal)
@@ -279,8 +279,8 @@ DCMTKImageIO ::Read(void * buffer)
     itkExceptionMacro(<< "Error: cannot load DICOM image (" << DicomImage::getString(m_DImage->getStatus()) << ")");
   }
 
-  m_Dimensions[0] = (unsigned int)(m_DImage->getWidth());
-  m_Dimensions[1] = (unsigned int)(m_DImage->getHeight());
+  m_Dimensions[0] = static_cast<unsigned int>(m_DImage->getWidth());
+  m_Dimensions[1] = static_cast<unsigned int>(m_DImage->getHeight());
 
   switch (this->m_ComponentType)
   {
@@ -307,7 +307,7 @@ DCMTKImageIO ::Read(void * buffer)
 }
 
 void
-DCMTKImageIO ::ReorderRGBValues(void * buffer, const void * data, size_t count, unsigned int voxel_size)
+DCMTKImageIO::ReorderRGBValues(void * buffer, const void * data, size_t count, unsigned int voxel_size)
 {
   switch (this->m_ComponentType)
   {
@@ -357,7 +357,7 @@ DCMTKImageIO::ReadImageInformation()
 
   // check for multiframe > 3D
   itk::int32_t numPhases;
-  unsigned     numDim(3);
+  unsigned int numDim(3);
 
   if (reader.GetElementSL(0x2001, 0x1017, numPhases, false) != EXIT_SUCCESS)
   {
@@ -411,7 +411,7 @@ DCMTKImageIO::ReadImageInformation()
   else
   {
     vnl_vector<double> rowDirection4(4), columnDirection4(4), sliceDirection4(4), phaseDirection4(4);
-    for (unsigned i = 0; i < 3; ++i)
+    for (unsigned int i = 0; i < 3; ++i)
     {
       rowDirection4[i] = rowDirection[i];
       columnDirection4[i] = columnDirection[i];
@@ -437,7 +437,7 @@ DCMTKImageIO::ReadImageInformation()
   reader.GetOrigin(origin);
   this->m_Origin.resize(numDim);
 
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     this->m_Origin[i] = origin[i];
   }
@@ -510,12 +510,12 @@ DCMTKImageIO::ReadImageInformation()
 }
 
 void
-DCMTKImageIO ::WriteImageInformation()
+DCMTKImageIO::WriteImageInformation()
 {}
 
 /** */
 void
-DCMTKImageIO ::Write(const void * buffer)
+DCMTKImageIO::Write(const void * buffer)
 {
   (void)(buffer);
 }

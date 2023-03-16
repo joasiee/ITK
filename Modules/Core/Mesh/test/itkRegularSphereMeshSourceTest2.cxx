@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -72,7 +72,7 @@ itkRegularSphereMeshSourceTest2(int, char *[])
   while (it != end)
   {
     const MeshType::PointType p = it->Value();
-    double                    d = itk::NumericTraits<double>::ZeroValue();
+    double                    d = 0.0;
     for (unsigned int dim = 0; dim < Dimension; ++dim)
     {
       d += (center[dim] - p[dim]) * (center[dim] - p[dim]) / (scale[dim] * scale[dim]);

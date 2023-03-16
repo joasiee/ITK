@@ -3,8 +3,8 @@
            - Written by Bob Cox, SSCC NIMH
            - Revisions by Rick Reynolds, SSCC NIMH
  */
-#ifndef _NIFTI_IO_HEADER_
-#define _NIFTI_IO_HEADER_
+#ifndef NIFTI1_IO_HEADER
+#define NIFTI1_IO_HEADER
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +17,7 @@
 #endif
 #include "nifti1.h"                  /*** NIFTI-1 header specification ***/
 
-#include <znzlib.h>
+#include "znzlib.h"
 
 /*=================*/
 #ifdef  __cplusplus
@@ -299,8 +299,12 @@ int          nifti_read_subregion_image( nifti_image * nim,
                                          void ** data );
 
 void         nifti_image_write   ( nifti_image * nim ) ;
+int          nifti_image_write_status( nifti_image *nim );
+
 void         nifti_image_write_bricks(nifti_image * nim,
                                       const nifti_brick_list * NBL);
+int          nifti_image_write_bricks_status(nifti_image * nim,
+                                             const nifti_brick_list * NBL);
 void         nifti_image_infodump( const nifti_image * nim ) ;
 
 void         nifti_disp_lib_hist( void ) ;     /* to display library history */
@@ -498,9 +502,9 @@ int    valid_nifti_extensions(const nifti_image *nim);
 #define NIFTI_MAX_FTYPE       3    /* this should match the maximum code */
 
 /*------------------------------------------------------------------------*/
-/*-- the rest of these apply only to nifti1_io.c, check for _NIFTI1_IO_C_ */
+/*-- the rest of these apply only to nifti1_io.c, check for NIFTI1_IO_C */
 /*                                                    Feb 9, 2005 [rickr] */
-#ifdef _NIFTI1_IO_C_
+#ifdef NIFTI1_IO_C
 
 typedef struct {
     int debug;               /*!< debug level for status reports  */
@@ -550,7 +554,7 @@ typedef struct {
 
 #define LNI_MAX_NIA_EXT_LEN 100000  /* consider a longer extension invalid */
 
-#endif  /* _NIFTI1_IO_C_ section */
+#endif  /* NIFTI1_IO_C section */
 /*------------------------------------------------------------------------*/
 
 /*=================*/
@@ -559,4 +563,4 @@ typedef struct {
 #endif
 /*=================*/
 
-#endif /* _NIFTI_IO_HEADER_ */
+#endif /* NIFTI1_IO_HEADER */

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -164,8 +164,8 @@ ReadWriteTest(const std::string fileName, const bool isRealDisplacementField, co
       std::cerr << "Error invalid spacing restored from disk" << std::endl;
       std::cerr << std::setprecision(17) << "\n"
                 << readDisplacement->GetSpacing() << " != " << knownField->GetSpacing() << "\n"
-                << requiredSpacing << "It is likely going trough a float truncation " << (float)requiredSpacing
-                << std::endl;
+                << requiredSpacing << "It is likely going trough a float truncation "
+                << static_cast<float>(requiredSpacing) << std::endl;
       return EXIT_FAILURE;
     }
     if ((readDisplacement->GetOrigin() != knownField->GetOrigin()) ||

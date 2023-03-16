@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -98,7 +98,7 @@ itkVectorGradientMagnitudeImageFilterTest3(int argc, char * argv[])
     return EXIT_FAILURE;
   }
 
-  // this verifies that the pipeline was executed as expected allong
+  // this verifies that the pipeline was executed as expected along
   // with correct region propagation and output information
   if (!monitor2->VerifyAllInputCanStream(4))
   {

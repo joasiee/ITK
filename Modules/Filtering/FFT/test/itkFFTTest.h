@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -65,9 +65,7 @@ test_fft(unsigned int * SizeOfDimensions)
 
   auto realImage = RealImageType::New();
   // Create the Real Image.
-  realImage->SetLargestPossibleRegion(region);
-  realImage->SetBufferedRegion(region);
-  realImage->SetRequestedRegion(region);
+  realImage->SetRegions(region);
   realImage->Allocate();
 
   // Set up spacing and origin to test passing of metadata
@@ -84,7 +82,7 @@ test_fft(unsigned int * SizeOfDimensions)
   realImage->SetOrigin(origin);
   realImage->SetSpacing(spacing);
   realImage->SetDirection(direction);
-  vnl_sample_reseed(static_cast<int>(123456));
+  vnl_sample_reseed(123456);
 
   // We use 2 region iterators for this test: the original image
   // iterator and another iterator for the resultant image after
@@ -302,9 +300,7 @@ test_fft_rtc(unsigned int * SizeOfDimensions)
   auto realImage = RealImageType::New();
 
   // Create the Real Image.
-  realImage->SetLargestPossibleRegion(region);
-  realImage->SetBufferedRegion(region);
-  realImage->SetRequestedRegion(region);
+  realImage->SetRegions(region);
   realImage->Allocate();
   vnl_sample_reseed(static_cast<int>(itksys::SystemTools::GetTime() / 10000.0));
 

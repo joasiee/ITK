@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -137,11 +137,11 @@ MRIBiasEnergyFunction<TImage, TImageMask, TBiasField>::GetValue(const Parameters
       for (curIndex[2] = origIndex[2]; curIndex[2] < origIndex[2] + (IndexValueType)size[2];
            curIndex[2] = curIndex[2] + (IndexValueType)m_SamplingFactor[2])
       {
-        indexBias[1] = (int)((curIndex[2] % 2) * 0.5 * m_SamplingFactor[1]);
+        indexBias[1] = static_cast<int>((curIndex[2] % 2) * 0.5 * m_SamplingFactor[1]);
         for (curIndex[1] = origIndex[1]; curIndex[1] < origIndex[1] + (IndexValueType)size[1];
              curIndex[1] = curIndex[1] + (IndexValueType)m_SamplingFactor[1])
         {
-          indexBias[0] = (int)((curIndex[2] % 2) * 0.5 * m_SamplingFactor[0]);
+          indexBias[0] = static_cast<int>((curIndex[2] % 2) * 0.5 * m_SamplingFactor[0]);
           for (curIndex[0] = origIndex[0]; curIndex[0] < origIndex[0] + (IndexValueType)size[0];
                curIndex[0] = curIndex[0] + (IndexValueType)m_SamplingFactor[0])
           {
@@ -161,11 +161,11 @@ MRIBiasEnergyFunction<TImage, TImageMask, TBiasField>::GetValue(const Parameters
       for (curIndex[2] = origIndex[2]; curIndex[2] < origIndex[2] + (IndexValueType)size[2];
            curIndex[2] = curIndex[2] + (IndexValueType)m_SamplingFactor[2])
       {
-        indexBias[1] = (int)((curIndex[2] % 2) * 0.5 * m_SamplingFactor[1]);
+        indexBias[1] = static_cast<int>((curIndex[2] % 2) * 0.5 * m_SamplingFactor[1]);
         for (curIndex[1] = origIndex[1]; curIndex[1] < origIndex[1] + (IndexValueType)size[1];
              curIndex[1] = curIndex[1] + (IndexValueType)m_SamplingFactor[1])
         {
-          indexBias[0] = (int)((curIndex[2] % 2) * 0.5 * m_SamplingFactor[0]);
+          indexBias[0] = static_cast<int>((curIndex[2] % 2) * 0.5 * m_SamplingFactor[0]);
           for (curIndex[0] = origIndex[0]; curIndex[0] < origIndex[0] + (IndexValueType)size[0];
                curIndex[0] = curIndex[0] + (IndexValueType)m_SamplingFactor[0])
           {
@@ -523,11 +523,11 @@ MRIBiasFieldCorrectionFilter<TInputImage, TOutputImage, TMaskImage>::EstimateBia
       optimizer->StartOptimization();
     }
   }
-  catch (ExceptionObject & ie)
+  catch (const ExceptionObject & ie)
   {
     std::cerr << ie << std::endl;
   }
-  catch (std::exception & e)
+  catch (const std::exception & e)
   {
     std::cerr << e.what() << std::endl;
   }
@@ -711,7 +711,7 @@ MRIBiasFieldCorrectionFilter<TInputImage, TOutputImage, TMaskImage>::GenerateDat
       this->CorrectImage(bias, *iter);
       itkDebugMacro(<< "  Bias corrected.");
     }
-    iter++;
+    ++iter;
   }
 
   if (this->GetBiasFieldMultiplicative())
@@ -864,7 +864,7 @@ MRIBiasFieldCorrectionFilter<TInputImage, TOutputImage, TMaskImage>::GetBiasFiel
   {
     if (size[dim] > 1)
     {
-      biasDim++;
+      ++biasDim;
     }
   }
 
@@ -876,7 +876,7 @@ MRIBiasFieldCorrectionFilter<TInputImage, TOutputImage, TMaskImage>::GetBiasFiel
     if (size[dim] > 1)
     {
       biasSize[biasDim] = size[dim];
-      biasDim++;
+      ++biasDim;
     }
   }
 }
@@ -910,8 +910,8 @@ MRIBiasFieldCorrectionFilter<TInputImage, TOutputImage, TMaskImage>::AdjustSlabR
   auto iter = slabs.begin();
   while (iter != slabs.end())
   {
-    coordFirst2 = (*iter).GetIndex()[m_SlicingDirection];
-    coordLast2 = coordFirst2 + static_cast<IndexValueType>((*iter).GetSize()[m_SlicingDirection]) - 1;
+    coordFirst2 = iter->GetIndex()[m_SlicingDirection];
+    coordLast2 = coordFirst2 + static_cast<IndexValueType>(iter->GetSize()[m_SlicingDirection]) - 1;
 
     if (coordFirst > coordFirst2)
     {
@@ -942,7 +942,7 @@ MRIBiasFieldCorrectionFilter<TInputImage, TOutputImage, TMaskImage>::AdjustSlabR
       // No ovelapping, so remove the slab from the vector
       slabs.erase(iter);
     }
-    iter++;
+    ++iter;
   }
 }
 

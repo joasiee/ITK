@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -112,7 +112,7 @@ public:
   /** Typedef for generic boundary condition pointer */
   using ImageBoundaryConditionPointerType = ImageBoundaryCondition<ImageType> *;
 
-  /** Const Interator */
+  /** Const Iterator */
   struct ConstIterator
   {
     ConstIterator() { m_NeighborhoodIterator = nullptr; }
@@ -141,26 +141,26 @@ public:
     void
     operator++(int)
     {
-      m_ListIterator++;
+      ++m_ListIterator;
     }
 
     void
     operator--(int)
     {
-      m_ListIterator--;
+      --m_ListIterator;
     }
 
     const ConstIterator &
     operator++()
     {
-      m_ListIterator++;
+      ++m_ListIterator;
       return *this;
     }
 
     const ConstIterator &
     operator--()
     {
-      m_ListIterator--;
+      --m_ListIterator;
       return *this;
     }
 

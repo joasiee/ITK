@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@
 #ifndef itkDenseFiniteDifferenceImageFilter_h
 #define itkDenseFiniteDifferenceImageFilter_h
 
+#include "itkBooleanStdVector.h"
 #include "itkFiniteDifferenceImageFilter.h"
 #include "itkMultiThreaderBase.h"
 
@@ -80,7 +81,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods) */
-  itkTypeMacro(DenseFiniteDifferenceImageFilter, ImageToImageFilter);
+  itkTypeMacro(DenseFiniteDifferenceImageFilter, FiniteDifferenceImageFilter);
 
   /** Convenient type alias */
   using typename Superclass::InputImageType;
@@ -173,9 +174,7 @@ private:
     TimeStepType                       TimeStep;
     std::vector<TimeStepType>          TimeStepList;
 
-    // NB: although semantically boolean, vector<bool> is not thread safe due to the possibility of multiple bits being
-    // packed together in the same memory location.
-    std::vector<uint8_t> ValidTimeStepList;
+    BooleanStdVectorType ValidTimeStepList;
   };
 
   /** This callback method uses ImageSource::SplitRequestedRegion to acquire an

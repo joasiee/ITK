@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -61,21 +61,15 @@ itkJoinImageFilterTest(int, char *[])
   region.SetSize(size);
 
   // Initialize Image A
-  inputImageA->SetLargestPossibleRegion(region);
-  inputImageA->SetBufferedRegion(region);
-  inputImageA->SetRequestedRegion(region);
+  inputImageA->SetRegions(region);
   inputImageA->Allocate();
 
   // Initialize Image B
-  inputImageB->SetLargestPossibleRegion(region);
-  inputImageB->SetBufferedRegion(region);
-  inputImageB->SetRequestedRegion(region);
+  inputImageB->SetRegions(region);
   inputImageB->Allocate();
 
   // Initialize Image C
-  inputImageC->SetLargestPossibleRegion(region);
-  inputImageC->SetBufferedRegion(region);
-  inputImageC->SetRequestedRegion(region);
+  inputImageC->SetRegions(region);
   inputImageC->Allocate();
 
   // Declare Iterator types apropriated for each image
@@ -90,8 +84,8 @@ itkJoinImageFilterTest(int, char *[])
   std::cout << "Image #1 " << std::endl;
   while (!it1.IsAtEnd())
   {
-    it1.Set((char)vnl_sample_uniform(0, 255));
-    std::cout << (int)it1.Get() << std::endl;
+    it1.Set(static_cast<char>(vnl_sample_uniform(0, 255)));
+    std::cout << static_cast<int>(it1.Get()) << std::endl;
     ++it1;
   }
 
@@ -104,8 +98,8 @@ itkJoinImageFilterTest(int, char *[])
   itk::Vector<unsigned short, 2> vec;
   while (!it2.IsAtEnd())
   {
-    vec[0] = (unsigned short)vnl_sample_uniform(0, 32765);
-    vec[1] = (unsigned short)vnl_sample_uniform(0, 32765);
+    vec[0] = static_cast<unsigned short>(vnl_sample_uniform(0, 32765));
+    vec[1] = static_cast<unsigned short>(vnl_sample_uniform(0, 32765));
     it2.Set(vec);
     std::cout << it2.Get() << std::endl;
     ++it2;
@@ -120,10 +114,10 @@ itkJoinImageFilterTest(int, char *[])
   itk::RGBAPixel<short> rgbaVec;
   while (!itRGBA.IsAtEnd())
   {
-    rgbaVec[0] = (short)vnl_sample_uniform(0, 255);
-    rgbaVec[1] = (short)vnl_sample_uniform(0, 255);
-    rgbaVec[2] = (short)vnl_sample_uniform(0, 255);
-    rgbaVec[3] = (short)vnl_sample_uniform(0, 255);
+    rgbaVec[0] = static_cast<short>(vnl_sample_uniform(0, 255));
+    rgbaVec[1] = static_cast<short>(vnl_sample_uniform(0, 255));
+    rgbaVec[2] = static_cast<short>(vnl_sample_uniform(0, 255));
+    rgbaVec[3] = static_cast<short>(vnl_sample_uniform(0, 255));
     itRGBA.Set(rgbaVec);
     //  std::cout << itRGBA.Get() << std::endl;
     ++itRGBA;
@@ -234,7 +228,7 @@ itkJoinImageFilterTest(int, char *[])
   std::cout << "Joining #1 and #1 image " << std::endl;
   while (!it5.IsAtEnd())
   {
-    std::cout << (int)it5.Get()[0] << "  " << (int)it5.Get()[1] << std::endl;
+    std::cout << static_cast<int>(it5.Get()[0]) << "  " << static_cast<int>(it5.Get()[1]) << std::endl;
     ++it5;
   }
 

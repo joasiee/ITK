@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -197,7 +197,7 @@ GaussianInterpolateImageFunction<TImageType, TCoordRep>::ComputeErrorFunctionArr
     g_last = itk::Math::two_over_sqrtpi * std::exp(-itk::Math::sqr(t));
   }
 
-  for (unsigned i = 0; i < region.GetSize()[dimension]; ++i)
+  for (unsigned int i = 0; i < region.GetSize()[dimension]; ++i)
   {
     t += this->m_ScalingFactor[dimension];
     RealType e_now = vnl_erf(t);

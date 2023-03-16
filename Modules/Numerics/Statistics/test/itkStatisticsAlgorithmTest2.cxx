@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -105,7 +105,7 @@ itkStatisticsAlgorithmTest2(int, char *[])
   bool        pass = true;
   std::string whereFail = "";
 
-  // creats an image and allocate memory
+  // creates an image and allocate memory
   auto image = ImageType::New();
 
   ImageType::SizeType size;
@@ -126,7 +126,7 @@ itkStatisticsAlgorithmTest2(int, char *[])
   auto sample = SampleType::New();
   sample->SetImage(image);
 
-  // creates a Subsample obeject using the ImageToListSampleAdaptor object
+  // creates a Subsample object using the ImageToListSampleAdaptor object
   auto subsample = SubsampleType::New();
   subsample->SetSample(sample);
 
@@ -134,7 +134,7 @@ itkStatisticsAlgorithmTest2(int, char *[])
   // refVector
   std::vector<int> refVector;
 
-  // creats a subsample with all instances in the image
+  // creates a subsample with all instances in the image
   subsample->InitializeWithAllInstances();
 
   // InsertSort algorithm test
@@ -159,7 +159,7 @@ itkStatisticsAlgorithmTest2(int, char *[])
     whereFail = "HeapSort";
   }
 
-  // IntospectiveSort algortihm test
+  // IntospectiveSort algorithm test
   resetData(image, refVector);
   itk::Statistics::Algorithm::IntrospectiveSort<SubsampleType>(subsample, testDimension, 0, subsample->Size(), 16);
   if (!isSortedOrderCorrect(refVector, subsample))

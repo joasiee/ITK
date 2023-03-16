@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -120,7 +120,7 @@ TriangleMeshToSimplexMeshFilter<TInputMesh, TOutputMesh>::CreateSimplexPoints()
     unsigned int id = *faceIterator;
     output->SetPoint(id, copyPoint);
     output->SetGeometryData(id, new itk::SimplexMeshGeometry());
-    faceIterator++;
+    ++faceIterator;
   }
 }
 
@@ -206,7 +206,7 @@ TriangleMeshToSimplexMeshFilter<TInputMesh, TOutputMesh>::CreateNewEdge(CellIden
     m_NewInputMeshCellPointer->SetPointId(0, startPointId);
     m_NewInputMeshCellPointer->SetPointId(1, endPointId);
     nonConstInput->SetCell(boundaryId, m_NewInputMeshCellPointer);
-    m_EdgeCellId++;
+    ++m_EdgeCellId;
   }
   else
   {
@@ -326,10 +326,10 @@ TriangleMeshToSimplexMeshFilter<TInputMesh, TOutputMesh>::CreateCells()
             wrongIdx = compare.second;
             break;
           }
-          iterator2++;
+          ++iterator2;
         }
       }
-      iterator1++;
+      ++iterator1;
     }
 
     // create a new cell
@@ -372,7 +372,7 @@ TriangleMeshToSimplexMeshFilter<TInputMesh, TOutputMesh>::CreateCells()
       {
         nextIdx = newIdx;
       }
-      featureId++;
+      ++featureId;
     }
     ++points;
   }
@@ -403,9 +403,9 @@ TriangleMeshToSimplexMeshFilter<TInputMesh, TOutputMesh>::ComputeFaceCenter(Cell
   }
 
   InputPointType result;
-  result[0] = ((double)(v1[0] + v2[0] + v3[0])) / 3.0;
-  result[1] = ((double)(v1[1] + v2[1] + v3[1])) / 3.0;
-  result[2] = ((double)(v1[2] + v2[2] + v3[2])) / 3.0;
+  result[0] = (static_cast<double>(v1[0] + v2[0] + v3[0])) / 3.0;
+  result[1] = (static_cast<double>(v1[1] + v2[1] + v3[1])) / 3.0;
+  result[2] = (static_cast<double>(v1[2] + v2[2] + v3[2])) / 3.0;
 
   return result;
 }

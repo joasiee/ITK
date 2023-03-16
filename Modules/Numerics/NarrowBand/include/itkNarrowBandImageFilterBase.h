@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@
 #ifndef itkNarrowBandImageFilterBase_h
 #define itkNarrowBandImageFilterBase_h
 
+#include "itkBooleanStdVector.h"
 #include "itkFiniteDifferenceImageFilter.h"
 #include "itkMultiThreaderBase.h"
 #include "itkNarrowBand.h"
@@ -141,7 +142,7 @@ public:
   }
 
   void
-  InsertNarrowBandNode(const IndexType & index, const PixelType & value, const signed char & nodestate)
+  InsertNarrowBandNode(const IndexType & index, const PixelType & value, const signed char nodestate)
   {
     BandNodeType tmpnode;
 
@@ -157,7 +158,7 @@ public:
    * twice this value (positive and negative distance to the zero level
    * set). The default value is 3. */
   void
-  SetNarrowBandTotalRadius(const float & val)
+  SetNarrowBandTotalRadius(const float val)
   {
     if (m_NarrowBand->GetTotalRadius() != val)
     {
@@ -176,7 +177,7 @@ public:
   /** Set the narrow band inner radius. The inner radius is the safe
    * are where the level set can be computed. The default value is 1. */
   void
-  SetNarrowBandInnerRadius(const float & val)
+  SetNarrowBandInnerRadius(const float val)
   {
     if (m_NarrowBand->GetInnerRadius() != val)
     {
@@ -292,9 +293,7 @@ protected:
 
   bool m_Touched;
 
-  // NB: although semantically boolean, vector<bool> is not thread safe due to the possibility of multiple bits being
-  // packed together in the same memory location.
-  std::vector<uint8_t> m_TouchedForThread;
+  BooleanStdVectorType m_TouchedForThread;
 
   ValueType m_IsoSurfaceValue;
 

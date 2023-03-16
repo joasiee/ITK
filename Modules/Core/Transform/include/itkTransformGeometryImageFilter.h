@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,28 +26,26 @@
 namespace itk
 {
 /** \class TransformGeometryImageFilter
- * \brief Pseudo-Resample an image by modifying the geometric meta-data and not the pixels.
+ * \brief Modify an image's geometric meta-data, changing its "physical" extent.
  *
- * The TransformGeometryImageFilter will generate a physical memory-modified version of
- * the input image if the input transform is not identity. Its neglectful use
- * can be a source of problems: e.g. it can exhaust the memory if the image is
- * very large, and it WILL reduce the image quality when there are lots of
- * transforms to be superimposed for the input image. Often times, we are not
- * interested in the intermediate transformed images.
+ * The TransformGeometryImageFilter "physically" changes the image in
+ * space using the given transformation. The resulting image is an image with
+ * the same voxel values as the input, but with different physical space
+ * representation as affected by the transform.
  *
- * If all the transforms are rigid, there is a far superior way to achieve a similar result.
- * Updating image metadata in-place removes the accumulated resampling errors
- * as well as eliminating the expense of accessing the physical memory of the image.
- * We need to compose all the transforms beforehand to make use of this filter.
+ * The specific transformation type can be any type derived from the
+ * MatrixOffsetTransformBase and the TranslationTransform.
+ * The modification of the geometric meta-data is an alternative to
+ * resampling the moving image onto the fixed image grid, after registration. The advantages of using
+ * this approach over resampling are two-fold, it does not introduce artifacts
+ * into the result because the original intensity information is not
+ * modified, and it is computationally more efficient.
  *
- * \param \c RigidTransform Currently must be a VersorRigid3DTransform.
- * \param \c InputImage The image to be duplicated and modified to incorporate the
- * rigid transform.
- * \return An image with the same voxel values as the input, but with different
- * physical space representation affected by the rigid transform.
- *
- * The purpose of this class is to generate the new origin and direction
- * that will remove the need for using the transform.
+ * When the filter is used with a rigid or translation transformation
+ * the resulting image can be saved in any desired format. When the
+ * filter is used with an affine transformation the resulting image
+ * should be saved in a format that supports a non ortho-normal
+ * direction cosine matrix (e.g. nrrd).
  *
  * Let us call the transform operation from the fixed image to moving image <tt>TfmF2M</tt>.
  * Given a set of points from the fixed image in physical space (i.e. <tt>physicalFixedImagePoints</tt>),
@@ -67,7 +65,7 @@ namespace itk
  *    - \f$\mathbf{D}\f$: direction cosine matrix
  *    - \f$\mathbf{o}\f$: origin vector
  *    - \f$\mathbf{S}\f$: spacing
- *    - \f$\mathbf{ci}\f$: continouos index
+ *    - \f$\mathbf{ci}\f$: continuous index
  *    - \f$\mathbf{D}^{'}\f$: new direction cosine matrix
  *    - \f$\mathbf{o}^{'}\f$: new origin vector
  *
@@ -145,7 +143,7 @@ public:
   /** Set/Get required rigid transform. */
   itkSetGetDecoratedObjectInputMacro(Transform, TransformType);
 
-  /** Set/Get required input image. (A wrapper to this->Set/GetInput()) */
+  /** Set/Get required input image. */
   itkSetInputMacro(InputImage, InputImageType);
   itkGetInputMacro(InputImage, InputImageType);
 

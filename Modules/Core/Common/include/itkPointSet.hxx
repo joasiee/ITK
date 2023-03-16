@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,9 +51,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::PrintSelf(std::ostream & os, Inde
      << std::endl;
 }
 
-/**
- * Access routine to set the points container.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::SetPoints(PointsContainer * points)
@@ -66,9 +63,22 @@ PointSet<TPixelType, VDimension, TMeshTraits>::SetPoints(PointsContainer * point
   }
 }
 
-/**
- * Access routine to get the points container.
- */
+template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
+void
+PointSet<TPixelType, VDimension, TMeshTraits>::SetPoints(PointsVectorContainer * points)
+{
+
+  itkDebugMacro("setting Points container to " << points);
+  if (points->Size() % PointDimension != 0)
+  {
+    itkExceptionMacro("Number of entries in given 1d array incompatible with the point dimension");
+  }
+  auto * pointsPtr = reinterpret_cast<PointsContainer *>(points);
+
+  m_PointsContainer = pointsPtr;
+  this->Modified();
+}
+
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 auto
 PointSet<TPixelType, VDimension, TMeshTraits>::GetPoints() -> PointsContainer *
@@ -82,9 +92,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::GetPoints() -> PointsContainer *
   return m_PointsContainer;
 }
 
-/**
- * Access routine to get the points container.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 auto
 PointSet<TPixelType, VDimension, TMeshTraits>::GetPoints() const -> const PointsContainer *
@@ -93,9 +100,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::GetPoints() const -> const Points
   return m_PointsContainer.GetPointer();
 }
 
-/**
- * Access routine to set the point data container.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::SetPointData(PointDataContainer * pointData)
@@ -108,9 +112,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::SetPointData(PointDataContainer *
   }
 }
 
-/**
- * Access routine to get the point data container.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 auto
 PointSet<TPixelType, VDimension, TMeshTraits>::GetPointData() -> PointDataContainer *
@@ -123,9 +124,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::GetPointData() -> PointDataContai
   return m_PointDataContainer;
 }
 
-/**
- * Access routine to get the point data container.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 auto
 PointSet<TPixelType, VDimension, TMeshTraits>::GetPointData() const -> const PointDataContainer *
@@ -134,10 +132,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::GetPointData() const -> const Poi
   return m_PointDataContainer.GetPointer();
 }
 
-/**
- * Assign a point to a point identifier.  If a spot for the point identifier
- * does not exist, it will be created automatically.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::SetPoint(PointIdentifier ptId, PointType point)
@@ -156,13 +150,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::SetPoint(PointIdentifier ptId, Po
   m_PointsContainer->InsertElement(ptId, point);
 }
 
-/**
- * Check if a point exists for a given point identifier.  If a spot for
- * the point identifier exists, "point" is set, and true is returned.
- * Otherwise, false is returned, and "point" is not modified.
- * If "point" is nullptr, then it is never set, but the existence of the point
- * is still returned.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 bool
 PointSet<TPixelType, VDimension, TMeshTraits>::GetPoint(PointIdentifier ptId, PointType * point) const
@@ -205,11 +192,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::GetPoint(PointIdentifier ptId) co
   return point;
 }
 
-/**
- * Assign data to a point identifier.  If a spot for the point identifier
- * does not exist, it will be created automatically.  There is no check if
- * a point with the same identifier exists.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::SetPointData(PointIdentifier ptId, PixelType data)
@@ -228,13 +210,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::SetPointData(PointIdentifier ptId
   m_PointDataContainer->InsertElement(ptId, data);
 }
 
-/**
- * Check if point data exists for a given point identifier.  If a spot for
- * the point identifier exists, "data" is set, and true is returned.
- * Otherwise, false is returned, and "data" is not modified.
- * If "data" is nullptr, then it is never set, but the existence of the point
- * data is still returned.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 bool
 PointSet<TPixelType, VDimension, TMeshTraits>::GetPointData(PointIdentifier ptId, PixelType * data) const
@@ -254,10 +229,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::GetPointData(PointIdentifier ptId
   return m_PointDataContainer->GetElementIfIndexExists(ptId, data);
 }
 
-/**
- * Copy the geometric and topological structure of the given input pointSet.
- * The copying is done via reference counting.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::PassStructure(Self *)
@@ -265,9 +236,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::PassStructure(Self *)
   // IMPLEMENT ME
 }
 
-/**
- * Get the number of points in the PointsContainer.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 auto
 PointSet<TPixelType, VDimension, TMeshTraits>::GetNumberOfPoints() const -> PointIdentifier
@@ -279,10 +247,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::GetNumberOfPoints() const -> Poin
   return 0;
 }
 
-/**
- * Restore the PointSet to its initial state.  Useful for data pipeline updates
- * without memory re-allocation.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::Initialize()
@@ -293,14 +257,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::Initialize()
   m_PointDataContainer = nullptr;
 }
 
-/******************************************************************************
- * PROTECTED METHOD DEFINITIONS
- *****************************************************************************/
-
-/**
- * A protected default constructor allows the New() routine to create an
- * instance of PointSet.  All the containers are initialized to non-existent.
- */
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 PointSet<TPixelType, VDimension, TMeshTraits>::PointSet()
   : m_PointsContainer(nullptr)
@@ -317,15 +273,11 @@ PointSet<TPixelType, VDimension, TMeshTraits>::PointSet()
   m_RequestedRegion = -1;
 }
 
-//----------------------------------------------------------------------------
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::UpdateOutputInformation()
 {
-  if (this->GetSource())
-  {
-    this->GetSource()->UpdateOutputInformation();
-  }
+  this->Superclass::UpdateOutputInformation();
 
   // Now we should know what our largest possible region is. If our
   // requested region was not set yet, (or has been set to something
@@ -337,7 +289,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::UpdateOutputInformation()
   }
 }
 
-//----------------------------------------------------------------------------
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::SetRequestedRegionToLargestPossibleRegion()
@@ -346,7 +297,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::SetRequestedRegionToLargestPossib
   m_RequestedRegion = 0;
 }
 
-//----------------------------------------------------------------------------
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::CopyInformation(const DataObject * data)
@@ -368,7 +318,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::CopyInformation(const DataObject 
   m_RequestedRegion = pointSet->m_RequestedRegion;
 }
 
-//----------------------------------------------------------------------------
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::Graft(const DataObject * data)
@@ -389,7 +338,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::Graft(const DataObject * data)
   this->SetPointData(pointSet->m_PointDataContainer);
 }
 
-//----------------------------------------------------------------------------
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::SetRequestedRegion(const DataObject * data)
@@ -404,7 +352,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::SetRequestedRegion(const DataObje
   }
 }
 
-//----------------------------------------------------------------------------
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::SetRequestedRegion(const RegionType & region)
@@ -415,7 +362,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::SetRequestedRegion(const RegionTy
   }
 }
 
-//----------------------------------------------------------------------------
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 void
 PointSet<TPixelType, VDimension, TMeshTraits>::SetBufferedRegion(const RegionType & region)
@@ -427,7 +373,6 @@ PointSet<TPixelType, VDimension, TMeshTraits>::SetBufferedRegion(const RegionTyp
   }
 }
 
-//----------------------------------------------------------------------------
 template <typename TPixelType, unsigned int VDimension, typename TMeshTraits>
 bool
 PointSet<TPixelType, VDimension, TMeshTraits>::RequestedRegionIsOutsideOfTheBufferedRegion()

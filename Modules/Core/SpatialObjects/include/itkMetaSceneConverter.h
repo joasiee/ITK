@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,7 +32,7 @@
 namespace itk
 {
 /**
- *\class MetaSceneConverter
+ * \class MetaSceneConverter
  *  \brief Converts between MetaObject and SpaitalObject group.
  *
  *  SpatialObject hierarchies are written to disk using the MetaIO
@@ -42,9 +42,9 @@ namespace itk
  *  \sa MetaConverterBase
  *  \ingroup ITKSpatialObjects
  */
-template <unsigned int NDimensions = 3,
+template <unsigned int VDimension = 3,
           typename PixelType = unsigned char,
-          typename TMeshTraits = DefaultStaticMeshTraits<PixelType, NDimensions, NDimensions>>
+          typename TMeshTraits = DefaultStaticMeshTraits<PixelType, VDimension, VDimension>>
 class ITK_TEMPLATE_EXPORT MetaSceneConverter : public Object
 {
 public:
@@ -60,12 +60,12 @@ public:
   itkTypeMacro(MetaSceneConverter, Object);
 
   /** SpatialObject Scene types */
-  using SpatialObjectType = itk::SpatialObject<NDimensions>;
+  using SpatialObjectType = itk::SpatialObject<VDimension>;
   using SpatialObjectPointer = typename SpatialObjectType::Pointer;
   using SpatialObjectConstPointer = typename SpatialObjectType::ConstPointer;
 
   /** Typedef for auxiliary conversion classes */
-  using MetaConverterBaseType = MetaConverterBase<NDimensions>;
+  using MetaConverterBaseType = MetaConverterBase<VDimension>;
   using MetaConverterPointer = typename MetaConverterBaseType::Pointer;
   using ConverterMapType = std::map<std::string, MetaConverterPointer>;
 

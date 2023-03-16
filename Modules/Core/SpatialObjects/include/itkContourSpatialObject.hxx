@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -90,7 +90,7 @@ ContourSpatialObject<TDimension>::GetOrientationInObjectSpace() const
         maxPnt[i] = curpoint[i];
       }
     }
-    it++;
+    ++it;
   }
   m_OrientationInObjectSpace = -1;
   for (unsigned int i = 0; i < TDimension; ++i)
@@ -117,7 +117,7 @@ ContourSpatialObject<TDimension>::SetControlPoints(const ContourPointListType & 
   {
     m_ControlPoints.push_back(*it);
     m_ControlPoints.back().SetSpatialObject(this);
-    it++;
+    ++it;
   }
   this->Modified();
 }
@@ -214,13 +214,18 @@ ContourSpatialObject<TDimension>::Update()
         {
           step[d] = (pnt2[d] - pnt[d]) / m_InterpolationFactor;
         }
+
+        // TODO There is an issue regarding this code, from 24 February 2022:
+        // "`ContourSpatialObject<TDimension>::Update()` LINEAR_INTERPOLATION case may need some adjustment"
+        // https://github.com/InsightSoftwareConsortium/ITK/issues/3222
+
         PointType newPoint;
         newPoint.Fill(NumericTraits<double>::max());
         for (unsigned int i = 0; i < m_InterpolationFactor; ++i)
         {
           for (unsigned int d = 0; d < TDimension; ++d)
           {
-            newPoint = pnt[d] + i * step[d];
+            newPoint[d] = pnt[d] + i * step[d];
           }
         }
         typename Superclass::SpatialObjectPointType newSOPoint;

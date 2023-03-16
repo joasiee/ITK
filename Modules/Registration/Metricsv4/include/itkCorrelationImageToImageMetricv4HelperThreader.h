@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,8 @@
 #define itkCorrelationImageToImageMetricv4HelperThreader_h
 
 #include "itkImageToImageMetricv4GetValueAndDerivativeThreader.h"
+
+#include <memory> // For unique_ptr.
 
 namespace itk
 {
@@ -73,7 +75,7 @@ public:
 
 protected:
   CorrelationImageToImageMetricv4HelperThreader();
-  ~CorrelationImageToImageMetricv4HelperThreader() override;
+  ~CorrelationImageToImageMetricv4HelperThreader() override = default;
 
   /** Overload: Resize and initialize per thread objects. */
   void
@@ -132,7 +134,7 @@ private:
                     PaddedCorrelationMetricPerThreadStruct,
                     AlignedCorrelationMetricPerThreadStruct);
   /* per thread variables for correlation and its derivatives */
-  mutable AlignedCorrelationMetricPerThreadStruct * m_CorrelationMetricPerThreadVariables;
+  std::unique_ptr<AlignedCorrelationMetricPerThreadStruct[]> m_CorrelationMetricPerThreadVariables;
 
   /** Internal pointer to the metric object in use by this threader.
    *  This will avoid costly dynamic casting in tight loops. */

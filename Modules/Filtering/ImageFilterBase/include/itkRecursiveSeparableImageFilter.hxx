@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,7 +20,7 @@
 
 #include "itkObjectFactory.h"
 #include "itkImageLinearIteratorWithIndex.h"
-#include <memory> // For unique_ptr
+#include "itkMakeUniqueForOverwrite.h"
 
 namespace itk
 {
@@ -281,9 +281,9 @@ RecursiveSeparableImageFilter<TInputImage, TOutputImage>::DynamicThreadedGenerat
 
   const SizeValueType ln = region.GetSize(this->m_Direction);
 
-  const std::unique_ptr<RealType[]> inps(new RealType[ln]);
-  const std::unique_ptr<RealType[]> outs(new RealType[ln]);
-  const std::unique_ptr<RealType[]> scratch(new RealType[ln]);
+  const auto inps = make_unique_for_overwrite<RealType[]>(ln);
+  const auto outs = make_unique_for_overwrite<RealType[]>(ln);
+  const auto scratch = make_unique_for_overwrite<RealType[]>(ln);
 
   inputIterator.GoToBegin();
   outputIterator.GoToBegin();

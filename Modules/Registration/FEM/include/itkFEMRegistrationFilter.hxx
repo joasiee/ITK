@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -209,7 +209,7 @@ FEMRegistrationFilter<TMovingImage, TFixedImage, TFemObject>::ChooseMetric(unsig
   using MetricType2 = itk::MIRegistrationFunction<FixedImageType, MovingImageType, FieldType>;
   using MetricType3 = itk::DemonsRegistrationFunction<FixedImageType, MovingImageType, FieldType>;
 
-  m_WhichMetric = (unsigned int)which;
+  m_WhichMetric = static_cast<unsigned int>(which);
 
   switch (which)
   {
@@ -437,7 +437,7 @@ FEMRegistrationFilter<TMovingImage, TFixedImage, TFemObject>::ApplyLoads(ImageSi
     {
       if (Math::AlmostEquals(coord[ii], m_ImageOrigin[ii]) || Math::AlmostEquals(coord[ii], ImgSz[ii] - 1))
       {
-        CornerCounter++;
+        ++CornerCounter;
       }
     }
 
@@ -460,7 +460,7 @@ FEMRegistrationFilter<TMovingImage, TFixedImage, TFemObject>::ApplyLoads(ImageSi
           {
             if (Math::AlmostEquals(coord[ii], m_ImageOrigin[ii]) || Math::AlmostEquals(coord[ii], ImgSz[ii] - 1))
             {
-              CornerCounter++;
+              ++CornerCounter;
             }
           }
           if (CornerCounter == ImageDimension - 1)
@@ -489,12 +489,12 @@ FEMRegistrationFilter<TMovingImage, TFixedImage, TFemObject>::ApplyLoads(ImageSi
 
               m_FEMObject->AddNextLoad(l1);
             }
-            EdgeCounter++;
+            ++EdgeCounter;
           }
         }
       } // end elt loop
     }
-    nodect++;
+    ++nodect;
     itkDebugMacro(<< " Node: " << nodect);
   }
 }
@@ -551,7 +551,7 @@ FEMRegistrationFilter<TMovingImage, TFixedImage, TFemObject>::IterativeSolve(Sol
       itkDebugMacro(<< " Line search done " << std::endl);
     }
 
-    iters++;
+    ++iters;
 
     if (deltE == 0.0)
     {
@@ -594,7 +594,7 @@ FEMRegistrationFilter<TMovingImage, TFixedImage, TFemObject>::IterativeSolve(Sol
       }
     }
     itkDebugMacro(<< " min E: " << m_MinE << "; delt E: " << deltE << "; iters: " << iters << std::endl);
-    m_TotalIterations++;
+    ++m_TotalIterations;
   }
 }
 
@@ -670,7 +670,7 @@ FEMRegistrationFilter<TMovingImage, TFixedImage, TFemObject>::InterpolateVectorF
       field->TransformIndexToPhysicalPoint(rindex, physicalPoint);
       for (unsigned int d = 0; d < ImageDimension; ++d)
       {
-        Gpt[d] = (double)(physicalPoint[d]);
+        Gpt[d] = static_cast<double>(physicalPoint[d]);
       }
 
       eltp = solver->GetElementAtPoint(Gpt);
@@ -701,9 +701,9 @@ FEMRegistrationFilter<TMovingImage, TFixedImage, TFemObject>::InterpolateVectorF
   if (ImageDimension == 3)
   {
     // FIXME SHOULD BE 2.0 over meshpixperelt
-    rstep = 1.25 / ((double)m_MeshPixelsPerElementAtEachResolution[m_CurrentLevel]);
-    sstep = 1.25 / ((double)m_MeshPixelsPerElementAtEachResolution[m_CurrentLevel]);
-    tstep = 1.25 / ((double)m_MeshPixelsPerElementAtEachResolution[m_CurrentLevel]);
+    rstep = 1.25 / (static_cast<double>(m_MeshPixelsPerElementAtEachResolution[m_CurrentLevel]));
+    sstep = 1.25 / (static_cast<double>(m_MeshPixelsPerElementAtEachResolution[m_CurrentLevel]));
+    tstep = 1.25 / (static_cast<double>(m_MeshPixelsPerElementAtEachResolution[m_CurrentLevel]));
 
     Pos.set_size(ImageDimension);
     int numElements = solver->GetInput()->GetNumberOfElements();
@@ -1094,7 +1094,7 @@ FEMRegistrationFilter<TMovingImage, TFixedImage, TFemObject>::PrintVectorField(u
       }
     }
     ++fieldIter;
-    ct++;
+    ++ct;
   }
 
   itkDebugMacro(<< " Max vec: " << max << std::endl);
@@ -1336,7 +1336,7 @@ FEMRegistrationFilter<TMovingImage, TFixedImage, TFemObject>::GoldenSection(Solv
   unsigned int iters = 0;
   while (itk::Math::abs(x3 - x0) > tol * (itk::Math::abs(x1) + itk::Math::abs(x2)) && iters < MaxIters)
   {
-    iters++;
+    ++iters;
     if (f2 < f1)
     {
       x0 = x1;

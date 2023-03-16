@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -95,7 +95,9 @@ BoundingBox<TPointIdentifier, VPointDimension, TCoordRep, TPointsContainer>::Com
     PointType pnt;
     for (unsigned int i = 0; i < PointDimension; ++i)
     {
-      pnt[i] = center[i] + std::pow(-1.0, ((double)(j / (int(std::pow(2.0, (double)i)))))) * radius[i];
+      pnt[i] = center[i] +
+               std::pow(-1.0, (static_cast<double>(j / (static_cast<int>(std::pow(2.0, static_cast<double>(i))))))) *
+                 radius[i];
     }
 
     result[j] = pnt;
@@ -320,7 +322,7 @@ BoundingBox<TPointIdentifier, VPointDimension, TCoordRep, TPointsContainer>::IsI
     {
       return false;
     }
-    i++;
+    ++i;
   }
   return true;
 }

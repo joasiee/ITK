@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -82,7 +82,7 @@ itkSpatialObjectToImageStatisticsCalculatorTest(int, char *[])
   std::cout << "Sample mean = " << calculator->GetMean() << std::endl;
   std::cout << "Sample covariance = " << calculator->GetCovarianceMatrix();
 
-  if (calculator->GetMean() != CalculatorType::VectorType(255) ||
+  if (calculator->GetMean() != itk::MakeFilled<CalculatorType::VectorType>(255) ||
       itk::Math::NotAlmostEquals(calculator->GetCovarianceMatrix()[0][0],
                                  itk::NumericTraits<CalculatorType::MatrixType::ValueType>::ZeroValue()))
   {

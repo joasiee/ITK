@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -67,8 +67,8 @@ ParticleSwarmOptimizerBase::SetInitialSwarm(const SwarmType & initialSwarm)
     // check that the dimensions of the swarm data are consistent
     for (auto it = initialSwarm.begin(); it != initialSwarm_END; ++it)
     {
-      if ((*it).m_CurrentParameters.GetSize() != n || (*it).m_CurrentVelocity.GetSize() != n ||
-          (*it).m_BestParameters.GetSize() != n)
+      if (it->m_CurrentParameters.GetSize() != n || it->m_CurrentVelocity.GetSize() != n ||
+          it->m_BestParameters.GetSize() != n)
       {
         itkExceptionMacro(<< "inconsistent dimensions in swarm data");
       }
@@ -156,7 +156,7 @@ ParticleSwarmOptimizerBase::PrintSelf(std::ostream & os, Indent indent) const
   end = this->m_ParameterBounds.end();
   os << indent << "Parameter bounds: [";
   for (it = this->m_ParameterBounds.begin(); it != end; ++it)
-    os << " [" << (*it).first << ", " << (*it).second << "]";
+    os << " [" << it->first << ", " << it->second << "]";
   os << " ]\n";
   os << indent << "Parameters' convergence tolerance: " << this->m_ParametersConvergenceTolerance;
   os << "\n";
@@ -248,7 +248,7 @@ ParticleSwarmOptimizerBase::StartOptimization()
     // buffer with m_NumberOfGenerationsWithMinimalImprovement+1
     // elements. the optimizer has converged if: (a) the difference
     // between the first and last elements currently in the ring buffer
-    // is less than the user specificed threshold. and (b) the particles
+    // is less than the user-specified threshold. and (b) the particles
     // are close enough to the best particle.
     if (this->m_IterationIndex >= m_NumberOfGenerationsWithMinimalImprovement)
     {
@@ -281,7 +281,7 @@ ParticleSwarmOptimizerBase::StartOptimization()
 
   this->m_StopConditionDescription << GetNameOfClass() << ": ";
   if (converged)
-    this->m_StopConditionDescription << "successfuly converged after " << m_IterationIndex << " iterations";
+    this->m_StopConditionDescription << "successfully converged after " << m_IterationIndex << " iterations";
   else
     this->m_StopConditionDescription << "terminated after " << m_IterationIndex << " iterations";
   InvokeEvent(EndEvent());
@@ -457,7 +457,7 @@ ParticleSwarmOptimizerBase::RandomInitialization()
         if (this->m_Particles[i].m_CurrentParameters[j] < parameterBounds[j].first ||
             this->m_Particles[i].m_CurrentParameters[j] > parameterBounds[j].second)
         {
-          j--;
+          --j;
         }
       }
     }

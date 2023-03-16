@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@
 #ifndef itkFiniteDifferenceImageFilter_h
 #define itkFiniteDifferenceImageFilter_h
 
+#include "itkBooleanStdVector.h"
 #include "itkInPlaceImageFilter.h"
 #include "itkFiniteDifferenceFunction.h"
 
@@ -331,11 +332,11 @@ protected:
    * \param timeStepList The set of time changes compiled from all the threaded calls
    * to ThreadedGenerateData.
    * \param valid The set of flags indicating which of "timeStepList" elements are
-   *  valid. Although they are uint8_t, they should be treated like bools.
+   *  valid.
    *
    * The default is to return the minimum value in the list. */
   virtual TimeStepType
-  ResolveTimeStep(const std::vector<TimeStepType> & timeStepList, const std::vector<uint8_t> & valid) const;
+  ResolveTimeStep(const std::vector<TimeStepType> & timeStepList, const BooleanStdVectorType & valid) const;
 
   /** Set the number of elapsed iterations of the filter. */
   itkSetMacro(ElapsedIterations, IdentifierType);

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -112,9 +112,9 @@ itkSubsampleTest(int, char *[])
   try
   {
     subsample->AddInstance(idOutisdeRange);
-    std::cerr << "Exception should have been thrown since \
-      an instance outside the range of the sample container is added"
-              << std::endl;
+    std::cerr
+      << "Exception should have been thrown since an instance outside the range of the sample container is added"
+      << std::endl;
     return EXIT_FAILURE;
   }
   catch (const itk::ExceptionObject & excp)
@@ -126,8 +126,7 @@ itkSubsampleTest(int, char *[])
   try
   {
     MeasurementVectorType vec = subsample->GetMeasurementVector(idOutisdeRange);
-    std::cerr << "Exception should have been thrown since \
-      the id specified is outside the range of the sample container"
+    std::cerr << "Exception should have been thrown since the id specified is outside the range of the sample container"
               << std::endl;
     std::cerr << "The invalid subsample->GetMeasurementVector() is: " << vec << std::endl;
     return EXIT_FAILURE;
@@ -141,8 +140,7 @@ itkSubsampleTest(int, char *[])
   {
     // Purposely calling GetFrequency() method prematurely in order to trigger an exception.
     subsample->GetFrequency(idOutisdeRange);
-    std::cerr << "Exception should have been thrown since \
-      the id specified is outside the range of the sample container"
+    std::cerr << "Exception should have been thrown since the id specified is outside the range of the sample container"
               << std::endl;
     return EXIT_FAILURE;
   }
@@ -151,13 +149,12 @@ itkSubsampleTest(int, char *[])
     std::cerr << "Expected Exception caught: " << excp << std::endl;
   }
 
-  // try swaping indices out of range
+  // try swapping indices out of range
   try
   {
     subsample->Swap(2000000, 50);
-    std::cerr << "Exception should have been thrown since \
-      the indices specified to be swapped are outside the range\
-      of the sample container"
+    std::cerr << "Exception should have been thrown since the indices specified to be swapped are outside the range of "
+                 "the sample container"
               << std::endl;
     return EXIT_FAILURE;
   }
@@ -171,9 +168,9 @@ itkSubsampleTest(int, char *[])
   {
     unsigned int          index = listSample->Size() + 2;
     MeasurementVectorType measurementVector = subsample->GetMeasurementVectorByIndex(index);
-    std::cerr << "Exception should have been thrown since \
-      the index specified is outside the range of the sample container"
-              << std::endl;
+    std::cerr
+      << "Exception should have been thrown since the index specified is outside the range of the sample container"
+      << std::endl;
     std::cerr << "The size of the invalid subsample->GetMeasurementVectorByIndex( index ) is: " << subsample
               << std::endl;
     std::cerr << "The invalid subsample->GetMeasurementVectorByIndex() is: " << measurementVector << std::endl;
@@ -190,10 +187,9 @@ itkSubsampleTest(int, char *[])
     unsigned int                         index = listSample->Size() + 2;
     SubsampleType::AbsoluteFrequencyType frequency = subsample->GetFrequencyByIndex(index);
     std::cout << "Frequency: " << frequency << std::endl;
-    std::cerr << "Exception should have been thrown since \
-      the index specified is outside the range\
-      of the sample container"
-              << std::endl;
+    std::cerr
+      << "Exception should have been thrown since the index specified is outside the range of the sample container"
+      << std::endl;
     return EXIT_FAILURE;
   }
   catch (const itk::ExceptionObject & excp)
@@ -201,15 +197,15 @@ itkSubsampleTest(int, char *[])
     std::cerr << "Expected Exception caught: " << excp << std::endl;
   }
 
-  // try accessing a instance identifier of a measurement vector
+  // try accessing an instance identifier of a measurement vector
   // using an index that is out of range
   try
   {
     unsigned int                       index = listSample->Size() + 2;
     ListSampleType::InstanceIdentifier id = subsample->GetInstanceIdentifier(index);
-    std::cerr << "Exception should have been thrown since \
-      the index specified is outside the range of the sample container"
-              << std::endl;
+    std::cerr
+      << "Exception should have been thrown since the index specified is outside the range of the sample container"
+      << std::endl;
     std::cout << "Instance identifier: " << id << std::endl;
     return EXIT_FAILURE;
   }

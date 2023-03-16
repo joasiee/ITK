@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -75,7 +75,7 @@ void
 SparseFieldCityBlockNeighborList<TNeighborhoodType>::Print(std::ostream & os) const
 {
   os << "SparseFieldCityBlockNeighborList: " << std::endl;
-  for (unsigned i = 0; i < this->GetSize(); ++i)
+  for (unsigned int i = 0; i < this->GetSize(); ++i)
   {
     os << "m_ArrayIndex[" << i << "]: " << m_ArrayIndex[i] << std::endl;
     os << "m_NeighborhoodOffset[" << i << "]: " << m_NeighborhoodOffset[i] << std::endl;
@@ -461,7 +461,7 @@ SparseFieldLevelSetImageFilter<TInputImage, TOutputImage>::UpdateActiveLayerValu
   else
   {
     this->SetRMSChange(
-      static_cast<double>(std::sqrt((double)(rms_change_accumulator / static_cast<ValueType>(counter)))));
+      static_cast<double>(std::sqrt(static_cast<double>(rms_change_accumulator / static_cast<ValueType>(counter)))));
   }
 }
 
@@ -823,7 +823,7 @@ SparseFieldLevelSetImageFilter<TInputImage, TOutputImage>::InitializeActiveLayer
         length += dx_backward * dx_backward;
       }
     }
-    length = std::sqrt((double)length) + MIN_NORM;
+    length = std::sqrt(static_cast<double>(length)) + MIN_NORM;
     distance = shiftedIt.GetCenterPixel() / length;
 
     output->SetPixel(activeIt->m_Value, std::min(std::max(-CHANGE_FACTOR, distance), CHANGE_FACTOR));
@@ -849,9 +849,9 @@ SparseFieldLevelSetImageFilter<TInputImage, TOutputImage>::CalculateChange() -> 
 {
   const typename Superclass::FiniteDifferenceFunctionType::Pointer   df = this->GetDifferenceFunction();
   typename Superclass::FiniteDifferenceFunctionType::FloatOffsetType offset;
-  ValueType norm_grad_phi_squared, dx_forward, dx_backward, forwardValue, backwardValue, centerValue;
-  unsigned  i;
-  ValueType MIN_NORM = 1.0e-6;
+  ValueType    norm_grad_phi_squared, dx_forward, dx_backward, forwardValue, backwardValue, centerValue;
+  unsigned int i;
+  ValueType    MIN_NORM = 1.0e-6;
   if (this->GetUseImageSpacing())
   {
     SpacePrecisionType minSpacing = NumericTraits<SpacePrecisionType>::max();

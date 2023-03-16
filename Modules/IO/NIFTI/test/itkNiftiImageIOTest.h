@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -76,110 +76,113 @@ MakeNiftiImage()
 
   const typename ImageType::IndexType index = { { 0, 0, 0 } };
   typename ImageType::RegionType      region(index, size);
-  typename ImageType::Pointer img = itk::IOTestHelper::AllocateImageFromRegionAndSpacing<ImageType>(region, spacing);
+  {
+    typename ImageType::Pointer img = itk::IOTestHelper::AllocateImageFromRegionAndSpacing<ImageType>(region, spacing);
 
-  { // Fill in entire image
-    itk::ImageRegionIterator<ImageType> ri(img, region);
+    { // Fill in entire image
+      itk::ImageRegionIterator<ImageType> ri(img, region);
+      try
+      {
+        while (!ri.IsAtEnd())
+        {
+          ri.Set(RPI);
+          ++ri;
+        }
+      }
+      catch (const itk::ExceptionObject & ex)
+      {
+        std::cerr << "Error filling array" << ex << std::endl;
+        return EXIT_FAILURE;
+      }
+    }
+
+    typename ImageType::RegionType      RPIregion;
+    itk::ImageRegionIterator<ImageType> RPIiterator;
+
+    { // Fill in left half
+      const typename ImageType::IndexType RPIindex = { { 0, 0, 0 } };
+      const typename ImageType::SizeType  RPIsize = { { 5, 10, 10 } };
+      RPIregion = typename ImageType::RegionType(RPIindex, RPIsize);
+      RPIiterator = itk::ImageRegionIterator<ImageType>(img, RPIregion);
+      while (!RPIiterator.IsAtEnd())
+      {
+        RPIiterator.Set(RPIiterator.Get() + LEFT);
+        ++RPIiterator;
+      }
+    }
+    { // Fill in anterior half
+      const typename ImageType::IndexType RPIindex = { { 0, 5, 0 } };
+      const typename ImageType::SizeType  RPIsize = { { 10, 5, 10 } };
+      RPIregion = typename ImageType::RegionType(RPIindex, RPIsize);
+      RPIiterator = itk::ImageRegionIterator<ImageType>(img, RPIregion);
+      while (!RPIiterator.IsAtEnd())
+      {
+        RPIiterator.Set(RPIiterator.Get() + ANTERIOR);
+        ++RPIiterator;
+      }
+    }
+    { // Fill in superior half
+      const typename ImageType::IndexType RPIindex = { { 0, 0, 5 } };
+      const typename ImageType::SizeType  RPIsize = { { 10, 10, 5 } };
+      RPIregion = typename ImageType::RegionType(RPIindex, RPIsize);
+      RPIiterator = itk::ImageRegionIterator<ImageType>(img, RPIregion);
+      while (!RPIiterator.IsAtEnd())
+      {
+        RPIiterator.Set(RPIiterator.Get() + SUPERIOR);
+        ++RPIiterator;
+      }
+    }
+    {
+      // Don't use identity DirectionCosine, Unit Spacing, or Zero Origin
+      typename ImageType::DirectionType dc;
+      dc[0][0] = 0;
+      dc[0][1] = 1;
+      dc[0][2] = 0;
+      dc[1][0] = 0;
+      dc[1][1] = 0;
+      dc[1][2] = 1;
+      dc[2][0] = 1;
+      dc[2][1] = 0;
+      dc[2][2] = 0;
+      img->SetDirection(dc);
+      typename ImageType::SpacingType sp;
+      sp[0] = 1.0;
+      sp[1] = 2.0;
+      sp[2] = 3.0;
+      img->SetSpacing(sp);
+      typename ImageType::PointType og;
+      og[0] = -10.0;
+      og[1] = -20.0;
+      og[2] = -30.0;
+      img->SetOrigin(og);
+    }
+    {
+      // Set the qform, sfrom and aux_file values for the MetaDataDictionary.
+      itk::MetaDataDictionary & thisDic = img->GetMetaDataDictionary();
+      itk::EncapsulateMetaData<std::string>(thisDic, "qform_code_name", "NIFTI_XFORM_SCANNER_ANAT");
+      itk::EncapsulateMetaData<std::string>(thisDic, "sform_code_name", "NIFTI_XFORM_UNKNOWN");
+      itk::EncapsulateMetaData<std::string>(thisDic, "aux_file", "aux_info.txt");
+    }
+
     try
     {
-      while (!ri.IsAtEnd())
-      {
-        ri.Set(RPI);
-        ++ri;
-      }
+      itk::IOTestHelper::WriteImage<ImageType, itk::NiftiImageIO>(img, std::string(filename));
     }
     catch (const itk::ExceptionObject & ex)
     {
-      std::cerr << "Error filling array" << ex << std::endl;
+      std::string message;
+      message = "Problem found while writing image ";
+      message += filename;
+      message += "\n";
+      message += ex.GetLocation();
+      message += "\n";
+      message += ex.GetDescription();
+      std::cerr << message << std::endl;
+      itk::IOTestHelper::Remove(filename);
       return EXIT_FAILURE;
     }
-  }
+  } // End writing image test
 
-  typename ImageType::RegionType      RPIregion;
-  itk::ImageRegionIterator<ImageType> RPIiterator;
-
-  { // Fill in left half
-    const typename ImageType::IndexType RPIindex = { { 0, 0, 0 } };
-    const typename ImageType::SizeType  RPIsize = { { 5, 10, 10 } };
-    RPIregion = typename ImageType::RegionType(RPIindex, RPIsize);
-    RPIiterator = itk::ImageRegionIterator<ImageType>(img, RPIregion);
-    while (!RPIiterator.IsAtEnd())
-    {
-      RPIiterator.Set(RPIiterator.Get() + LEFT);
-      ++RPIiterator;
-    }
-  }
-  { // Fill in anterior half
-    const typename ImageType::IndexType RPIindex = { { 0, 5, 0 } };
-    const typename ImageType::SizeType  RPIsize = { { 10, 5, 10 } };
-    RPIregion = typename ImageType::RegionType(RPIindex, RPIsize);
-    RPIiterator = itk::ImageRegionIterator<ImageType>(img, RPIregion);
-    while (!RPIiterator.IsAtEnd())
-    {
-      RPIiterator.Set(RPIiterator.Get() + ANTERIOR);
-      ++RPIiterator;
-    }
-  }
-  { // Fill in superior half
-    const typename ImageType::IndexType RPIindex = { { 0, 0, 5 } };
-    const typename ImageType::SizeType  RPIsize = { { 10, 10, 5 } };
-    RPIregion = typename ImageType::RegionType(RPIindex, RPIsize);
-    RPIiterator = itk::ImageRegionIterator<ImageType>(img, RPIregion);
-    while (!RPIiterator.IsAtEnd())
-    {
-      RPIiterator.Set(RPIiterator.Get() + SUPERIOR);
-      ++RPIiterator;
-    }
-  }
-  {
-    // Don't use identity DirectionCosine, Unit Spacing, or Zero Origin
-    typename ImageType::DirectionType dc;
-    dc[0][0] = 0;
-    dc[0][1] = 1;
-    dc[0][2] = 0;
-    dc[1][0] = 0;
-    dc[1][1] = 0;
-    dc[1][2] = 1;
-    dc[2][0] = 1;
-    dc[2][1] = 0;
-    dc[2][2] = 0;
-    img->SetDirection(dc);
-    typename ImageType::SpacingType sp;
-    sp[0] = 1.0;
-    sp[1] = 2.0;
-    sp[2] = 3.0;
-    img->SetSpacing(sp);
-    typename ImageType::PointType og;
-    og[0] = -10.0;
-    og[1] = -20.0;
-    og[2] = -30.0;
-    img->SetOrigin(og);
-  }
-  {
-    // Set the qform, sfrom and aux_file values for the MetaDataDictionary.
-    itk::MetaDataDictionary & thisDic = img->GetMetaDataDictionary();
-    itk::EncapsulateMetaData<std::string>(thisDic, "qform_code_name", "NIFTI_XFORM_SCANNER_ANAT");
-    itk::EncapsulateMetaData<std::string>(thisDic, "sform_code_name", "NIFTI_XFORM_UNKNOWN");
-    itk::EncapsulateMetaData<std::string>(thisDic, "aux_file", "aux_info.txt");
-  }
-
-  try
-  {
-    itk::IOTestHelper::WriteImage<ImageType, itk::NiftiImageIO>(img, std::string(filename));
-  }
-  catch (const itk::ExceptionObject & ex)
-  {
-    std::string message;
-    message = "Problem found while writing image ";
-    message += filename;
-    message += "\n";
-    message += ex.GetLocation();
-    message += "\n";
-    message += ex.GetDescription();
-    std::cerr << message << std::endl;
-    itk::IOTestHelper::Remove(filename);
-    return EXIT_FAILURE;
-  }
   typename ImageType::Pointer input;
   try
   {
@@ -226,12 +229,12 @@ template <typename ImageType>
 typename ImageType::DirectionType
 CORDirCosines()
 {
-  typename itk::SpatialOrientationAdapter::DirectionType CORdir =
-    itk::SpatialOrientationAdapter().ToDirectionCosines(itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RIP);
+  typename itk::SpatialOrientationAdapter::DirectionType CORdir = itk::SpatialOrientationAdapter().ToDirectionCosines(
+    itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RIP);
   typename ImageType::DirectionType dir;
-  for (unsigned i = 0; i < ImageType::ImageDimension; ++i)
+  for (unsigned int i = 0; i < ImageType::ImageDimension; ++i)
   {
-    for (unsigned j = 0; j < ImageType::ImageDimension; ++j)
+    for (unsigned int j = 0; j < ImageType::ImageDimension; ++j)
     {
       dir[i][j] = CORdir[i][j];
     }
@@ -247,7 +250,7 @@ CORDirCosines()
  *
  * Could probably be made to fo the image of vector test as well
  */
-template <typename PixelType, unsigned VDimension>
+template <typename PixelType, unsigned int VDimension>
 int
 TestImageOfSymMats(const std::string & fname)
 {
@@ -282,7 +285,7 @@ TestImageOfSymMats(const std::string & fname)
             << "======================== Initialized Direction" << std::endl
             << myDirection << std::endl;
 
-  for (unsigned i = 0; i < VDimension; ++i)
+  for (unsigned int i = 0; i < VDimension; ++i)
   {
     size[i] = dimsize;
     index[i] = 0;
@@ -299,11 +302,11 @@ TestImageOfSymMats(const std::string & fname)
 
   int dims[7];
   int _index[7];
-  for (unsigned i = 0; i < VDimension; ++i)
+  for (unsigned int i = 0; i < VDimension; ++i)
   {
     dims[i] = size[i];
   }
-  for (unsigned i = VDimension; i < 7; ++i)
+  for (unsigned int i = VDimension; i < 7; ++i)
   {
     dims[i] = 1;
   }
@@ -491,7 +494,7 @@ RGBTest(int argc, char * argv[])
   typename RGBImageType::SpacingType spacing;
   typename RGBImageType::PointType   origin;
 
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     size[i] = 5;
     index[i] = 0;

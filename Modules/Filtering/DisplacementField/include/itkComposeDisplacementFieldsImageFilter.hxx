@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -60,7 +60,7 @@ template <typename InputImage, typename TOutputImage>
 void
 ComposeDisplacementFieldsImageFilter<InputImage, TOutputImage>::BeforeThreadedGenerateData()
 {
-  VectorType zeroVector(0.0);
+  constexpr VectorType zeroVector{};
 
   this->GetOutput()->FillBuffer(zeroVector);
 
@@ -97,7 +97,7 @@ ComposeDisplacementFieldsImageFilter<InputImage, TOutputImage>::DynamicThreadedG
       pointIn2[d] = pointIn1[d] + warpVector[d];
     }
 
-    typename InterpolatorType::OutputType displacement(0.0);
+    typename InterpolatorType::OutputType displacement{};
     if (this->m_Interpolator->IsInsideBuffer(pointIn2))
     {
       displacement = this->m_Interpolator->Evaluate(pointIn2);

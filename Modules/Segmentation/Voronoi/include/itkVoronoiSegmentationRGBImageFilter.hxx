@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -90,9 +90,7 @@ VoronoiSegmentationRGBImageFilter<TInputImage, TOutputImage>::SetInput(const Inp
   const RegionType region(this->GetSize());
 
   m_WorkingImage = RGBHCVImage::New();
-  m_WorkingImage->SetLargestPossibleRegion(region);
-  m_WorkingImage->SetBufferedRegion(region);
-  m_WorkingImage->SetRequestedRegion(region);
+  m_WorkingImage->SetRegions(region);
   m_WorkingImage->Allocate();
 
   itk::ImageRegionIteratorWithIndex<RGBHCVImage>         wit(m_WorkingImage, region);
@@ -196,7 +194,7 @@ VoronoiSegmentationRGBImageFilter<TInputImage, TOutputImage>::TestHomogeneity(In
     {
       ok = false;
     }
-    j++;
+    ++j;
   }
 
   if (ok)
@@ -280,7 +278,7 @@ VoronoiSegmentationRGBImageFilter<TInputImage, TOutputImage>::TakeAPrior(const B
       currp = iit.Get();
       if (ait.Get())
       {
-        objnum++;
+        ++objnum;
         for (k = 0; k < 6; ++k)
         {
           objaddp[k] += currp[k];
@@ -289,7 +287,7 @@ VoronoiSegmentationRGBImageFilter<TInputImage, TOutputImage>::TakeAPrior(const B
       }
       else
       {
-        bkgnum++;
+        ++bkgnum;
         for (k = 0; k < 6; ++k)
         {
           bkgaddp[k] += currp[k];
@@ -377,7 +375,7 @@ VoronoiSegmentationRGBImageFilter<TInputImage, TOutputImage>::TakeAPrior(const B
 
   /*  Sorting. */
   unsigned char tmp[6] = { 0, 1, 2, 3, 4, 5 };
-  for (unsigned j = 0; j < 3; ++j)
+  for (unsigned int j = 0; j < 3; ++j)
   {
     k = 0;
     for (unsigned int i = 1; i < 6 - j; ++i)

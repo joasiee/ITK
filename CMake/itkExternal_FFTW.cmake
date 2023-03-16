@@ -5,7 +5,7 @@
 #       and the version of fftw built here does not
 #       use modern hardware optimzations.
 #
-#       The build configuration choosen to be
+#       The build configuration chosen to be
 #       generalizable to as many hardware platforms.
 #       Being backward compatible for decades
 #       old hardware is the goal of this internal
@@ -73,6 +73,8 @@ if(NOT ITK_USE_SYSTEM_FFTW)
            -DBUILD_TESTS:BOOL=OFF
            -DCMAKE_BUILD_TYPE:STRING=${FFTW_BUILD_TYPE}
            -DCMAKE_INSTALL_PREFIX:PATH=${FFTW_STAGED_INSTALL_PREFIX}
+           -DCMAKE_INSTALL_LIBDIR:STRING=${CMAKE_INSTALL_LIBDIR}
+           -DCMAKE_INSTALL_BINDIR:STRING=${CMAKE_INSTALL_BINDIR}
            -DDISABLE_FORTRAN:BOOL=ON
            -DENABLE_AVX:BOOL=OFF
            -DENABLE_AVX2:BOOL=OFF
@@ -98,7 +100,7 @@ if(NOT ITK_USE_SYSTEM_FFTW)
       #  )
       # Can not find package, it does not yet exist find_package(FFTW3f CONFIG REQUIRED)
       # but we know where it will eventually be!
-      set(FFTW3f_INCLUDE_DIRS ${FFTW_STAGED_INSTALL_PREFIX}/include )
+      set(FFTW3f_INCLUDE_DIRS ${FFTW_STAGED_INSTALL_PREFIX}/include)
       set(FFTW3f_LIBRARY_DIRS ${FFTW_STAGED_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
       set(FFTW_INCLUDE ${FFTW3_INCLUDE_DIRS})
       set(FFTW_LIBDIR  ${FFTW3_LIBRARY_DIRS})
@@ -124,6 +126,8 @@ if(NOT ITK_USE_SYSTEM_FFTW)
            -DBUILD_TESTS:BOOL=OFF
            -DCMAKE_BUILD_TYPE:STRING=${FFTW_BUILD_TYPE}
            -DCMAKE_INSTALL_PREFIX:PATH=${FFTW_STAGED_INSTALL_PREFIX}
+           -DCMAKE_INSTALL_LIBDIR:STRING=${CMAKE_INSTALL_LIBDIR}
+           -DCMAKE_INSTALL_BINDIR:STRING=${CMAKE_INSTALL_BINDIR}
            -DDISABLE_FORTRAN:BOOL=ON
            -DENABLE_AVX:BOOL=OFF
            -DENABLE_AVX2:BOOL=OFF
@@ -149,7 +153,7 @@ if(NOT ITK_USE_SYSTEM_FFTW)
       #   FORCE
       #  )
       # Can not find package, it does not yet exist find_package(FFTW3 CONFIG REQUIRED)
-      set(FFTW3_INCLUDE_DIRS ${FFTW_STAGED_INSTALL_PREFIX}/include )
+      set(FFTW3_INCLUDE_DIRS ${FFTW_STAGED_INSTALL_PREFIX}/include)
       set(FFTW3_LIBRARY_DIRS ${FFTW_STAGED_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 
       set(FFTW_INCLUDE ${FFTW3_INCLUDE_DIRS})
@@ -161,7 +165,7 @@ if(NOT ITK_USE_SYSTEM_FFTW)
     # copy libraries into install tree, NOTE: DESTINATION MUST EXACTLY MATCH values from main CMakeLists.txt for FFTW_LIBDIR
     install(CODE
       "file(GLOB FFTW_LIBS ${FFTW_STAGED_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/*fftw3*)
-file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/lib/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}\"
+      file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}\"
 TYPE FILE FILES \${FFTW_LIBS})"
       COMPONENT Development)
     #
@@ -173,5 +177,5 @@ TYPE FILE FILES \${FFTW_INC})"
       COMPONENT Development)
 else()
   #Search the filesystem for compatible versions
-  find_package( FFTW ) # Use local itk FindFFTW.config to set variables consistently both with/without USE_SYSTEM_FFTW
+  find_package(FFTW) # Use local itk FindFFTW.config to set variables consistently both with/without USE_SYSTEM_FFTW
 endif()

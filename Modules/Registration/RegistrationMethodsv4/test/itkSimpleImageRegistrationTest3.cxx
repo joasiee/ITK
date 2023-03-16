@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -144,7 +144,7 @@ PerformCompositeImageRegistration(int itkNotUsed(argc), char * argv[])
 
   // Change origins far from (0,0)
 
-  typename FixedImageType::PointType farOrigin(1000.0);
+  auto farOrigin = itk::MakeFilled<typename FixedImageType::PointType>(1000.0);
   fixedImage->SetOrigin(farOrigin);
   movingImage->SetOrigin(farOrigin);
 

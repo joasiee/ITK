@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -145,6 +145,8 @@ ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::ComputeConvolut
     convolutionFilter->GraftOutput(this->GetOutput());
     convolutionFilter->GetOutput()->SetRequestedRegion(this->GetOutput()->GetRequestedRegion());
     convolutionFilter->Update();
+    // Set largest possible region to that of input image
+    convolutionFilter->GetOutput()->SetLargestPossibleRegion(this->GetInput()->GetLargestPossibleRegion());
     this->GraftOutput(convolutionFilter->GetOutput());
   }
   else // OutputRegionMode == Self::VALID
@@ -176,6 +178,8 @@ ConvolutionImageFilter<TInputImage, TKernelImage, TOutputImage>::ComputeConvolut
     cropFilter->GetOutput()->SetRequestedRegion(this->GetOutput()->GetRequestedRegion());
     cropFilter->Update();
 
+    // Reset the largest possible region to the valid region
+    cropFilter->GetOutput()->SetLargestPossibleRegion(this->GetValidRegion());
 
     // Graft the output of the crop filter back onto this
     // filter's output.

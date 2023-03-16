@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -71,8 +71,8 @@ PlatformMultiThreader::MultipleMethodExecute()
     m_ThreadInfoArray[threadCount].UserData = m_MultipleData[threadCount];
     m_ThreadInfoArray[threadCount].NumberOfWorkUnits = m_NumberOfWorkUnits;
 
-    processId[threadCount] = (void *)_beginthreadex(
-      nullptr, 0, m_MultipleMethod[threadCount], &m_ThreadInfoArray[threadCount], 0, (unsigned int *)&threadId);
+    processId[threadCount] = reinterpret_cast<HANDLE>(_beginthreadex(
+      nullptr, 0, m_MultipleMethod[threadCount], &m_ThreadInfoArray[threadCount], 0, (unsigned int *)&threadId));
 
     if (processId[threadCount] == nullptr)
     {
@@ -121,7 +121,7 @@ PlatformMultiThreader::SpawnThread(ThreadFunctionType f, void * UserData)
     }
     m_SpawnedThreadActiveFlagLock[id]->unlock();
 
-    id++;
+    ++id;
   }
 
   if (id >= ITK_MAX_THREADS)
@@ -136,8 +136,8 @@ PlatformMultiThreader::SpawnThread(ThreadFunctionType f, void * UserData)
 
   // Using _beginthreadex on a PC
   //
-  m_SpawnedThreadProcessID[id] =
-    (void *)_beginthreadex(nullptr, 0, f, &m_SpawnedThreadInfoArray[id], 0, (unsigned int *)&threadId);
+  m_SpawnedThreadProcessID[id] = reinterpret_cast<HANDLE>(
+    _beginthreadex(nullptr, 0, f, &m_SpawnedThreadInfoArray[id], 0, (unsigned int *)&threadId));
   if (m_SpawnedThreadProcessID[id] == nullptr)
   {
     itkExceptionMacro("Error in thread creation !!!");
@@ -175,9 +175,9 @@ ThreadProcessIdType
 PlatformMultiThreader::SpawnDispatchSingleMethodThread(PlatformMultiThreader::WorkUnitInfo * threadInfo)
 {
   // Using _beginthreadex on a PC
-  DWORD  threadId;
-  HANDLE threadHandle =
-    (HANDLE)_beginthreadex(nullptr, 0, this->SingleMethodProxy, threadInfo, 0, (unsigned int *)&threadId);
+  DWORD threadId;
+  auto  threadHandle = reinterpret_cast<HANDLE>(
+    _beginthreadex(nullptr, 0, this->SingleMethodProxy, threadInfo, 0, (unsigned int *)&threadId));
   if (threadHandle == nullptr)
   {
     itkExceptionMacro("Error in thread creation !!!");

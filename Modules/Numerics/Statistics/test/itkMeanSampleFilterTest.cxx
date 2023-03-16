@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -64,8 +64,7 @@ itkMeanSampleFilterTest(int, char *[])
   try
   {
     filter->Update();
-    failureMeassage = "Exception should have been thrown since \
-                    Update() is invoked without setting an input ";
+    failureMeassage = "Exception should have been thrown since Update() is invoked without setting an input ";
     pass = false;
   }
   catch (const itk::ExceptionObject & excp)
@@ -76,8 +75,7 @@ itkMeanSampleFilterTest(int, char *[])
   if (filter->GetInput() != nullptr)
   {
     pass = false;
-    failureMeassage = "GetInput() should return nullptr if the input \
-                     has not been set";
+    failureMeassage = "GetInput() should return nullptr if the input has not been set";
   }
 
   filter->ResetPipeline();

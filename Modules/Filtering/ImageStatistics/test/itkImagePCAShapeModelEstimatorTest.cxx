@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -182,7 +182,7 @@ itkImagePCAShapeModelEstimatorTest(int, char *[])
   std::cout << "The mean image is:" << std::endl;
   while (!outImageIt.IsAtEnd())
   {
-    std::cout << (double)(outImageIt.Get()) << ";" << std::endl;
+    std::cout << static_cast<double>(outImageIt.Get()) << ";" << std::endl;
     ++outImageIt;
   }
   std::cout << "  " << std::endl;
@@ -198,7 +198,7 @@ itkImagePCAShapeModelEstimatorTest(int, char *[])
     std::cout << "The eigen vector number: " << j << " is:" << std::endl;
     while (!outImage2It.IsAtEnd())
     {
-      std::cout << (double)(outImage2It.Get()) << ";" << std::endl;
+      std::cout << static_cast<double>(outImage2It.Get()) << ";" << std::endl;
       ++outImage2It;
     }
     std::cout << "  " << std::endl;

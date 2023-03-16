@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,7 +28,7 @@ namespace itk
 {
 /* Necessary forward declaration see below for definition */
 /**
- *\class LBFGSOptimizerBaseHelperv4
+ * \class LBFGSOptimizerBaseHelperv4
  * \brief Wrapper helper around vnl optimizer.
  *
  * This class is used to translate iteration events, etc, from
@@ -41,7 +41,7 @@ template <typename TInternalVnlOptimizerType>
 class ITK_TEMPLATE_EXPORT LBFGSOptimizerBaseHelperv4;
 
 /**
- *\class LBFGSOptimizerBasev4
+ * \class LBFGSOptimizerBasev4
  * \brief Abstract base for vnl lbfgs algorithm optimizers in ITKv4 registration framework.
  *
  * \note The StopConditionDescription returned by this class is directly from the vnl

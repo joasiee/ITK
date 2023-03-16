@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,7 +36,7 @@ Test_SetCenterAndScale()
 
   for (double center{ -1.0 }; center <= 1.0; ++center)
   {
-    transform->SetCenter(PointType(center));
+    transform->SetCenter(itk::MakeFilled<PointType>(center));
 
     for (double scale{ 0.5 }; scale <= 2.0; scale *= 2.0)
     {
@@ -44,7 +44,8 @@ Test_SetCenterAndScale()
 
       for (double input{ -1.0 }; input <= 1.0; ++input)
       {
-        EXPECT_EQ(transform->TransformPoint(PointType(input)), PointType(center + (scale * (input - center))));
+        EXPECT_EQ(transform->TransformPoint(itk::MakeFilled<PointType>(input)),
+                  itk::MakeFilled<PointType>(center + (scale * (input - center))));
       }
     }
   }

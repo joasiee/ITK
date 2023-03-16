@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -89,7 +89,7 @@ ManifoldParzenWindowsPointSetFunction<TPointSet, TOutput, TCoordRep>::SetInputPo
         Cout.Fill(0);
 
         typename PointsLocatorType::NeighborsIdentifierType neighbors;
-        this->m_PointsLocator->Search(point, this->m_CovarianceKNeighborhood, neighbors);
+        this->m_PointsLocator->FindClosestNPoints(point, this->m_CovarianceKNeighborhood, neighbors);
 
         CompensatedSummation<RealType> denominator;
         for (unsigned int j = 0; j < this->m_CovarianceKNeighborhood; ++j)
@@ -166,7 +166,7 @@ ManifoldParzenWindowsPointSetFunction<TPointSet, TOutput, TCoordRep>::Evaluate(c
   else
   {
     typename PointsLocatorType::NeighborsIdentifierType neighbors;
-    this->m_PointsLocator->Search(point, numberOfNeighbors, neighbors);
+    this->m_PointsLocator->FindClosestNPoints(point, numberOfNeighbors, neighbors);
 
     for (unsigned int j = 0; j < numberOfNeighbors; ++j)
     {
@@ -198,6 +198,8 @@ template <typename TPointSet, typename TOutput, typename TCoordRep>
 void
 ManifoldParzenWindowsPointSetFunction<TPointSet, TOutput, TCoordRep>::PrintSelf(std::ostream & os, Indent indent) const
 {
+  Superclass::PrintSelf(os, indent);
+
   os << indent << "Covariance neighborhood: " << this->m_CovarianceKNeighborhood << std::endl;
   os << indent << "Evaluation neighborhood: " << this->m_EvaluationKNeighborhood << std::endl;
   os << indent << "Regularization sigma: " << this->m_RegularizationSigma << std::endl;

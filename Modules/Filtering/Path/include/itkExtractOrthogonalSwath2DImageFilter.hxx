@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,7 +55,7 @@ ExtractOrthogonalSwath2DImageFilter<TImage>::SetSpacing(const float * spacing)
 
   for (i = 0; i < ImageDimension; ++i)
   {
-    if (Math::NotExactlyEquals((double)spacing[i], m_Spacing[i]))
+    if (Math::NotExactlyEquals(static_cast<double>(spacing[i]), m_Spacing[i]))
     {
       break;
     }
@@ -107,7 +107,7 @@ ExtractOrthogonalSwath2DImageFilter<TImage>::SetOrigin(const float * origin)
 
   for (i = 0; i < ImageDimension; ++i)
   {
-    if (Math::NotExactlyEquals((double)origin[i], m_Origin[i]))
+    if (Math::NotExactlyEquals(static_cast<double>(origin[i]), m_Origin[i]))
     {
       break;
     }
@@ -180,14 +180,15 @@ ExtractOrthogonalSwath2DImageFilter<TImage>::GenerateData()
   {
     index = outputIt.GetIndex();
 
-    // what position along the path coresponds to this column of the swath?
-    pathInput = inputPathPtr->StartOfInput() + double(inputPathPtr->EndOfInput() - inputPathPtr->StartOfInput()) *
-                                                 double(index[0]) / double(m_Size[0]);
+    // what position along the path corresponds to this column of the swath?
+    pathInput =
+      inputPathPtr->StartOfInput() + static_cast<double>(inputPathPtr->EndOfInput() - inputPathPtr->StartOfInput()) *
+                                       static_cast<double>(index[0]) / static_cast<double>(m_Size[0]);
 
     // What is the orghogonal offset from the path in the input image for this
     // particular index in the output swath image?
     // Vertically centered swath pixels lie on the path in the input image.
-    orthogonalOffset = index[1] - int(m_Size[1] / 2); // use signed arithmatic
+    orthogonalOffset = index[1] - static_cast<int>(m_Size[1] / 2); // use signed arithmetic
 
     // Make continousIndex point to the source pixel in the input image
     continousIndex = inputPathPtr->Evaluate(pathInput);

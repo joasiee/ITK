@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -128,7 +128,7 @@ SLICImageFilter<TInputImage, TOutputImage, TDistancePixel>::BeforeThreadedGenera
 
     shrunkImage = shrinker->GetOutput();
   }
-  itkDebugMacro("Shinking Completed");
+  itkDebugMacro("Shrinking Completed");
 
   const typename InputImageType::RegionType region = inputImage->GetBufferedRegion();
   const unsigned int                        numberOfComponents = inputImage->GetNumberOfComponentsPerPixel();
@@ -150,7 +150,7 @@ SLICImageFilter<TInputImage, TOutputImage, TDistancePixel>::BeforeThreadedGenera
   while (!it.IsAtEnd())
   {
     const size_t ln = shrunkImage->GetLargestPossibleRegion().GetSize(0);
-    for (unsigned x = 0; x < ln; ++x)
+    for (unsigned int x = 0; x < ln; ++x)
     {
       // construct vector as reference to the scalar array
       ClusterType cluster(numberOfClusterComponents, &m_Clusters[cnt * numberOfClusterComponents]);
@@ -287,7 +287,7 @@ SLICImageFilter<TInputImage, TOutputImage, TDistancePixel>::ThreadedUpdateCluste
   while (!itOut.IsAtEnd())
   {
     const size_t ln = updateRegionForThread.GetSize(0);
-    for (unsigned x = 0; x < ln; ++x)
+    for (unsigned int x = 0; x < ln; ++x)
     {
       const IndexType &                         idx = itOut.GetIndex();
       const InputPixelType &                    v = itIn.Get();
@@ -321,7 +321,7 @@ SLICImageFilter<TInputImage, TOutputImage, TDistancePixel>::ThreadedUpdateCluste
     itOut.NextLine();
   }
 
-  // TODO improve merge algoithm
+  // TODO improve merge algorithm
   std::lock_guard<std::mutex> mutexHolder(m_Mutex);
   m_UpdateClusterPerThread.push_back(clusterMap);
 }
@@ -404,7 +404,7 @@ SLICImageFilter<TInputImage, TOutputImage, TDistancePixel>::ThreadedPerturbClust
       // convert to a type that has the operator[], for scalars this
       // will be FixedArray, for VectorImages, this will be the same
       // type as the pixel and not conversion or allocation will occur.
-      const typename NumericTraits<InputPixelType>::MeasurementVectorType & vG = J[i];
+      const typename NumericTraits<typename NumericTraits<InputPixelType>::RealType>::MeasurementVectorType & vG = J[i];
       for (unsigned int j = 0; j < numberOfComponents; ++j)
       {
         gNorm += vG[j] * vG[j];

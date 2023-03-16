@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@
 #include "itkImageIterator.h"
 #include "itkMath.h"
 #include "itkStatisticsImageFilter.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 #include "vnl/vnl_vector.h"
 #include "vnl/vnl_c_vector.h"
@@ -44,12 +45,6 @@ MattesMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::MattesMutu
   this->m_WithinThreadPreProcess = true;
   this->m_WithinThreadPostProcess = false;
   this->m_ComputeGradient = false;
-}
-
-template <typename TFixedImage, typename TMovingImage>
-MattesMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::~MattesMutualInformationImageToImageMetric()
-{
-  delete[] this->m_MMIMetricPerThreadVariables;
 }
 
 template <typename TFixedImage, typename TMovingImage>
@@ -217,8 +212,8 @@ MattesMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Initialize
    */
   this->m_MovingImageMarginalPDF.resize(m_NumberOfHistogramBins, 0.0F);
 
-  delete[] this->m_MMIMetricPerThreadVariables;
-  this->m_MMIMetricPerThreadVariables = new AlignedMMIMetricPerThreadStruct[this->m_NumberOfWorkUnits];
+  this->m_MMIMetricPerThreadVariables =
+    make_unique_for_overwrite<AlignedMMIMetricPerThreadStruct[]>(this->m_NumberOfWorkUnits);
 
   {
     const int binRange = this->m_NumberOfHistogramBins / this->m_NumberOfWorkUnits;
@@ -339,7 +334,7 @@ MattesMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::ComputeFix
   {
     // Determine parzen window arguments (see eqn 6 of Mattes paper [2]).
     const PDFValueType windowTerm =
-      static_cast<PDFValueType>((*iter).value) / this->m_FixedImageBinSize - this->m_FixedImageNormalizedMin;
+      static_cast<PDFValueType>(iter->value) / this->m_FixedImageBinSize - this->m_FixedImageNormalizedMin;
     auto pindex = static_cast<OffsetValueType>(windowTerm);
 
     // Make sure the extreme values are in valid bins
@@ -356,7 +351,7 @@ MattesMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::ComputeFix
       }
     }
 
-    (*iter).valueIndex = pindex;
+    iter->valueIndex = pindex;
   }
 }
 
@@ -516,48 +511,7 @@ MattesMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(c
     itkExceptionMacro("Joint PDF summed to zero\n" << this->m_MMIMetricPerThreadVariables[0].JointPDF);
   }
 
-  std::fill(this->m_MovingImageMarginalPDF.begin(), this->m_MovingImageMarginalPDF.end(), 0.0F);
-
-  // NOTE: Since the m_ThreaderFixedImageMarginalPDF is the sum of mass
-  // in the fixed image dimension, accumulating these values gives the
-  // same answer as computing the the sum of individual values over
-  // the the entire histogram.  IMPORTANT NOTICE: THIS MAKES AN
-  // ASSUMPTION OF CONSERVATION OF MASS OF THE BSPLINE SMOOTHING.  The
-  // sum of all the values should equal the number of samples being
-  // used, since each sample contributes only one sample somewhere in
-  // the histogram
-  PDFValueType totalMassOfPDF = 0.0;
-  for (unsigned int i = 0; i < this->m_NumberOfHistogramBins; ++i)
-  {
-    totalMassOfPDF += this->m_MMIMetricPerThreadVariables[0].FixedImageMarginalPDF[i];
-  }
-  const PDFValueType  normalizationFactor = 1.0 / this->m_MMIMetricPerThreadVariables[0].JointPDFSum;
-  JointPDFValueType * pdfPtr = this->m_MMIMetricPerThreadVariables[0].JointPDF->GetBufferPointer();
-  for (unsigned int i = 0; i < this->m_NumberOfHistogramBins; ++i)
-  {
-    PDFValueType * movingMarginalPtr = &(m_MovingImageMarginalPDF[0]);
-    for (unsigned int j = 0; j < this->m_NumberOfHistogramBins; ++j)
-    {
-      *(pdfPtr) *= normalizationFactor;
-      *(movingMarginalPtr++) += *(pdfPtr++);
-    }
-  }
-
-  if (this->m_NumberOfPixelsCounted < this->m_NumberOfFixedImageSamples / 16)
-  {
-    itkExceptionMacro("Too many samples map outside moving image buffer: "
-                      << this->m_NumberOfPixelsCounted << " / " << this->m_NumberOfFixedImageSamples << std::endl);
-  }
-
-  // Normalize the fixed image marginal PDF
-  if (totalMassOfPDF == 0.0)
-  {
-    itkExceptionMacro("Fixed image marginal PDF summed to zero");
-  }
-  for (unsigned int bin = 0; bin < this->m_NumberOfHistogramBins; ++bin)
-  {
-    this->m_MMIMetricPerThreadVariables[0].FixedImageMarginalPDF[bin] /= totalMassOfPDF;
-  }
+  this->CommonGetValueProcessing();
 
   /**
    * Compute the metric by double sumdation over histogram.
@@ -781,52 +735,20 @@ MattesMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAn
   // MUST BE CALLED TO INITIATE PROCESSING ON SAMPLES
   this->GetValueAndDerivativeMultiThreadedInitiate();
 
+  // MUST BE CALLED TO INITIATE PROCESSING
   // CALL IF DOING THREADED POST PROCESSING
   this->GetValueAndDerivativeMultiThreadedPostProcessInitiate();
+  // Consolidate to the first element in the vector
   for (ThreadIdType workUnitID = 1; workUnitID < this->m_NumberOfWorkUnits; ++workUnitID)
   {
     this->m_MMIMetricPerThreadVariables[0].JointPDFSum += this->m_MMIMetricPerThreadVariables[workUnitID].JointPDFSum;
   }
   if (this->m_MMIMetricPerThreadVariables[0].JointPDFSum < itk::NumericTraits<PDFValueType>::epsilon())
   {
-    itkExceptionMacro("Joint PDF summed to zero");
+    itkExceptionMacro("Joint PDF summed to zero\n" << this->m_MMIMetricPerThreadVariables[0].JointPDF);
   }
 
-  std::fill(this->m_MovingImageMarginalPDF.begin(), this->m_MovingImageMarginalPDF.end(), 0.0F);
-
-  PDFValueType totalMassOfPDF = 0.0;
-  for (unsigned int i = 0; i < this->m_NumberOfHistogramBins; ++i)
-  {
-    totalMassOfPDF += this->m_MMIMetricPerThreadVariables[0].FixedImageMarginalPDF[i];
-  }
-
-  const PDFValueType  normalizationFactor = 1.0 / this->m_MMIMetricPerThreadVariables[0].JointPDFSum;
-  JointPDFValueType * pdfPtr = this->m_MMIMetricPerThreadVariables[0].JointPDF->GetBufferPointer();
-  for (unsigned int i = 0; i < this->m_NumberOfHistogramBins; ++i)
-  {
-    PDFValueType * movingMarginalPtr = &(m_MovingImageMarginalPDF[0]);
-    for (unsigned int j = 0; j < this->m_NumberOfHistogramBins; ++j)
-    {
-      *(pdfPtr) *= normalizationFactor;
-      *(movingMarginalPtr++) += *(pdfPtr++);
-    }
-  }
-
-  if (this->m_NumberOfPixelsCounted < this->m_NumberOfFixedImageSamples / 16)
-  {
-    itkExceptionMacro("Too many samples map outside moving image buffer: "
-                      << this->m_NumberOfPixelsCounted << " / " << this->m_NumberOfFixedImageSamples << std::endl);
-  }
-
-  // Normalize the fixed image marginal PDF
-  if (totalMassOfPDF == 0.0)
-  {
-    itkExceptionMacro("Fixed image marginal PDF summed to zero");
-  }
-  for (unsigned int bin = 0; bin < this->m_NumberOfHistogramBins; ++bin)
-  {
-    this->m_MMIMetricPerThreadVariables[0].FixedImageMarginalPDF[bin] /= totalMassOfPDF;
-  }
+  this->CommonGetValueProcessing();
 
   /**
    * Compute the metric by double summation over histogram.
@@ -836,8 +758,7 @@ MattesMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAn
   JointPDFValueType * jointPDFPtr = this->m_MMIMetricPerThreadVariables[0].JointPDF->GetBufferPointer();
 
   // Initialize sum to zero
-  PDFValueType sum = 0.0;
-
+  PDFValueType       sum = 0.0;
   const PDFValueType nFactor = 1.0 / (this->m_MovingImageBinSize * this->m_NumberOfPixelsCounted);
   for (unsigned int fixedIndex = 0; fixedIndex < this->m_NumberOfHistogramBins; ++fixedIndex)
   {
@@ -906,6 +827,55 @@ MattesMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAn
   }
 
   value = static_cast<MeasureType>(-1.0 * sum);
+}
+
+template <typename TFixedImage, typename TMovingImage>
+void
+MattesMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::CommonGetValueProcessing() const
+{
+  std::fill(this->m_MovingImageMarginalPDF.begin(), this->m_MovingImageMarginalPDF.end(), 0.0F);
+
+  // NOTE: Since the m_ThreaderFixedImageMarginalPDF is the sum of mass
+  // in the fixed image dimension, accumulating these values gives the
+  // same answer as computing the the sum of individual values over
+  // the the entire histogram.  IMPORTANT NOTICE: THIS MAKES AN
+  // ASSUMPTION OF CONSERVATION OF MASS OF THE BSPLINE SMOOTHING.  The
+  // sum of all the values should equal the number of samples being
+  // used, since each sample contributes only one sample somewhere in
+  // the histogram
+  PDFValueType totalMassOfPDF = 0.0;
+  for (unsigned int i = 0; i < this->m_NumberOfHistogramBins; ++i)
+  {
+    totalMassOfPDF += this->m_MMIMetricPerThreadVariables[0].FixedImageMarginalPDF[i];
+  }
+
+  const PDFValueType  normalizationFactor = 1.0 / this->m_MMIMetricPerThreadVariables[0].JointPDFSum;
+  JointPDFValueType * pdfPtr = this->m_MMIMetricPerThreadVariables[0].JointPDF->GetBufferPointer();
+  for (unsigned int i = 0; i < this->m_NumberOfHistogramBins; ++i)
+  {
+    PDFValueType * movingMarginalPtr = &(this->m_MovingImageMarginalPDF[0]);
+    for (unsigned int j = 0; j < this->m_NumberOfHistogramBins; ++j)
+    {
+      *(pdfPtr) *= normalizationFactor;
+      *(movingMarginalPtr++) += *(pdfPtr++);
+    }
+  }
+
+  if (this->m_NumberOfPixelsCounted < this->m_NumberOfFixedImageSamples / 16)
+  {
+    itkExceptionMacro("Too many samples map outside moving image buffer: "
+                      << this->m_NumberOfPixelsCounted << " / " << this->m_NumberOfFixedImageSamples << std::endl);
+  }
+
+  // Normalize the fixed image marginal PDF
+  if (totalMassOfPDF == 0.0)
+  {
+    itkExceptionMacro("Fixed image marginal PDF summed to zero");
+  }
+  for (unsigned int bin = 0; bin < this->m_NumberOfHistogramBins; ++bin)
+  {
+    this->m_MMIMetricPerThreadVariables[0].FixedImageMarginalPDF[bin] /= totalMassOfPDF;
+  }
 }
 
 /**

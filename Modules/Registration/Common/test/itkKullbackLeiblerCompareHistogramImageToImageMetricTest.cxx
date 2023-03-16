@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,34 +52,26 @@ itkKullbackLeiblerCompareHistogramImageToImageMetricTest(int, char *[])
     ImageDimension = MovingImageType::ImageDimension
   };
 
-  MovingImageType::SizeType   size = { { 100, 100 } };
+  MovingImageType::SizeType   size = { { 16, 16 } };
   MovingImageType::IndexType  index = { { 0, 0 } };
   MovingImageType::RegionType region;
   region.SetSize(size);
   region.SetIndex(index);
 
   auto imgMoving = MovingImageType::New();
-  imgMoving->SetLargestPossibleRegion(region);
-  imgMoving->SetBufferedRegion(region);
-  imgMoving->SetRequestedRegion(region);
+  imgMoving->SetRegions(region);
   imgMoving->Allocate();
 
   auto imgFixed = FixedImageType::New();
-  imgFixed->SetLargestPossibleRegion(region);
-  imgFixed->SetBufferedRegion(region);
-  imgFixed->SetRequestedRegion(region);
+  imgFixed->SetRegions(region);
   imgFixed->Allocate();
 
   auto imgTrainingMoving = MovingImageType::New();
-  imgTrainingMoving->SetLargestPossibleRegion(region);
-  imgTrainingMoving->SetBufferedRegion(region);
-  imgTrainingMoving->SetRequestedRegion(region);
+  imgTrainingMoving->SetRegions(region);
   imgTrainingMoving->Allocate();
 
   auto imgTrainingFixed = FixedImageType::New();
-  imgTrainingFixed->SetLargestPossibleRegion(region);
-  imgTrainingFixed->SetBufferedRegion(region);
-  imgTrainingFixed->SetRequestedRegion(region);
+  imgTrainingFixed->SetRegions(region);
   imgTrainingFixed->Allocate();
 
   // Fill images with a 2D gaussian
@@ -89,12 +81,12 @@ itkKullbackLeiblerCompareHistogramImageToImageMetricTest(int, char *[])
   using TrainingTargetIteratorType = itk::ImageRegionIterator<TrainingFixedImageType>;
 
   itk::Point<double, 2> center;
-  center[0] = (double)region.GetSize()[0] / 2.0;
-  center[1] = (double)region.GetSize()[1] / 2.0;
+  center[0] = static_cast<double>(region.GetSize()[0]) / 2.0;
+  center[1] = static_cast<double>(region.GetSize()[1]) / 2.0;
 
-  const double s = (double)region.GetSize()[0] / 2.0;
-  const auto   mag = (double)200.0;
-  const auto   noisemag = (double)0.0; // ended up yielding best results
+  const double s = static_cast<double>(region.GetSize()[0]) / 2.0;
+  const double mag = 200.0;
+  const double noisemag = 0.0; // ended up yielding best results
 
   itk::Point<double, 2>  p;
   itk::Vector<double, 2> d;
@@ -118,7 +110,7 @@ itkKullbackLeiblerCompareHistogramImageToImageMetricTest(int, char *[])
     d += displacement;
     const double x = d[0];
     const double y = d[1];
-    ri.Set((unsigned char)(mag * std::exp(-(x * x + y * y) / (s * s))));
+    ri.Set(static_cast<unsigned char>(mag * std::exp(-(x * x + y * y) / (s * s))));
     ++ri;
   }
 
@@ -130,7 +122,7 @@ itkKullbackLeiblerCompareHistogramImageToImageMetricTest(int, char *[])
     d = p - center;
     const double x = d[0];
     const double y = d[1];
-    ti.Set((unsigned char)(mag * std::exp(-(x * x + y * y) / (s * s))));
+    ti.Set(static_cast<unsigned char>(mag * std::exp(-(x * x + y * y) / (s * s))));
     ++ti;
   }
 
@@ -145,7 +137,8 @@ itkKullbackLeiblerCompareHistogramImageToImageMetricTest(int, char *[])
     //    d += displacement;
     const double x = d[0];
     const double y = d[1];
-    gri.Set((unsigned char)((mag * std::exp(-(x * x + y * y) / (s * s))) + vnl_sample_normal(0.0, noisemag)));
+    gri.Set(
+      static_cast<unsigned char>((mag * std::exp(-(x * x + y * y) / (s * s))) + vnl_sample_normal(0.0, noisemag)));
     ++gri;
   }
 
@@ -157,7 +150,8 @@ itkKullbackLeiblerCompareHistogramImageToImageMetricTest(int, char *[])
     d = p - center;
     const double x = d[0];
     const double y = d[1];
-    gti.Set((unsigned char)((mag * std::exp(-(x * x + y * y) / (s * s))) + vnl_sample_normal(0.0, noisemag)));
+    gti.Set(
+      static_cast<unsigned char>((mag * std::exp(-(x * x + y * y) / (s * s))) + vnl_sample_normal(0.0, noisemag)));
     ++gti;
   }
 
@@ -173,7 +167,7 @@ itkKullbackLeiblerCompareHistogramImageToImageMetricTest(int, char *[])
   TrainingTransform->SetIdentity();
 
   //------------------------------------------------------------
-  // Set up a interpolator
+  // Set up an interpolator
   //------------------------------------------------------------
   using InterpolatorType = itk::LinearInterpolateImageFunction<MovingImageType, double>;
 
@@ -237,7 +231,7 @@ itkKullbackLeiblerCompareHistogramImageToImageMetricTest(int, char *[])
   metric->Initialize();
 
   //------------------------------------------------------------
-  // Set up a affine transform parameters
+  // Set up an affine transform parameters
   //------------------------------------------------------------
   unsigned int   numberOfParameters = transformer->GetNumberOfParameters();
   ParametersType parameters(numberOfParameters);
@@ -310,7 +304,7 @@ itkKullbackLeiblerCompareHistogramImageToImageMetricTest(int, char *[])
   //  metric->SetKernelFunction( theKernel );
   //  theKernel->Print( std::cout );
 
-  //  std::cout << "Try causing a exception by making std dev too small";
+  //  std::cout << "Try causing an exception by making std dev too small";
   //  std::cout << std::endl;
   //  metric->SetFixedImageStandardDeviation( 0.001 );
   //  try
@@ -328,7 +322,7 @@ itkKullbackLeiblerCompareHistogramImageToImageMetricTest(int, char *[])
   //  // reset standard deviation
   //  metric->SetFixedImageStandardDeviation( 5.0 );
 
-  std::cout << "Try causing a exception by making fixed image nullptr";
+  std::cout << "Try causing an exception by making fixed image nullptr";
   std::cout << std::endl;
   metric->SetFixedImage(nullptr);
   try

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -156,9 +156,19 @@ itkLevelSetEquationTermContainerTest(int argc, char * argv[])
   std::cout << "CV internal term created" << std::endl;
 
   auto termContainer0 = TermContainerType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(termContainer0, LevelSetEquationTermContainer, Object);
+
+
   termContainer0->SetInput(binary);
-  termContainer0->SetCurrentLevelSetId(0);
+  ITK_TEST_SET_GET_VALUE(binary, termContainer0->GetInput());
+
+  typename TermContainerType::LevelSetIdentifierType currentLevelSetId = 0;
+  termContainer0->SetCurrentLevelSetId(currentLevelSetId);
+  ITK_TEST_SET_GET_VALUE(currentLevelSetId, termContainer0->GetCurrentLevelSetId());
+
   termContainer0->SetLevelSetContainer(lscontainer);
+  ITK_TEST_SET_GET_VALUE(lscontainer, termContainer0->GetLevelSetContainer());
 
   termContainer0->AddTerm(0, term0);
   termContainer0->AddTerm(1, term1);

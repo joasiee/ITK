@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -118,8 +118,8 @@ EigenAnalysis2DImageFilter<TInputImage, TEigenValueImage, TEigenVectorImage>::Ge
 }
 
 /**
- *   Make Ouput
- * \todo Verify that MakeOutput is createing the right type of objects
+ *   Make Output
+ * \todo Verify that MakeOutput is creating the right type of objects
  *  this could be the cause of the reinterpret_cast bug in this class
  */
 template <typename TInputImage, typename TEigenValueImage, typename TEigenVectorImage>

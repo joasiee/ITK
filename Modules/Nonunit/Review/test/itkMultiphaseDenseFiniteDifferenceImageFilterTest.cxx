@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@
 
 #include "itkMultiphaseDenseFiniteDifferenceImageFilter.h"
 #include "itkScalarChanAndVeseLevelSetFunction.h"
+#include "itkTestingMacros.h"
 
 namespace itk
 {
@@ -105,8 +106,15 @@ itkMultiphaseDenseFiniteDifferenceImageFilterTest(int, char *[])
 
   auto filter = FilterType::New();
 
-  std::cout << "GetNameOfClass() = " << filter->GetNameOfClass() << std::endl;
-  filter->Print(std::cout);
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(
+    filter, MultiphaseDenseFiniteDifferenceImageFilterTestHelper, MultiphaseDenseFiniteDifferenceImageFilter);
 
+
+  unsigned int reinitializeCounter = 1;
+  filter->SetReinitializeCounter(reinitializeCounter);
+  ITK_TEST_SET_GET_VALUE(reinitializeCounter, filter->GetReinitializeCounter());
+
+
+  std::cout << "Test finished." << std::endl;
   return EXIT_SUCCESS;
 }

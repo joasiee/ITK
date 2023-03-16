@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -114,7 +114,7 @@ itkMetaGaussianConverterTest(int argc, char * argv[])
   // Check maximum
   double metaMaximum = newMetaGaussian->Maximum();
 
-  // if (metaMaximum != (float)maximum)
+  // if (metaMaximum != static_cast<float>(maximum))
   if (itk::Math::abs(metaMaximum - maximum) > precisionLimit)
   {
     std::cout << "[FAILED] Conversion to MetaGaussian failed to convert maximum" << std::endl;
@@ -125,7 +125,7 @@ itkMetaGaussianConverterTest(int argc, char * argv[])
   // Check radius
   double metaRadius = newMetaGaussian->Radius();
 
-  // if (metaRadius != (float)radius)
+  // if (metaRadius != static_cast<float>(radius))
   if (itk::Math::abs(metaRadius - radius) > precisionLimit)
   {
     std::cout << "[FAILED] Conversion to MetaGaussian failed to convert radius" << std::endl;
@@ -136,7 +136,7 @@ itkMetaGaussianConverterTest(int argc, char * argv[])
   // Check sigma
   double metaSigma = newMetaGaussian->Sigma();
 
-  // if (metaSigma != (float)sigma)
+  // if (metaSigma != static_cast<float>(sigma))
   if (itk::Math::abs(metaSigma - sigma) > precisionLimit)
   {
     std::cout << "[FAILED] Conversion to MetaGaussian failed to convert sigma" << std::endl;

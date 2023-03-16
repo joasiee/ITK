@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -425,7 +425,7 @@ HistogramMatchingImageFilter<TInputImage, TOutputImage, THistogramMeasurement>::
     lowerBound.Fill(minHistogramValidValue);
     upperBound.Fill(maxHistogramValidValue);
 
-    // Initialize with equally spaced bins withing the valid region.
+    // Initialize with equally spaced bins within the valid region.
     histogram->Initialize(size, lowerBound, upperBound);
 
     // Now expand the first and last bin to represent the true reference image range

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -62,7 +62,7 @@ QuadEdgeMesh<TPixel, VDimension, TTraits>::Clear()
     }
   }
 
-  // Clear the points potentialy left behind by LightWeightDeleteEdge():
+  // Clear the points potentially left behind by LightWeightDeleteEdge():
   if (this->GetPoints())
   {
     this->GetPoints()->clear();
@@ -294,7 +294,7 @@ QuadEdgeMesh<TPixel, VDimension, TTraits>::Splice(QEPrimal * a, QEPrimal * b) ->
     }
 
     // Notice that when aLeftFace == m_NoFace and bLeftFace == m_NoFace
-    // we simply proceed... (with MustReconstructFace initialy set to
+    // we simply proceed... (with MustReconstructFace initially set to
     // false.
 
     ///////////////////////////////////////////////////////////////
@@ -433,7 +433,7 @@ QuadEdgeMesh<TPixel, VDimension, TTraits>::FindFirstUnusedPointIndex() -> PointI
     if (pid != 0)
     {
       PointsContainerConstIterator last = this->GetPoints()->End();
-      last--;
+      --last;
       pid = last.Index() + 1;
     }
   }
@@ -600,7 +600,7 @@ QuadEdgeMesh<TPixel, VDimension, TTraits>::FindFirstUnusedCellIndex() -> CellIde
     if (cid != 0)
     {
       CellsContainerIterator last = this->GetCells()->End();
-      last--;
+      --last;
       cid = last.Index() + 1;
     }
   }
@@ -735,7 +735,7 @@ QuadEdgeMesh<TPixel, VDimension, TTraits>::PushOnContainer(EdgeCellType * newEdg
   CellAutoPointer pEdge;
   pEdge.TakeOwnership(newEdge);
   this->SetEdgeCell(eid, pEdge);
-  m_NumberOfEdges++;
+  ++m_NumberOfEdges;
 }
 
 /**

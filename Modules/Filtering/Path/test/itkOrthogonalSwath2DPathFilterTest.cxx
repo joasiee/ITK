@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -124,8 +124,8 @@ itkOrthogonalSwath2DPathFilterTest(int, char *[])
   while (!it.IsAtEnd())
   {
     pixelIndex = it.GetIndex();
-    if (pixelIndex[0] >= int(size[0] / 4) && pixelIndex[0] < int(size[0] * 3 / 4) &&
-        pixelIndex[1] >= int(size[1] / 4) && pixelIndex[1] < int(size[1] * 3 / 4))
+    if (pixelIndex[0] >= static_cast<int>(size[0] / 4) && pixelIndex[0] < static_cast<int>(size[0] * 3 / 4) &&
+        pixelIndex[1] >= static_cast<int>(size[1] / 4) && pixelIndex[1] < static_cast<int>(size[1] * 3 / 4))
     {
       it.Set(0);
     }
@@ -146,9 +146,9 @@ itkOrthogonalSwath2DPathFilterTest(int, char *[])
   auto smoothFilter = SmoothFilterType::New();
   smoothFilter->SetInput(castFilter->GetOutput());
   double gaussianVariance = 1.0;
-  // We want a fast 3x3 kernel. A Gausian operator will not truncate its kernel
+  // We want a fast 3x3 kernel. A Gaussian operator will not truncate its kernel
   // width to any less than a 5x5 kernel (kernel width of 3 for 1 center pixel +
-  // 2 edge pixels). However, a Gausian operator always uses at least a 3x3
+  // 2 edge pixels). However, a Gaussian operator always uses at least a 3x3
   // kernel, and so setting the maximum error to 1.0 (no limit) will make it
   // stop growing the kernel at the desired 3x3 size.
   double maxError = 0.9;

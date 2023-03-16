@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,7 +28,7 @@
 namespace itk
 {
 /**
- *\class VnlRealToHalfHermitianForwardFFTImageFilter
+ * \class VnlRealToHalfHermitianForwardFFTImageFilter
  *
  * \brief VNL-based forward Fast Fourier Transform.
  *
@@ -105,6 +105,7 @@ struct FFTImageFilterTraits<VnlRealToHalfHermitianForwardFFTImageFilter>
   using InputPixelType = TUnderlying;
   template <typename TUnderlying>
   using OutputPixelType = std::complex<TUnderlying>;
+  using FilterDimensions = std::integer_sequence<unsigned int, 4, 3, 2, 1>;
 };
 
 } // namespace itk

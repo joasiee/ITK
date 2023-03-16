@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +34,8 @@ itkImageToVideoFilterTest(int argc, char * argv[])
 {
   if (argc < 3)
   {
-    std::cerr << "Usage: " << argv[0];
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
     std::cerr << " inputFile outputFile";
     std::cerr << std::endl;
     return EXIT_FAILURE;
@@ -61,10 +62,15 @@ itkImageToVideoFilterTest(int argc, char * argv[])
 
   using VideoFilterType = itk::ImageToVideoFilter<ImageType>;
   auto videoFilter = VideoFilterType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(videoFilter, ImageToVideoFilter, VideoSource);
+
+
   videoFilter->SetInput(inputImage);
   // Arbitrarily set 0th axis as temporal dimension to split frames
   itk::IndexValueType frameAxis = 0;
   videoFilter->SetFrameAxis(frameAxis);
+  ITK_TEST_SET_GET_VALUE(frameAxis, videoFilter->GetFrameAxis());
 
   ITK_TRY_EXPECT_NO_EXCEPTION(videoFilter->Update());
 

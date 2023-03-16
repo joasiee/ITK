@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -195,7 +195,7 @@ ConnectedComponentImageFilter<TInputImage, TOutputImage, TMaskImage>::DynamicThr
         // create the run length object to go in the vector
         RunLength thisRun = { length, thisIndex, 0 };
         thisLine.push_back(thisRun);
-        nbOfLabels++;
+        ++nbOfLabels;
       }
       else
       {
@@ -203,7 +203,7 @@ ConnectedComponentImageFilter<TInputImage, TOutputImage, TMaskImage>::DynamicThr
       }
     }
     this->m_LineMap[lineId] = thisLine;
-    lineId++;
+    ++lineId;
   }
 
   this->m_NumberOfLabels.fetch_add(nbOfLabels, std::memory_order_relaxed);

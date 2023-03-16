@@ -87,6 +87,8 @@ itkMultipleLogOutputTest.cxx
 itkVectorTest.cxx
 itkImageTest.cxx
 itkPointSetTest.cxx
+itkPointSetToImageFilterTest1.cxx
+itkPointSetToImageFilterTest2.cxx
 itkBresenhamLineTest.cxx
 itkSparseFieldLayerTest.cxx
 itkDataObjectTest.cxx
@@ -100,9 +102,13 @@ itkMersenneTwisterRandomVariateGeneratorTest.cxx
 itkNumberToStringTest.cxx
 itkTimeProbeTest.cxx
 itkTimeProbeTest2.cxx
+itkSpatialOrientationTest.cxx
 itkStdStreamStateSaveTest.cxx
 itkVersionTest.cxx
 VNLSparseLUSolverTraitsTest.cxx
+itkSobelOperatorImageConvolutionTest.cxx
+itkSobelOperatorImageFilterTest.cxx
+itkSobelOperatorTest.cxx
 )
 set(ITKCommon2Tests
 itkSTLThreadTest.cxx
@@ -182,12 +188,13 @@ itkImageRegionSplitterDirectionTest.cxx
 itkImageRegionSplitterMultidimensionalTest.cxx
 itkMetaDataObjectTest.cxx
 # itkVectorMultiplyTest.cxx
+itkXMLFileOutputWindowTest.cxx
 )
 if(ITK_BUILD_SHARED_LIBS AND ITK_DYNAMIC_LOADING)
   list(APPEND ITKCommon2Tests itkDownCastTest.cxx)
 endif()
 
-# Note: Tests are arbitrarly split into two drivers to avoid memory issues.
+# Note: Tests are arbitrarily split into two drivers to avoid memory issues.
 CreateTestDriver(ITKCommon1 "${ITKCommon-Test_LIBRARIES}" "${ITKCommon1Tests}" itkFloatingPointExceptionsExtern.cxx)
 CreateTestDriver(ITKCommon2 "${ITKCommon-Test_LIBRARIES}" "${ITKCommon2Tests}" itkFloatingPointExceptionsExtern.cxx)
 
@@ -195,7 +202,7 @@ set(BASELINE "${ITK_DATA_ROOT}/Baseline/Common")
 set(TEMP ${ITK_TEST_OUTPUT_DIR})
 
 
-add_executable(itkMathTest itkMathTest.cxx )
+add_executable(itkMathTest itkMathTest.cxx)
 itk_module_target_label(itkMathTest)
 target_link_libraries(itkMathTest LINK_PUBLIC ${ITKCommon_LIBRARIES})
 itk_add_test(NAME itkMathTest COMMAND itkMathTest)
@@ -265,9 +272,28 @@ itk_add_test(NAME itkBoundaryConditionTest COMMAND ITKCommon1TestDriver itkBound
 itk_add_test(NAME itkByteSwapTest COMMAND ITKCommon1TestDriver itkByteSwapTest)
 itk_add_test(NAME itkBSplineInterpolationWeightFunctionTest COMMAND ITKCommon2TestDriver itkBSplineInterpolationWeightFunctionTest)
 itk_add_test(NAME itkBSplineKernelFunctionTest COMMAND ITKCommon1TestDriver itkBSplineKernelFunctionTest)
+itk_add_test(NAME itkSpatialOrientationTest COMMAND ITKCommon1TestDriver itkSpatialOrientationTest)
 itk_add_test(NAME VNLSparseLUSolverTraitsTest COMMAND ITKCommon1TestDriver VNLSparseLUSolverTraitsTest)
 itk_add_test(NAME itkGaussianDerivativeOperatorTest
   COMMAND ITKCommon1TestDriver itkGaussianDerivativeOperatorTest)
+itk_add_test(NAME itkSobelOperatorImageConvolutionHorizTest
+  COMMAND ITKCommon1TestDriver
+  --compare DATA{Baseline/itkSobelOperatorImageHorizTest.png} ${ITK_TEST_OUTPUT_DIR}/itkSobelOperatorImageConvolutionHorizTest.png
+  itkSobelOperatorImageConvolutionTest DATA{${ITK_DATA_ROOT}/Input/sf4.png} 0 ${ITK_TEST_OUTPUT_DIR}/itkSobelOperatorImageConvolutionHorizTest.png)
+itk_add_test(NAME itkSobelOperatorImageFilterHorizTest
+  COMMAND ITKCommon1TestDriver
+  --compare DATA{Baseline/itkSobelOperatorImageHorizTest.png} ${ITK_TEST_OUTPUT_DIR}/itkSobelOperatorImageFilterHorizTest.png
+  itkSobelOperatorImageFilterTest DATA{${ITK_DATA_ROOT}/Input/sf4.png} 0 ${ITK_TEST_OUTPUT_DIR}/itkSobelOperatorImageFilterHorizTest.png)
+itk_add_test(NAME itkSobelOperatorImageConvolutionVertTest
+  COMMAND ITKCommon1TestDriver
+  --compare DATA{Baseline/itkSobelOperatorImageVertTest.png} ${ITK_TEST_OUTPUT_DIR}/itkSobelOperatorImageConvolutionVertTest.png
+  itkSobelOperatorImageConvolutionTest DATA{${ITK_DATA_ROOT}/Input/sf4.png} 1 ${ITK_TEST_OUTPUT_DIR}/itkSobelOperatorImageConvolutionVertTest.png)
+itk_add_test(NAME itkSobelOperatorImageFilterVertTest
+  COMMAND ITKCommon1TestDriver
+  --compare DATA{Baseline/itkSobelOperatorImageVertTest.png} ${ITK_TEST_OUTPUT_DIR}/itkSobelOperatorImageFilterVertTest.png
+  itkSobelOperatorImageFilterTest DATA{${ITK_DATA_ROOT}/Input/sf4.png} 1 ${ITK_TEST_OUTPUT_DIR}/itkSobelOperatorImageFilterVertTest.png)
+itk_add_test(NAME itkSobelOperatorTest
+  COMMAND ITKCommon1TestDriver itkSobelOperatorTest)
 
 itk_add_test(NAME itkConstNeighborhoodIteratorTest
       COMMAND ITKCommon2TestDriver --redirectOutput ${TEMP}/itkConstNeighborhoodIteratorTest.txt
@@ -331,7 +357,7 @@ itk_add_test(NAME itkImageSliceIteratorTest
       COMMAND ITKCommon1TestDriver itkImageSliceIteratorTest)
 itk_add_test(NAME itkImageTest COMMAND ITKCommon1TestDriver itkImageTest)
 itk_add_test(NAME itkLightObjectTest COMMAND ITKCommon1TestDriver itkLightObjectTest)
-itk_add_test(NAME itkLineIteratorTest COMMAND ITKCommon1TestDriver itkLineIteratorTest DATA{${BASELINE}/itkLineIteratorTest.txt} )
+itk_add_test(NAME itkLineIteratorTest COMMAND ITKCommon1TestDriver itkLineIteratorTest DATA{${BASELINE}/itkLineIteratorTest.txt})
 itk_add_test(NAME itkLoggerTest COMMAND ITKCommon1TestDriver itkLoggerTest ${TEMP}/test_logger.txt)
 itk_add_test(NAME itkLoggerOutputTest COMMAND ITKCommon2TestDriver itkLoggerOutputTest ${TEMP}/test_loggerOutput.txt)
 itk_add_test(NAME itkLoggerManagerTest COMMAND ITKCommon2TestDriver itkLoggerManagerTest ${TEMP}/test_LoggerManager.txt)
@@ -343,6 +369,14 @@ itk_add_test(NAME itkIteratorTests COMMAND ITKCommon1TestDriver itkIteratorTests
 itk_add_test(NAME itkObjectFactoryTest COMMAND ITKCommon1TestDriver itkObjectFactoryTest)
 itk_add_test(NAME itkVectorTest COMMAND ITKCommon1TestDriver itkVectorTest)
 itk_add_test(NAME itkPointSetTest COMMAND ITKCommon1TestDriver itkPointSetTest)
+itk_add_test(NAME itkPointSetToImageFilterTest1
+      COMMAND ITKCommon1TestDriver
+    --compare DATA{Baseline/itkPointSetToImageFilterTest1.png} ${ITK_TEST_OUTPUT_DIR}/itkPointSetToImageFilterTest1.png
+     itkPointSetToImageFilterTest1 ${ITK_TEST_OUTPUT_DIR}/itkPointSetToImageFilterTest1.png)
+itk_add_test(NAME itkPointSetToImageFilterTest2
+      COMMAND ITKCommon1TestDriver
+    --compare DATA{Baseline/itkPointSetToImageFilterTest2.mha} ${ITK_TEST_OUTPUT_DIR}/itkPointSetToImageFilterTest2.mha
+     itkPointSetToImageFilterTest2 DATA{${ITK_DATA_ROOT}/Input/VascularTreePointSet.txt} ${ITK_TEST_OUTPUT_DIR}/itkPointSetToImageFilterTest2.mha)
 itk_add_test(NAME itkBresenhamLineTest COMMAND ITKCommon1TestDriver itkBresenhamLineTest)
 itk_add_test(NAME itkSparseFieldLayerTest COMMAND ITKCommon1TestDriver itkSparseFieldLayerTest)
 itk_add_test(NAME itkDataObjectTest COMMAND ITKCommon1TestDriver itkDataObjectTest)
@@ -517,14 +551,14 @@ itk_add_test(NAME itkConstantBoundaryConditionTest COMMAND ITKCommon2TestDriver 
  itk_add_test(NAME itkVNLRoundProfileTest1 COMMAND ITKCommon2TestDriver itkVNLRoundProfileTest1)
  itk_add_test(NAME itkMemoryProbesCollecterBaseTest COMMAND ITKCommon2TestDriver
    itkMemoryProbesCollecterBaseTest)
-if( "${ITK_COMPUTER_MEMORY_SIZE}" GREATER 4 )
+if("${ITK_COMPUTER_MEMORY_SIZE}" GREATER 4)
   itk_add_test(NAME itkImageFillBufferTest4.1 COMMAND ITKCommon2TestDriver itkImageFillBufferTest 4.1)
   set_property(TEST itkImageFillBufferTest4.1 APPEND PROPERTY LABELS RUNS_LONG)
-  set_tests_properties( itkImageFillBufferTest4.1 PROPERTIES RESOURCE_LOCK MEMORY_SIZE )
+  set_tests_properties(itkImageFillBufferTest4.1 PROPERTIES RESOURCE_LOCK MEMORY_SIZE)
 endif()
 
-itk_add_test(NAME itkImageAlgorithmCopyTest COMMAND ITKCommon2TestDriver itkImageAlgorithmCopyTest )
-itk_add_test(NAME itkImageAlgorithmCopyTest2 COMMAND ITKCommon2TestDriver itkImageAlgorithmCopyTest2 )
+itk_add_test(NAME itkImageAlgorithmCopyTest COMMAND ITKCommon2TestDriver itkImageAlgorithmCopyTest)
+itk_add_test(NAME itkImageAlgorithmCopyTest2 COMMAND ITKCommon2TestDriver itkImageAlgorithmCopyTest2)
 itk_add_test(NAME itkOptimizerParametersTest COMMAND ITKCommon2TestDriver itkOptimizerParametersTest)
 itk_add_test(NAME itkImageVectorOptimizerParametersHelperTest COMMAND ITKCommon2TestDriver itkImageVectorOptimizerParametersHelperTest)
 itk_add_test(NAME itkCompensatedSummationTest COMMAND ITKCommon2TestDriver itkCompensatedSummationTest)
@@ -542,9 +576,9 @@ if("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin|Linux")
   itk_add_test(NAME itkFloatingPointExceptionsTest2 COMMAND ITKCommon1TestDriver
     itkFloatingPointExceptionsTest ZeroDivByZero)
   itk_add_test(NAME itkFloatingPointExceptionsTest3 COMMAND ITKCommon1TestDriver
-    itkFloatingPointExceptionsTest FPOverFlow)
+    itkFloatingPointExceptionsTest FPOverflow)
   itk_add_test(NAME itkFloatingPointExceptionsTest4 COMMAND ITKCommon1TestDriver
-    itkFloatingPointExceptionsTest FPUnderFlow)
+    itkFloatingPointExceptionsTest FPUnderflow)
 
   set_tests_properties(
     itkFloatingPointExceptionsTest1
@@ -579,6 +613,10 @@ itk_add_test(NAME itkMultithreadingTest COMMAND ITKCommon2TestDriver itkMultithr
 
 itk_add_test(NAME itkMultiThreaderExceptionsTest COMMAND ITKCommon2TestDriver itkMultiThreaderExceptionsTest)
 
+itk_add_test(NAME itkXMLFileOutputWindowTestFilename
+      COMMAND ITKCommon2TestDriver
+    itkXMLFileOutputWindowTest ${ITK_TEST_OUTPUT_DIR}/itkXMLFileOutputWindowTest.xml)
+
 if(ITK_BUILD_SHARED_LIBS AND ITK_DYNAMIC_LOADING)
   macro(BuildClientTestLibrary _name _type)
     add_library(ClientTestLibrary${_name} ${_type} ClientTestLibrary${_name}.cxx)
@@ -605,6 +643,8 @@ endif()
 
 set(ITKCommonGTests
       itkAggregateTypesGTest.cxx
+      itkBitCastGTest.cxx
+      itkBooleanStdVectorGTest.cxx
       itkBuildInformationGTest.cxx
       itkConnectedImageNeighborhoodShapeGTest.cxx
       itkConstantBoundaryImageNeighborhoodPixelAccessPolicyGTest.cxx
@@ -616,12 +656,15 @@ set(ITKCommonGTests
       itkImageBufferRangeGTest.cxx
       itkImageRegionRangeGTest.cxx
       itkImageIORegionGTest.cxx
+      itkImageRegionGTest.cxx
       itkIndexGTest.cxx
       itkIndexRangeGTest.cxx
+      itkMakeUniqueForOverwriteGTest.cxx
       itkMatrixGTest.cxx
       itkMersenneTwisterRandomVariateGeneratorGTest.cxx
       itkNeighborhoodAllocatorGTest.cxx
       itkNumberToStringGTest.cxx
+      itkOffsetGTest.cxx
       itkOptimizerParametersGTest.cxx
       itkPointGTest.cxx
       itkShapedImageNeighborhoodRangeGTest.cxx
@@ -653,7 +696,7 @@ if(NOT ITK_BUILD_SHARED_LIBS AND NOT CMAKE_EXE_LINKER_FLAGS MATCHES ".*-static.*
   # Linking static ITK libraries twice, into two different binaries for the same process, is not recommended or supported.
   BuildSharedTestLibrary(A SHARED)
   BuildSharedTestLibrary(B SHARED)
-  add_executable(itkObjectFactoryBasePrivateDestructor itkObjectFactoryBasePrivateDestructor.cxx )
+  add_executable(itkObjectFactoryBasePrivateDestructor itkObjectFactoryBasePrivateDestructor.cxx)
   itk_module_target_label(itkObjectFactoryBasePrivateDestructor)
   target_link_libraries(itkObjectFactoryBasePrivateDestructor
       LINK_PUBLIC

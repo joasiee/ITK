@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,6 +24,7 @@
 #include "itkCompositeTransform.h"
 #include "itkCompositeTransformIOHelper.h"
 #include "itkVersion.h"
+#include "itkMakeUniqueForOverwrite.h"
 #include <sstream>
 
 namespace itk
@@ -83,7 +84,7 @@ HDF5TransformIOTemplate<TParametersValueType>::CanWriteFile(const char * fileNam
     ".hdf", ".h4", ".hdf4", ".h5", ".hdf5", ".he4", ".he5", ".hd5", nullptr,
   };
   std::string ext(itksys::SystemTools::GetFilenameLastExtension(fileName));
-  for (unsigned i = 0; extensions[i] != nullptr; ++i)
+  for (unsigned int i = 0; extensions[i] != nullptr; ++i)
   {
     if (ext == extensions[i])
     {
@@ -183,18 +184,18 @@ HDF5TransformIOTemplate<TParametersValueType>::ReadParameters(const std::string 
 
   if (ParamType.getSize() == sizeof(double))
   {
-    const std::unique_ptr<double[]> buf(new double[dim]);
+    const auto buf = make_unique_for_overwrite<double[]>(dim);
     paramSet.read(buf.get(), H5::PredType::NATIVE_DOUBLE);
-    for (unsigned i = 0; i < dim; ++i)
+    for (unsigned int i = 0; i < dim; ++i)
     {
       ParameterArray.SetElement(i, static_cast<ParametersValueType>(buf[i]));
     }
   }
   else
   {
-    const std::unique_ptr<float[]> buf(new float[dim]);
+    const auto buf = make_unique_for_overwrite<float[]>(dim);
     paramSet.read(buf.get(), H5::PredType::NATIVE_FLOAT);
-    for (unsigned i = 0; i < dim; ++i)
+    for (unsigned int i = 0; i < dim; ++i)
     {
       ParameterArray.SetElement(i, static_cast<ParametersValueType>(buf[i]));
     }
@@ -230,18 +231,18 @@ HDF5TransformIOTemplate<TParametersValueType>::ReadFixedParameters(const std::st
 
   if (ParamType.getSize() == sizeof(double))
   {
-    const std::unique_ptr<double[]> buf(new double[dim]);
+    const auto buf = make_unique_for_overwrite<double[]>(dim);
     paramSet.read(buf.get(), H5::PredType::NATIVE_DOUBLE);
-    for (unsigned i = 0; i < dim; ++i)
+    for (unsigned int i = 0; i < dim; ++i)
     {
       FixedParameterArray.SetElement(i, static_cast<FixedParametersValueType>(buf[i]));
     }
   }
   else
   {
-    const std::unique_ptr<float[]> buf(new float[dim]);
+    const auto buf = make_unique_for_overwrite<float[]>(dim);
     paramSet.read(buf.get(), H5::PredType::NATIVE_FLOAT);
-    for (unsigned i = 0; i < dim; ++i)
+    for (unsigned int i = 0; i < dim; ++i)
     {
       FixedParameterArray.SetElement(i, static_cast<FixedParametersValueType>(buf[i]));
     }
@@ -358,7 +359,7 @@ HDF5TransformIOTemplate<TParametersValueType>::Read()
     this->m_H5File->close();
   }
   // catch failure caused by the H5File operations
-  catch (H5::Exception & error)
+  catch (const H5::Exception & error)
   {
     itkExceptionMacro(<< error.getCDetailMsg());
   }
@@ -450,12 +451,12 @@ HDF5TransformIOTemplate<TParametersValueType>::Write()
 
     for (typename ConstTransformListType::const_iterator it = transformList.begin(); it != end; ++it, ++count)
     {
-      this->WriteOneTransform(count, (*it).GetPointer());
+      this->WriteOneTransform(count, it->GetPointer());
     }
     this->m_H5File->close();
   }
   // catch failure caused by the H5File operations
-  catch (H5::Exception & error)
+  catch (const H5::Exception & error)
   {
     itkExceptionMacro(<< error.getCDetailMsg());
   }

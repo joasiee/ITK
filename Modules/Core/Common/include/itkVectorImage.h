@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -183,22 +183,22 @@ public:
    * \sa Image::Rebind
    * \deprecated Use template alias RebindImageType instead
    */
-  template <typename UPixelType, unsigned int NUImageDimension = VImageDimension>
+  template <typename UPixelType, unsigned int VUImageDimension = VImageDimension>
   struct Rebind
   {
-    using Type = itk::VectorImage<UPixelType, NUImageDimension>;
+    using Type = itk::VectorImage<UPixelType, VUImageDimension>;
   };
 
   /// \cond HIDE_SPECIALIZATION_DOCUMENTATION
-  template <typename UElementType, unsigned int NUImageDimension>
-  struct Rebind<VariableLengthVector<UElementType>, NUImageDimension>
+  template <typename UElementType, unsigned int VUImageDimension>
+  struct Rebind<VariableLengthVector<UElementType>, VUImageDimension>
   {
-    using Type = itk::VectorImage<UElementType, NUImageDimension>;
+    using Type = itk::VectorImage<UElementType, VUImageDimension>;
   };
   /// \endcond
 
-  template <typename UPixelType, unsigned int NUImageDimension = VImageDimension>
-  using RebindImageType = typename Rebind<UPixelType, NUImageDimension>::Type;
+  template <typename UPixelType, unsigned int VUImageDimension = VImageDimension>
+  using RebindImageType = typename Rebind<UPixelType, VUImageDimension>::Type;
 
   /** Allocate the image memory. The size of the image must
    * already be set, e.g. by calling SetRegions(). */

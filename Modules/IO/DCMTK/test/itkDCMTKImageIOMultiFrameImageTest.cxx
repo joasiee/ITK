@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -53,9 +53,9 @@ CloseEnough(double a, double b)
 bool
 Equal(DirectionType dir1, DirectionType dir2)
 {
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
-    for (unsigned j = 0; j < 3; ++j)
+    for (unsigned int j = 0; j < 3; ++j)
     {
       if (!CloseEnough(dir1(i, j), dir2(i, j)))
       {
@@ -69,7 +69,7 @@ Equal(DirectionType dir1, DirectionType dir2)
 bool
 Equal(SpacingType spacing1, SpacingType spacing2)
 {
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     if (!CloseEnough(spacing1[i], spacing2[i]))
     {

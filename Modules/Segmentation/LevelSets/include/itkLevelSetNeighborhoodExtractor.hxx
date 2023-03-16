@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -149,7 +149,7 @@ LevelSetNeighborhoodExtractor<TLevelSet>::GenerateDataFull()
     // update progress
     if (!(i % updateVisits))
     {
-      this->UpdateProgress((float)i / (float)totalPixels);
+      this->UpdateProgress(static_cast<float>(i) / static_cast<float>(totalPixels));
     }
 
     inputIndex = inIt.GetIndex();
@@ -190,7 +190,7 @@ LevelSetNeighborhoodExtractor<TLevelSet>::GenerateDataNarrowBand()
     // update progress
     if (!(i % updateVisits))
     {
-      this->UpdateProgress((float)i / (float)totalPixels);
+      this->UpdateProgress(static_cast<float>(i) / static_cast<float>(totalPixels));
     }
 
     node = pointsIter.Value();
@@ -214,7 +214,7 @@ LevelSetNeighborhoodExtractor<TLevelSet>::CalculateDistance(IndexType & index)
   PixelType                             inputPixel;
 
   inputPixel = m_InputLevelSet->GetPixel(index);
-  centerValue = (double)inputPixel;
+  centerValue = static_cast<double>(inputPixel);
   centerValue -= m_LevelSetValue;
 
   NodeType centerNode;
@@ -290,7 +290,7 @@ LevelSetNeighborhoodExtractor<TLevelSet>::CalculateDistance(IndexType & index)
       break;
     }
 
-    distance += 1.0 / itk::Math::sqr((double)neighNode.GetValue());
+    distance += 1.0 / itk::Math::sqr(static_cast<double>(neighNode.GetValue()));
   }
 
   if (distance == 0.0)

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -58,14 +58,14 @@ TestKernelTransform(const char * name, KernelType *)
   typename KernelPointSetType::CoordRepType randomCoords[3];
   for (int i = 0; i < 4; ++i)
   {
-    randomCoords[0] = (typename KernelPointSetType::CoordRepType)vnl_sample_uniform((double)-1.0, (double)1.0);
-    randomCoords[1] = (typename KernelPointSetType::CoordRepType)vnl_sample_uniform((double)-1.0, (double)1.0);
-    randomCoords[2] = (typename KernelPointSetType::CoordRepType)vnl_sample_uniform((double)-1.0, (double)1.0);
+    randomCoords[0] = (typename KernelPointSetType::CoordRepType)vnl_sample_uniform(-1.0, 1.0);
+    randomCoords[1] = (typename KernelPointSetType::CoordRepType)vnl_sample_uniform(-1.0, 1.0);
+    randomCoords[2] = (typename KernelPointSetType::CoordRepType)vnl_sample_uniform(-1.0, 1.0);
     targetLandmarks->GetPoints()->SetElement(i, randomCoords);
 
-    randomCoords[0] = (typename KernelPointSetType::CoordRepType)vnl_sample_uniform((double)-1.0, (double)1.0);
-    randomCoords[1] = (typename KernelPointSetType::CoordRepType)vnl_sample_uniform((double)-1.0, (double)1.0);
-    randomCoords[2] = (typename KernelPointSetType::CoordRepType)vnl_sample_uniform((double)-1.0, (double)1.0);
+    randomCoords[0] = (typename KernelPointSetType::CoordRepType)vnl_sample_uniform(-1.0, 1.0);
+    randomCoords[1] = (typename KernelPointSetType::CoordRepType)vnl_sample_uniform(-1.0, 1.0);
+    randomCoords[2] = (typename KernelPointSetType::CoordRepType)vnl_sample_uniform(-1.0, 1.0);
     sourceLandmarks->GetPoints()->SetElement(i, randomCoords);
   }
 

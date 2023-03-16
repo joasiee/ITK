@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -109,16 +109,16 @@ outputPoint = transform->TransformPoint( inputPoint );
  * \sphinxexample{Core/Transform/GlobalRegistrationTwoImagesBSpline,Global Registration Of Two Images (BSpline)}
  * \endsphinx
  */
-template <typename TParametersValueType = double, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3>
+template <typename TParametersValueType = double, unsigned int VDimension = 3, unsigned int VSplineOrder = 3>
 class ITK_TEMPLATE_EXPORT BSplineDeformableTransform
-  : public BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>
+  : public BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(BSplineDeformableTransform);
 
   /** Standard class type aliases. */
   using Self = BSplineDeformableTransform;
-  using Superclass = BSplineBaseTransform<TParametersValueType, NDimensions, VSplineOrder>;
+  using Superclass = BSplineBaseTransform<TParametersValueType, VDimension, VSplineOrder>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -146,7 +146,7 @@ public:
   itkTypeMacro(BSplineDeformableTransform, BSplineBaseTransform);
 
   /** Dimension of the domain space. */
-  static constexpr unsigned int SpaceDimension = NDimensions;
+  static constexpr unsigned int SpaceDimension = VDimension;
 
   /** The BSpline order. */
   static constexpr unsigned int SplineOrder = VSplineOrder;
@@ -260,7 +260,7 @@ public:
   void
   ComputeJacobianWithRespectToParameters(const InputPointType &, JacobianType &) const override;
 
-  /** Return the number of parameters that completely define the Transfom */
+  /** Return the number of parameters that completely define the Transform */
   NumberOfParametersType
   GetNumberOfParameters() const override;
 

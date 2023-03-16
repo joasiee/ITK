@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -90,7 +90,7 @@ CreateMaskImage()
   it.GoToBegin();
   while (!it.IsAtEnd())
   {
-    it.Set((unsigned char)255);
+    it.Set(static_cast<unsigned char>(255));
     ++it;
   }
   return image;
@@ -138,8 +138,7 @@ itkImageToListSampleFilterTest(int, char *[])
   try
   {
     filter->Update();
-    failureMeassage = "Exception should have been thrown since \
-                    Update() is invoked without setting an input ";
+    failureMeassage = "Exception should have been thrown since Update() is invoked without setting an input ";
     pass = false;
   }
   catch (const itk::ExceptionObject & excp)
@@ -152,15 +151,13 @@ itkImageToListSampleFilterTest(int, char *[])
   if (filter->GetInput() != nullptr)
   {
     pass = false;
-    failureMeassage = "GetInput() should return nullptr if the input \
-                     has not been set";
+    failureMeassage = "GetInput() should return nullptr if the input has not been set";
   }
 
   if (filter->GetMaskImage() != nullptr)
   {
     pass = false;
-    failureMeassage = "GetMaskImage() should return nullptr if mask image \
-                     has not been set";
+    failureMeassage = "GetMaskImage() should return nullptr if mask image has not been set";
   }
 
 
@@ -213,9 +210,7 @@ itkImageToListSampleFilterTest(int, char *[])
   try
   {
     filter->Update();
-    std::cerr << "Exception should have been thrown since \
-      the mask has a different LargestPossibleRegion."
-              << std::endl;
+    std::cerr << "Exception should have been thrown since the mask has a different LargestPossibleRegion." << std::endl;
     return EXIT_FAILURE;
   }
   catch (const itk::ExceptionObject & excp)

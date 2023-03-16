@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -86,7 +86,7 @@ Test3dImageMask()
 
   auto imageFilter = SpatialObjectToImageFilterType::New();
 
-  // note visual studio 2015 u1  (release mode) fails to exectute .Fill
+  // note visual studio 2015 u1 (release mode) fails to execute. Fill
   // properly here by not initializing the last member. With initializer it
   // is happy.
   itk::Size<3> size = { { 10, 10, 10 } };
@@ -152,7 +152,7 @@ Test3dImageMask()
 
   constexpr std::array<double, MaskBoundsArrayType::Length> expectedBounds{ { 6.75, 8.25, 6.75, 8.25, 6.75, 8.25 } };
 
-  for (unsigned i = 0; i < MaskBoundsArrayType::Length; ++i)
+  for (unsigned int i = 0; i < MaskBoundsArrayType::Length; ++i)
   {
     if (itk::Math::NotAlmostEquals(maskBounds[i], expectedBounds[i]))
     {
@@ -207,7 +207,7 @@ Test2dImageMask()
   }
 
   // Now generate an imageMaskSpatial Object from box1
-  // Should have the same bounding box. withing pixelation bounds
+  // Should have the same bounding box. within pixelation bounds
   using ImageType = itk::Image<unsigned char, 2>;
   using ImageMaskSpatialObjectType = itk::ImageMaskSpatialObject<2>;
 
@@ -270,7 +270,7 @@ Test2dImageMask()
 
   constexpr std::array<double, MaskBoundsArrayType::Length> expectedBounds{ { 6.75, 8.15, 6.75, 8.15 } };
 
-  for (unsigned i = 0; i < MaskBoundsArrayType::Length; ++i)
+  for (unsigned int i = 0; i < MaskBoundsArrayType::Length; ++i)
   {
     if (itk::Math::NotAlmostEquals(maskBounds[i], expectedBounds[i]))
     {

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,7 +55,7 @@
 namespace itk
 {
 /**
- *\class IPLSortInfo
+ * \class IPLSortInfo
  *  \brief -- holds info on one file for IPLCommonImageIO
  * \ingroup ITKIOIPL
  */
@@ -111,7 +111,7 @@ private:
 };
 
 /**
- *\class IPLFileNameList
+ * \class IPLFileNameList
  *  \brief -- stores filename+info to be enumerated for IPLCommonImageIO
  * \ingroup ITKIOIPL
  */
@@ -219,7 +219,7 @@ public:
       {
         return true;
       }
-      it++;
+      ++it;
     }
     m_List.push_back(new IPLFileSortInfo(filename,
                                          sliceLocation,

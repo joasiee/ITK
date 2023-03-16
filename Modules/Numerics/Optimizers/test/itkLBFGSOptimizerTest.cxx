@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,7 +28,7 @@
  *  1/2 x^T A x - b^T x
  *
  *  Where A is represented as an itkMatrix and
- *  b is represented as a itkVector
+ *  b is represented as an itkVector
  *
  *  The system in this example is:
  *
@@ -118,7 +118,7 @@ itkLBFGSOptimizerTest(int, char *[])
   using OptimizerType = itk::LBFGSOptimizer;
   using vnlOptimizerType = OptimizerType::InternalOptimizerType;
 
-  // Declaration of a itkOptimizer
+  // Declaration of an itkOptimizer
   auto itkOptimizer = OptimizerType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(itkOptimizer, LBFGSOptimizer, SingleValuedNonLinearVnlOptimizer);
@@ -129,8 +129,7 @@ itkLBFGSOptimizerTest(int, char *[])
 
   // Set some optimizer parameters
   bool trace = false;
-  itkOptimizer->SetTrace(trace);
-  ITK_TEST_SET_GET_VALUE(trace, itkOptimizer->GetTrace());
+  ITK_TEST_SET_GET_BOOLEAN(itkOptimizer, Trace, trace);
 
   unsigned int maximumNumberOfFunctionEvaluations = 1000;
   itkOptimizer->SetMaximumNumberOfFunctionEvaluations(maximumNumberOfFunctionEvaluations);

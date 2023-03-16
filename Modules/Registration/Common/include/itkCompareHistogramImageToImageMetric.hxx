@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -65,10 +65,7 @@ CompareHistogramImageToImageMetric<TFixedImage, TMovingImage>::FormTrainingHisto
   }
 
   // If the image is provided by a source, update the source.
-  if (m_TrainingMovingImage->GetSource())
-  {
-    m_TrainingMovingImage->GetSource()->Update();
-  }
+  m_TrainingMovingImage->UpdateSource();
 
   if (!m_TrainingFixedImage)
   {
@@ -76,10 +73,7 @@ CompareHistogramImageToImageMetric<TFixedImage, TMovingImage>::FormTrainingHisto
   }
 
   // If the image is provided by a source, update the source.
-  if (m_TrainingFixedImage->GetSource())
-  {
-    m_TrainingFixedImage->GetSource()->Update();
-  }
+  m_TrainingFixedImage->UpdateSource();
 
   if (m_TrainingFixedImageRegion.GetNumberOfPixels() == 0)
   {
@@ -127,7 +121,7 @@ CompareHistogramImageToImageMetric<TFixedImage, TMovingImage>::FormTrainingHisto
       {
         const RealType TrainingMovingValue = this->m_TrainingInterpolator->Evaluate(transformedPoint);
         const RealType TrainingFixedValue = ti.Get();
-        NumberOfPixelsCounted++;
+        ++NumberOfPixelsCounted;
 
         typename HistogramType::MeasurementVectorType sample;
         sample.SetSize(2);
@@ -144,8 +138,7 @@ CompareHistogramImageToImageMetric<TFixedImage, TMovingImage>::FormTrainingHisto
 
   if (NumberOfPixelsCounted == 0)
   {
-    itkExceptionMacro(<< "All the points mapped to outside of the Training moving \
-age");
+    itkExceptionMacro(<< "All the points mapped to outside of the Training moving age");
   }
 }
 

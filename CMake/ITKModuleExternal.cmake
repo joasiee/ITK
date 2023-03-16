@@ -12,7 +12,7 @@ if(MSVC AND ${CMAKE_MINIMUM_REQUIRED_VERSION} LESS 3.16.3)
   message(WARNING "cmake_minimum_required must be at least 3.16.3")
   message(STATUS "This is needed to allow proper setting of CMAKE_MSVC_RUNTIME_LIBRARY.")
   message(STATUS "Do not be surprised if you run into link errors of the style:
-  error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MTd_Static' doesn't match value 'MDd_Dynamic' in module.obj")
+  LNK2038: mismatch detected for 'RuntimeLibrary': value 'MTd_Static' doesn't match value 'MDd_Dynamic' in module.obj")
 endif()
 if(NOT EXISTS ${ITK_CMAKE_DIR}/ITKModuleMacros.cmake)
   message(FATAL_ERROR "Modules can only be built against an ITK build tree; they cannot be built against an ITK install tree.")
@@ -50,10 +50,16 @@ if(NOT ITK_BINARY_DIR)
   set(ITK_BINARY_DIR ${ITK_DIR})
 endif()
 
+# Set default value for project that are not using the
+# "GNUInstallDirs" CMake module.
+if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
+  set(CMAKE_INSTALL_LIBDIR "lib")
+endif()
+
 # The default path when not wrapping.  Restore standard build location
 # if python wrapping is turned on, and then turned off.
 if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
-  set(NO_WRAP_CMAKE_LIBRARY_OUTPUT_DIRECTORY ${ITK_BINARY_DIR}/lib CACHE PATH "Shared library directory")
+  set(NO_WRAP_CMAKE_LIBRARY_OUTPUT_DIRECTORY ${ITK_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR} CACHE PATH "Shared library directory")
 else()
   set(NO_WRAP_CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} CACHE PATH "Shared library directory")
 endif()
@@ -63,47 +69,11 @@ else()
   set(NO_WRAP_CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} CACHE PATH "Shared library directory")
 endif()
 
-if(ITK_WRAPPING)
-  # WRAPPER_LIBRARY_OUTPUT_DIR. Directory in which generated cxx, xml, and idx files will be placed.
-  set(WRAPPER_LIBRARY_OUTPUT_DIR "${ITK_DIR}/Wrapping" CACHE INTERNAL "Need to specify the output library directory globally")
-  if(ITK_WRAP_PYTHON)
-    set(ITK_WRAP_PYTHON_ROOT_BINARY_DIR "${WRAPPER_LIBRARY_OUTPUT_DIR}/Generators/Python" CACHE INTERNAL "python binary dir")
-    # create the directory to avoid loosing case on windows
-    file(MAKE_DIRECTORY ${ITK_WRAP_PYTHON_ROOT_BINARY_DIR})
-
-    set(ITK_STUB_DIR "${ITK_WRAP_PYTHON_ROOT_BINARY_DIR}/itk-stubs")
-    file(MAKE_DIRECTORY ${ITK_STUB_DIR})
-
-    set(ITK_PYTHON_PACKAGE_DIR "${ITK_WRAP_PYTHON_ROOT_BINARY_DIR}/itk")
-    # create the directory to avoid loosing case on windows
-    file(MAKE_DIRECTORY ${ITK_PYTHON_PACKAGE_DIR})
-
-    set(ITK_WRAP_PYTHON_SWIG_CONFIGURATION_DIR "${ITK_PYTHON_PACKAGE_DIR}/Configuration" CACHE INTERNAL "python binary dir")
-    # create the directory to avoid loosing case on windows
-    file(MAKE_DIRECTORY ${ITK_WRAP_PYTHON_SWIG_CONFIGURATION_DIR})
-
-    # IF WRAP_PYTHON then we must unconditionally set the CMAKE_LIBRARY_OUTPUT_DIRECTORY
-    # If wrapping for python, then put all the shared libraries (both core shared libs,
-    # and python shared libs) in the itk python package directory.
-    #
-    # https://cmake.org/cmake/help/v3.10/prop_tgt/LIBRARY_OUTPUT_DIRECTORY.html#prop_tgt:LIBRARY_OUTPUT_DIRECTORY
-    # Multi-configuration generators (VS, Xcode) append a per-configuration subdirectory
-    # to the specified directory unless a generator expression is used.
-    # Using an always true generator expression to disable multi-config standard behavior
-    #
-    # When wrapping, the multi-config generators can only be used in degraded state
-    # of allowing only a single element int the CMAKE_CONFIGURATION_TYPES and enforcing
-    # that CMAKE_BUILD_TYPE match that type (see Wrapping/CMakeLists.txt enforcement)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "$<1:${ITK_PYTHON_PACKAGE_DIR}>" CACHE PATH "Shared library directory with generator override")
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "$<1:${ITK_PYTHON_PACKAGE_DIR}>" CACHE PATH "Shared library directory with generator override")
-  endif()
-else()
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${NO_WRAP_CMAKE_LIBRARY_OUTPUT_DIRECTORY}   CACHE PATH "Shared library directory")
-endif()
+include(WrappingConfigCommon)
 # Setup build locations for shared libraries ----STOP
 
 if(NOT CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${ITK_DIR}/lib CACHE PATH "Static library install directory")
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${ITK_DIR}/${CMAKE_INSTALL_LIBDIR} CACHE PATH "Static library install directory")
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${NO_WRAP_CMAKE_RUNTIME_OUTPUT_DIRECTORY}   CACHE PATH "Runtime library directory")
 endif()
 
@@ -112,10 +82,10 @@ if(NOT ITK_INSTALL_RUNTIME_DIR)
   set(ITK_INSTALL_RUNTIME_DIR bin)
 endif()
 if(NOT ITK_INSTALL_LIBRARY_DIR)
-  set(ITK_INSTALL_LIBRARY_DIR lib)
+  set(ITK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_LIBDIR})
 endif()
 if(NOT ITK_INSTALL_ARCHIVE_DIR)
-  set(ITK_INSTALL_ARCHIVE_DIR lib)
+  set(ITK_INSTALL_ARCHIVE_DIR ${CMAKE_INSTALL_LIBDIR})
 endif()
 if(NOT ITK_INSTALL_INCLUDE_DIR)
   set(ITK_INSTALL_INCLUDE_DIR include/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR})
@@ -127,7 +97,7 @@ if(NOT ITK_INSTALL_DOC_DIR)
   set(ITK_INSTALL_DOC_DIR share/doc/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR})
 endif()
 if(NOT ITK_INSTALL_PACKAGE_DIR)
-  set(ITK_INSTALL_PACKAGE_DIR "lib/cmake/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}")
+  set(ITK_INSTALL_PACKAGE_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}")
 endif()
 
 include(${ITK_CMAKE_DIR}/ITKInitializeCXXStandard.cmake)
@@ -193,26 +163,11 @@ endif()
 if(ITK_WRAPPING)
   CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_PYTHON "Build Python support." ${ITK_WRAP_PYTHON}
                        "ITK_WRAP_PYTHON" OFF)
-  CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_JAVA "Build Java support." ${ITK_WRAP_JAVA}
-                       "ITK_WRAP_JAVA" OFF)
-  CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_RUBY "Build Ruby support." ${ITK_WRAP_RUBY}
-                       "ITK_WRAP_RUBY" OFF)
-  CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_PERL "Build Perl support." ${ITK_WRAP_PERL}
-                       "ITK_WRAP_PERL" OFF)
-  CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_TCL "Build Tcl support." ${ITK_WRAP_TCL}
-                       "ITK_WRAP_TCL" OFF)
-  CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_EXPLICIT "Build Explicit support." OFF
-                       "ITK_WRAP_EXPLICIT" OFF)
   CMAKE_DEPENDENT_OPTION(${itk-module}_WRAP_DOC "Build Doxygen support." OFF
                        "ITK_WRAP_DOC" OFF)
   set(${itk-module}_WRAP_CASTXML ${ITK_WRAPPING})
   set(${itk-module}_WRAP_SWIGINTERFACE ${ITK_WRAPPING})
-  if( (${itk-module}_WRAP_PYTHON OR
-       ${itk-module}_WRAP_JAVA OR
-       ${itk-module}_WRAP_RUBY OR
-       ${itk-module}_WRAP_PERL OR
-       ${itk-module}_WRAP_TCL OR
-       ${itk-module}_WRAP_EXPLICIT OR
+  if((${itk-module}_WRAP_PYTHON OR
        ${itk-module}_WRAP_DOC
       )
     AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/wrapping/CMakeLists.txt"

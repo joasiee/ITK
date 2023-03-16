@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@
 namespace itk
 {
 /**
- *\class XMLReaderBase
+ * \class XMLReaderBase
  * XMLReaderBase encapsulates the expat library (Insight/Utilities/expat
  * and defines the methods needed in a derived class to receive the
  * contents of an XML file in a structured manner.  It's 'impure virtual'
@@ -88,7 +88,7 @@ protected:
 };
 
 /**
- *\class XMLReader
+ * \class XMLReader
  * \brief template base class for an XMLReader
  * Its purpose really is just to define the simple interface for
  * extracting the object resulting from reading the XML File.
@@ -131,7 +131,7 @@ protected:
 };
 
 /**
- *\class XMLWriterBase
+ * \class XMLWriterBase
  *
  * 'Impure virtual' base class for XML File writing.
  * Defines the interface for an XML file writer and provides

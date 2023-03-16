@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -49,7 +49,7 @@ itkSymmetricEllipsoidInteriorExteriorSpatialFunctionTest(int, char *[])
   spatialFunc->SetCenter(center);
 
   // Define and set the orientation and axes lengths of the ellipsoid
-  // NOTE: Orienation vector must be normalized!!!!
+  // NOTE: Orientation vector must be normalized!!!!
   itk::Vector<double, 3> orientation;
   orientation[0] = 1 / std::sqrt(2.0);
   orientation[1] = 1 / std::sqrt(2.0);

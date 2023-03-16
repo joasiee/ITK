@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,7 +30,7 @@
 #ifndef itkTriangleMeshCurvatureCalculator_hxx
 #define itkTriangleMeshCurvatureCalculator_hxx
 
-#include <memory> // For unique_ptr
+#include "itkMakeUniqueForOverwrite.h"
 #include "itkObjectFactory.h"
 #include "itkMath.h"
 #include "vnl/vnl_cross.h"
@@ -81,13 +81,12 @@ TriangleMeshCurvatureCalculator<TInputMesh>::ComputeGaussCurvature(const InputMe
 
   const unsigned int numberOfPoints = inputMesh->GetNumberOfPoints();
 
-  const std::unique_ptr<double[]> K(new double[numberOfPoints]);
-  const std::unique_ptr<double[]> dA(new double[numberOfPoints]);
-  double                          pi2 = itk::Math::twopi;
+  const auto K = make_unique_for_overwrite<double[]>(numberOfPoints);
+  const auto dA = std::make_unique<double[]>(numberOfPoints);
+  double     pi2 = itk::Math::twopi;
   for (unsigned int k = 0; k < numberOfPoints; ++k)
   {
     K[k] = pi2;
-    dA[k] = 0.0;
   }
 
   CellsContainerConstPointer  outCells = inputMesh->GetCells();
@@ -134,7 +133,8 @@ TriangleMeshCurvatureCalculator<TInputMesh>::ComputeGaussCurvature(const InputMe
     alpha2 = itk::Math::pi - angle(e0.GetVnlVector(), e1.GetVnlVector());
 
     // Surface area
-    A = double(itk::Math::abs(vnl_cross_3d((v1 - v0).GetVnlVector(), (v2 - v0).GetVnlVector()).two_norm() / 2.0));
+    A = static_cast<double>(
+      itk::Math::abs(vnl_cross_3d((v1 - v0).GetVnlVector(), (v2 - v0).GetVnlVector()).two_norm() / 2.0));
 
     dA[point_ids[0]] += A;
     dA[point_ids[1]] += A;

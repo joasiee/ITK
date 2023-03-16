@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@
 #define itkVideoFileReader_hxx
 
 #include "itkConvertPixelBuffer.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 
 namespace itk
@@ -231,15 +232,14 @@ VideoFileReader<TOutputVideoStream>::TemporalStreamingGenerateData()
   if (this->m_PixelConversionNeeded)
   {
     // Set up temporary buffer for reading
-    size_t bufferSize = m_VideoIO->GetImageSizeInBytes();
-    auto * loadBuffer = new char[bufferSize];
+    size_t     bufferSize = m_VideoIO->GetImageSizeInBytes();
+    const auto loadBuffer = make_unique_for_overwrite<char[]>(bufferSize);
 
     // Read into a temporary buffer
-    this->m_VideoIO->Read(static_cast<void *>(loadBuffer));
+    this->m_VideoIO->Read(static_cast<void *>(loadBuffer.get()));
 
     // Convert the buffer into the output buffer location
-    this->DoConvertBuffer(static_cast<void *>(loadBuffer), frameNum);
-    delete[] loadBuffer;
+    this->DoConvertBuffer(static_cast<void *>(loadBuffer.get()), frameNum);
   }
   else
   {

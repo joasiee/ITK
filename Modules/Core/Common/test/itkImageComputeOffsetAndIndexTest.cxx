@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,7 +26,7 @@ void
 ComputeIndex(TImage * image, unsigned int count, unsigned int repeat)
 {
   typename TImage::IndexType index;
-  for (unsigned j = 0; j < repeat; ++j)
+  for (unsigned int j = 0; j < repeat; ++j)
   {
     for (unsigned int i = 0; i < count; ++i)
     {
@@ -66,7 +66,7 @@ ComputeOffset(TImage * image, unsigned int count, unsigned int repeat)
   typename TImage::OffsetType      indexIncr;
   indexIncr.Fill(1);
 
-  for (unsigned j = 0; j < repeat; ++j)
+  for (unsigned int j = 0; j < repeat; ++j)
   {
     index.Fill(0);
     for (unsigned int i = 0; i < count; ++i)
@@ -92,7 +92,7 @@ ComputeFastOffset(TImage * image, unsigned int count, unsigned int repeat)
 
   const typename TImage::OffsetValueType * offsetTable = image->GetOffsetTable();
 
-  for (unsigned j = 0; j < repeat; ++j)
+  for (unsigned int j = 0; j < repeat; ++j)
   {
     index.Fill(0);
     for (unsigned int i = 0; i < count; ++i)
@@ -125,9 +125,7 @@ itkImageComputeOffsetAndIndexTest(int, char *[])
     index.Fill(0);                                           \
     region.SetSize(size);                                    \
     region.SetIndex(index);                                  \
-    myImage->SetLargestPossibleRegion(region);               \
-    myImage->SetBufferedRegion(region);                      \
-    myImage->SetRequestedRegion(region);                     \
+    myImage->SetRegions(region);                             \
     myImage->Allocate();                                     \
     collector.Start("ComputeIndexFast " #dim "D");           \
     unsigned int totalSize = 1;                              \
@@ -157,9 +155,7 @@ itkImageComputeOffsetAndIndexTest(int, char *[])
     index.Fill(0);                                       \
     region.SetSize(size);                                \
     region.SetIndex(index);                              \
-    myImage->SetLargestPossibleRegion(region);           \
-    myImage->SetBufferedRegion(region);                  \
-    myImage->SetRequestedRegion(region);                 \
+    myImage->SetRegions(region);                         \
     myImage->Allocate();                                 \
     collector.Start("ComputeIndex " #dim "D");           \
     unsigned int totalSize = 1;                          \
@@ -189,9 +185,7 @@ itkImageComputeOffsetAndIndexTest(int, char *[])
     index.Fill(0);                                                      \
     region.SetSize(size);                                               \
     region.SetIndex(index);                                             \
-    myImage->SetLargestPossibleRegion(region);                          \
-    myImage->SetBufferedRegion(region);                                 \
-    myImage->SetRequestedRegion(region);                                \
+    myImage->SetRegions(region);                                        \
     myImage->Allocate();                                                \
     collector.Start("ComputeOffsetFast " #dim "D");                     \
     unsigned int repeat = 1;                                            \
@@ -216,9 +210,7 @@ itkImageComputeOffsetAndIndexTest(int, char *[])
     index.Fill(0);                                                  \
     region.SetSize(size);                                           \
     region.SetIndex(index);                                         \
-    myImage->SetLargestPossibleRegion(region);                      \
-    myImage->SetBufferedRegion(region);                             \
-    myImage->SetRequestedRegion(region);                            \
+    myImage->SetRegions(region);                                    \
     myImage->Allocate();                                            \
     collector.Start("ComputeOffset " #dim "D");                     \
     unsigned int repeat = 1;                                        \

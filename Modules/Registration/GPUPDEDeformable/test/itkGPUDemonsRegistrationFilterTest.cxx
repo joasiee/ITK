@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -80,27 +80,27 @@ const bool             smoothUpdateField = true;
 itk::TimeProbe m_GPUTime;
 itk::TimeProbe m_CPUTime;
 
-template <unsigned VDimension>
+template <unsigned int VDimension>
 int
 GPUDemonsRegistrationFilterTestTemplate(int argc, char * argv[]);
 
-template <unsigned VDimension, typename TDisplacementFieldPointer>
+template <unsigned int VDimension, typename TDisplacementFieldPointer>
 TDisplacementFieldPointer
 itkGPUDemons(int argc, char * argv[]);
-template <unsigned VDimension, typename TDisplacementFieldPointer>
+template <unsigned int VDimension, typename TDisplacementFieldPointer>
 TDisplacementFieldPointer
 itkCPUDemons(int argc, char * argv[]);
 
 char *
 AppendFileName(char * src, const char * postfix)
 {
-  char * dest = new char[strlen(src) + strlen(postfix) + 1];
+  size_t destLength = strlen(src) + strlen(postfix) + 1;
+  char * dest = new char[destLength];
   char * pos = strrchr(src, '.');
   int    skip = pos - src;
 
-  sprintf(dest, "%s", src);
-  sprintf(dest + skip, "%s", postfix);
-  sprintf(dest + skip + strlen(postfix), "%s", pos);
+  snprintf(dest, destLength, "%s", src);
+  snprintf(dest + skip, destLength - skip, "%s%s", postfix, pos);
   return dest;
 }
 
@@ -221,7 +221,7 @@ GPUDemonsRegistrationFilterTestTemplate(int argc, char * argv[])
   return EXIT_SUCCESS;
 }
 
-template <unsigned VDimension, typename TDisplacementFieldPointer>
+template <unsigned int VDimension, typename TDisplacementFieldPointer>
 TDisplacementFieldPointer
 itkGPUDemons(int, char * argv[])
 {
@@ -336,7 +336,7 @@ itkGPUDemons(int, char * argv[])
   return ret;
 }
 
-template <unsigned VDimension, typename TDisplacementFieldPointer>
+template <unsigned int VDimension, typename TDisplacementFieldPointer>
 TDisplacementFieldPointer
 itkCPUDemons(int, char * argv[])
 {

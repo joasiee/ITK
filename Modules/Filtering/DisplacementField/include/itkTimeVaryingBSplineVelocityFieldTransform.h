@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -64,16 +64,16 @@ namespace itk
  * \ingroup Transforms
  * \ingroup ITKDisplacementField
  */
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 class ITK_TEMPLATE_EXPORT TimeVaryingBSplineVelocityFieldTransform
-  : public VelocityFieldTransform<TParametersValueType, NDimensions>
+  : public VelocityFieldTransform<TParametersValueType, VDimension>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(TimeVaryingBSplineVelocityFieldTransform);
 
   /** Standard class type aliases. */
   using Self = TimeVaryingBSplineVelocityFieldTransform;
-  using Superclass = VelocityFieldTransform<TParametersValueType, NDimensions>;
+  using Superclass = VelocityFieldTransform<TParametersValueType, VDimension>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -108,10 +108,10 @@ public:
   using typename Superclass::DerivativeType;
 
   /** Dimension of the domain spaces. */
-  static constexpr unsigned int Dimension = NDimensions;
+  static constexpr unsigned int Dimension = VDimension;
 
   /** Dimension of the time varying velocity field. */
-  static constexpr unsigned int VelocityFieldDimension = NDimensions + 1;
+  static constexpr unsigned int VelocityFieldDimension = VDimension + 1;
 
   using VelocityFieldPointType = typename VelocityFieldType::PointType;
   using VelocityFieldSizeType = typename VelocityFieldType::SizeType;

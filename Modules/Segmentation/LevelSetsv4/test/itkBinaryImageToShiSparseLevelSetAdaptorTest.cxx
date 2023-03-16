@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -110,7 +110,7 @@ itkBinaryImageToShiSparseLevelSetAdaptorTest(int argc, char * argv[])
 
     while (lIt != layer.end())
     {
-      std::cout << lIt->first << ' ' << int(lIt->second) << std::endl;
+      std::cout << lIt->first << ' ' << static_cast<int>(lIt->second) << std::endl;
       ++lIt;
     }
     std::cout << std::endl;

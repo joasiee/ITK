@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -71,8 +71,8 @@ itkConnectedComponentImageFilterTestRGB(int argc, char * argv[])
   threshold_hi = std::stoi(argv[4]);
 
   threshold->SetInput(reader->GetOutput());
-  threshold->SetInsideValue(itk::NumericTraits<InternalPixelType>::OneValue());
-  threshold->SetOutsideValue(itk::NumericTraits<InternalPixelType>::ZeroValue());
+  threshold->SetInsideValue(itk::NumericTraits<RGBPixelType>::OneValue());
+  threshold->SetOutsideValue(itk::NumericTraits<RGBPixelType>::ZeroValue());
   threshold->SetLowerThreshold(threshold_low);
   threshold->SetUpperThreshold(threshold_hi);
   threshold->Update();
@@ -121,7 +121,7 @@ itkConnectedComponentImageFilterTestRGB(int argc, char * argv[])
   {
     if (it.Get() == 0)
     {
-      cit.Set(RGBPixelType(itk::NumericTraits<unsigned char>::ZeroValue()));
+      cit.Set(RGBPixelType());
     }
     else
     {

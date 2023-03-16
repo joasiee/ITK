@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,6 +27,7 @@
  *=========================================================================*/
 #include "itkLSMImageIO.h"
 #include "itkByteSwapper.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 #include "itk_tiff.h"
 
@@ -62,7 +63,7 @@ using Float32_t = float;
 using Float64_t = double;
 using Float96_t = long double;
 
-using zeiss_info = struct
+struct zeiss_info
 {
   UInt32_t  U32MagicNumber;
   Int32_t   S32StructureSize;
@@ -301,16 +302,15 @@ LSMImageIO::Write(const void * buffer)
     {
       // if number of scalar components is greater than 3, that means we assume
       // there is alpha.
-      uint16_t extra_samples = scomponents - 3;
-      auto *   sample_info = new uint16_t[scomponents - 3];
+      uint16_t   extra_samples = scomponents - 3;
+      const auto sample_info = make_unique_for_overwrite<uint16_t[]>(scomponents - 3);
       sample_info[0] = EXTRASAMPLE_ASSOCALPHA;
       int cc;
       for (cc = 1; cc < scomponents - 3; ++cc)
       {
         sample_info[cc] = EXTRASAMPLE_UNSPECIFIED;
       }
-      TIFFSetField(tif, TIFFTAG_EXTRASAMPLES, extra_samples, sample_info);
-      delete[] sample_info;
+      TIFFSetField(tif, TIFFTAG_EXTRASAMPLES, extra_samples, sample_info.get());
     }
 
     uint16_t compression;
@@ -401,7 +401,7 @@ LSMImageIO::Write(const void * buffer)
         itkExceptionMacro(<< "TIFFImageIO: error out of disk space");
       }
       outPtr += rowLength;
-      row++;
+      ++row;
     }
 
     if (m_NumberOfDimensions == 3)

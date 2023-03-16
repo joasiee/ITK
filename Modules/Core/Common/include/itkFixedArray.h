@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,7 @@
 #define itkFixedArray_h
 
 #include "itkMacro.h"
+#include "itkMakeFilled.h"
 #include <algorithm>
 #include <array>
 
@@ -189,15 +190,9 @@ public:
   using SizeType = unsigned int;
 
 public:
-  /** Constructors */
+  /** Default-constructor.
+   * \note The other five "special member functions" are defaulted implicitly, following the C++ "Rule of Zero". */
   FixedArray() = default;
-  FixedArray(const FixedArray &) = default;
-  FixedArray &
-  operator=(const FixedArray &) = default;
-  FixedArray(FixedArray &&) = default;
-  FixedArray &
-  operator=(FixedArray &&) = default;
-  ~FixedArray() = default;
 
   /** Conversion constructors */
   FixedArray(const ValueType r[VLength]);
@@ -257,7 +252,7 @@ public:
    */
 // false positive warnings with GCC
 #if defined(__GNUC__)
-#  if (__GNUC__ == 4) && (__GNUC_MINOR__ == 9) || (__GNUC__ >= 7)
+#  if (__GNUC__ >= 7)
 #    pragma GCC diagnostic push
 #    pragma GCC diagnostic ignored "-Warray-bounds"
 #  endif
@@ -265,7 +260,7 @@ public:
   constexpr reference       operator[](unsigned int index) { return m_InternalArray[index]; }
   constexpr const_reference operator[](unsigned int index) const { return m_InternalArray[index]; }
 #if defined(__GNUC__)
-#  if (__GNUC__ == 4) && (__GNUC_MINOR__ == 9) || (__GNUC__ >= 7)
+#  if (__GNUC__ >= 7)
 #    pragma GCC diagnostic pop
 #  endif
 #endif
@@ -328,37 +323,37 @@ public:
 
   itkLegacyMacro(ConstReverseIterator rEnd() const);
 
-  const_iterator
+  constexpr const_iterator
   cbegin() const noexcept
   {
     return m_InternalArray;
   }
 
-  iterator
+  constexpr iterator
   begin() noexcept
   {
     return m_InternalArray;
   }
 
-  const_iterator
+  constexpr const_iterator
   begin() const noexcept
   {
     return this->cbegin();
   }
 
-  const_iterator
+  constexpr const_iterator
   cend() const noexcept
   {
     return m_InternalArray + VLength;
   }
 
-  iterator
+  constexpr iterator
   end() noexcept
   {
     return m_InternalArray + VLength;
   }
 
-  const_iterator
+  constexpr const_iterator
   end() const noexcept
   {
     return this->cend();
@@ -429,12 +424,7 @@ public:
   static constexpr FixedArray
   Filled(const ValueType & value)
   {
-    FixedArray result{};
-    for (ValueType & element : result.m_InternalArray)
-    {
-      element = value;
-    }
-    return result;
+    return MakeFilled<FixedArray>(value);
   }
 };
 

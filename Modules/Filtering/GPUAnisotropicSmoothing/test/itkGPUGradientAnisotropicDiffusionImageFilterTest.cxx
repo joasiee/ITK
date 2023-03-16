@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -140,7 +140,7 @@ runGPUGradientAnisotropicDiffusionImageFilterTest(const std::string & inFile, co
 
       for (cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git)
       {
-        double err = (double)(cit.Get()) - (double)(git.Get());
+        double err = static_cast<double>(cit.Get()) - static_cast<double>(git.Get());
         diff += err * err;
         nPix++;
       }
@@ -151,7 +151,7 @@ runGPUGradientAnisotropicDiffusionImageFilterTest(const std::string & inFile, co
 
       if (nPix > 0)
       {
-        double RMSError = sqrt(diff / (double)nPix);
+        double RMSError = sqrt(diff / static_cast<double>(nPix));
         std::cout << "RMS Error : " << RMSError << std::endl;
         double RMSThreshold = 10.0;
         if (itk::Math::isnan(RMSError))

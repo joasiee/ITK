@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,7 +26,7 @@ namespace itk
 namespace Accessor
 {
 /**
- *\class VectorImageToImagePixelAccessor
+ * \class VectorImageToImagePixelAccessor
  * \brief Extract components from a VectorImage.
  *
  * This accessor is used to extract components from a VectorImage. It is used
@@ -123,7 +123,7 @@ private:
 } // end namespace Accessor
 
 /**
- *\class VectorImageToImageAdaptor
+ * \class VectorImageToImageAdaptor
  * \brief Presents a VectorImage and extracts a component from it into an image.
  *
  * The class is expected to be templated over a pixel type and dimension. These

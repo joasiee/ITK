@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -143,14 +143,14 @@ itkPointSetToImageRegistrationTest(int, char *[])
   scales.Fill(1.0);
 
   unsigned long numberOfIterations = 50;
-  double        maximumStepLenght = 1.0; // no step will be larger than this
-  double        minimumStepLenght = 0.01;
+  double        maximumStepLength = 1.0; // no step will be larger than this
+  double        minimumStepLength = 0.01;
   double        gradientTolerance = 1e-6; // convergence criterion
 
   optimizer->SetScales(scales);
   optimizer->SetNumberOfIterations(numberOfIterations);
-  optimizer->SetMinimumStepLength(minimumStepLenght);
-  optimizer->SetMaximumStepLength(maximumStepLenght);
+  optimizer->SetMinimumStepLength(minimumStepLength);
+  optimizer->SetMaximumStepLength(maximumStepLength);
   optimizer->SetGradientMagnitudeTolerance(gradientTolerance);
   optimizer->MinimizeOn();
 

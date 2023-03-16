@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -48,8 +48,8 @@ itkSimilarityIndexImageFilterTest(int, char *[])
 
   unsigned long numOfPixels = image1->GetBufferedRegion().GetNumberOfPixels();
   unsigned long lower1 = 0;
-  unsigned long upper1 = (unsigned long)((double)numOfPixels * 0.75) - 1;
-  auto          lower2 = (unsigned long)((double)numOfPixels * 0.25);
+  unsigned long upper1 = static_cast<unsigned long>(static_cast<double>(numOfPixels) * 0.75) - 1;
+  auto          lower2 = static_cast<unsigned long>(static_cast<double>(numOfPixels) * 0.25);
   unsigned long upper2 = numOfPixels - 1;
 
   itk::ImageRegionIterator<Image1Type> it1(image1, image1->GetBufferedRegion());

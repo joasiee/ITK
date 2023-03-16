@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -97,8 +97,8 @@ CurvatureFlowFunction<TImage>::ComputeUpdate(const NeighborhoodType & it,
                          neighborhoodScales[i] * neighborhoodScales[j];
     }
 
-    // accumlate the gradient magnitude squared
-    magnitudeSqr += itk::Math::sqr((double)firstderiv[i]);
+    // accumulate the gradient magnitude squared
+    magnitudeSqr += itk::Math::sqr(static_cast<double>(firstderiv[i]));
   }
 
   if (magnitudeSqr < 1e-9)
@@ -123,10 +123,10 @@ CurvatureFlowFunction<TImage>::ComputeUpdate(const NeighborhoodType & it,
       temp += secderiv[j];
     }
 
-    update += temp * itk::Math::sqr((double)firstderiv[i]);
+    update += temp * itk::Math::sqr(static_cast<double>(firstderiv[i]));
   }
 
-  // accumlate -2 * dx * dy * dxy terms
+  // accumulate -2 * dx * dy * dxy terms
   for (i = 0; i < ImageDimension; ++i)
   {
     for (j = i + 1; j < ImageDimension; ++j)

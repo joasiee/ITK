@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,7 @@
 namespace itk
 {
 /**
- *\class BinaryImageToStatisticsLabelMapFilter
+ * \class BinaryImageToStatisticsLabelMapFilter
  * \brief a convenient class to convert a binary image to a label map and valuate the statistics attributes at once
  *
  * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
@@ -118,14 +118,14 @@ public:
 
   /**
    * Set/Get whether the maximum Feret diameter should be computed or not. The
-   * defaut value is false, because of the high computation time required.
+   * default value is false, because of the high computation time required.
    */
   itkSetMacro(ComputeFeretDiameter, bool);
   itkGetConstReferenceMacro(ComputeFeretDiameter, bool);
   itkBooleanMacro(ComputeFeretDiameter);
 
   /**
-   * Set/Get whether the perimeter should be computed or not. The defaut value
+   * Set/Get whether the perimeter should be computed or not. The default value
    * is false, because of the high computation time required.
    */
   itkSetMacro(ComputePerimeter, bool);

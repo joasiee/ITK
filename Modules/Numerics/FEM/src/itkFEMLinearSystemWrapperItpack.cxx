@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -79,7 +79,7 @@ LinearSystemWrapperItpack::InitializeMatrix(unsigned int matrixIndex)
       __FILE__, __LINE__, "LinearSystemWrapperItpack::InitializeMatrix", "Maximum number of non zeros not set");
   }
 
-  // allocate if necessay
+  // allocate if necessary
   if (m_Matrices == nullptr)
   {
     m_Matrices = new MatrixHolder(m_NumberOfMatrices);
@@ -125,7 +125,7 @@ LinearSystemWrapperItpack::InitializeVector(unsigned int vectorIndex)
       __FILE__, __LINE__, "LinearSystemWrapperItpack::InitializeVector", "m_Vectors", vectorIndex);
   }
 
-  /* allocate if necessay */
+  /* allocate if necessary */
   if (m_Vectors == nullptr)
   {
     m_Vectors = new VectorHolder(m_NumberOfVectors);
@@ -173,7 +173,7 @@ LinearSystemWrapperItpack::InitializeSolution(unsigned int solutionIndex)
       __FILE__, __LINE__, "LinearSystemWrapperItpack::InitializeSolution", "m_Solutions", solutionIndex);
   }
 
-  // allocate if necessay
+  // allocate if necessary
   if (m_Solutions == nullptr)
   {
     m_Solutions = new VectorHolder(m_NumberOfSolutions);
@@ -808,7 +808,7 @@ LinearSystemWrapperItpack::SwapSolutions(unsigned int solutionIndex1, unsigned i
 }
 
 void
-LinearSystemWrapperItpack::CopySolution2Vector(unsigned solutionIndex, unsigned int vectorIndex)
+LinearSystemWrapperItpack::CopySolution2Vector(unsigned int solutionIndex, unsigned int vectorIndex)
 {
   /* error checking */
   if (!m_Vectors)
@@ -841,7 +841,7 @@ LinearSystemWrapperItpack::CopySolution2Vector(unsigned solutionIndex, unsigned 
 }
 
 void
-LinearSystemWrapperItpack::CopyVector2Solution(unsigned vectorIndex, unsigned int solutionIndex)
+LinearSystemWrapperItpack::CopyVector2Solution(unsigned int vectorIndex, unsigned int solutionIndex)
 {
   /* error checking */
   if (!m_Vectors)

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -185,7 +185,6 @@ TransformToDisplacementFieldFilter<TOutputImage, TParametersValueType>::Nonlinea
   // to an output pixel
   PointType outputPoint;       // Coordinates of output pixel
   PointType transformedPoint;  // Coordinates of transformed pixel
-  PointType displacementPoint; // the difference
   PixelType displacementPixel; // the difference, cast to pixel type
 
 
@@ -203,11 +202,11 @@ TransformToDisplacementFieldFilter<TOutputImage, TParametersValueType>::Nonlinea
       // Compute corresponding input pixel position
       transformedPoint = transform->TransformPoint(outputPoint);
 
-      displacementPoint = transformedPoint - outputPoint;
+      const typename PointType::VectorType displacementVector = transformedPoint - outputPoint;
       // Cast PointType -> PixelType
       for (IndexValueType idx = 0; idx < ImageDimension; ++idx)
       {
-        displacementPixel[idx] = static_cast<typename PixelType::ValueType>(displacementPoint[idx]);
+        displacementPixel[idx] = static_cast<typename PixelType::ValueType>(displacementVector[idx]);
       }
       outIt.Set(displacementPixel);
       ++outIt;
@@ -265,7 +264,7 @@ TransformToDisplacementFieldFilter<TOutputImage, TParametersValueType>::LinearTh
     {
       // Perform linear interpolation between startIndex and endIndex
       const double alpha =
-        (scanlineIndex - largestPossibleRegion.GetIndex(0)) / double(largestPossibleRegion.GetSize(0));
+        (scanlineIndex - largestPossibleRegion.GetIndex(0)) / static_cast<double>(largestPossibleRegion.GetSize(0));
       const double oneMinusAlpha = 1.0 - alpha;
 
       PixelType displacement;

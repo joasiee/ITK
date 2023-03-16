@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,7 +27,7 @@
 namespace itk
 {
 /**
- *\class ParametricPath
+ * \class ParametricPath
  * \brief  Represent a parametric path through ND Space
  *
  * This virtual class is intended to represent a parametric path through an
@@ -67,7 +67,7 @@ public:
 
   /** Standard class type aliases. */
   using Self = ParametricPath;
-  /** All paths must be mapable to index space */
+  /** All paths must be mappable to index space */
   using ContinuousIndexType = ContinuousIndex<SpacePrecisionType, VDimension>;
   using Superclass = Path<double, ContinuousIndexType, VDimension>;
 

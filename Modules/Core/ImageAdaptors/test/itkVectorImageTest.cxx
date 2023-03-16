@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -628,7 +628,7 @@ itkVectorImageTest(int, char * argv[])
   }
 
   {
-    // Now read it as a itk::VectorImage.
+    // Now read it as an itk::VectorImage.
     using VectorImageType = itk::VectorImage<PixelType, Dimension>;
     using ReaderType = itk::ImageFileReader<VectorImageType>;
     auto reader = ReaderType::New();
@@ -672,7 +672,7 @@ itkVectorImageTest(int, char * argv[])
 
 
   {
-    // Now read it as a itk::VectorImage.
+    // Now read it as an itk::VectorImage.
     using VectorImageType = itk::VectorImage<PixelType, Dimension>;
     using ReaderType = itk::ImageFileReader<VectorImageType>;
     auto reader = ReaderType::New();
@@ -845,9 +845,9 @@ itkVectorImageTest(int, char * argv[])
         std::cerr << "  SetNext() [FAILED]" << std::endl;
         failed = true;
       }
-      for (unsigned i = 0; i < Dimension; ++i)
+      for (unsigned int i = 0; i < Dimension; ++i)
       {
-        p[i] = p[Dimension + i] = (float)index1[i];
+        p[i] = p[Dimension + i] = static_cast<float>(index1[i]);
       }
       nit.SetCenterPixel(p);
       if (nit.GetCenterPixel() != p)
@@ -859,7 +859,7 @@ itkVectorImageTest(int, char * argv[])
       // Test SetNeighborhood() and GetPrevious()
       nit.SetLocation(index1);
       nit.SetNeighborhood(neighborhood);
-      for (unsigned i = 0; i < Dimension; ++i)
+      for (unsigned int i = 0; i < Dimension; ++i)
       {
         p[i] = p[Dimension + i] = i + 1;
       }

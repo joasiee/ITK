@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -171,7 +171,7 @@ CannyEdgeDetectionImageFilter<TInputImage, TOutputImage>::ComputeCannyEdge(const
                0.25 * it.GetPixel(m_Center + m_Stride[i] + m_Stride[j]);
 
       deriv += 2.0 * dx[i] * dx[j] * dxy[k];
-      k++;
+      ++k;
     }
   }
 
@@ -214,7 +214,7 @@ CannyEdgeDetectionImageFilter<TInputImage, TOutputImage>::GenerateData()
   m_GaussianFilter->SetVariance(m_Variance);
   m_GaussianFilter->SetMaximumError(m_MaximumError);
   m_GaussianFilter->SetInput(input);
-  // Modify to force excution, due to grafting complications
+  // Modify to force execution, due to grafting complications
   m_GaussianFilter->Modified();
   m_GaussianFilter->Update();
   this->UpdateProgress(0.01f);
@@ -449,7 +449,7 @@ CannyEdgeDetectionImageFilter<TInputImage, TOutputImage>::ThreadedCompute2ndDeri
         dx1[i] = IP(m_ComputeCannyEdgeSlice[i], bit1, m_ComputeCannyEdge1stDerivativeOper);
       }
 
-      gradMag = std::sqrt((double)gradMag);
+      gradMag = std::sqrt(static_cast<double>(gradMag));
       derivPos = zero;
       for (unsigned int i = 0; i < ImageDimension; ++i)
       {

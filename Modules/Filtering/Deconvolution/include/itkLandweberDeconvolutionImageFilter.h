@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,7 +28,7 @@ namespace itk
 namespace Functor
 {
 /**
- *\class LandweberMethod
+ * \class LandweberMethod
  * \brief Functor class for computing a Landweber iteration.
  * \ingroup ITKDeconvolution
  */
@@ -59,11 +59,11 @@ public:
 } // end namespace Functor
 
 /**
- *\class LandweberDeconvolutionImageFilter
+ * \class LandweberDeconvolutionImageFilter
  * \brief Deconvolve an image using the Landweber deconvolution
  * algorithm.
  *
- * This filter implements the Landweber deconvolution algorthim as
+ * This filter implements the Landweber deconvolution algorithm as
  * defined in Bertero M and Boccacci P, "Introduction to Inverse
  * Problems in Imaging", 1998. The algorithm assumes that the input
  * image has been formed by a linear shift-invariant system with a

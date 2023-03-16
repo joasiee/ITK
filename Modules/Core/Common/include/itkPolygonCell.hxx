@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -222,7 +222,7 @@ PolygonCell<TCellInterface>::RemovePointId(PointIdentifier ptID)
 }
 
 /**
- * clear all the point and edge informations
+ * clear all the point and edge information
  */
 template <typename TCellInterface>
 void
@@ -262,7 +262,7 @@ template <typename TCellInterface>
 void
 PolygonCell<TCellInterface>::SetPointId(int localId, PointIdentifier ptId)
 {
-  if (m_PointIds.size() < (unsigned int)(localId + 1))
+  if (m_PointIds.size() < static_cast<unsigned int>(localId + 1))
   {
     m_PointIds.resize(localId + 1);
   }

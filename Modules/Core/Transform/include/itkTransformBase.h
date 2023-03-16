@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,14 +32,14 @@
 
 namespace itk
 {
-/**\class TransformBaseTemplateEnums
+/** \class TransformBaseTemplateEnums
  * \brief Contains all enum classes used by TransformBaseTemplate class.
  * \ingroup ITKTransform
  */
 class TransformBaseTemplateEnums
 {
 public:
-  /**\class TransformCategory
+  /** \class TransformCategory
    * \ingroup ITKTransform
    * */
   enum class TransformCategory : uint8_t
@@ -90,7 +90,7 @@ public:
    *  therefore we use here a large capacity integer. */
   using NumberOfParametersType = IdentifierType;
 
-  /** Return the number of parameters that completely define the Transfom  */
+  /** Return the number of parameters that completely define the Transform  */
   virtual NumberOfParametersType
   GetNumberOfParameters() const = 0;
 

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -158,7 +158,7 @@ LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GenerateData()
   // initialize output image
   //
   // NOTE: We intentionally don't allocate the output image here,
-  // because the cast image filter will either run inplace, or alloate
+  // because the cast image filter will either run inplace, or allocate
   // the output there. The requested region has already been set in
   // ImageToImageFilter::GenerateInputImageFilter.
   typename TOutputImage::Pointer outputImage(this->GetOutput());
@@ -208,11 +208,11 @@ LaplacianRecursiveGaussianImageFilter<TInputImage, TOutputImage>::GenerateData()
     {
       if (i == dim)
       {
-        j++;
+        ++j;
       }
       m_SmoothingFilters[i]->SetDirection(j);
-      i++;
-      j++;
+      ++i;
+      ++j;
     }
     m_DerivativeFilter->SetDirection(dim);
 

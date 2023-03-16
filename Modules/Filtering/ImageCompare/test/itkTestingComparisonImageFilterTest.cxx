@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,7 +40,7 @@ itkTestingComparisonImageFilterTest(int argc, char * argv[])
 
   // Test using an unsigned integral pixel type and generate a signed
   // integral pixel type
-  using InputPixelType = signed short;
+  using InputPixelType = short;
   using OutputPixelType = unsigned short;
 
   constexpr unsigned int Dimension = 2;
@@ -71,11 +71,11 @@ itkTestingComparisonImageFilterTest(int argc, char * argv[])
 
   auto differenceThreshold = static_cast<typename FilterType::OutputPixelType>(std::stoi(argv[5]));
   filter->SetDifferenceThreshold(differenceThreshold);
-  TEST_SET_GET_VALUE(differenceThreshold, filter->GetDifferenceThreshold());
+  ITK_TEST_SET_GET_VALUE(differenceThreshold, filter->GetDifferenceThreshold());
 
   int toleranceRadius = std::stoi(argv[6]);
   filter->SetToleranceRadius(toleranceRadius);
-  TEST_SET_GET_VALUE(toleranceRadius, filter->GetToleranceRadius());
+  ITK_TEST_SET_GET_VALUE(toleranceRadius, filter->GetToleranceRadius());
 
   itk::SimpleFilterWatcher watcher(filter, "Difference");
 

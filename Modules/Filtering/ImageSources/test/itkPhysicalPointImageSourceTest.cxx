@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -87,8 +87,8 @@ itkPhysicalPointImageSourceTest(int argc, char * argv[])
   itk::Size<ImageDimension> size;
   size.Fill(64);
 
-  ImageType::SpacingType   spacing(1.0);
-  ImageType::PointType     origin(0.0);
+  auto                     spacing = itk::MakeFilled<ImageType::SpacingType>(1.0);
+  ImageType::PointType     origin{};
   ImageType::DirectionType direction;
   direction.SetIdentity();
 

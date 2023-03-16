@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,8 @@
 
 #include "itkMath.h"
 #include "itkSphereSpatialFunction.h"
+
+#include <memory> // For make_unique.
 
 namespace itk
 {
@@ -41,10 +43,9 @@ template <typename TPixel, unsigned int TDimension, typename TAllocator>
 void
 AnnulusOperator<TPixel, TDimension, TAllocator>::Fill(const CoefficientVector & coeff)
 {
-  auto * temp_slice = new std::slice(0, coeff.size(), 1);
+  const std::slice temp_slice(0, coeff.size(), 1);
 
-  typename Self::SliceIteratorType data(this, *temp_slice);
-  delete temp_slice;
+  typename Self::SliceIteratorType data(this, temp_slice);
 
   auto it = coeff.begin();
 
@@ -105,7 +106,7 @@ AnnulusOperator<TPixel, TDimension, TAllocator>::GenerateCoefficients() -> Coeff
 
   const typename SizeType::SizeValueType w = this->Size();
 
-  std::vector<bool>              outside(w);
+  const auto                     outside = std::make_unique<bool[]>(w);
   CoefficientVector              coeffP(w);
   OffsetType                     offset;
   typename SphereType::InputType point;
@@ -138,7 +139,7 @@ AnnulusOperator<TPixel, TDimension, TAllocator>::GenerateCoefficients() -> Coeff
       coeffP[i] = annulusV;
       sumNotExterior += annulusV;
       sumNotExteriorSq += (annulusV * annulusV);
-      countNotExterior++;
+      ++countNotExterior;
       outside[i] = false;
     }
     else
@@ -147,7 +148,7 @@ AnnulusOperator<TPixel, TDimension, TAllocator>::GenerateCoefficients() -> Coeff
       coeffP[i] = interiorV;
       sumNotExterior += interiorV;
       sumNotExteriorSq += (interiorV * interiorV);
-      countNotExterior++;
+      ++countNotExterior;
       outside[i] = false;
     }
   }

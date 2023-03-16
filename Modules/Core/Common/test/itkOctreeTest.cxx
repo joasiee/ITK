@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,11 +46,9 @@ itkOctreeTest(int, char *[])
   region.SetSize(imageSize);
   region.SetIndex(imageIndex);
   auto img = ImageType::New();
-  img->SetLargestPossibleRegion(region);
-  img->SetBufferedRegion(region);
-  img->SetRequestedRegion(region);
+  img->SetRegions(region);
   img->Allocate();
-  srand((unsigned)time(nullptr));
+  srand(static_cast<unsigned int>(time(nullptr)));
   itk::ImageRegionIterator<ImageType> ri(img, region);
   try
   {

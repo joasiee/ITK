@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -281,11 +281,11 @@ public:
   /** Special SetPixel method which quietly ignores out-of-bounds attempts.
    *  Sets status TRUE if pixel has been set, FALSE otherwise.  */
   ITK_ITERATOR_VIRTUAL void
-  SetPixel(const unsigned i, const PixelType & v, bool & status) ITK_ITERATOR_FINAL;
+  SetPixel(const unsigned int i, const PixelType & v, bool & status) ITK_ITERATOR_FINAL;
 
   /** Set the pixel at the ith location. */
   ITK_ITERATOR_VIRTUAL void
-  SetPixel(const unsigned i, const PixelType & v) ITK_ITERATOR_FINAL;
+  SetPixel(const unsigned int i, const PixelType & v) ITK_ITERATOR_FINAL;
 
   //  { *(this->operator[](i)) = v; }
 
@@ -301,7 +301,7 @@ public:
       the positive specified "axis" direction. No bounds checking is done on
       the size of the neighborhood. */
   ITK_ITERATOR_VIRTUAL void
-  SetNext(const unsigned axis, const unsigned i, const PixelType & v) ITK_ITERATOR_FINAL
+  SetNext(const unsigned int axis, const unsigned int i, const PixelType & v) ITK_ITERATOR_FINAL
   {
     this->SetPixel(this->GetCenterNeighborhoodIndex() + (i * this->GetStride(axis)), v);
   }
@@ -310,7 +310,7 @@ public:
       the specified positive axis direction. No bounds checking is done on the
       size of the neighborhood. */
   ITK_ITERATOR_VIRTUAL void
-  SetNext(const unsigned axis, const PixelType & v) ITK_ITERATOR_FINAL
+  SetNext(const unsigned int axis, const PixelType & v) ITK_ITERATOR_FINAL
   {
     this->SetPixel(this->GetCenterNeighborhoodIndex() + this->GetStride(axis), v);
   }
@@ -319,7 +319,7 @@ public:
       the negative specified "axis" direction. No bounds checking is done on
       the size of the neighborhood. */
   ITK_ITERATOR_VIRTUAL void
-  SetPrevious(const unsigned axis, const unsigned i, const PixelType & v) ITK_ITERATOR_FINAL
+  SetPrevious(const unsigned int axis, const unsigned int i, const PixelType & v) ITK_ITERATOR_FINAL
   {
     this->SetPixel(this->GetCenterNeighborhoodIndex() - (i * this->GetStride(axis)), v);
   }
@@ -328,7 +328,7 @@ public:
       the specified negative axis direction. No bounds checking is done on the
       size of the neighborhood. */
   ITK_ITERATOR_VIRTUAL void
-  SetPrevious(const unsigned axis, const PixelType & v) ITK_ITERATOR_FINAL
+  SetPrevious(const unsigned int axis, const PixelType & v) ITK_ITERATOR_FINAL
   {
     this->SetPixel(this->GetCenterNeighborhoodIndex() - this->GetStride(axis), v);
   }

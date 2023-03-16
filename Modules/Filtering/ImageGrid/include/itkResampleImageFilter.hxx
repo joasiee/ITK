@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,8 +39,8 @@ template <typename TInputImage,
 ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTransformPrecisionType>::
   ResampleImageFilter()
   : m_Extrapolator(nullptr)
-  , m_OutputSpacing(1.0)
-  , m_OutputOrigin(0.0)
+  , m_OutputSpacing(MakeFilled<SpacingType>(1.0))
+  , m_OutputOrigin()
 
 {
 
@@ -107,8 +107,8 @@ ResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TTran
   const ReferenceImageBaseType * const referenceImage = this->GetReferenceImage();
   if (this->m_Size[0] == 0 && referenceImage && !m_UseReferenceImage)
   {
-    itkExceptionMacro("Output image size is zero in all dimensions.  Consider using SetUseReferenceImageOn()."
-                      "to define the resample output from the ReferenceImage.");
+    itkExceptionMacro("Output image size is zero in all dimensions.  Consider using UseReferenceImageOn()."
+                      "or SetUseReferenceImage(true) to define the resample output from the ReferenceImage.");
   }
 }
 

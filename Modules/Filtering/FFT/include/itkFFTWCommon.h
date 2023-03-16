@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -82,7 +82,7 @@ public:
   Plan_dft_c2r_1d(int           n,
                   ComplexType * in,
                   PixelType *   out,
-                  unsigned      flags,
+                  unsigned int  flags,
                   int           threads = 1,
                   bool          canDestroyInput = false)
   {
@@ -94,15 +94,14 @@ public:
                   int           ny,
                   ComplexType * in,
                   PixelType *   out,
-                  unsigned      flags,
+                  unsigned int  flags,
                   int           threads = 1,
                   bool          canDestroyInput = false)
   {
-    auto * sizes = new int[2];
+    int sizes[2];
     sizes[0] = nx;
     sizes[1] = ny;
     PlanType plan = Plan_dft_c2r(2, sizes, in, out, flags, threads, canDestroyInput);
-    delete[] sizes;
     return plan;
   }
 
@@ -112,16 +111,15 @@ public:
                   int           nz,
                   ComplexType * in,
                   PixelType *   out,
-                  unsigned      flags,
+                  unsigned int  flags,
                   int           threads = 1,
                   bool          canDestroyInput = false)
   {
-    auto * sizes = new int[3];
+    int sizes[3];
     sizes[0] = nx;
     sizes[1] = ny;
     sizes[2] = nz;
     PlanType plan = Plan_dft_c2r(3, sizes, in, out, flags, threads, canDestroyInput);
-    delete[] sizes;
     return plan;
   }
 
@@ -130,7 +128,7 @@ public:
                const int *   n,
                ComplexType * in,
                PixelType *   out,
-               unsigned      flags,
+               unsigned int  flags,
                int           threads = 1,
                bool          canDestroyInput = false)
   {
@@ -142,7 +140,7 @@ public:
 #  endif
     // don't add FFTW_WISDOM_ONLY if the plan rigor is FFTW_ESTIMATE
     // because FFTW_ESTIMATE guarantee to not destroy the input
-    unsigned roflags = flags;
+    unsigned int roflags = flags;
     if (!(flags & FFTW_ESTIMATE))
     {
       roflags = flags | FFTW_WISDOM_ONLY;
@@ -183,7 +181,7 @@ public:
   Plan_dft_r2c_1d(int           n,
                   PixelType *   in,
                   ComplexType * out,
-                  unsigned      flags,
+                  unsigned int  flags,
                   int           threads = 1,
                   bool          canDestroyInput = false)
   {
@@ -195,15 +193,14 @@ public:
                   int           ny,
                   PixelType *   in,
                   ComplexType * out,
-                  unsigned      flags,
+                  unsigned int  flags,
                   int           threads = 1,
                   bool          canDestroyInput = false)
   {
-    auto * sizes = new int[2];
+    int sizes[2];
     sizes[0] = nx;
     sizes[1] = ny;
     PlanType plan = Plan_dft_r2c(2, sizes, in, out, flags, threads, canDestroyInput);
-    delete[] sizes;
     return plan;
   }
 
@@ -213,16 +210,15 @@ public:
                   int           nz,
                   PixelType *   in,
                   ComplexType * out,
-                  unsigned      flags,
+                  unsigned int  flags,
                   int           threads = 1,
                   bool          canDestroyInput = false)
   {
-    auto * sizes = new int[3];
+    int sizes[3];
     sizes[0] = nx;
     sizes[1] = ny;
     sizes[2] = nz;
     PlanType plan = Plan_dft_r2c(3, sizes, in, out, flags, threads, canDestroyInput);
-    delete[] sizes;
     return plan;
   }
 
@@ -231,7 +227,7 @@ public:
                const int *   n,
                PixelType *   in,
                ComplexType * out,
-               unsigned      flags,
+               unsigned int  flags,
                int           threads = 1,
                bool          canDestroyInput = false)
   {
@@ -244,7 +240,7 @@ public:
 #  endif
     // don't add FFTW_WISDOM_ONLY if the plan rigor is FFTW_ESTIMATE
     // because FFTW_ESTIMATE guarantee to not destroy the input
-    unsigned roflags = flags;
+    unsigned int roflags = flags;
     if (!(flags & FFTW_ESTIMATE))
     {
       roflags = flags | FFTW_WISDOM_ONLY;
@@ -285,7 +281,7 @@ public:
               ComplexType * in,
               ComplexType * out,
               int           sign,
-              unsigned      flags,
+              unsigned int  flags,
               int           threads = 1,
               bool          canDestroyInput = false)
   {
@@ -298,15 +294,14 @@ public:
               ComplexType * in,
               ComplexType * out,
               int           sign,
-              unsigned      flags,
+              unsigned int  flags,
               int           threads = 1,
               bool          canDestroyInput = false)
   {
-    auto * sizes = new int[2];
+    int sizes[2];
     sizes[0] = nx;
     sizes[1] = ny;
     PlanType plan = Plan_dft(2, sizes, in, out, sign, flags, threads, canDestroyInput);
-    delete[] sizes;
     return plan;
   }
 
@@ -317,16 +312,15 @@ public:
               ComplexType * in,
               ComplexType * out,
               int           sign,
-              unsigned      flags,
+              unsigned int  flags,
               int           threads = 1,
               bool          canDestroyInput = false)
   {
-    auto * sizes = new int[3];
+    int sizes[3];
     sizes[0] = nx;
     sizes[1] = ny;
     sizes[2] = nz;
     PlanType plan = Plan_dft(3, sizes, in, out, sign, flags, threads, canDestroyInput);
-    delete[] sizes;
     return plan;
   }
 
@@ -336,7 +330,7 @@ public:
            ComplexType * in,
            ComplexType * out,
            int           sign,
-           unsigned      flags,
+           unsigned int  flags,
            int           threads = 1,
            bool          canDestroyInput = false)
   {
@@ -348,7 +342,7 @@ public:
 #  endif
     // don't add FFTW_WISDOM_ONLY if the plan rigor is FFTW_ESTIMATE
     // because FFTW_ESTIMATE guarantee to not destroy the input
-    unsigned roflags = flags;
+    unsigned int roflags = flags;
     if (!(flags & FFTW_ESTIMATE))
     {
       roflags = flags | FFTW_WISDOM_ONLY;
@@ -424,7 +418,7 @@ public:
   Plan_dft_c2r_1d(int           n,
                   ComplexType * in,
                   PixelType *   out,
-                  unsigned      flags,
+                  unsigned int  flags,
                   int           threads = 1,
                   bool          canDestroyInput = false)
   {
@@ -436,15 +430,14 @@ public:
                   int           ny,
                   ComplexType * in,
                   PixelType *   out,
-                  unsigned      flags,
+                  unsigned int  flags,
                   int           threads = 1,
                   bool          canDestroyInput = false)
   {
-    auto * sizes = new int[2];
+    int sizes[2];
     sizes[0] = nx;
     sizes[1] = ny;
     PlanType plan = Plan_dft_c2r(2, sizes, in, out, flags, threads, canDestroyInput);
-    delete[] sizes;
     return plan;
   }
 
@@ -454,16 +447,15 @@ public:
                   int           nz,
                   ComplexType * in,
                   PixelType *   out,
-                  unsigned      flags,
+                  unsigned int  flags,
                   int           threads = 1,
                   bool          canDestroyInput = false)
   {
-    auto * sizes = new int[3];
+    int sizes[3];
     sizes[0] = nx;
     sizes[1] = ny;
     sizes[2] = nz;
     PlanType plan = Plan_dft_c2r(3, sizes, in, out, flags, threads, canDestroyInput);
-    delete[] sizes;
     return plan;
   }
 
@@ -472,7 +464,7 @@ public:
                const int *   n,
                ComplexType * in,
                PixelType *   out,
-               unsigned      flags,
+               unsigned int  flags,
                int           threads = 1,
                bool          canDestroyInput = false)
   {
@@ -484,7 +476,7 @@ public:
 #  endif
     // don't add FFTW_WISDOM_ONLY if the plan rigor is FFTW_ESTIMATE
     // because FFTW_ESTIMATE guarantee to not destroy the input
-    unsigned roflags = flags;
+    unsigned int roflags = flags;
     if (!(flags & FFTW_ESTIMATE))
     {
       roflags = flags | FFTW_WISDOM_ONLY;
@@ -525,7 +517,7 @@ public:
   Plan_dft_r2c_1d(int           n,
                   PixelType *   in,
                   ComplexType * out,
-                  unsigned      flags,
+                  unsigned int  flags,
                   int           threads = 1,
                   bool          canDestroyInput = false)
   {
@@ -537,15 +529,14 @@ public:
                   int           ny,
                   PixelType *   in,
                   ComplexType * out,
-                  unsigned      flags,
+                  unsigned int  flags,
                   int           threads = 1,
                   bool          canDestroyInput = false)
   {
-    auto * sizes = new int[2];
+    int sizes[2];
     sizes[0] = nx;
     sizes[1] = ny;
     PlanType plan = Plan_dft_r2c(2, sizes, in, out, flags, threads, canDestroyInput);
-    delete[] sizes;
     return plan;
   }
 
@@ -555,16 +546,15 @@ public:
                   int           nz,
                   PixelType *   in,
                   ComplexType * out,
-                  unsigned      flags,
+                  unsigned int  flags,
                   int           threads = 1,
                   bool          canDestroyInput = false)
   {
-    auto * sizes = new int[3];
+    int sizes[3];
     sizes[0] = nx;
     sizes[1] = ny;
     sizes[2] = nz;
     PlanType plan = Plan_dft_r2c(3, sizes, in, out, flags, threads, canDestroyInput);
-    delete[] sizes;
     return plan;
   }
 
@@ -573,7 +563,7 @@ public:
                const int *   n,
                PixelType *   in,
                ComplexType * out,
-               unsigned      flags,
+               unsigned int  flags,
                int           threads = 1,
                bool          canDestroyInput = false)
   {
@@ -585,7 +575,7 @@ public:
 #  endif
     // don't add FFTW_WISDOM_ONLY if the plan rigor is FFTW_ESTIMATE
     // because FFTW_ESTIMATE guarantee to not destroy the input
-    unsigned roflags = flags;
+    unsigned int roflags = flags;
     if (!(flags & FFTW_ESTIMATE))
     {
       roflags = flags | FFTW_WISDOM_ONLY;
@@ -626,7 +616,7 @@ public:
               ComplexType * in,
               ComplexType * out,
               int           sign,
-              unsigned      flags,
+              unsigned int  flags,
               int           threads = 1,
               bool          canDestroyInput = false)
   {
@@ -639,15 +629,14 @@ public:
               ComplexType * in,
               ComplexType * out,
               int           sign,
-              unsigned      flags,
+              unsigned int  flags,
               int           threads = 1,
               bool          canDestroyInput = false)
   {
-    auto * sizes = new int[2];
+    int sizes[2];
     sizes[0] = nx;
     sizes[1] = ny;
     PlanType plan = Plan_dft(2, sizes, in, out, sign, flags, threads, canDestroyInput);
-    delete[] sizes;
     return plan;
   }
 
@@ -658,16 +647,15 @@ public:
               ComplexType * in,
               ComplexType * out,
               int           sign,
-              unsigned      flags,
+              unsigned int  flags,
               int           threads = 1,
               bool          canDestroyInput = false)
   {
-    auto * sizes = new int[3];
+    int sizes[3];
     sizes[0] = nx;
     sizes[1] = ny;
     sizes[2] = nz;
     PlanType plan = Plan_dft(3, sizes, in, out, sign, flags, threads, canDestroyInput);
-    delete[] sizes;
     return plan;
   }
 
@@ -677,7 +665,7 @@ public:
            ComplexType * in,
            ComplexType * out,
            int           sign,
-           unsigned      flags,
+           unsigned int  flags,
            int           threads = 1,
            bool          canDestroyInput = false)
   {
@@ -689,7 +677,7 @@ public:
 #  endif
     // don't add FFTW_WISDOM_ONLY if the plan rigor is FFTW_ESTIMATE
     // because FFTW_ESTIMATE guarantee to not destroy the input
-    unsigned roflags = flags;
+    unsigned int roflags = flags;
     if (!(flags & FFTW_ESTIMATE))
     {
       roflags = flags | FFTW_WISDOM_ONLY;

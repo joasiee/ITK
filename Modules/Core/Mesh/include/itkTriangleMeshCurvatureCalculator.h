@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,18 +36,10 @@
 
 namespace itk
 {
-/**  \class TriangleMeshCurvatureCalculator
- * \brief
- * Calculator to compute curvature of a triangle mesh. Set the input triangle mesh and the
- * required curvature type first. Default curvature type is Gauss. After computing curvature the result
- * can be obtained using the getter method. It throws exeption if the input mesh is not set.
- * The implementation is same as in VTK.
- * \ingroup ITKMesh
- */
-
 /** \class TriangleMeshCurvatureCalculatorEnum
- * \brief Different modes of operation. Currently only Guassian curvature is supported.
+ * \brief Different modes of operation. Currently only Gaussian curvature is supported.
  * Using enum for future extension to Mean, Max and Min curvature.
+ * \ingroup ITKMesh
  */
 class TriangleMeshCurvatureCalculatorEnums
 {
@@ -64,6 +56,14 @@ public:
 extern ITKMesh_EXPORT std::ostream &
                       operator<<(std::ostream & out, const TriangleMeshCurvatureCalculatorEnums::Curvatures value);
 
+/**  \class TriangleMeshCurvatureCalculator
+ * \brief
+ * Calculator to compute curvature of a triangle mesh. Set the input triangle mesh and the
+ * required curvature type first. Default curvature type is Gauss. After computing curvature the result
+ * can be obtained using the getter method. It throws exception if the input mesh is not set.
+ * The implementation is the same as in VTK.
+ * \ingroup ITKMesh
+ */
 template <typename TInputMesh>
 class ITK_TEMPLATE_EXPORT TriangleMeshCurvatureCalculator : public Object
 {
@@ -111,7 +111,7 @@ public:
   /** Get Gauss curvature. */
   itkGetConstObjectMacro(GaussCurvatureData, DoubleVectorContainer);
 
-  /** Set the curvature type to Guass. */
+  /** Set the curvature type to Gauss. */
   void
   SetCurvatureTypeToGaussian()
   {

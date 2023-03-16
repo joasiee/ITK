@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,19 +44,19 @@ namespace itk
  *  This code was taken from the Insight Journal paper:
  *
  *      "Cell Tracking using Coupled Active Surfaces for Nuclei and Membranes"
- *      http://www.insight-journal.org/browse/publication/642
+ *      https://www.insight-journal.org/browse/publication/642
  *      https://hdl.handle.net/10380/3055
  *
  *  That is based on the papers:
  *
  *      "Level Set Segmentation: Active Contours without edge"
- *      http://www.insight-journal.org/browse/publication/322
+ *      https://www.insight-journal.org/browse/publication/322
  *      https://hdl.handle.net/1926/1532
  *
  *      and
  *
  *      "Level set segmentation using coupled active surfaces"
- *      http://www.insight-journal.org/browse/publication/323
+ *      https://www.insight-journal.org/browse/publication/323
  *      https://hdl.handle.net/1926/1533
  *
  *
@@ -120,12 +120,12 @@ public:
   using ListPixelIterator = typename ListPixelType::iterator;
   using ListImageType = Image<ListPixelType, Self::ImageDimension>;
 
-  /** \brief Performs the narrow-band update of the Heaviside function for each
-  voxel. The characteristic function of each region is recomputed (note the
-  shared data which contains information from the other level sets). Using the
-  new H values, the previous c_i are updated. */
+  /** Performs the narrow-band update of the Heaviside function for each
+   *  voxel. The characteristic function of each region is recomputed (note the
+   *  shared data which contains information from the other level sets). Using the
+   *  new $H$ values, the previous $c_i$ are updated. */
   void
-  UpdatePixel(const unsigned int &                idx,
+  UpdatePixel(const unsigned int                  idx,
               NeighborhoodIterator<TInputImage> & iterator,
               InputPixelType &                    newValue,
               bool &                              status);
@@ -136,12 +136,14 @@ protected:
   {}
   ~ScalarRegionBasedLevelSetFunction() override = default;
 
+  /** Compute the overlap multiplicative factors for the penalty term (sum) and
+   *  the background intensity fitting terms in multiphase level-sets. */
   ScalarValueType
   ComputeOverlapParameters(const FeatureIndexType & featIndex, ScalarValueType & product) override;
 
-  // update the background and foreground constants for pixel updates
-  // Called only when sparse filters are used to prevent iteration through the
-  // entire image
+  /** Update the background and foreground constants for pixel updates.
+   *  Called only when sparse filters are used to prevent iteration through the
+   *  entire image. */
   virtual void
   UpdateSharedDataInsideParameters(const unsigned int &     iId,
                                    const FeaturePixelType & iVal,

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,7 @@
 
 #include "itkNumericTraits.h"
 #include "itkMath.h"
-#include "itkMath.h"
+#include <memory> // For make_unique.
 
 namespace itk
 {
@@ -183,11 +183,7 @@ HistogramToTextureFeaturesFilter<THistogram>::ComputeMeansAndVariances(double & 
 
   // Initialize everything
   typename HistogramType::SizeValueType binsPerAxis = inputHistogram->GetSize(0);
-  auto *                                marginalSums = new double[binsPerAxis];
-  for (double * ms_It = marginalSums; ms_It < marginalSums + binsPerAxis; ++ms_It)
-  {
-    *ms_It = 0;
-  }
+  const auto                            marginalSums = std::make_unique<double[]>(binsPerAxis);
   pixelMean = 0;
 
   typename RelativeFrequencyContainerType::const_iterator rFreqIterator = m_RelativeFrequencyContainer.begin();
@@ -242,8 +238,6 @@ HistogramToTextureFeaturesFilter<THistogram>::ComputeMeansAndVariances(double & 
     pixelVariance += (index[0] - pixelMean) * (index[0] - pixelMean) * frequency;
     ++rFreqIterator;
   }
-
-  delete[] marginalSums;
 }
 
 template <typename THistogram>

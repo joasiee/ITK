@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,6 +23,7 @@
 #include "itkVersorTransformOptimizer.h"
 #include "itkQuaternionRigidTransformGradientDescentOptimizer.h"
 #include "itkOnePlusOneEvolutionaryOptimizer.h"
+#include "itkTestingMacros.h"
 
 
 #include <iostream>
@@ -40,7 +41,6 @@
 int
 itkOptimizersHierarchyTest(int, char *[])
 {
-  bool pass = true;
 
   using OptimizerType = itk::Optimizer;
   auto genericOptimizer = OptimizerType::New();
@@ -89,81 +89,64 @@ itkOptimizersHierarchyTest(int, char *[])
 
   using NonLinearOptimizerType = itk::NonLinearOptimizer;
   auto nonLinearOptimizer = NonLinearOptimizerType::New();
-  if (nonLinearOptimizer.IsNull())
-  {
-    pass = false;
-  }
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(nonLinearOptimizer, NonLinearOptimizer, Optimizer);
+
 
   using SingleValuedNonLinearOptimizerType = itk::SingleValuedNonLinearOptimizer;
   auto singleValuedOptimizer = SingleValuedNonLinearOptimizerType::New();
-  if (singleValuedOptimizer.IsNull())
-  {
-    pass = false;
-  }
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(singleValuedOptimizer, SingleValuedNonLinearOptimizer, NonLinearOptimizer);
+
 
   using AmoebaOptimizerType = itk::AmoebaOptimizer;
   auto amoeba = AmoebaOptimizerType::New();
-  if (amoeba.IsNull())
-  {
-    pass = false;
-  }
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(amoeba, AmoebaOptimizer, SingleValuedNonLinearVnlOptimizer);
+
 
   using ConjugateGradientOptimizerType = itk::ConjugateGradientOptimizer;
   auto conjugate = ConjugateGradientOptimizerType::New();
-  if (conjugate.IsNull())
-  {
-    pass = false;
-  }
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(conjugate, ConjugateGradientOptimizer, SingleValuedNonLinearVnlOptimizer);
+
 
   using LBFGSOptimizerType = itk::LBFGSOptimizer;
   auto lbfgs = LBFGSOptimizerType::New();
-  if (lbfgs.IsNull())
-  {
-    pass = false;
-  }
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(lbfgs, LBFGSOptimizer, SingleValuedNonLinearVnlOptimizer);
+
 
   // Note that a "Versor" is a Unit Quaternion
   using VersorOptimizerType = itk::VersorTransformOptimizer;
-  auto versoropt = VersorOptimizerType::New();
-  if (versoropt.IsNull())
-  {
-    pass = false;
-  }
+  auto versorOpt = VersorOptimizerType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(versorOpt, VersorTransformOptimizer, RegularStepGradientDescentBaseOptimizer);
+
 
   using QuaternionOptimizerType = itk::QuaternionRigidTransformGradientDescentOptimizer;
-  auto quaternionopt = QuaternionOptimizerType::New();
-  if (quaternionopt.IsNull())
-  {
-    pass = false;
-  }
+  auto quaternionOpt = QuaternionOptimizerType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(
+    quaternionOpt, QuaternionRigidTransformGradientDescentOptimizer, GradientDescentOptimizer);
 
   using OnePlusOneEvolutionaryOptimizerType = itk::OnePlusOneEvolutionaryOptimizer;
   auto onePlusOne = OnePlusOneEvolutionaryOptimizerType::New();
-  if (onePlusOne.IsNull())
-  {
-    pass = false;
-  }
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(onePlusOne, OnePlusOneEvolutionaryOptimizer, SingleValuedNonLinearOptimizer);
 
   using CumulativeGaussianOptimizerType = itk::CumulativeGaussianOptimizer;
-  auto cumgaussopt = CumulativeGaussianOptimizerType::New();
-  if (cumgaussopt.IsNull())
-  {
-    pass = false;
-  }
+  auto cumGaussOpt = CumulativeGaussianOptimizerType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(cumGaussOpt, CumulativeGaussianOptimizer, MultipleValuedNonLinearOptimizer);
+
 
   using CumulativeGaussianCostFunctionType = itk::CumulativeGaussianCostFunction;
-  auto cumgausstype = CumulativeGaussianCostFunctionType::New();
-  if (cumgausstype.IsNull())
-  {
-    pass = false;
-  }
+  auto cumGaussCostFunc = CumulativeGaussianCostFunctionType::New();
 
-  if (!pass)
-  {
-    std::cout << "Test failed." << std::endl;
-    return EXIT_FAILURE;
-  }
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(cumGaussCostFunc, CumulativeGaussianCostFunction, MultipleValuedCostFunction);
 
-  std::cout << "Test passed." << std::endl;
+
+  std::cout << "Test finished." << std::endl;
   return EXIT_SUCCESS;
 }

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -50,7 +50,7 @@ TriangleThresholdCalculator<THistogram, TOutput>::GenerateData()
 
   // Triangle method needs the maximum and minimum indexes
   // Minimum indexes for this purpose are poorly defined - can't just
-  // take a index with zero entries.
+  // take an index with zero entries.
   double         Mx = itk::NumericTraits<double>::min();
   IndexValueType MxIdx = 0;
 
@@ -82,7 +82,8 @@ TriangleThresholdCalculator<THistogram, TOutput>::GenerateData()
   // Figure out which way we are looking - we want to construct our
   // line between the max index and the further of 1% and 99%
   IndexValueType ThreshIdx = 0;
-  if (itk::Math::abs((float)MxIdx - (float)onePCIdx) > itk::Math::abs((float)MxIdx - (float)nnPCIdx))
+  if (itk::Math::abs(static_cast<float>(MxIdx) - static_cast<float>(onePCIdx)) >
+      itk::Math::abs(static_cast<float>(MxIdx) - static_cast<float>(nnPCIdx)))
   {
     // line to 1 %
     double slope = Mx / (MxIdx - onePCIdx);

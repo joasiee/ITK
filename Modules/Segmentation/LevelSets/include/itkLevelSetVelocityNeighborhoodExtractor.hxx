@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -91,7 +91,7 @@ LevelSetVelocityNeighborhoodExtractor<TLevelSet, TAuxValue, VAuxDimension>::Calc
   for (unsigned int k = 0; k < VAuxDimension; ++k)
   {
     auxPixel = m_AuxImage[k]->GetPixel(index);
-    centerValue[k] = (double)auxPixel;
+    centerValue[k] = static_cast<double>(auxPixel);
   }
 
   // if distance is zero, insert point in inside container
@@ -132,11 +132,11 @@ LevelSetVelocityNeighborhoodExtractor<TLevelSet, TAuxValue, VAuxDimension>::Calc
       break;
     }
 
-    denom += 1.0 / itk::Math::sqr((double)neighNode.GetValue());
+    denom += 1.0 / itk::Math::sqr(static_cast<double>(neighNode.GetValue()));
     for (unsigned int k = 0; k < VAuxDimension; ++k)
     {
       auxPixel = m_AuxImage[k]->GetPixel(neighNode.GetIndex());
-      numer[k] += (double)(auxPixel) / itk::Math::sqr((double)neighNode.GetValue());
+      numer[k] += static_cast<double>(auxPixel) / itk::Math::sqr(static_cast<double>(neighNode.GetValue()));
     }
   }
 

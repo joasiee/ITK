@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -98,7 +98,7 @@ itkGaussianDistributionTest(int, char *[])
   {
     value = distributionFunction->EvaluateInverseCDF(expected1[i + 5]);
 
-    diff = itk::Math::abs(value - double(i));
+    diff = itk::Math::abs(value - static_cast<double>(i));
 
     std::cout << "Inverse Gaussian cdf at ";
     std::cout.width(22);
@@ -106,7 +106,7 @@ itkGaussianDistributionTest(int, char *[])
     std::cout.width(22);
     std::cout << value << ", expected value = ";
     std::cout.width(22);
-    std::cout << double(i) << ", error = ";
+    std::cout << static_cast<double>(i) << ", error = ";
     std::cout.width(22);
     std::cout << diff;
     if (diff < tol)
@@ -250,7 +250,7 @@ itkGaussianDistributionTest(int, char *[])
   {
     value = distributionFunction->EvaluateInverseCDF(expected2[i + 5]);
 
-    diff = itk::Math::abs(value - double(i));
+    diff = itk::Math::abs(value - static_cast<double>(i));
 
     std::cout << "Inverse Gaussian cdf at ";
     std::cout.width(22);
@@ -258,7 +258,7 @@ itkGaussianDistributionTest(int, char *[])
     std::cout.width(22);
     std::cout << value << ", expected value = ";
     std::cout.width(22);
-    std::cout << double(i) << ", error = ";
+    std::cout << static_cast<double>(i) << ", error = ";
     std::cout.width(22);
     std::cout << diff;
     if (diff < tol)

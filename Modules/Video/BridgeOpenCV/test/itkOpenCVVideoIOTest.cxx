@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -107,7 +107,7 @@ readCorrectly(itk::OpenCVVideoIO::Pointer opencvIO, CvCapture * capture, FrameOf
   cvCvtColor(cvFrameBGR, cvFrameRGB, CV_BGR2RGB);
 
   // Make sure buffers are same sized
-  if (cvFrameRGB->imageSize != (int)bufferSize)
+  if (cvFrameRGB->imageSize != static_cast<int>(bufferSize))
   {
     std::cerr << "Frame buffer sizes don't match. Got: " << bufferSize << ", Expected: " << cvFrameRGB->imageSize
               << std::endl;

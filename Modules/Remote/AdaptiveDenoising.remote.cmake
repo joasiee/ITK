@@ -27,12 +27,12 @@
 #--   - [ X ] Some tests exist and pass on at least some platform
 #--   - [ X ] All requirements of Levels 2,1
 #--
-#-- ## Compliance Level 2 star (Alpha code feature API development or niche community/exectution environment dependance )
+#-- ## Compliance Level 2 star (Alpha code feature API development or niche community/execution environment dependance )
 #--   - [ X ] Compiles for at least 1 niche set of execution envirionments, and perhaps others
 #--         (may depend on specific external tools like a java environment, or specific external libraries to work )
 #--   - [ X ] All requirements of Levels 1
 #--
-#-- ## Compliance Level 1 star (Pre-alpha features under development and code of unkown quality)
+#-- ## Compliance Level 1 star (Pre-alpha features under development and code of unknown quality)
 #--   - [ X ] Code complies on at least 1 platform
 #--
 #-- ## Compliance Level 0 star ( Code/Feature of known poor-quality or deprecated status )
@@ -47,14 +47,14 @@ itk_fetch_module(AdaptiveDenoising
   and non-local super-resolution.
   Tustison N., Avants B., Wang H., Xie L., Coupe P., Yushkevich P., Manjon J.
   Insight Journal.
-  http://insight-journal.org/browse/publication/982.
+  https://insight-journal.org/browse/publication/982.
   Two Luis Miguel fans walk into a bar in Nagoya ---> (yada, yada, yada)
   ---> an ITK-implementation of a popular patch-based denoising filter.
   Tustison N., Manjon J.V.
   Insight Journal.
-  http://insight-journal.org/browse/publication/979.
+  https://insight-journal.org/browse/publication/979.
   "
   MODULE_COMPLIANCE_LEVEL 3
   GIT_REPOSITORY ${git_protocol}://github.com/ntustison/ITKAdaptiveDenoising.git
-  GIT_TAG a31fc7dbed78260abb3832b908fd2b6a52cf189e
+  GIT_TAG 24825c8d246e941334f47968553f0ae388851f0c
 )

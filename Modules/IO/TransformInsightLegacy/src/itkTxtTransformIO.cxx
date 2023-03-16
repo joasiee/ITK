@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -241,14 +241,13 @@ template <typename TParametersValueType>
 inline void
 print_vector(std::ofstream & s, vnl_vector<TParametersValueType> const & v)
 {
-  NumberToString<TParametersValueType> convert;
-  for (unsigned i = 0; i + 1 < v.size(); ++i)
+  for (unsigned int i = 0; i + 1 < v.size(); ++i)
   {
-    s << convert(v[i]) << ' ';
+    s << ConvertNumberToString(v[i]) << ' ';
   }
   if (!v.empty())
   {
-    s << convert(v.back());
+    s << ConvertNumberToString(v.back());
   }
 }
 } // namespace itk_impl_details

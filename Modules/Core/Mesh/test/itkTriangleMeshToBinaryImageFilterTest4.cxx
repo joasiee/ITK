@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -92,9 +92,7 @@ itkTriangleMeshToBinaryImageFilterTest4(int argc, char * argv[])
   region3D.SetIndex(index3D);
 
   auto inputImage = ImageType::New();
-  inputImage->SetLargestPossibleRegion(region3D);
-  inputImage->SetBufferedRegion(region3D);
-  inputImage->SetRequestedRegion(region3D);
+  inputImage->SetRegions(region3D);
   inputImage->SetOrigin(origin);
   inputImage->SetSpacing(spacing);
   inputImage->Allocate();
@@ -221,7 +219,7 @@ itkTriangleMeshToBinaryImageFilterTest4(int argc, char * argv[])
 
   const ImageType::SpacingType & testSpacing = imageFilter->GetSpacing();
 
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     if (itk::Math::NotExactlyEquals(testSpacing[i], spacingAsFloatArray[i]))
     {
@@ -239,7 +237,7 @@ itkTriangleMeshToBinaryImageFilterTest4(int argc, char * argv[])
   originAsFloatArray[2] = std::stod(argv[8]);
   imageFilter->SetOrigin(originAsFloatArray);
   const ImageType::PointType & testOrigin = imageFilter->GetOrigin();
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     if (itk::Math::NotExactlyEquals(testOrigin[i], originAsFloatArray[i]))
     {

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -37,6 +37,13 @@ itkFiniteCylinderSpatialFunctionTest(int, char *[])
   ITK_EXERCISE_BASIC_OBJECT_METHODS(spatialFunc, FiniteCylinderSpatialFunction, InteriorExteriorSpatialFunction);
 
 
+  // Test exceptions
+  TCylinderFunctionVectorType orientation;
+  orientation[0] = 0.0;
+  orientation[1] = 0.0;
+  orientation[2] = 0.0;
+  ITK_TRY_EXPECT_EXCEPTION(spatialFunc->SetOrientation(orientation));
+
   double axis = 40.0;
   spatialFunc->SetAxisLength(axis);
   ITK_TEST_SET_GET_VALUE(axis, spatialFunc->GetAxisLength());
@@ -53,7 +60,6 @@ itkFiniteCylinderSpatialFunctionTest(int, char *[])
   spatialFunc->SetCenter(center);
   ITK_TEST_SET_GET_VALUE(center, spatialFunc->GetCenter());
 
-  TCylinderFunctionVectorType orientation;
   orientation[0] = .35;
   orientation[1] = .35;
   orientation[2] = .30;

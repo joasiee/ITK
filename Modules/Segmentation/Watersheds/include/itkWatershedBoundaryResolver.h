@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,7 +26,7 @@ namespace itk
 namespace watershed
 {
 /**
- *\class BoundaryResolver
+ * \class BoundaryResolver
  *  This filter implements a piece of the streaming watershed
  *  segmentation algorithm.  It takes in pairs of itk::watershed::Boundary
  *  objects and connects the labeling of pixels across image chunk boundaries.

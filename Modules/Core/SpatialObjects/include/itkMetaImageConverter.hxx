@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,23 +24,23 @@
 
 namespace itk
 {
-template <unsigned int NDimensions, typename PixelType, typename TSpatialObjectType>
+template <unsigned int VDimension, typename PixelType, typename TSpatialObjectType>
 auto
-MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::CreateMetaObject() -> MetaObjectType *
+MetaImageConverter<VDimension, PixelType, TSpatialObjectType>::CreateMetaObject() -> MetaObjectType *
 {
   return dynamic_cast<MetaObjectType *>(new ImageMetaObjectType);
 }
 
-template <unsigned int NDimensions, typename PixelType, typename TSpatialObjectType>
+template <unsigned int VDimension, typename PixelType, typename TSpatialObjectType>
 const char *
-MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::GetMetaObjectSubType()
+MetaImageConverter<VDimension, PixelType, TSpatialObjectType>::GetMetaObjectSubType()
 {
   return "Image";
 }
 
-template <unsigned int NDimensions, typename PixelType, typename TSpatialObjectType>
+template <unsigned int VDimension, typename PixelType, typename TSpatialObjectType>
 auto
-MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::AllocateImage(const ImageMetaObjectType * image) ->
+MetaImageConverter<VDimension, PixelType, TSpatialObjectType>::AllocateImage(const ImageMetaObjectType * image) ->
   typename ImageType::Pointer
 {
   auto rval = ImageType::New();
@@ -52,7 +52,7 @@ MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::AllocateImage(co
   SizeType    size;
   SpacingType spacing;
 
-  for (unsigned int i = 0; i < NDimensions; ++i)
+  for (unsigned int i = 0; i < VDimension; ++i)
   {
     size[i] = image->DimSize()[i];
     if (Math::ExactlyEquals(image->ElementSpacing()[i], NumericTraits<typename SpacingType::ValueType>::ZeroValue()))
@@ -66,18 +66,16 @@ MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::AllocateImage(co
   }
 
   const RegionType region(size);
-  rval->SetLargestPossibleRegion(region);
-  rval->SetBufferedRegion(region);
-  rval->SetRequestedRegion(region);
+  rval->SetRegions(region);
   rval->SetSpacing(spacing);
   rval->Allocate();
   return rval;
 }
 
 /** Convert a metaImage into an ImageMaskSpatialObject  */
-template <unsigned int NDimensions, typename PixelType, typename TSpatialObjectType>
+template <unsigned int VDimension, typename PixelType, typename TSpatialObjectType>
 auto
-MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::MetaObjectToSpatialObject(const MetaObjectType * mo)
+MetaImageConverter<VDimension, PixelType, TSpatialObjectType>::MetaObjectToSpatialObject(const MetaObjectType * mo)
   -> SpatialObjectPointer
 {
   const auto * imageMO = dynamic_cast<const ImageMetaObjectType *>(mo);
@@ -108,9 +106,9 @@ MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::MetaObjectToSpat
 
 
 /** Convert an Image SpatialObject into a metaImage */
-template <unsigned int NDimensions, typename PixelType, typename TSpatialObjectType>
+template <unsigned int VDimension, typename PixelType, typename TSpatialObjectType>
 auto
-MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::SpatialObjectToMetaObject(const SpatialObjectType * so)
+MetaImageConverter<VDimension, PixelType, TSpatialObjectType>::SpatialObjectToMetaObject(const SpatialObjectType * so)
   -> MetaObjectType *
 {
   const ImageSpatialObjectConstPointer imageSO = dynamic_cast<const ImageSpatialObjectType *>(so);
@@ -123,16 +121,16 @@ MetaImageConverter<NDimensions, PixelType, TSpatialObjectType>::SpatialObjectToM
 
   ImageConstPointer SOImage = imageSO->GetImage();
 
-  float spacing[NDimensions];
-  int   size[NDimensions];
+  float spacing[VDimension];
+  int   size[VDimension];
 
-  for (unsigned int i = 0; i < NDimensions; ++i)
+  for (unsigned int i = 0; i < VDimension; ++i)
   {
     size[i] = SOImage->GetLargestPossibleRegion().GetSize()[i];
     spacing[i] = SOImage->GetSpacing()[i];
   }
 
-  auto * imageMO = new MetaImage(NDimensions, size, spacing, MET_GetPixelType(typeid(PixelType)));
+  auto * imageMO = new MetaImage(VDimension, size, spacing, MET_GetPixelType(typeid(PixelType)));
 
   itk::ImageRegionConstIterator<ImageType> it(SOImage, SOImage->GetLargestPossibleRegion());
   for (unsigned int i = 0; !it.IsAtEnd(); i++, ++it)

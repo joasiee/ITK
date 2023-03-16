@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,7 @@
 #define itkImageToImageMetricv4GetValueAndDerivativeThreaderBase_hxx
 
 #include "itkNumericTraits.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 namespace itk
 {
@@ -30,13 +31,6 @@ ImageToImageMetricv4GetValueAndDerivativeThreaderBase<TDomainPartitioner, TImage
   , m_CachedNumberOfParameters(0)
   , m_CachedNumberOfLocalParameters(0)
 {}
-
-template <typename TDomainPartitioner, typename TImageToImageMetricv4>
-ImageToImageMetricv4GetValueAndDerivativeThreaderBase<TDomainPartitioner, TImageToImageMetricv4>::
-  ~ImageToImageMetricv4GetValueAndDerivativeThreaderBase()
-{
-  delete[] m_GetValueAndDerivativePerThreadVariables;
-}
 
 template <typename TDomainPartitioner, typename TImageToImageMetricv4>
 void
@@ -52,8 +46,8 @@ ImageToImageMetricv4GetValueAndDerivativeThreaderBase<TDomainPartitioner,
 
   /* Per-thread results */
   const ThreadIdType numWorkUnitsUsed = this->GetNumberOfWorkUnitsUsed();
-  delete[] m_GetValueAndDerivativePerThreadVariables;
-  this->m_GetValueAndDerivativePerThreadVariables = new AlignedGetValueAndDerivativePerThreadStruct[numWorkUnitsUsed];
+  this->m_GetValueAndDerivativePerThreadVariables =
+    make_unique_for_overwrite<AlignedGetValueAndDerivativePerThreadStruct[]>(numWorkUnitsUsed);
 
   if (this->m_Associate->GetComputeDerivative())
   {
@@ -208,7 +202,7 @@ ImageToImageMetricv4GetValueAndDerivativeThreaderBase<TDomainPartitioner, TImage
       this->m_Associate->ComputeFixedImageGradientAtPoint(mappedFixedPoint, mappedFixedImageGradient);
     }
   }
-  catch (ExceptionObject & exc)
+  catch (const ExceptionObject & exc)
   {
     // NOTE: there must be a cleaner way to do this:
     std::string msg("Caught exception: \n");
@@ -231,7 +225,7 @@ ImageToImageMetricv4GetValueAndDerivativeThreaderBase<TDomainPartitioner, TImage
       this->m_Associate->ComputeMovingImageGradientAtPoint(mappedMovingPoint, mappedMovingImageGradient);
     }
   }
-  catch (ExceptionObject & exc)
+  catch (const ExceptionObject & exc)
   {
     std::string msg("Caught exception: \n");
     msg += exc.what();
@@ -259,7 +253,7 @@ ImageToImageMetricv4GetValueAndDerivativeThreaderBase<TDomainPartitioner, TImage
                                       this->m_GetValueAndDerivativePerThreadVariables[threadId].LocalDerivatives,
                                       threadId);
   }
-  catch (ExceptionObject & exc)
+  catch (const ExceptionObject & exc)
   {
     // NOTE: there must be a cleaner way to do this:
     std::string msg("Exception in GetValueAndDerivativeProcessPoint:\n");
@@ -324,7 +318,7 @@ ImageToImageMetricv4GetValueAndDerivativeThreaderBase<TDomainPartitioner, TImage
           this->m_GetValueAndDerivativePerThreadVariables[threadId].LocalDerivatives[i];
       }
     }
-    catch (ExceptionObject & exc)
+    catch (const ExceptionObject & exc)
     {
       std::string msg("Caught exception: \n");
       msg += exc.what();

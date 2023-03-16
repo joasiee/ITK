@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@
 #include "itkConstNeighborhoodIterator.h"
 #include <limits>
 #include "itkMultiThreaderBase.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 
 namespace itk
@@ -168,8 +169,8 @@ BlockMatchingImageFilter<TFixedImage, TMovingImage, TFeatures, TDisplacements, T
     itkExceptionMacro("Invalid number of feature points: " << this->m_PointsCount << ".");
   }
 
-  this->m_DisplacementsVectorsArray = new DisplacementsVector[this->m_PointsCount];
-  this->m_SimilaritiesValuesArray = new SimilaritiesValue[this->m_PointsCount];
+  this->m_DisplacementsVectorsArray = make_unique_for_overwrite<DisplacementsVector[]>(this->m_PointsCount);
+  this->m_SimilaritiesValuesArray = make_unique_for_overwrite<SimilaritiesValue[]>(this->m_PointsCount);
 }
 
 template <typename TFixedImage,
@@ -223,8 +224,8 @@ BlockMatchingImageFilter<TFixedImage, TMovingImage, TFeatures, TDisplacements, T
   }
 
   // clean up
-  delete[] m_DisplacementsVectorsArray;
-  delete[] m_SimilaritiesValuesArray;
+  m_DisplacementsVectorsArray.reset();
+  m_SimilaritiesValuesArray.reset();
 }
 
 // Callback routine used by the threading library. This routine just calls
@@ -281,7 +282,7 @@ BlockMatchingImageFilter<TFixedImage, TMovingImage, TFeatures, TDisplacements, T
 
   // start constructing block iterator
   SizeValueType numberOfVoxelInBlock = 1;
-  for (unsigned i = 0; i < ImageSizeType::Dimension; ++i)
+  for (unsigned int i = 0; i < ImageSizeType::Dimension; ++i)
   {
     numberOfVoxelInBlock *= m_BlockRadius[i] + 1 + m_BlockRadius[i];
   }

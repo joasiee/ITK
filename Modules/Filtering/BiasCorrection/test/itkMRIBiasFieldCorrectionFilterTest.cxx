@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -86,7 +86,7 @@ itkMRIBiasFieldCorrectionFilterTest(int, char *[])
   classSigmas[0] = 10.0;
   classSigmas[1] = 20.0;
 
-  // creats a normal random variate generator
+  // creates a normal random variate generator
   itk::Statistics::MersenneTwisterRandomVariateGenerator::Pointer randomGenerator =
     itk::Statistics::MersenneTwisterRandomVariateGenerator::New();
 
@@ -199,7 +199,9 @@ itkMRIBiasFieldCorrectionFilterTest(int, char *[])
   int                 interSliceCorrectionMaximumIteration = 100;
   double              optimizerInitialRadius = 0.02;
   double              optimizerGrowthFactor = 1.01;
+  double              optimizerShrinkFactor = std::pow(optimizerGrowthFactor, -0.25);
   bool                usingInterSliceIntensityCorrection = true;
+
 
   filter->SetSlabNumberOfSamples(slabNumberOfSamples);
   filter->SetSlabBackgroundMinimumThreshold(slabBackgroundMinimumThreshold);
@@ -209,6 +211,7 @@ itkMRIBiasFieldCorrectionFilterTest(int, char *[])
   filter->SetInterSliceCorrectionMaximumIteration(interSliceCorrectionMaximumIteration);
   filter->SetOptimizerInitialRadius(optimizerInitialRadius);
   filter->SetOptimizerGrowthFactor(optimizerGrowthFactor);
+  filter->SetOptimizerShrinkFactor(optimizerShrinkFactor);
 
   ITK_TEST_SET_GET_BOOLEAN(filter, BiasFieldMultiplicative, isBiasFieldMultiplicative);
   ITK_TEST_SET_GET_BOOLEAN(filter, UsingSlabIdentification, usingSlabIdentification);
@@ -222,6 +225,7 @@ itkMRIBiasFieldCorrectionFilterTest(int, char *[])
   ITK_TEST_SET_GET_VALUE(interSliceCorrectionMaximumIteration, filter->GetInterSliceCorrectionMaximumIteration());
   ITK_TEST_SET_GET_VALUE(optimizerInitialRadius, filter->GetOptimizerInitialRadius());
   ITK_TEST_SET_GET_VALUE(optimizerGrowthFactor, filter->GetOptimizerGrowthFactor());
+  ITK_TEST_SET_GET_VALUE(optimizerShrinkFactor, filter->GetOptimizerShrinkFactor());
   ITK_TEST_SET_GET_BOOLEAN(filter, UsingInterSliceIntensityCorrection, usingInterSliceIntensityCorrection);
 
   filter->SetBiasFieldDegree(biasDegree); // default value = 3
@@ -235,9 +239,9 @@ itkMRIBiasFieldCorrectionFilterTest(int, char *[])
   // ITK_TEST_SET_GET_VALUE( initCoefficients, filter->GetInitialBiasFieldCoefficients() );
 
   // timing
-  long int t1 = time(nullptr);
+  long t1 = time(nullptr);
   filter->Update();
-  long int t2 = time(nullptr);
+  long t2 = time(nullptr);
   std::cout << "Run time (in s)" << t2 - t1 << std::endl;
 
   sumOfError = 0.0;

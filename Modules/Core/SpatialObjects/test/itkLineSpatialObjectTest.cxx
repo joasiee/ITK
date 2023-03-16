@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -91,19 +91,19 @@ itkLineSpatialObjectTest(int, char *[])
   {
     for (unsigned int d = 0; d < 3; ++d)
     {
-      if (itk::Math::NotExactlyEquals((*it).GetPositionInWorldSpace()[d], i + d))
+      if (itk::Math::NotExactlyEquals(it->GetPositionInWorldSpace()[d], i + d))
       {
         std::cout << "[FAILED]" << std::endl;
         return EXIT_FAILURE;
       }
 
-      if (itk::Math::NotExactlyEquals(((*it).GetNormalInObjectSpace(0))[d], d))
+      if (itk::Math::NotExactlyEquals((it->GetNormalInObjectSpace(0))[d], d))
       {
         std::cout << "[FAILED]" << std::endl;
         return EXIT_FAILURE;
       }
 
-      if (itk::Math::NotExactlyEquals(((*it).GetNormalInObjectSpace(1))[d], 2 * d))
+      if (itk::Math::NotExactlyEquals((it->GetNormalInObjectSpace(1))[d], 2 * d))
       {
         std::cout << "[FAILED]" << std::endl;
         return EXIT_FAILURE;

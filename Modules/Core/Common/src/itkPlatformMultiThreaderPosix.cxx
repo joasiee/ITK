@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,11 +30,6 @@
 #include "itkObjectFactory.h"
 #include "itksys/SystemTools.hxx"
 #include <unistd.h>
-
-#ifdef __APPLE__
-#  include <sys/types.h>
-#  include <sys/sysctl.h>
-#endif
 
 namespace itk
 {
@@ -128,7 +123,7 @@ PlatformMultiThreader::SpawnThread(ThreadFunctionType f, void * UserData)
     }
     m_SpawnedThreadActiveFlagLock[id]->unlock();
 
-    id++;
+    ++id;
   }
 
   if (id >= ITK_MAX_THREADS)

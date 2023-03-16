@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -137,7 +137,7 @@ FEMScatteredDataPointSetToImageFilter<TInputPointSet,
 
   // set the interpolation grid of the FEMSolver
   // note that let the interpolation grid be same with the deformation field
-  // in order to accelarate the generation of the deformation field.
+  // in order to accelerate the generation of the deformation field.
   this->m_FEMSolver->SetOrigin(this->m_Origin);
   this->m_FEMSolver->SetSpacing(this->m_Spacing);
   RegionType region;
@@ -224,7 +224,7 @@ FEMScatteredDataPointSetToImageFilter<TInputPointSet,
 
       this->m_Mesh->SetPoint(globalNumbering, pointCoordinate);
 
-      globalNumbering++;
+      ++globalNumbering;
     }
   }
 
@@ -244,7 +244,7 @@ FEMScatteredDataPointSetToImageFilter<TInputPointSet,
 
       this->m_Mesh->SetCell(globalNumbering, cell);
 
-      globalNumbering++;
+      ++globalNumbering;
     }
   }
 }
@@ -292,7 +292,7 @@ FEMScatteredDataPointSetToImageFilter<TInputPointSet,
         image->TransformContinuousIndexToPhysicalPoint(pointIndex, pointCoordinate);
         this->m_Mesh->SetPoint(globalNumbering, pointCoordinate);
 
-        globalNumbering++;
+        ++globalNumbering;
       }
     }
   }
@@ -344,7 +344,7 @@ FEMScatteredDataPointSetToImageFilter<TInputPointSet,
 
         this->m_Mesh->SetCell(globalNumbering, cell);
 
-        globalNumbering++;
+        ++globalNumbering;
       }
     }
   }
@@ -425,7 +425,7 @@ FEMScatteredDataPointSetToImageFilter<TInputPointSet,
   // initialize nodes
   while (it != meshPoints->End())
   {
-    for (unsigned i = 0; i < ImageDimension; ++i)
+    for (unsigned int i = 0; i < ImageDimension; ++i)
     {
       point[i] = it.Value()[i];
     }
@@ -723,7 +723,7 @@ FEMScatteredDataPointSetToImageFilter<TInputPointSet,
 
     if (element.IsNull())
     {
-      for (unsigned i = 0; i < ImageDimension; ++i)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         displacement[i] = 0.0;
       }
@@ -754,7 +754,7 @@ FEMScatteredDataPointSetToImageFilter<TInputPointSet,
         simulatedDisplacement += shape[m] * nodeSolution;
       }
 
-      for (unsigned i = 0; i < ImageDimension; ++i)
+      for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         displacement[i] = simulatedDisplacement[i];
       }

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,7 +35,7 @@ OpenCVImageBridge::IplImageToITKImage(const IplImage * in)
   // Typedefs
   using ImageType = TOutputImageType;
 
-  // IplImage::depth is defined as a int, but it is treated as a unsigned
+  // IplImage::depth is defined as an int, but it is treated as an unsigned
   // integer bit field which causes a compilation error in clang 6.0 when
   // trying to implicit cast some IPL_DEPTH_* values
   using DepthIDType = unsigned int;

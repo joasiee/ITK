@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -134,7 +134,7 @@ public:
   friend bool
   operator==(const Self & lhs, const Self & rhs)
   {
-    return lhs.m_MetaDataObjectValue == rhs.m_MetaDataObjectValue;
+    return Self::EqualValues(lhs.m_MetaDataObjectValue, rhs.m_MetaDataObjectValue);
   }
 
   /** Returns (metaDataObject1 != metaDataObject2). */
@@ -149,6 +149,52 @@ protected:
   ~MetaDataObject() override = default;
 
 private:
+  /** Assigns the value of `source` to `target`.
+   * \note The trailing return type is there, just to enable SFINAE.*/
+  template <typename TValue>
+  static auto
+  Assign(TValue & target, const TValue & source) -> decltype(target = source)
+  {
+    return target = source;
+  }
+
+  /** `Assign` overload for C-style arrays (as well as arrays of arrays). */
+  template <typename TValue, size_t VNumberOfElements>
+  static void
+  Assign(TValue (&target)[VNumberOfElements], const TValue (&source)[VNumberOfElements])
+  {
+    for (size_t i = 0; i < VNumberOfElements; ++i)
+    {
+      Self::Assign(target[i], source[i]);
+    }
+  }
+
+
+  /** Tells whether the specified arguments compare equal.
+   * \note The trailing return type is there, just to enable SFINAE.*/
+  template <typename TValue>
+  static auto
+  EqualValues(const TValue & lhs, const TValue & rhs) -> decltype(lhs == rhs)
+  {
+    return lhs == rhs;
+  }
+
+  /** `EqualValues` overload for C-style arrays (as well as arrays of arrays). */
+  template <typename TValue, size_t VNumberOfElements>
+  static bool
+  EqualValues(const TValue (&lhs)[VNumberOfElements], const TValue (&rhs)[VNumberOfElements])
+  {
+    for (size_t i = 0; i < VNumberOfElements; ++i)
+    {
+      if (!Self::EqualValues(lhs[i], rhs[i]))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+
   /** Internal helper function used to implement operator== for MetaDataObjectBase. */
   bool
   Equal(const MetaDataObjectBase & metaDataObjectBase) const override
@@ -170,7 +216,7 @@ private:
  * \param Dictionary TODO
  * \param key TODO
  * \param invalue the value of type T that is to be encapsulated.
- * \return A smartpointer ot a MetaDataObject that is suitable for
+ * \return A smartpointer to a MetaDataObject that is suitable for
  * insertion into a MetaDataDictionary.
  */
 template <typename T>
@@ -318,6 +364,7 @@ extern template class ITKCommon_EXPORT_EXPLICIT MetaDataObject<Array<char>>;
 extern template class ITKCommon_EXPORT_EXPLICIT MetaDataObject<Array<int>>;
 extern template class ITKCommon_EXPORT_EXPLICIT MetaDataObject<Array<float>>;
 extern template class ITKCommon_EXPORT_EXPLICIT MetaDataObject<Array<double>>;
+extern template class ITKCommon_EXPORT_EXPLICIT MetaDataObject<Matrix<float, 4, 4>>;
 extern template class ITKCommon_EXPORT_EXPLICIT MetaDataObject<Matrix<double>>;
 
 ITK_GCC_PRAGMA_DIAG_POP()

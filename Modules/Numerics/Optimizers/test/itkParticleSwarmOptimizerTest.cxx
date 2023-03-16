@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -351,7 +351,7 @@ PSOTest3()
   itkOptimizer->SetInertiaCoefficient(inertiaCoefficient);
   if (itk::Math::abs(itkOptimizer->GetInertiaCoefficient() - inertiaCoefficient))
   {
-    std::cerr << "Error in Set/Get method for inertia coefficent parameter";
+    std::cerr << "Error in Set/Get method for inertia coefficient parameter";
     return EXIT_FAILURE;
   }
 
@@ -359,7 +359,7 @@ PSOTest3()
   itkOptimizer->SetPersonalCoefficient(personalCoefficient);
   if (itk::Math::abs(itkOptimizer->GetPersonalCoefficient() - personalCoefficient))
   {
-    std::cerr << "Error in Set/Get method for personal coefficent parameter";
+    std::cerr << "Error in Set/Get method for personal coefficient parameter";
     return EXIT_FAILURE;
   }
 
@@ -367,7 +367,7 @@ PSOTest3()
   itkOptimizer->SetGlobalCoefficient(gobalCoefficient);
   if (itk::Math::abs(itkOptimizer->GetGlobalCoefficient() - gobalCoefficient))
   {
-    std::cerr << "Error in Set/Get method for gobal coefficent parameter";
+    std::cerr << "Error in Set/Get method for global coefficient parameter";
     return EXIT_FAILURE;
   }
 

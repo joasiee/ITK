@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -227,10 +227,11 @@ Histogram<TMeasurement, TFrequencyContainer>::Initialize(const SizeType &       
       // Set the min vector and max vector
       for (unsigned int j = 0; j < static_cast<unsigned int>(size[i] - 1); ++j)
       {
-        this->SetBinMin(i, j, (MeasurementType)(lowerBound[i] + ((float)j * interval)));
-        this->SetBinMax(i, j, (MeasurementType)(lowerBound[i] + (((float)j + 1) * interval)));
+        this->SetBinMin(i, j, (MeasurementType)(lowerBound[i] + (static_cast<float>(j) * interval)));
+        this->SetBinMax(i, j, (MeasurementType)(lowerBound[i] + ((static_cast<float>(j) + 1) * interval)));
       }
-      this->SetBinMin(i, size[i] - 1, (MeasurementType)(lowerBound[i] + (((float)size[i] - 1) * interval)));
+      this->SetBinMin(
+        i, size[i] - 1, (MeasurementType)(lowerBound[i] + ((static_cast<float>(size[i]) - 1) * interval)));
       this->SetBinMax(i, size[i] - 1, (MeasurementType)(upperBound[i]));
     }
   }
@@ -574,7 +575,7 @@ Histogram<TMeasurement, TFrequencyContainer>::GetFrequency(InstanceIdentifier n,
     while (include < includeEnd)
     {
       frequency += GetFrequency(include);
-      include++;
+      ++include;
     }
     current += nextOffset;
   }
@@ -598,27 +599,27 @@ Histogram<TMeasurement, TFrequencyContainer>::Quantile(unsigned int dimension, d
   double             p_n;
   double             f_n;
   double             cumulated = 0;
-  auto               totalFrequency = double(this->GetTotalFrequency());
+  auto               totalFrequency = static_cast<double>(this->GetTotalFrequency());
   double             binProportion;
   double             min, max, interval;
 
   if (p < 0.5)
   {
     n = 0;
-    p_n = NumericTraits<double>::ZeroValue();
+    p_n = 0.0;
     do
     {
       f_n = this->GetFrequency(n, dimension);
       cumulated += f_n;
       p_n_prev = p_n;
       p_n = cumulated / totalFrequency;
-      n++;
+      ++n;
     } while (n < size && p_n < p);
 
     binProportion = f_n / totalFrequency;
 
-    min = double(this->GetBinMin(dimension, n - 1));
-    max = double(this->GetBinMax(dimension, n - 1));
+    min = static_cast<double>(this->GetBinMin(dimension, n - 1));
+    max = static_cast<double>(this->GetBinMax(dimension, n - 1));
     interval = max - min;
     return min + ((p - p_n_prev) / binProportion) * interval;
   }
@@ -626,20 +627,20 @@ Histogram<TMeasurement, TFrequencyContainer>::Quantile(unsigned int dimension, d
   {
     n = size - 1;
     InstanceIdentifier m = NumericTraits<InstanceIdentifier>::ZeroValue();
-    p_n = NumericTraits<double>::OneValue();
+    p_n = 1.0;
     do
     {
       f_n = this->GetFrequency(n, dimension);
       cumulated += f_n;
       p_n_prev = p_n;
-      p_n = NumericTraits<double>::OneValue() - cumulated / totalFrequency;
-      n--;
-      m++;
+      p_n = 1.0 - cumulated / totalFrequency;
+      --n;
+      ++m;
     } while (m < size && p_n > p);
 
     binProportion = f_n / totalFrequency;
-    min = double(this->GetBinMin(dimension, n + 1));
-    max = double(this->GetBinMax(dimension, n + 1));
+    min = static_cast<double>(this->GetBinMin(dimension, n + 1));
+    max = static_cast<double>(this->GetBinMax(dimension, n + 1));
     interval = max - min;
     return max - ((p_n_prev - p) / binProportion) * interval;
   }

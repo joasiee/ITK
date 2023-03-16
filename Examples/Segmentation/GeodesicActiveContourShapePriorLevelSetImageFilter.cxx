@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -75,7 +75,7 @@
 // potential image.
 //
 // The \doxygen{FastMarchingImageFilter} creates an initial level set using
-// three user specified seed positions and a initial contour radius. Three
+// three user specified seed positions and an initial contour radius. Three
 // seeds are used in this example to facilitate the segmentation of long
 // narrow objects in a smaller number of iterations. The output of the
 // FastMarchingImageFilter is passed as the input to the
@@ -529,7 +529,7 @@ main(int argc, char * argv[])
 
   //  Here we configure all the writers required to see the intermediate
   //  outputs of the pipeline. This is added here only for
-  //  pedagogical/debugging purposes. These intermediate output are normaly
+  //  pedagogical/debugging purposes. These intermediate output are normally
   //  not required. Only the output of the final thresholding filter should be
   //  relevant.  Observing intermediate output is helpful in the process of
   //  fine tuning the parameters of filters in the pipeline.
@@ -932,7 +932,7 @@ main(int argc, char * argv[])
 
 
   // The following writer type is used to save the output of the time-crossing
-  // map in a file with apropiate pixel representation. The advantage of
+  // map in a file with appropriate pixel representation. The advantage of
   // saving this image in native format is that it can be used with a viewer
   // to help determine an appropriate threshold to be used on the output of
   // the fastmarching filter.

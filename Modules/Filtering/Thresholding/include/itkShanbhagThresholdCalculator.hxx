@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -59,14 +59,14 @@ ShanbhagThresholdCalculator<THistogram, TOutput>::GenerateData()
 
   int total = histogram->GetTotalFrequency();
 
-  for (ih = 0; (unsigned)ih < size; ++ih)
+  for (ih = 0; static_cast<unsigned int>(ih) < size; ++ih)
   {
-    norm_histo[ih] = (double)histogram->GetFrequency(ih, 0) / total;
+    norm_histo[ih] = static_cast<double>(histogram->GetFrequency(ih, 0)) / total;
   }
 
   P1[0] = norm_histo[0];
   P2[0] = 1.0 - P1[0];
-  for (ih = 1; (unsigned)ih < size; ++ih)
+  for (ih = 1; static_cast<unsigned int>(ih) < size; ++ih)
   {
     P1[ih] = P1[ih - 1] + norm_histo[ih];
     P2[ih] = 1.0 - P1[ih];
@@ -74,7 +74,7 @@ ShanbhagThresholdCalculator<THistogram, TOutput>::GenerateData()
 
   // Determine the first non-zero bin
   first_bin = 0;
-  for (ih = 0; (unsigned)ih < size; ++ih)
+  for (ih = 0; static_cast<unsigned int>(ih) < size; ++ih)
   {
     if (!(itk::Math::abs(P1[ih]) < tolerance))
     {
@@ -112,7 +112,7 @@ ShanbhagThresholdCalculator<THistogram, TOutput>::GenerateData()
     // Entropy of the object pixels
     ent_obj = 0.0;
     term = 0.5 / P2[it];
-    for (ih = it + 1; (unsigned)ih < size; ++ih)
+    for (ih = it + 1; static_cast<unsigned int>(ih) < size; ++ih)
     {
       ent_obj -= norm_histo[ih] * std::log(1.0 - term * P2[ih]);
     }

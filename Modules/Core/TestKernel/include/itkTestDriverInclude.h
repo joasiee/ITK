@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -75,7 +75,7 @@ RegressionTestBaselines(char *);
 using ComparePairType = std::pair<char *, char *>;
 
 // A structure to hold regression test parameters
-using RegressionTestParameters = struct _RegressionTestParameters
+struct RegressionTestParameters
 {
   std::vector<ComparePairType> compareList;
   double                       intensityTolerance;
@@ -112,7 +112,7 @@ struct ProcessedOutputType
 };
 
 // A structure to hold redirect output parameters
-using RedirectOutputParameters = struct _RedirectOutputParameters
+struct RedirectOutputParameters
 {
   bool        redirect;
   std::string fileName;

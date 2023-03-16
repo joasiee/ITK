@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,7 +23,7 @@
 #include "itkTestingMacros.h"
 
 /**
- * This program looks for straight lines whithin an image
+ * This program looks for straight lines within an image
  * It uses the ITK HoughTransform2DLinesImageFilter.
  * - Read the image.
  * - Apply a gradient and thresholding functions.
@@ -124,7 +124,7 @@ itkHoughTransform2DLinesImageTest(int, char *[])
   bool success = true;
 
   // Define the dimension of the images
-  constexpr unsigned Dimension = 2;
+  constexpr unsigned int Dimension = 2;
 
   // Declare the pixel types of the images
   using PixelType = unsigned char;
@@ -168,10 +168,11 @@ itkHoughTransform2DLinesImageTest(int, char *[])
 
   for (unsigned int i = 0; i < numberOfPixels; i += 1)
   {
-    index[0] = (long int)(Vx - VyNorm * i);
-    index[1] = (long int)(Vy + VxNorm * i);
+    index[0] = static_cast<long>(Vx - VyNorm * i);
+    index[1] = static_cast<long>(Vy + VxNorm * i);
 
-    if (index[0] < (long)size[0] && index[0] >= 0 && index[1] < (long)size[1] && index[1] >= 0)
+    if (index[0] < static_cast<long>(size[0]) && index[0] >= 0 && index[1] < static_cast<long>(size[1]) &&
+        index[1] >= 0)
     {
       image->SetPixel(index, 255);
     }
@@ -299,9 +300,9 @@ itkHoughTransform2DLinesImageTest(int, char *[])
         {
           for (double length = 0; length < discRadius; length += 1)
           {
-            index[0] = (long int)(it_input.GetIndex()[0] + length * std::cos(angle));
-            index[1] = (long int)(it_input.GetIndex()[1] + length * std::sin(angle));
-            if (index[0] <= std::sqrt((double)400 * 400 + 400 * 400) && index[0] >= 0 && index[1] <= angleResolution &&
+            index[0] = static_cast<long>(it_input.GetIndex()[0] + length * std::cos(angle));
+            index[1] = static_cast<long>(it_input.GetIndex()[1] + length * std::sin(angle));
+            if (index[0] <= std::sqrt(400.0 * 400 + 400 * 400) && index[0] >= 0 && index[1] <= angleResolution &&
                 index[1] >= 0)
             {
               accumulator->SetPixel(index, 0);

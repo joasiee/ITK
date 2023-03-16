@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,10 +34,10 @@ namespace itk
 
 template <typename TInputImage, typename TPolyline, typename TVector, typename TOutputImage>
 PolylineMaskImageFilter<TInputImage, TPolyline, TVector, TOutputImage>::PolylineMaskImageFilter()
-  : m_ViewVector(1)
-  , m_UpVector(1)
+  : m_ViewVector(MakeFilled<VectorType>(1))
+  , m_UpVector(MakeFilled<VectorType>(1))
   , m_CameraCenterPoint(0)
-  , m_FocalPoint(0.0)
+  , m_FocalPoint()
 
 {
   this->SetNumberOfRequiredInputs(2);
@@ -208,7 +208,7 @@ PolylineMaskImageFilter<TInputImage, TPolyline, TVector, TOutputImage>::Generate
   using CornerPointType = Point<double, 3>;
   using CornerPointProjectionType = Point<double, 2>;
 
-  using BoundingBoxType = BoundingBox<unsigned long int, 2, double>;
+  using BoundingBoxType = BoundingBox<unsigned long, 2, double>;
   using CornerPointProjectionContainer = BoundingBoxType::PointsContainer;
 
   auto                      cornerPointProjectionlist = CornerPointProjectionContainer::New();
@@ -327,9 +327,7 @@ PolylineMaskImageFilter<TInputImage, TPolyline, TVector, TOutputImage>::Generate
   itkDebugMacro(<< "Projection image start index:" << projectionStart);
   itkDebugMacro(<< "Projection image origin:" << origin);
 
-  projectionImagePtr->SetRequestedRegion(projectionRegion);
-  projectionImagePtr->SetBufferedRegion(projectionRegion);
-  projectionImagePtr->SetLargestPossibleRegion(projectionRegion);
+  projectionImagePtr->SetRegions(projectionRegion);
   projectionImagePtr->Allocate(true); // initialize buffer to zero
 
   using ProjectionImageIteratorType = ImageRegionIterator<ProjectionImageType>;

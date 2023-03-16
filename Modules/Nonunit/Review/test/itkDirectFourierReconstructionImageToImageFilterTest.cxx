@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,7 +26,7 @@
 #include "itkTestingMacros.h"
 
 using InternalPixelType = double;
-using TestOutputPixelType = short int;
+using TestOutputPixelType = short;
 
 using OutputImageType = itk::Image<TestOutputPixelType, 3>;
 using InternalImageType = itk::Image<InternalPixelType, 3>;
@@ -72,7 +72,7 @@ protected:
       return;
     }
 
-    std::cout << (int)(100 * reconstructor->GetProgress()) << "%" << std::endl;
+    std::cout << static_cast<int>(100 * reconstructor->GetProgress()) << "%" << std::endl;
   }
 };
 

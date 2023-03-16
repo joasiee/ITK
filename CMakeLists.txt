@@ -19,7 +19,7 @@ cmake_minimum_required(VERSION ${ITK_OLDEST_VALIDATED_POLICIES_VERSION}...${ITK_
 # Now enumerate specific policies newer than ITK_NEWEST_VALIDATED_POLICIES_VERSION
 # that may need to be individually set to NEW/OLD
 #
-foreach(pnew "CMP0120")
+foreach(pnew "CMP0120" "CMP0135")
   if(POLICY ${pnew})
     cmake_policy(SET ${pnew} NEW)
   endif()
@@ -75,7 +75,7 @@ include(CMakeDependentOption)
 # use ExternalProject
 include(ExternalProject)
 
-if( CMAKE_HOST_WIN32 )
+if(CMAKE_HOST_WIN32)
   if(NOT DEFINED ITK_SKIP_PATH_LENGTH_CHECKS)
     if(${CMAKE_SYSTEM_VERSION} VERSION_GREATER "10.0.14392") # Win10 version 1607
       set(_LongPathKey LongPathsEnabled)
@@ -88,10 +88,10 @@ if( CMAKE_HOST_WIN32 )
   endif()
 endif()
 
-if( CMAKE_HOST_WIN32 AND NOT ITK_SKIP_PATH_LENGTH_CHECKS )
+if(CMAKE_HOST_WIN32 AND NOT ITK_SKIP_PATH_LENGTH_CHECKS)
 
-  string( LENGTH "${CMAKE_CURRENT_SOURCE_DIR}" n )
-  if( n GREATER 50 )
+  string(LENGTH "${CMAKE_CURRENT_SOURCE_DIR}" n)
+  if(n GREATER 50)
     message(
       FATAL_ERROR
       "ITK source code directory path length is too long (${n} > 50)."
@@ -99,8 +99,8 @@ if( CMAKE_HOST_WIN32 AND NOT ITK_SKIP_PATH_LENGTH_CHECKS )
       )
   endif()
 
-  string( LENGTH "${CMAKE_CURRENT_BINARY_DIR}" n )
-  if( n GREATER 50 )
+  string(LENGTH "${CMAKE_CURRENT_BINARY_DIR}" n)
+  if(n GREATER 50)
     message(
       FATAL_ERROR
       "ITK build directory path length is too long (${n} > 50)."
@@ -150,14 +150,18 @@ set(main_project_name ${_ITKModuleMacros_DEFAULT_LABEL})
 #-----------------------------------------------------------------------------
 configure_file(CMake/ITKConfigVersion.cmake.in ITKConfigVersion.cmake @ONLY)
 
+if(NOT CMAKE_INSTALL_LIBDIR)
+  set(CMAKE_INSTALL_LIBDIR lib)
+endif()
+
 if(NOT ITK_INSTALL_RUNTIME_DIR)
   set(ITK_INSTALL_RUNTIME_DIR bin)
 endif()
 if(NOT ITK_INSTALL_LIBRARY_DIR)
-  set(ITK_INSTALL_LIBRARY_DIR lib)
+  set(ITK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_LIBDIR})
 endif()
 if(NOT ITK_INSTALL_ARCHIVE_DIR)
-  set(ITK_INSTALL_ARCHIVE_DIR lib)
+  set(ITK_INSTALL_ARCHIVE_DIR ${CMAKE_INSTALL_LIBDIR})
 endif()
 if(NOT ITK_INSTALL_INCLUDE_DIR)
   set(ITK_INSTALL_INCLUDE_DIR include/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR})
@@ -169,7 +173,7 @@ if(NOT ITK_INSTALL_DOC_DIR)
   set(ITK_INSTALL_DOC_DIR share/doc/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR})
 endif()
 if(NOT ITK_INSTALL_PACKAGE_DIR)
-  set(ITK_INSTALL_PACKAGE_DIR "lib/cmake/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}")
+  set(ITK_INSTALL_PACKAGE_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}")
 endif()
 
 # Override CMake's built-in add_* commands: assign LABELS to tests and targets
@@ -216,7 +220,11 @@ endif()
 option(BUILD_SHARED_LIBS "Build ITK with shared libraries." OFF)
 set(ITK_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
 
-option(ITK_DYNAMIC_LOADING "Support run-time loading of shared libraries" ON)
+set(ITK_DYNAMIC_LOADING_DEFAULT ON)
+if(WASI OR EMSCRIPTEN)
+  set(ITK_DYNAMIC_LOADING_DEFAULT OFF)
+endif()
+option(ITK_DYNAMIC_LOADING "Support run-time loading of shared libraries" ${ITK_DYNAMIC_LOADING_DEFAULT})
 mark_as_advanced(ITK_DYNAMIC_LOADING)
 
 #-----------------------------------------------------------------------------
@@ -253,7 +261,7 @@ endif()
 # The default path when not wrapping.  Restore standard build location
 # if python wrapping is turned on, and then turned off.
 if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
-  set(NO_WRAP_CMAKE_LIBRARY_OUTPUT_DIRECTORY ${ITK_BINARY_DIR}/lib CACHE PATH "Shared library directory")
+  set(NO_WRAP_CMAKE_LIBRARY_OUTPUT_DIRECTORY ${ITK_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR} CACHE PATH "Shared library directory")
 else()
   set(NO_WRAP_CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} CACHE PATH "Shared library directory")
 endif()
@@ -263,50 +271,7 @@ else()
   set(NO_WRAP_CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} CACHE PATH "Shared library directory")
 endif()
 
-if(ITK_WRAPPING)
-  # WRAPPER_LIBRARY_OUTPUT_DIR. Directory in which generated cxx, xml, and idx files will be placed.
-  set(WRAPPER_LIBRARY_OUTPUT_DIR "${ITK_BINARY_DIR}/Wrapping" CACHE INTERNAL "Need to specify the output library directory globally")
-  if(ITK_WRAP_PYTHON)
-    set(ITK_WRAP_PYTHON_ROOT_BINARY_DIR "${WRAPPER_LIBRARY_OUTPUT_DIR}/Generators/Python" CACHE INTERNAL "python binary dir")
-    # create the directory to avoid loosing case on windows
-    file(MAKE_DIRECTORY ${ITK_WRAP_PYTHON_ROOT_BINARY_DIR})
-
-    set(ITK_STUB_DIR "${ITK_WRAP_PYTHON_ROOT_BINARY_DIR}/itk-stubs")
-    file(MAKE_DIRECTORY ${ITK_STUB_DIR})
-
-    set(ITK_PYTHON_PACKAGE_DIR "${ITK_WRAP_PYTHON_ROOT_BINARY_DIR}/itk")
-    # create the directory to avoid loosing case on windows
-    file(MAKE_DIRECTORY ${ITK_PYTHON_PACKAGE_DIR})
-
-    set(ITK_WRAP_PYTHON_SWIG_CONFIGURATION_DIR "${ITK_PYTHON_PACKAGE_DIR}/Configuration" CACHE INTERNAL "python binary dir")
-    # create the directory to avoid loosing case on windows
-    file(MAKE_DIRECTORY ${ITK_WRAP_PYTHON_SWIG_CONFIGURATION_DIR})
-
-    # IF WRAP_PYTHON then we must unconditionally set the CMAKE_LIBRARY_OUTPUT_DIRECTORY
-    # If wrapping for python, then put all the shared libraries (both core shared libs,
-    # and python shared libs) in the itk python package directory.
-    #
-    # https://cmake.org/cmake/help/v3.10/prop_tgt/LIBRARY_OUTPUT_DIRECTORY.html#prop_tgt:LIBRARY_OUTPUT_DIRECTORY
-    # Multi-configuration generators (VS, Xcode) append a per-configuration subdirectory
-    # to the specified directory unless a generator expression is used.
-    # Using an always true generator expression to disable multi-config standard behavior
-    #
-    # When wrapping, the multi-config generators can only be used in degraded state
-    # of allowing only a single element int the CMAKE_CONFIGURATION_TYPES and enforcing
-    # that CMAKE_BUILD_TYPE match that type (see Wrapping/CMakeLists.txt enforcement)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "$<1:${ITK_PYTHON_PACKAGE_DIR}>" CACHE PATH "Shared library directory with generator override" FORCE)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "$<1:${ITK_PYTHON_PACKAGE_DIR}>" CACHE PATH "Shared library directory with generator override" FORCE)
-  endif()
-else()
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${NO_WRAP_CMAKE_LIBRARY_OUTPUT_DIRECTORY}   CACHE PATH "Shared library directory")
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${NO_WRAP_CMAKE_RUNTIME_OUTPUT_DIRECTORY}   CACHE PATH "Runtime library directory")
-endif()
-mark_as_advanced(FORCE
-  CMAKE_RUNTIME_OUTPUT_DIRECTORY
-  CMAKE_LIBRARY_OUTPUT_DIRECTORY
-  NO_WRAP_CMAKE_LIBRARY_OUTPUT_DIRECTORY
-  NO_WRAP_CMAKE_RUNTIME_OUTPUT_DIRECTORY
-  Python3_ROOT_DIR)
+include(WrappingConfigCommon)
 # Setup build locations for shared libraries ----STOP
 
 if(CMAKE_CONFIGURATION_TYPES AND ITK_WRAPPING)
@@ -323,7 +288,7 @@ if(CMAKE_CONFIGURATION_TYPES AND ITK_WRAPPING)
 endif()
 
 if(NOT CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${ITK_BINARY_DIR}/lib)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${ITK_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 endif()
 set(ITK_MODULES_DIR "${ITK_BINARY_DIR}/${ITK_INSTALL_PACKAGE_DIR}/Modules")
 
@@ -340,7 +305,7 @@ cmake_dependent_option(ITK_LEGACY_REMOVE
 # These ITK_FUTURE_LEGACY_REMOVE are another level of granularity for
 # which backwards compatible features we want to maintain.
 cmake_dependent_option(ITK_FUTURE_LEGACY_REMOVE
-      "Completely remove compilation of code which will become deprecated by default in ITKv5." OFF
+      "Completely remove compilation of code which will become deprecated by default in ITKv6." OFF
       "ITK_LEGACY_REMOVE" OFF)
 cmake_dependent_option(ITK_LEGACY_SILENT
       "Silence all legacy code messages when ITK_LEGACY_REMOVE:BOOL=OFF." OFF
@@ -364,12 +329,12 @@ set(ITK_NIFTI_IO_ANALYZE_FLAVOR "ITK4Warning" CACHE STRING ${ITK_NIFTI_IO_ANALYZ
 
 set_property(CACHE ITK_NIFTI_IO_ANALYZE_FLAVOR PROPERTY STRINGS ITK4Warning ITK4 SPM FSL Reject)
 
-if( NOT ("${ITK_NIFTI_IO_ANALYZE_FLAVOR}" STREQUAL "ITK4Warning" OR
+if(NOT ("${ITK_NIFTI_IO_ANALYZE_FLAVOR}" STREQUAL "ITK4Warning" OR
          "${ITK_NIFTI_IO_ANALYZE_FLAVOR}" STREQUAL "ITK4" OR
          "${ITK_NIFTI_IO_ANALYZE_FLAVOR}" STREQUAL "SPM" OR
          "${ITK_NIFTI_IO_ANALYZE_FLAVOR}" STREQUAL "FSL" OR
          "${ITK_NIFTI_IO_ANALYZE_FLAVOR}" STREQUAL "Reject"
-         ) )
+         ))
   set(ITK_NIFTI_IO_ANALYZE_FLAVOR "ITK4Warning" CACHE STRING ${ITK_NIFTI_IO_ANALYZE_FLAVOR_DOC_STRING} FORCE)
 endif()
 mark_as_advanced(ITK_NIFTI_IO_ANALYZE_FLAVOR)
@@ -461,7 +426,7 @@ option(ITK_USE_SYSTEM_FFTW "Use an installed version of FFTW" ${ITK_USE_SYSTEM_F
 mark_as_advanced(ITK_USE_SYSTEM_FFTW)
 
 
-if( ITK_USE_FFTWD OR ITK_USE_FFTWF )
+if(ITK_USE_FFTWD OR ITK_USE_FFTWF)
   include(itkExternal_FFTW)
   # This pollutes the global namespace, but is needed for backward compatibility
   include_directories(${FFTW_INCLUDE})
@@ -480,7 +445,7 @@ mark_as_advanced(ITK_USE_64BITS_IDS)
 option(ITK_USE_CONCEPT_CHECKING "Turn on concept checking to give helpful errors at compile time if a type cannot be used as a template parameter." ON)
 mark_as_advanced(ITK_USE_CONCEPT_CHECKING)
 if(ITK_USE_STRICT_CONCEPT_CHECKING)
-  message(WARNING "Compilers requiring ITK_USE_STRICT_CONCEPT_CHECKING are no longer suppported.  This variable is no longer used.")
+  message(WARNING "Compilers requiring ITK_USE_STRICT_CONCEPT_CHECKING are no longer supported.  This variable is no longer used.")
 endif()
 
 #-----------------------------------------------------------------------------
@@ -502,12 +467,12 @@ set(ITK_EXAMPLE_DATA_ROOT "${ITK_SOURCE_DIR}/Examples/Data")
 
 # This flag is used in particular, to enable some tests that require large memory to run.
 # Test that have significant memory requirements should use
-# "set_tests_properties( testname PROPERTIES RESOURCE_LOCK MEMORY_SIZE )",
+# "set_tests_properties(testname PROPERTIES RESOURCE_LOCK MEMORY_SIZE)",
 # so that only 1 of the memory constrained tests is run at a time.  (NOTE: Other low
 # memory tests that do not have the RESOURCE_LOCK requirement can be run at the same time.)
 # Allow for tests that may use upto 80% of the computer memory to be used for testing.
 cmake_host_system_information(RESULT ITK_COMPUTER_MEMORY_AVAILABLE_MB QUERY TOTAL_PHYSICAL_MEMORY)
-math(EXPR EIGHTY_PERCENT_AVAILABLE_MEMORY_IN_GB "(${ITK_COMPUTER_MEMORY_AVAILABLE_MB} * 80) / ( 1024 * 100)" )
+math(EXPR EIGHTY_PERCENT_AVAILABLE_MEMORY_IN_GB "(${ITK_COMPUTER_MEMORY_AVAILABLE_MB} * 80) / ( 1024 * 100)")
 set(ITK_COMPUTER_MEMORY_SIZE ${EIGHTY_PERCENT_AVAILABLE_MEMORY_IN_GB} CACHE STRING "Provide here the size of your RAM in gibibytes")
 unset(EIGHTY_PERCENT_AVAILABLE_MEMORY_IN_GB)
 unset(ITK_COMPUTER_MEMORY_AVAILABLE_MB)
@@ -524,6 +489,20 @@ mark_as_advanced(ITK_USE_FLOAT_SPACE_PRECISION)
 # This is used by dashboards to speed up compilation and testing on certain platforms.
 option(DISABLE_MODULE_TESTS "Disable all ITK module tests in `test` folder" OFF)
 mark_as_advanced(DISABLE_MODULE_TESTS)
+
+#-----------------------------------------------------------------------------
+# Need to set python variables before remote modules are included.
+if(BUILD_TESTING OR ITK_BUILD_DOCUMENTATION OR ITK_WRAP_PYTHON)
+  set(PYTHON_DEVELOPMENT_REQUIRED ${ITK_WRAP_PYTHON})
+  include(${CMAKE_CURRENT_SOURCE_DIR}/CMake/ITKSetPython3Vars.cmake)
+
+  if(ITK_WRAP_PYTHON AND NOT Python3_INCLUDE_DIRS)
+    message(FATAL_ERROR "Python version ${Python3_VERSION} development environment not found for wrapping.")
+  endif()
+  if(NOT Python3_ROOT_DIR)
+    get_filename_component(Python3_ROOT_DIR ${Python3_EXECUTABLE} DIRECTORY)
+  endif()
+endif()
 
 #-----------------------------------------------------------------------------
 # Configure Eigen3 before ITKModuleEnablement
@@ -572,7 +551,7 @@ set(ITK_CONFIG_TARGETS_FILE "\${ITK_INSTALL_PREFIX}/${ITK_INSTALL_PACKAGE_DIR}/I
 set(ITK_CONFIG_MODULE_API_FILE "\${ITK_INSTALL_PREFIX}/${ITK_INSTALL_PACKAGE_DIR}/ITKModuleAPI.cmake")
 if(NOT ITK_USE_SYSTEM_FFTW)
   # Location installed with the FFTW ExternalProject.
-  set(FFTW_LIBDIR "\${ITK_INSTALL_PREFIX}/lib/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}")
+  set(FFTW_LIBDIR "\${ITK_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}")
   set(FFTW_INCLUDE_PATH "\${ITK_INSTALL_PREFIX}/include/ITK-${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}/Algorithms")
 endif()
 configure_file(CMake/ITKConfig.cmake.in CMakeFiles/ITKConfig.cmake @ONLY)
@@ -583,7 +562,7 @@ install(FILES ${ITK_BINARY_DIR}/CMakeFiles/ITKConfig.cmake
               CMake/ITKModuleAPI.cmake
               CMake/UseITK.cmake
               CMake/ITKFactoryRegistration.cmake
-              CMake/itkFFTImageFilterFactoryRegisterManager.h.in
+              CMake/itkFFTImageFilterInitFactoryRegisterManager.h.in
               CMake/itkImageIOFactoryRegisterManager.h.in
               CMake/itkTransformIOFactoryRegisterManager.h.in
               CMake/itkMeshIOFactoryRegisterManager.h.in
@@ -603,22 +582,6 @@ else()
 endif()
 
 install(FILES "LICENSE" "NOTICE" "README.md" DESTINATION ${ITK_INSTALL_DOC_DIR} COMPONENT Runtime)
-
-if(BUILD_TESTING OR ITK_BUILD_DOCUMENTATION OR ITK_WRAP_PYTHON)
-  set(PYTHON_DEVELOPMENT_REQUIRED ${ITK_WRAP_PYTHON})
-  include(${CMAKE_CURRENT_SOURCE_DIR}/CMake/ITKSetPython3Vars.cmake)
-
-  if(ITK_WRAP_PYTHON AND NOT Python3_INCLUDE_DIRS)
-    message(FATAL_ERROR "Python version ${Python3_VERSION} development environment not found for wrapping.")
-  endif()
-  if(NOT Python3_ROOT_DIR)
-    get_filename_component(Python3_ROOT_DIR ${Python3_EXECUTABLE} DIRECTORY)
-  endif()
-endif()
-
-# Add user-visible cache entry
-set(Python3_ROOT_DIR ${Python3_ROOT_DIR} CACHE PATH
-  "Which installation or virtual environment of Python to use" FORCE)
 
 if(BUILD_TESTING)
   # If building the testing, write the test costs (i.e. time to run)
@@ -660,9 +623,13 @@ mark_as_advanced(FORCE
   Module_BoneEnhancement
   Module_BoneMorphometry
   Module_BSplineGradient
+  Module_Cleaver
   Module_Cuberille
+  Module_CudaCommon
   Module_FixedPointInverseDisplacementField
   Module_GenericLabelInterpolator
+  Module_GrowCut
+  Module_HASI
   Module_HigherOrderAccurateGradient
   Module_IOFDF
   Module_IOMeshSTL
@@ -673,6 +640,7 @@ mark_as_advanced(FORCE
   Module_LabelErodeDilate
   Module_LesionSizingToolkit
   Module_MeshNoise
+  Module_MeshToPolyData
   Module_MGHIO
   Module_MinimalPathExtraction
   Module_Montage
@@ -686,6 +654,7 @@ mark_as_advanced(FORCE
   Module_RLEImage
   Module_RTK
   Module_SCIFIO
+  Module_Shape
   Module_SimpleITKFilters
   Module_SkullStrip
   Module_SmoothingRecursiveYvvGaussianFilter
@@ -699,7 +668,16 @@ mark_as_advanced(FORCE
   Module_TubeTK
   Module_TwoProjectionRegistration
   Module_Ultrasound
-  Module_VariationalRegistration)
+  Module_VariationalRegistration
+  Module_VkFFTBackend
+  Module_WebAssemblyInterface
+  )
+
+mark_as_advanced(FORCE
+  NSIS_EXECUTABLE
+  WIX_EXECUTABLE
+  )
+
 
 # Create an IDE folder structure similar to our source structure
 if("${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio|KDevelop")
@@ -707,9 +685,13 @@ if("${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio|KDevelop")
   function(itk_organize_targets dir folder)
     itk_get_all_targets_recursive(targets ${dir})
     foreach(t ${targets})
-      get_target_property(f ${t} SOURCE_DIR)
-      string(REPLACE ${dir} "" f ${f})
-      set_target_properties (${t} PROPERTIES FOLDER "${folder}/${f}")
+      # INTERFACE_LIBRARY warns about non-whitelisted properties for CMake < 3.19
+      get_target_property(type ${t} TYPE)
+      if (NOT "${type}" STREQUAL "INTERFACE_LIBRARY")
+        get_target_property(f ${t} SOURCE_DIR)
+        string(REPLACE ${dir} "" f ${f})
+        set_target_properties (${t} PROPERTIES FOLDER "${folder}/${f}")
+      endif()
     endforeach()
   endfunction()
   macro(itk_get_all_targets_recursive targets dir)

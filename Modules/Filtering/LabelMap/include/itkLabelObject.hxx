@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -252,7 +252,7 @@ LabelObject<TLabel, VImageDimension>::GetIndex(SizeValueType offset) const -> In
       return idx;
     }
 
-    it++;
+    ++it;
   }
   itkGenericExceptionMacro(<< "Invalid offset: " << offset);
 }
@@ -313,7 +313,7 @@ LabelObject<TLabel, VImageDimension>::Optimize()
     typename Functor::LabelObjectLineComparator<LineType> comparator;
     std::sort(lineContainer.begin(), lineContainer.end(), comparator);
 
-    // then check the lines consistancy
+    // then check the lines consistency
     // we'll proceed line index by line index
     IndexType  currentIdx = lineContainer.begin()->GetIndex();
     LengthType currentLength = lineContainer.begin()->GetLength();
@@ -352,7 +352,7 @@ LabelObject<TLabel, VImageDimension>::Optimize()
         currentLength = length;
       }
 
-      it++;
+      ++it;
     }
 
     // complete the last line

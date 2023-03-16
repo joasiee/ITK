@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,7 +51,7 @@
 // through the NIH Roadmap for Medical Research, Grant U54 EB005149.
 //
 // Additional documentation: For details on the Nrrd format for DTI, see
-// http://wiki.na-mic.org/Wiki/index.php/NAMIC_Wiki:DTI:Nrrd_format
+// https://wiki.na-mic.org/Wiki/index.php/NAMIC_Wiki:DTI:Nrrd_format
 //
 
 
@@ -111,7 +111,7 @@ main(int argc, char * argv[])
   // Here we instantiate the DiffusionTensor3DReconstructionImageFilter class.
   // The class is templated over the pixel types of the reference, gradient
   // and the to be created tensor pixel's precision. (We use double here). It
-  // takes as input the Reference (B0 image aquired in the absence of
+  // takes as input the Reference (B0 image acquired in the absence of
   // diffusion sensitizing gradients), 'n' Gradient images and their
   // directions and produces as output an image of tensors with pixel-type
   // DiffusionTensor3D.
@@ -251,13 +251,13 @@ main(int argc, char * argv[])
           0.0) // this is a reference image
       {
         std::string fn("ReferenceImage%d.mhd");
-        sprintf(filename, fn.c_str(), referenceImageIndex);
+        snprintf(filename, sizeof(filename), fn.c_str(), referenceImageIndex);
         ++referenceImageIndex;
       }
       else
       {
         std::string fn("Gradient%d.mhd");
-        sprintf(filename, fn.c_str(), i);
+        snprintf(filename, sizeof(filename), fn.c_str(), i);
       }
       gradientWriter->SetFileName(filename);
       gradientWriter->Update();
@@ -280,7 +280,7 @@ main(int argc, char * argv[])
   // images may be specified.
   //
   // An alternate way to provide the inputs, when you have the reference and
-  // gradient images in seperate itk::Image< type, 3 > is  :
+  // gradient images in separate itk::Image< type, 3 > is  :
   //
   //   tensorReconstructionFilter->SetReferenceImage( image0 );
   //   tensorReconstructionFilter->AddGradientImage( direction1, image1 );

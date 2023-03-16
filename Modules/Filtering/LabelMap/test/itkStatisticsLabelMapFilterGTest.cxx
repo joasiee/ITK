@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -150,7 +150,7 @@ protected:
       auto n1 = values.size() / 2;
       if (values.size() % 2 == 0)
       {
-        return 0.5 * (double(values[n1]) + double(values[n1 - 1]));
+        return 0.5 * (static_cast<double>(values[n1]) + static_cast<double>(values[n1 - 1]));
       }
       return values[n1];
     }
@@ -190,7 +190,7 @@ TEST_F(StatisticsLabelMapFixture, 2D_zero)
 
 TEST_F(StatisticsLabelMapFixture, 2D_ones_with_outliers)
 {
-  using Utils = FixtureUtilities<2, signed short>;
+  using Utils = FixtureUtilities<2, short>;
   using namespace itk::GTest::TypedefsAndConstructors::Dimension2;
 
   auto             image = Utils::CreateImage();
@@ -226,7 +226,7 @@ TEST_F(StatisticsLabelMapFixture, 2D_ones_with_outliers)
 
 TEST_F(StatisticsLabelMapFixture, 2D_rand_with_outliers)
 {
-  using Utils = FixtureUtilities<2, signed short>;
+  using Utils = FixtureUtilities<2, short>;
   using namespace itk::GTest::TypedefsAndConstructors::Dimension2;
 
   auto image = Utils::CreateImageRandom(500, 0);

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,6 +21,7 @@
 #include "ITKIOMeshFreeSurferExport.h"
 
 #include "itkMeshIOBase.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 #include <fstream>
 
@@ -55,7 +56,7 @@ public:
   /*-------- This part of the interfaces deals with reading data. ----- */
 
   /** Determine if the file can be read with this MeshIO implementation.
-   * \param FileNameToRead The name of the file to test for reading.
+   * \param fileName The name of the file to test for reading.
    * \post Sets classes MeshIOBase::m_FileName variable to be FileNameToWrite
    * \return Returns true if this MeshIO can read the file specified.
    */
@@ -82,7 +83,7 @@ public:
   /*-------- This part of the interfaces deals with writing data. ----- */
 
   /** Determine if the file can be written with this MeshIO implementation.
-   * \param FileNameToWrite The name of the file to test for writing.
+   * \param fileName The name of the file to test for writing.
    * \post Sets classes MeshIOBase::m_FileName variable to be FileNameToWrite
    * \return Returns true if this MeshIO can write the file specified.
    */
@@ -135,9 +136,9 @@ protected:
     constexpr unsigned int numberOfCellPoints = 3;
     SizeValueType          index = 0;
 
-    auto * data = new T[this->m_NumberOfCells * numberOfCellPoints];
+    const auto data = make_unique_for_overwrite<T[]>(this->m_NumberOfCells * numberOfCellPoints);
 
-    ReadCellsBuffer(buffer, data);
+    ReadCellsBuffer(buffer, data.get());
 
     for (SizeValueType ii = 0; ii < this->m_NumberOfCells; ++ii)
     {
@@ -147,7 +148,6 @@ protected:
       }
       outputFile << label << '\n';
     }
-    delete[] data;
   }
 
   /** Read cells from a data buffer, used when writting cells */

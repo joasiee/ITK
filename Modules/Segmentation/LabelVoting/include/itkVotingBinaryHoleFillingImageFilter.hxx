@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -96,7 +96,7 @@ VotingBinaryHoleFillingImageFilter<TInputImage, TOutputImage>::ThreadedGenerateD
 
   const InputPixelType backgroundValue = this->GetBackgroundValue();
   const InputPixelType foregroundValue = this->GetForegroundValue();
-  const auto           birthThreshold = (unsigned int)(this->GetBirthThreshold());
+  const auto           birthThreshold = static_cast<unsigned int>(this->GetBirthThreshold());
 
   unsigned int numberOfPixelsChanged = 0;
 
@@ -124,14 +124,14 @@ VotingBinaryHoleFillingImageFilter<TInputImage, TOutputImage>::ThreadedGenerateD
           InputPixelType value = bit.GetPixel(i);
           if (value == foregroundValue)
           {
-            count++;
+            ++count;
           }
         }
 
         if (count >= birthThreshold)
         {
           it.Set(static_cast<OutputPixelType>(foregroundValue));
-          numberOfPixelsChanged++;
+          ++numberOfPixelsChanged;
         }
         else
         {

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -193,7 +193,7 @@ main(int argc, char * argv[])
   //
   //  Consider that, as explained in section
   //  \ref{sec:FeaturesOfTheRegistrationFramework}, the above transform is a
-  //  mapping from the vitual domain (i.e. fixed image space, when no fixed
+  //  mapping from the virtual domain (i.e. fixed image space, when no fixed
   //  initial transform) to the moving image space.
   //
   //  Then, the result transform of the first stage will be used as the

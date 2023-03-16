@@ -6,7 +6,7 @@
 #   you may not use this file except in compliance with the License.
 #   You may obtain a copy of the License at
 #
-#          http://www.apache.org/licenses/LICENSE-2.0.txt
+#          https://www.apache.org/licenses/LICENSE-2.0.txt
 #
 #   Unless required by applicable law or agreed to in writing, software
 #   distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +34,7 @@ import math
 from collections.abc import Mapping
 
 # Needed to avoid problem with aliasing of itk.set (itkTemplate)
-# inside the itk namespace.  We need to explictly specify the
+# inside the itk namespace.  We need to explicitly specify the
 # use of the builtin set
 from builtins import set as _builtin_set
 
@@ -554,6 +554,7 @@ class itkTemplate(Mapping):
             namespace = {}
             if not hasattr(this_module, "__templates_loaded"):
                 base.itk_load_swig_module(module, namespace)
+                base.load_module_needed_factories(module)
 
     def __dir__(self):
         """Returns the list of the attributes available in the current template.
@@ -746,8 +747,7 @@ or via one of the following keyword arguments: %s"""
     # and is a copy/paste from DictMixin
     # only methods to edit dictionary are not there
     def __iter__(self):
-        for k in self.keys():
-            yield k
+        yield from self.keys()
 
     def __contains__(self, key):
         return key in self

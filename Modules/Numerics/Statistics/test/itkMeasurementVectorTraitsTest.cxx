@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +34,7 @@
     std::cerr << std::endl;                                           \
     return EXIT_FAILURE;                                              \
   }                                                                   \
-  catch (itk::ExceptionObject &)                                      \
+  catch (const itk::ExceptionObject &)                                \
   {}                                                                  \
   ITK_MACROEND_NOOP_STATEMENT
 
@@ -46,14 +46,14 @@
     std::cerr << std::endl;                                        \
     return EXIT_FAILURE;                                           \
   }                                                                \
-  catch (itk::ExceptionObject &)                                   \
+  catch (const itk::ExceptionObject &)                             \
   {}                                                               \
   ITK_MACROEND_NOOP_STATEMENT
 
 #define itkAssertLengthSameValueReturn(m1, type1, m2)                                                             \
   if (itk::Statistics::MeasurementVectorTraits::Assert((m1), (m2)) != itk::NumericTraits<type1>::GetLength((m1))) \
   {                                                                                                               \
-    std::cerr << "Failed to get expected VLenght for Assert() ";                                                  \
+    std::cerr << "Failed to get expected VLength for Assert() ";                                                  \
     std::cerr << std::endl;                                                                                       \
     return EXIT_FAILURE;                                                                                          \
   }                                                                                                               \

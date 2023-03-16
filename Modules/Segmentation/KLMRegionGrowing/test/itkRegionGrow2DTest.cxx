@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -133,7 +133,7 @@ test_RegionGrowKLMExceptionHandling()
   image5D->SetLargestPossibleRegion(region5D);
   image5D->SetBufferedRegion(region5D);
   image5D->Allocate();
-  itk::Vector<double, NUMBANDS2> pixel(0.0);
+  itk::Vector<double, NUMBANDS2> pixel{};
   image5D->FillBuffer(pixel);
 
   // Set the filter with valid inputs
@@ -314,6 +314,10 @@ test_regiongrowKLM1D()
   KLMFilter->SetMaximumLambda(maximumLambda);
   ITK_TEST_SET_GET_VALUE(maximumLambda, KLMFilter->GetMaximumLambda());
 
+  unsigned int numberOfRegions = 0;
+  KLMFilter->SetNumberOfRegions(numberOfRegions);
+  ITK_TEST_SET_GET_VALUE(numberOfRegions, KLMFilter->GetNumberOfRegions());
+
   int nregions = 2;
   KLMFilter->SetMaximumNumberOfRegions(nregions);
 
@@ -411,6 +415,10 @@ test_regiongrowKLM1D()
   maximumLambda = 1e51;
   KLMFilter->SetMaximumLambda(maximumLambda);
   ITK_TEST_SET_GET_VALUE(maximumLambda, KLMFilter->GetMaximumLambda());
+
+  KLMFilter->SetNumberOfRegions(numberOfRegions);
+  ITK_TEST_SET_GET_VALUE(numberOfRegions, KLMFilter->GetNumberOfRegions());
+
 
   LOCAL_TEST_EXCEPTION_MACRO(KLMFilter);
 
@@ -1138,6 +1146,10 @@ test_regiongrowKLM2D()
   KLMFilter->SetMaximumLambda(maximumLambda);
   ITK_TEST_SET_GET_VALUE(maximumLambda, KLMFilter->GetMaximumLambda());
 
+  unsigned int numberOfRegions = 0;
+  KLMFilter->SetNumberOfRegions(numberOfRegions);
+  ITK_TEST_SET_GET_VALUE(numberOfRegions, KLMFilter->GetNumberOfRegions());
+
   // Kick off the Region grow function
 
   LOCAL_TEST_EXCEPTION_MACRO(KLMFilter);
@@ -1260,7 +1272,7 @@ test_regiongrowKLM3D()
 
   // Manually create an image
 
-  using ImageType = itk::Image<itk::Vector<short int, NUMBANDS2>, NUMDIM3D>;
+  using ImageType = itk::Image<itk::Vector<short, NUMBANDS2>, NUMDIM3D>;
   using OutputImageType = itk::Image<itk::Vector<float, NUMBANDS2>, NUMDIM3D>;
 
   auto image = ImageType::New();
@@ -1423,6 +1435,10 @@ test_regiongrowKLM3D()
   std::cout << std::endl << "First test, lambda = -1" << std::endl;
 
   KLMFilter->SetMaximumLambda(-1);
+
+  unsigned int numberOfRegions = 0;
+  KLMFilter->SetNumberOfRegions(numberOfRegions);
+  ITK_TEST_SET_GET_VALUE(numberOfRegions, KLMFilter->GetNumberOfRegions());
 
   // Kick off the Region grow function
 
@@ -1762,7 +1778,7 @@ test_regiongrowKLM4D()
 
   // Manually create an image
 
-  using ImageType = itk::Image<itk::Vector<short int, NUMBANDS1>, NUMDIM4D>;
+  using ImageType = itk::Image<itk::Vector<short, NUMBANDS1>, NUMDIM4D>;
   using OutputImageType = itk::Image<itk::Vector<float, NUMBANDS1>, NUMDIM4D>;
 
   auto image = ImageType::New();

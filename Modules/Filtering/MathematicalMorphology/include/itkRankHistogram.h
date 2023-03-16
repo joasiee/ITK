@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -140,7 +140,7 @@ public:
   GetValueBruteForce()
   {
     SizeValueType count = 0;
-    SizeValueType target = (int)(m_Rank * (m_Entries - 1)) + 1;
+    SizeValueType target = static_cast<int>(m_Rank * (m_Entries - 1)) + 1;
     for (typename MapType::iterator it = m_Map.begin(); it != m_Map.end(); ++it)
     {
       count += it->second;
@@ -343,7 +343,7 @@ public:
     const OffsetValueType q = (OffsetValueType)p - NumericTraits<TInputPixel>::NonpositiveMin();
 
     itkAssertInDebugAndIgnoreInReleaseMacro(q >= 0);
-    itkAssertInDebugAndIgnoreInReleaseMacro(q < (int)m_Vec.size());
+    itkAssertInDebugAndIgnoreInReleaseMacro(q < static_cast<int>(m_Vec.size()));
     itkAssertInDebugAndIgnoreInReleaseMacro(m_Entries >= 1);
     itkAssertInDebugAndIgnoreInReleaseMacro(m_Vec[q] > 0);
 

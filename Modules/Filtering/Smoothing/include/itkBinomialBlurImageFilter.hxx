@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -114,9 +114,7 @@ BinomialBlurImageFilter<TInputImage, TOutputImage>::GenerateData()
   typename TTempImage::RegionType tempRegion;
   tempRegion = inputPtr->GetRequestedRegion();
 
-  tempPtr->SetLargestPossibleRegion(tempRegion);
-  tempPtr->SetBufferedRegion(tempRegion);
-  tempPtr->SetRequestedRegion(tempRegion);
+  tempPtr->SetRegions(tempRegion);
   tempPtr->Allocate();
 
   // How big is the input image?
@@ -156,7 +154,7 @@ BinomialBlurImageFilter<TInputImage, TOutputImage>::GenerateData()
   // walk the output image forwards and compute blur
   for (unsigned int rep = 0; rep < m_Repetitions; ++rep)
   {
-    num_reps++;
+    ++num_reps;
 
     itkDebugMacro(<< "Repetition #" << rep);
 

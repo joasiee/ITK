@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,7 +36,7 @@ namespace Statistics
 {
 
 /**
- *\class ImageToNeighborhoodSampleAdaptor
+ * \class ImageToNeighborhoodSampleAdaptor
  *  \brief This class provides ListSample interface to ITK Image
  *
  * After calling SetImage( const Image * ) method to plug in the image object,
@@ -129,7 +129,7 @@ public:
   GetRegion() const;
 
   void
-  SetUseImageRegion(const bool & flag);
+  SetUseImageRegion(const bool flag);
 
   /** Method to get UseImageRegion flag */
   itkGetConstMacro(UseImageRegion, bool);
@@ -155,7 +155,7 @@ public:
   GetTotalFrequency() const override;
 
   /**
-   *\class ConstIterator
+   * \class ConstIterator
    *  \brief Const Iterator
    *  \ingroup ITKStatistics
    */
@@ -231,7 +231,7 @@ public:
   };
 
   /**
-   *\class Iterator
+   * \class Iterator
    *  \brief Iterator
    *  \ingroup ITKStatistics
    */

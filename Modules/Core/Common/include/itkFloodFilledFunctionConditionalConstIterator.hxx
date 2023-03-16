@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -82,9 +82,7 @@ FloodFilledFunctionConditionalConstIterator<TImage, TFunction>::InitializeIterat
   m_TemporaryPointer = TTempImage::New();
   typename TTempImage::RegionType tempRegion = this->m_Image->GetBufferedRegion();
 
-  m_TemporaryPointer->SetLargestPossibleRegion(tempRegion);
-  m_TemporaryPointer->SetBufferedRegion(tempRegion);
-  m_TemporaryPointer->SetRequestedRegion(tempRegion);
+  m_TemporaryPointer->SetRegions(tempRegion);
   m_TemporaryPointer->Allocate(true); // initialize buffer to zero
 
   // Initialize the queue by adding the start index assuming one of

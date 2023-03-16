@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -145,13 +145,13 @@ Octree<TPixel, ColorTableSize, MappingFunctionType>::GetValue(const unsigned int
 template <typename TPixel, unsigned int ColorTableSize, typename MappingFunctionType>
 OctreeNodeBranch *
 Octree<TPixel, ColorTableSize, MappingFunctionType>::maskToOctree(const TPixel * Mask,
-                                                                  unsigned       width,
-                                                                  unsigned       x,
-                                                                  unsigned       y,
-                                                                  unsigned       z,
-                                                                  unsigned       xsize,
-                                                                  unsigned       ysize,
-                                                                  unsigned       zsize)
+                                                                  unsigned int   width,
+                                                                  unsigned int   x,
+                                                                  unsigned int   y,
+                                                                  unsigned int   z,
+                                                                  unsigned int   xsize,
+                                                                  unsigned int   ysize,
+                                                                  unsigned int   zsize)
 {
   if ((x >= xsize) || (y >= ysize) || (z >= zsize))
   {
@@ -225,14 +225,14 @@ Octree<TPixel, ColorTableSize, MappingFunctionType>::BuildFromBuffer(const void 
                                                                      const unsigned int ysize,
                                                                      const unsigned int zsize)
 {
-  unsigned maxSize = xsize >= ysize ? (xsize >= zsize ? xsize : zsize) : (ysize >= zsize ? ysize : zsize);
-  unsigned width = 1;
-  unsigned depth = 0;
+  unsigned int maxSize = xsize >= ysize ? (xsize >= zsize ? xsize : zsize) : (ysize >= zsize ? ysize : zsize);
+  unsigned int width = 1;
+  unsigned int depth = 0;
 
   while (width < maxSize)
   {
     width *= 2;
-    depth++;
+    ++depth;
   }
   this->SetDepth(depth);
   this->SetWidth(width);
@@ -268,9 +268,7 @@ Octree<TPixel, ColorTableSize, MappingFunctionType>::GetImage() -> ImageTypePoin
   const typename ImageType::IndexType  imageIndex = { { 0, 0, 0 } };
   const typename ImageType::RegionType region(imageIndex, imageSize);
   auto                                 img = ImageType::New();
-  img->SetLargestPossibleRegion(region);
-  img->SetBufferedRegion(region);
-  img->SetRequestedRegion(region);
+  img->SetRegions(region);
   img->Allocate();
   typename ImageType::IndexType setIndex;
   for (unsigned int i = 0; i < m_TrueDims[0]; ++i)

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,8 +26,6 @@ namespace itk
 RegularStepGradientDescentBaseOptimizer::RegularStepGradientDescentBaseOptimizer()
 
 {
-  itkDebugMacro("Constructor");
-
   m_MaximumStepLength = 1.0;
   m_MinimumStepLength = 1e-3;
   m_GradientMagnitudeTolerance = 1e-4;
@@ -106,13 +104,13 @@ RegularStepGradientDescentBaseOptimizer::ResumeOptimization()
     {
       m_CostFunction->GetValueAndDerivative(this->GetCurrentPosition(), m_Value, m_Gradient);
     }
-    catch (ExceptionObject & excp)
+    catch (const ExceptionObject & excp)
     {
       m_StopCondition = StopConditionEnum::CostFunctionError;
       m_StopConditionDescription << "Cost function error after " << m_CurrentIteration << " iterations. "
                                  << excp.GetDescription();
       this->StopOptimization();
-      throw excp;
+      throw;
     }
 
     if (m_Stop)
@@ -122,7 +120,7 @@ RegularStepGradientDescentBaseOptimizer::ResumeOptimization()
 
     this->AdvanceOneStep();
 
-    m_CurrentIteration++;
+    ++m_CurrentIteration;
   }
 }
 

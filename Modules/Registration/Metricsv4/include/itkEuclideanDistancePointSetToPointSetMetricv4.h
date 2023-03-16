@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -67,6 +67,20 @@ public:
   using typename Superclass::PixelType;
   using typename Superclass::PointIdentifier;
 
+  using RealType = MeasureType;
+  /**
+   * Distance threshold to be used to calculate the metric value.
+   * Only point pairs that have distance lesser than this threshold
+   * contribute to the metric. Default is -1 to include all the pairs.
+   */
+  itkSetMacro(DistanceThreshold, RealType);
+
+  /**
+   * Get the Distance threshold to be used to calculate the metric value
+   * Default = -1.
+   */
+  itkGetConstMacro(DistanceThreshold, RealType);
+
   /**
    * Calculates the local metric value for a single point.
    */
@@ -95,6 +109,9 @@ protected:
   /** PrintSelf function */
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
+
+private:
+  RealType m_DistanceThreshold = -1.0;
 };
 } // end namespace itk
 

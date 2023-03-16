@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,7 @@ template <typename TInputImage, typename TClassifiedImage>
 MRFImageFilter<TInputImage, TClassifiedImage>::MRFImageFilter()
   : m_ClassifierPtr(nullptr)
 {
-  if ((int)InputImageDimension != (int)ClassifiedImageDimension)
+  if (static_cast<int>(InputImageDimension) != static_cast<int>(ClassifiedImageDimension))
   {
     std::ostringstream msg;
     msg << "Input image dimension: " << InputImageDimension
@@ -554,7 +554,7 @@ MRFImageFilter<TInputImage, TClassifiedImage>::DoNeighborhoodOperation(
   for (int i = 0; i < m_NeighborhoodSize; ++i)
   {
     labelledPixel = labelledIter.GetPixel(i);
-    index = (unsigned int)labelledPixel;
+    index = static_cast<unsigned int>(labelledPixel);
     m_NeighborInfluence[index] += m_MRFNeighborhoodWeight[i];
   } // End neighborhood processing
 
@@ -584,7 +584,7 @@ MRFImageFilter<TInputImage, TClassifiedImage>::DoNeighborhoodOperation(
   // Check if the labelled pixel value in the previous iteration has changed
   // If the value has changed then update the m_LabelStatus set;
 
-  if (pixLabel != (int)(*previousLabel))
+  if (pixLabel != static_cast<int>(*previousLabel))
   {
     labelledIter.SetCenterPixel(pixLabel);
     for (int i = 0; i < m_NeighborhoodSize; ++i)

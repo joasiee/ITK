@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -193,7 +193,7 @@ public:
         auto pos = m_UserDefined.find(id);
         if (pos != m_UserDefined.end())
         {
-          return (*pos).second;
+          return pos->second;
         }
       }
       return nullptr;
@@ -474,18 +474,18 @@ public:
 
 #if !defined(ITK_LEGACY_REMOVE)
   /** Expose old names for backwards compatibility*/
-  constexpr static CommonEnums::CellGeometry VERTEX_CELL = CommonEnums::CellGeometry::VERTEX_CELL;
-  constexpr static CommonEnums::CellGeometry LINE_CELL = CommonEnums::CellGeometry::LINE_CELL;
-  constexpr static CommonEnums::CellGeometry TRIANGLE_CELL = CommonEnums::CellGeometry::TRIANGLE_CELL;
-  constexpr static CommonEnums::CellGeometry QUADRILATERAL_CELL = CommonEnums::CellGeometry::QUADRILATERAL_CELL;
-  constexpr static CommonEnums::CellGeometry POLYGON_CELL = CommonEnums::CellGeometry::POLYGON_CELL;
-  constexpr static CommonEnums::CellGeometry TETRAHEDRON_CELL = CommonEnums::CellGeometry::TETRAHEDRON_CELL;
-  constexpr static CommonEnums::CellGeometry HEXAHEDRON_CELL = CommonEnums::CellGeometry::HEXAHEDRON_CELL;
-  constexpr static CommonEnums::CellGeometry QUADRATIC_EDGE_CELL = CommonEnums::CellGeometry::QUADRATIC_EDGE_CELL;
-  constexpr static CommonEnums::CellGeometry QUADRATIC_TRIANGLE_CELL =
+  static constexpr CommonEnums::CellGeometry VERTEX_CELL = CommonEnums::CellGeometry::VERTEX_CELL;
+  static constexpr CommonEnums::CellGeometry LINE_CELL = CommonEnums::CellGeometry::LINE_CELL;
+  static constexpr CommonEnums::CellGeometry TRIANGLE_CELL = CommonEnums::CellGeometry::TRIANGLE_CELL;
+  static constexpr CommonEnums::CellGeometry QUADRILATERAL_CELL = CommonEnums::CellGeometry::QUADRILATERAL_CELL;
+  static constexpr CommonEnums::CellGeometry POLYGON_CELL = CommonEnums::CellGeometry::POLYGON_CELL;
+  static constexpr CommonEnums::CellGeometry TETRAHEDRON_CELL = CommonEnums::CellGeometry::TETRAHEDRON_CELL;
+  static constexpr CommonEnums::CellGeometry HEXAHEDRON_CELL = CommonEnums::CellGeometry::HEXAHEDRON_CELL;
+  static constexpr CommonEnums::CellGeometry QUADRATIC_EDGE_CELL = CommonEnums::CellGeometry::QUADRATIC_EDGE_CELL;
+  static constexpr CommonEnums::CellGeometry QUADRATIC_TRIANGLE_CELL =
     CommonEnums::CellGeometry::QUADRATIC_TRIANGLE_CELL;
-  constexpr static CommonEnums::CellGeometry LAST_ITK_CELL = CommonEnums::CellGeometry::LAST_ITK_CELL;
-  constexpr static CommonEnums::CellGeometry MAX_ITK_CELLS = CommonEnums::CellGeometry::MAX_ITK_CELLS;
+  static constexpr CommonEnums::CellGeometry LAST_ITK_CELL = CommonEnums::CellGeometry::LAST_ITK_CELL;
+  static constexpr CommonEnums::CellGeometry MAX_ITK_CELLS = CommonEnums::CellGeometry::MAX_ITK_CELLS;
 #endif
 
 protected:

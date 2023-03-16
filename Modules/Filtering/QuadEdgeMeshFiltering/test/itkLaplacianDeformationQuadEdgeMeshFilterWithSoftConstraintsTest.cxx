@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -75,7 +75,7 @@ itkLaplacianDeformationQuadEdgeMeshFilterWithSoftConstraintsTest(int argc, char 
   CoefficientType coeff;
   filter->SetCoefficientsMethod(&coeff);
 
-  MeshType::VectorType nullVector(0.);
+  constexpr MeshType::VectorType nullVector{};
 
   std::map<MeshType::PointIdentifier, MeshType::VectorType> constraints;
   constraints[150] = nullVector;
@@ -86,13 +86,13 @@ itkLaplacianDeformationQuadEdgeMeshFilterWithSoftConstraintsTest(int argc, char 
   constraints[183] = nullVector;
   constraints[226] = nullVector;
 
-  MeshType::VectorType d(0.);
+  MeshType::VectorType d{};
   d[2] = -0.1;
 
   constraints[729] = d;
   constraints[938] = d;
 
-  MeshType::VectorType e(0.);
+  MeshType::VectorType e{};
   e[1] = 0.1;
   e[2] = -0.1;
 

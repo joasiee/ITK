@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,7 +18,7 @@
 
 #include <iostream>
 #include <set>
-
+#include "itkTestingMacros.h"
 #include "itkTransform.h"
 
 namespace itk
@@ -26,12 +26,12 @@ namespace itk
 namespace itkTransformTestHelpers
 {
 
-template <typename TScalar, unsigned int NInputDimensions, unsigned int NOutputDimensions>
-class TransformTestHelper : public Transform<TScalar, NInputDimensions, NOutputDimensions>
+template <typename TScalar, unsigned int VInputDimension, unsigned int VOutputDimension>
+class TransformTestHelper : public Transform<TScalar, VInputDimension, VOutputDimension>
 {
 public:
   using Self = TransformTestHelper;
-  using Superclass = Transform<TScalar, NInputDimensions, NOutputDimensions>;
+  using Superclass = Transform<TScalar, VInputDimension, VOutputDimension>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -165,13 +165,13 @@ public:
   }
 };
 
-template <typename TScalar, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalar, unsigned int VInputDimension, unsigned int VOutputDimension>
 class TransformTester
 {
 public:
   using Self = TransformTester;
 
-  using TransformType = TransformTestHelper<double, NInputDimensions, NOutputDimensions>;
+  using TransformType = TransformTestHelper<double, VInputDimension, VOutputDimension>;
 
   using JacobianType = typename TransformType::JacobianType;
   using ParametersType = typename TransformType::ParametersType;
@@ -195,7 +195,7 @@ public:
   bool
   RunTests()
   {
-    std::cout << "Testing itkTransform<" << NInputDimensions << "," << NOutputDimensions << ">" << std::endl;
+    std::cout << "Testing itkTransform<" << VInputDimension << "," << VOutputDimension << ">" << std::endl;
     auto transform = TransformType::New();
 
     InputPointType pnt;
@@ -209,7 +209,7 @@ public:
     transform->TransformVector(vec, pnt);
 
     InputVectorPixelType vecpix;
-    vecpix.SetSize(NInputDimensions);
+    vecpix.SetSize(VInputDimension);
     vecpix.Fill(1.7);
     transform->TransformVector(vecpix);
     transform->TransformVector(vecpix, pnt);
@@ -236,7 +236,7 @@ public:
     std::cout << "TransformDiffusionTensor3D()                  OK" << std::endl;
 
     InputSymmetricSecondRankTensorType ssrten;
-    vecpix.SetSize(NInputDimensions * NInputDimensions);
+    vecpix.SetSize(VInputDimension * VInputDimension);
     vecpix.Fill(0);
     transform->TransformSymmetricSecondRankTensor(ssrten);
     transform->TransformSymmetricSecondRankTensor(ssrten, pnt);
@@ -307,6 +307,15 @@ public:
     // Exercise some methods
     transform->Print(std::cout);
     std::cout << transform->GetNameOfClass() << std::endl;
+
+    transform->SetObjectName("test_transform");
+    ITK_TEST_EXPECT_EQUAL(std::string("test_transform"), transform->GetObjectName());
+
+    transform->SetInputSpaceName("test_inputspace");
+    ITK_TEST_EXPECT_EQUAL(std::string("test_inputspace"), transform->GetInputSpaceName());
+
+    transform->SetOutputSpaceName("test_outputspace");
+    ITK_TEST_EXPECT_EQUAL(std::string("test_outputspace"), transform->GetOutputSpaceName());
 
     // Test streaming enumeration for TransformBaseTemplateEnums::TransformCategory elements
     const std::set<itk::TransformBaseTemplateEnums::TransformCategory> allTransformCategory{

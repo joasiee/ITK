@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -255,7 +255,7 @@ ImageAlgorithm::EnlargeRegionOverBox(const typename InputImageType::RegionType &
       // else if InputDimension == OutputDimension copy the points.
       // else if InputDimension > OutputDimension project the point to first N-Dimensions of Output space.
       outputPoint.Fill(0.0);
-      for (unsigned d = 0; d < std::min(inputPoint.GetPointDimension(), outputPoint.GetPointDimension()); ++d)
+      for (unsigned int d = 0; d < std::min(inputPoint.GetPointDimension(), outputPoint.GetPointDimension()); ++d)
       {
         outputPoint[d] = inputPoint[d];
       }

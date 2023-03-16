@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -107,7 +107,7 @@ protected:
 inline std::ostream &
 operator<<(std::ostream & os, const EventObject & e)
 {
-  (&e)->Print(os);
+  e.Print(os);
   return os;
 }
 
@@ -154,7 +154,7 @@ operator<<(std::ostream & os, const EventObject & e)
   static_assert(true, "Compile time eliminated. Used to require a semi-colon at end of macro.")
 
 #if !defined(ITK_LEGACY_REMOVE)
-// Suppport Pre 2015 code bases
+// Support Pre 2015 code bases
 
 // This macro duplicates some of the declaration and definition
 // macro code. The purpose is to provide a backward compatibility API

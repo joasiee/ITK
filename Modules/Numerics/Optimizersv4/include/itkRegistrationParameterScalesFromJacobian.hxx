@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,11 +22,6 @@
 namespace itk
 {
 
-/** Compute parameter scales from average jacobian norms.
- *  For each parameter, compute the squared norm of its transform Jacobian,
- *  then average the squared norm over the sample points. This average is
- *  used as the scale of this parameter.
- */
 template <typename TMetric>
 void
 RegistrationParameterScalesFromJacobian<TMetric>::EstimateScales(ScalesType & parameterScales)
@@ -66,9 +61,6 @@ RegistrationParameterScalesFromJacobian<TMetric>::EstimateScales(ScalesType & pa
   }
 }
 
-/**
- *  Compute the scale for a STEP, the impact of a STEP on the transform.
- */
 template <typename TMetric>
 auto
 RegistrationParameterScalesFromJacobian<TMetric>::EstimateStepScale(const ParametersType & step) -> FloatType
@@ -92,11 +84,6 @@ RegistrationParameterScalesFromJacobian<TMetric>::EstimateStepScale(const Parame
   return scaleSum / numSamples;
 }
 
-/**
- * Estimate the scales of local steps. For each voxel, we compute the impact
- * of a STEP on its location as in EstimateStepScale. Then we attribute this
- * impact to the corresponding local parameters.
- */
 template <typename TMetric>
 void
 RegistrationParameterScalesFromJacobian<TMetric>::EstimateLocalStepScales(const ParametersType & step,
@@ -132,10 +119,6 @@ RegistrationParameterScalesFromJacobian<TMetric>::EstimateLocalStepScales(const 
   }
 }
 
-/**
- *  Compute the step scales for samples, i.e. the impacts on each sampled
- *  voxel from a change on the transform.
- */
 template <typename TMetric>
 void
 RegistrationParameterScalesFromJacobian<TMetric>::ComputeSampleStepScales(const ParametersType & step,
@@ -191,7 +174,6 @@ RegistrationParameterScalesFromJacobian<TMetric>::ComputeSampleStepScales(const 
   }
 }
 
-/** Print the information about this class */
 template <typename TMetric>
 void
 RegistrationParameterScalesFromJacobian<TMetric>::PrintSelf(std::ostream & os, Indent indent) const

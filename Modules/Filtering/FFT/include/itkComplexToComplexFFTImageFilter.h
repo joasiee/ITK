@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,7 @@
 
 namespace itk
 {
-/**\class ComplexToComplexFFTImageFilterEnums
+/** \class ComplexToComplexFFTImageFilterEnums
  * \brief Contains enum classes used by ComplexToComplexFFTImageFilter class
  * \ingroup ITKFFT
  * \ingroup FourierTransform
@@ -34,7 +34,7 @@ class ComplexToComplexFFTImageFilterEnums
 {
 public:
   /**
-   *\class TransformDirection
+   * \class TransformDirection
    * \ingroup ITKFFT
    * \ingroup FourierTransform
    * */
@@ -49,7 +49,7 @@ extern ITKFFT_EXPORT std::ostream &
                      operator<<(std::ostream & out, const ComplexToComplexFFTImageFilterEnums::TransformDirection value);
 
 /**
- *\class ComplexToComplexFFTImageFilter
+ * \class ComplexToComplexFFTImageFilter
  *
  * \brief Implements an API to enable the Fourier transform or the inverse
  * Fourier transform of images with complex valued voxels to be computed.
@@ -134,8 +134,8 @@ private:
 #  include "itkComplexToComplexFFTImageFilter.hxx"
 #endif
 
-#ifdef ITK_FFT_FACTORY_REGISTER_MANAGER
-#  include "itkFFTImageFilterFactoryRegisterManager.h"
+#ifdef ITK_FFTIMAGEFILTERINIT_FACTORY_REGISTER_MANAGER
+#  include "itkFFTImageFilterInitFactoryRegisterManager.h"
 #endif
 
 #endif

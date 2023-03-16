@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@
 
 #include "itkNeighborhoodIterator.h"
 #include "itkImageRegionIterator.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 namespace itk
 {
@@ -104,7 +105,7 @@ FastChamferDistanceImageFilter<TInputImage, TOutputImage>::GenerateDataND()
   NeighborhoodIterator<TInputImage> it(r, this->GetOutput(), m_RegionToProcess);
 
   const unsigned int center_voxel = it.Size() / 2;
-  auto *             neighbor_type = new int[it.Size()];
+  const auto         neighbor_type = make_unique_for_overwrite<int[]>(it.Size());
   int                i;
   unsigned int       n;
   float              val[ImageDimension];
@@ -211,7 +212,7 @@ FastChamferDistanceImageFilter<TInputImage, TOutputImage>::GenerateDataND()
     // Update the narrow band
     if (m_NarrowBand.IsNotNull())
     {
-      if (itk::Math::abs((float)center_value) <= m_NarrowBand->GetTotalRadius())
+      if (itk::Math::abs(static_cast<float>(center_value)) <= m_NarrowBand->GetTotalRadius())
       {
         node.m_Index = it.GetIndex();
         // Check node state.
@@ -220,7 +221,7 @@ FastChamferDistanceImageFilter<TInputImage, TOutputImage>::GenerateDataND()
         {
           node.m_NodeState += SIGN_MASK;
         }
-        if (itk::Math::abs((float)center_value) < m_NarrowBand->GetInnerRadius())
+        if (itk::Math::abs(static_cast<float>(center_value)) < m_NarrowBand->GetInnerRadius())
         {
           node.m_NodeState += INNER_MASK;
         }
@@ -263,7 +264,6 @@ FastChamferDistanceImageFilter<TInputImage, TOutputImage>::GenerateDataND()
       }
     }
   }
-  delete[] neighbor_type;
 }
 
 template <typename TInputImage, typename TOutputImage>

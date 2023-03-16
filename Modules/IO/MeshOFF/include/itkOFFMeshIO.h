@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,13 +21,14 @@
 #include "ITKIOMeshOFFExport.h"
 
 #include "itkMeshIOBase.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 #include <fstream>
 
 namespace itk
 {
 /**
- *\class OFFMeshIO
+ * \class OFFMeshIO
  * \brief this class defines how to read and write Object file format.
  * \ingroup IOFilters
  * \ingroup ITKIOMeshOFF
@@ -56,7 +57,7 @@ public:
   /*-------- This part of the interfaces deals with reading data. ----- */
 
   /** Determine if the file can be read with this MeshIO implementation.
-   * \param FileNameToRead The name of the file to test for reading.
+   * \param fileName The name of the file to test for reading.
    * \post Sets classes MeshIOBase::m_FileName variable to be FileNameToWrite
    * \return Returns true if this MeshIO can read the file specified.
    */
@@ -83,7 +84,7 @@ public:
   /*-------- This part of the interfaces deals with writing data. ----- */
 
   /** Determine if the file can be written with this MeshIO implementation.
-   * \param FileNameToWrite The name of the file to test for writing.
+   * \param fileName The name of the file to test for writing.
    * \post Sets classes MeshIOBase::m_FileName variable to be FileNameToWrite
    * \return Returns true if this MeshIO can write the file specified.
    */
@@ -146,7 +147,7 @@ protected:
       SizeValueType indOutput = 0;
       for (SizeValueType ii = 0; ii < this->m_NumberOfCells; ++ii)
       {
-        indInput++; // ignore the cell type
+        ++indInput; // ignore the cell type
         auto numberOfPoints = static_cast<unsigned int>(input[indInput++]);
         output[indOutput++] = static_cast<TOutput>(numberOfPoints);
         for (unsigned int jj = 0; jj < numberOfPoints; ++jj)
@@ -165,7 +166,7 @@ protected:
 
     for (SizeValueType ii = 0; ii < this->m_NumberOfCells; ++ii)
     {
-      index++;
+      ++index;
       auto numberOfCellPoints = static_cast<unsigned int>(buffer[index++]);
       outputFile << numberOfCellPoints << "  ";
 
@@ -182,12 +183,10 @@ protected:
   void
   WriteCellsAsBinary(TInput * buffer, std::ofstream & outputFile)
   {
-    auto * data = new TOutput[m_CellBufferSize - this->m_NumberOfCells];
+    const auto data = make_unique_for_overwrite<TOutput[]>(m_CellBufferSize - this->m_NumberOfCells);
 
-    ReadCellsBuffer(buffer, data);
-    WriteBufferAsBinary<TOutput>(data, outputFile, m_CellBufferSize - this->m_NumberOfCells);
-
-    delete[] data;
+    ReadCellsBuffer(buffer, data.get());
+    WriteBufferAsBinary<TOutput>(data.get(), outputFile, m_CellBufferSize - this->m_NumberOfCells);
   }
 
 protected:

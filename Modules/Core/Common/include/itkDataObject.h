@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,7 +44,7 @@ class ITK_FORWARD_EXPORT DataObject;
 /*--------------------Data Object Exceptions---------------------------*/
 
 /**
- *\class DataObjectError
+ * \class DataObjectError
  * \brief Exception object for DataObject exceptions.
  * \ingroup ITKCommon
  */
@@ -100,7 +100,7 @@ private:
 };
 
 /**
- *\class InvalidRequestRegionError
+ * \class InvalidRequestRegionError
  *  \brief Exception object for invalid requested region.
  *
  * Exception object for invalid requested region.
@@ -144,7 +144,7 @@ protected:
 /*----------------------------Data Object--------------------------------*/
 
 /**
- *\class DataObject
+ * \class DataObject
  * \brief Base class for all data objects in ITK.
  *
  * This is the base class for all data objects in the Insight data
@@ -332,6 +332,10 @@ public:
   using DataObjectPointerArraySizeType = std::vector<Pointer>::size_type;
   DataObjectPointerArraySizeType
   GetSourceOutputIndex() const;
+
+  /** Does an Update() of its source, if it has one. Does nothing, otherwise. */
+  void
+  UpdateSource() const;
 
   /** Restore the data object to its initial state. This means releasing
    * memory. */

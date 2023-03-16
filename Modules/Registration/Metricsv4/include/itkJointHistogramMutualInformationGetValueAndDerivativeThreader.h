@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,8 @@
 #define itkJointHistogramMutualInformationGetValueAndDerivativeThreader_h
 
 #include "itkImageToImageMetricv4GetValueAndDerivativeThreader.h"
+
+#include <memory> // For unique_ptr.
 
 namespace itk
 {
@@ -79,7 +81,7 @@ public:
 
 protected:
   JointHistogramMutualInformationGetValueAndDerivativeThreader();
-  ~JointHistogramMutualInformationGetValueAndDerivativeThreader() override;
+  ~JointHistogramMutualInformationGetValueAndDerivativeThreader() override = default;
 
   using JointHistogramType = Image<SizeValueType, 2>;
 
@@ -122,7 +124,7 @@ protected:
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT,
                     PaddedJointHistogramMIPerThreadStruct,
                     AlignedJointHistogramMIPerThreadStruct);
-  AlignedJointHistogramMIPerThreadStruct * m_JointHistogramMIPerThreadVariables;
+  std::unique_ptr<AlignedJointHistogramMIPerThreadStruct[]> m_JointHistogramMIPerThreadVariables;
 
 private:
   /** Internal pointer to the metric object in use by this threader.

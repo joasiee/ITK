@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -242,11 +242,11 @@ ImageFileWriter<TInputImage>::Write()
   // largest region or not.
   if (!largestIORegion.IsInside(pasteIORegion))
   {
-    itkExceptionMacro(<< "Largest possible region does not fully contain requested paste IO region"
-                      << "Paste IO region: " << pasteIORegion << "Largest possible region: " << largestRegion);
+    itkExceptionMacro(<< "Largest possible region does not fully contain requested paste IO region. Paste IO region: "
+                      << pasteIORegion << "Largest possible region: " << largestRegion);
   }
 
-  // Determin the actual number of divisions of the input. This is determined
+  // Determine the actual number of divisions of the input. This is determined
   // by what the ImageIO can do
   unsigned int numDivisions;
 
@@ -270,8 +270,9 @@ ImageFileWriter<TInputImage>::Write()
     // largest region or not.
     if (!pasteIORegion.IsInside(streamIORegion))
     {
-      itkExceptionMacro(<< "ImageIO returns streamable region that is not fully contain in paste IO region"
-                        << "Paste IO region: " << pasteIORegion << "Streamable region: " << streamIORegion);
+      itkExceptionMacro(
+        << "ImageIO returns streamable region that is not fully contain in paste IO region. Paste IO region: "
+        << pasteIORegion << "Streamable region: " << streamIORegion);
     }
 
     InputImageRegionType streamRegion;
@@ -387,15 +388,7 @@ ImageFileWriter<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 
   os << indent << "File Name: " << (m_FileName.data() ? m_FileName.data() : "(none)") << std::endl;
 
-  os << indent << "Image IO: ";
-  if (m_ImageIO.IsNull())
-  {
-    os << "(none)\n";
-  }
-  else
-  {
-    os << m_ImageIO << "\n";
-  }
+  itkPrintSelfObjectMacro(ImageIO);
 
   os << indent << "IO Region: " << m_PasteIORegion << "\n";
   os << indent << "Number of Stream Divisions: " << m_NumberOfStreamDivisions << "\n";

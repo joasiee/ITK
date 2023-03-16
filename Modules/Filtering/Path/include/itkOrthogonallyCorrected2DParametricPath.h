@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,7 @@
 namespace itk
 {
 /**
- *\class OrthogonallyCorrected2DParametricPath
+ * \class OrthogonallyCorrected2DParametricPath
  * \brief  Represent an orthogonally corrected 2D parametric path
  *
  * Description
@@ -69,7 +69,7 @@ public:
   using VectorType = Superclass::VectorType;
   using OriginalPathType = ParametricPath<2>;
   using OriginalPathConstPointer = OriginalPathType::ConstPointer;
-  using OrthogonalCorrectionTableType = VectorContainer<unsigned, double>;
+  using OrthogonalCorrectionTableType = VectorContainer<unsigned int, double>;
   using OrthogonalCorrectionTablePointer = OrthogonalCorrectionTableType::Pointer;
 
   using OrthogonalCorrectionTableSizeType = OrthogonalCorrectionTableType::ElementIdentifier;

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -60,8 +60,8 @@ GeometricalQuadEdge<TVRef, TFRef, TPrimalData, TDualData, PrimalDual>::SetLnextR
   while (maxSize && (it != this->EndGeomLnext()))
   {
     it.Value()->SetLeft(faceGeom);
-    it++;
-    maxSize--;
+    ++it;
+    --maxSize;
   }
 
   return (true);
@@ -198,8 +198,8 @@ GeometricalQuadEdge<TVRef, TFRef, TPrimalData, TDualData, PrimalDual>::IsLnextSh
     {
       return (false);
     }
-    it++;
-    maxSize--;
+    ++it;
+    --maxSize;
   }
 
   if (it != this->EndGeomLnext())
@@ -274,7 +274,7 @@ GeometricalQuadEdge<TVRef, TFRef, TPrimalData, TDualData, PrimalDual>::GetNextBo
   //                     /   *  |  *   \                             //
   //                    /       |       \                            //
   //
-  //          On this example, and if we assume the Onext() oder is
+  //          In this example, and if we assume the Onext() order is
   //          represented counter-clockwise, the edges are ordered as
   //          follows:
   //             b1, b2, i3, b4, b5, i6, i7
@@ -319,7 +319,7 @@ GeometricalQuadEdge<TVRef, TFRef, TPrimalData, TDualData, PrimalDual>::GetNextBo
     {
       return (it.Value());
     }
-    it++;
+    ++it;
   }
 
   // No border edge found
@@ -437,7 +437,7 @@ GeometricalQuadEdge<TVRef, TFRef, TPrimalData, TDualData, PrimalDual>::ReorderOn
   // that this request is not absurd since the current situation at
   // P isn't the one of a 2-manifold: hence when building the current
   // Onext() ring of P, we had not enough information to decide
-  // wheter b4.Onext() should be b5 or b1. It is ONLY when we are
+  // whether b4.Onext() should be b5 or b1. It is ONLY when we are
   // required to build the triangle [P, A, B] that we have the
   // additional information that b4.Onext() is indeed b1.
   //    When we are required to build triangle [P, A, B], we hence
@@ -571,7 +571,7 @@ GeometricalQuadEdge<TVRef, TFRef, TPrimalData, TDualData, PrimalDual>::ReorderOn
   }
   else
   {
-    // Orientation is localy clockwise:
+    // Orientation is locally clockwise:
     bsplice = second;
     second->GetOprev()->Splice(bsplice);
   }
@@ -599,7 +599,7 @@ GeometricalQuadEdge<TVRef, TFRef, TPrimalData, TDualData, PrimalDual>::Disconnec
     while (it != e->EndGeomLnext())
     {
       it.Value()->UnsetLeft();
-      it++;
+      ++it;
     }
   }
   else if (this->IsInternal())

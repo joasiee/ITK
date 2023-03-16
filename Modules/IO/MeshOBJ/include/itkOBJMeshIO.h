@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,7 +27,7 @@
 namespace itk
 {
 /**
- *\class OBJMeshIO
+ * \class OBJMeshIO
  * \brief This class defines how to read and write Object file format.
  * \ingroup IOFilters
  * \ingroup ITKIOMeshOBJ
@@ -55,7 +55,7 @@ public:
   /*-------- This part of the interfaces deals with reading data. ----- */
 
   /** Determine if the file can be read with this MeshIO implementation.
-   * \param FileNameToRead The name of the file to test for reading.
+   * \param fileName The name of the file to test for reading.
    * \post Sets classes MeshIOBase::m_FileName variable to be FileNameToWrite
    * \return Returns true if this MeshIO can read the file specified.
    */
@@ -82,7 +82,7 @@ public:
   /*-------- This part of the interfaces deals with writing data. ----- */
 
   /** Determine if the file can be written with this MeshIO implementation.
-   * \param FileNameToWrite The name of the file to test for writing.
+   * \param fileName The name of the file to test for writing.
    * \post Sets classes MeshIOBase::m_FileName variable to be FileNameToWrite
    * \return Returns true if this MeshIO can write the file specified.
    */
@@ -116,15 +116,14 @@ protected:
   void
   WritePoints(T * buffer, std::ofstream & outputFile)
   {
-    NumberToString<T> convert;
-    SizeValueType     index = itk::NumericTraits<SizeValueType>::ZeroValue();
+    SizeValueType index = itk::NumericTraits<SizeValueType>::ZeroValue();
 
     for (SizeValueType ii = 0; ii < this->m_NumberOfPoints; ++ii)
     {
       outputFile << "v ";
       for (unsigned int jj = 0; jj < this->m_PointDimension; ++jj)
       {
-        outputFile << convert(buffer[index++]) << "  ";
+        outputFile << ConvertNumberToString(buffer[index++]) << "  ";
       }
       outputFile << '\n';
     }
@@ -139,7 +138,7 @@ protected:
     for (SizeValueType ii = 0; ii < this->m_NumberOfCells; ++ii)
     {
       outputFile << "f ";
-      index++;
+      ++index;
       auto numberOfCellPoints = static_cast<unsigned int>(buffer[index++]);
 
       for (unsigned int jj = 0; jj < numberOfCellPoints; ++jj)
@@ -155,15 +154,14 @@ protected:
   void
   WritePointData(T * buffer, std::ofstream & outputFile)
   {
-    NumberToString<T> convert;
-    SizeValueType     index = itk::NumericTraits<SizeValueType>::ZeroValue();
+    SizeValueType index = itk::NumericTraits<SizeValueType>::ZeroValue();
 
     for (SizeValueType ii = 0; ii < this->m_NumberOfPointPixels; ++ii)
     {
       outputFile << "vn ";
       for (unsigned int jj = 0; jj < this->m_PointDimension; ++jj)
       {
-        outputFile << convert(buffer[index++]) << "  ";
+        outputFile << ConvertNumberToString(buffer[index++]) << "  ";
       }
 
       outputFile << '\n';

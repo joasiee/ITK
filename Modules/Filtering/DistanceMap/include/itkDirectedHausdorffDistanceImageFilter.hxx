@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -171,7 +171,7 @@ DirectedHausdorffDistanceImageFilter<TInputImage1, TInputImage2>::DynamicThreade
     if (Math::NotExactlyEquals(it1.Get(), NumericTraits<InputImage1PixelType>::ZeroValue()))
     {
       // The signed distance map is calculated, but we want the calculation based on the
-      // unsigned distance map.  Therefore, we set all distance map values less than 0 to 0.
+      // unsigned int distance map.  Therefore, we set all distance map values less than 0 to 0.
       const RealType val2 = std::max(static_cast<RealType>(it2.Get()), NumericTraits<RealType>::ZeroValue());
       maxDistance = std::max(maxDistance, val2);
       sum += val2;

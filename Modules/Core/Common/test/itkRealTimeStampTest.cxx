@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@
 #include "itkRealTimeStamp.h"
 #include "itkNumericTraits.h"
 #include "itkMath.h"
+#include "itkTestingMacros.h"
 
 #define CHECK_FOR_VALUE(a, b)                                                            \
   {                                                                                      \
@@ -62,8 +63,12 @@ itkRealTimeStampTest(int, char *[])
   CHECK_FOR_VALUE(timeInHours, 0.0);
   CHECK_FOR_VALUE(timeInDays, 0.0);
 
-  itk::RealTimeStamp    stamp1;
-  itk::RealTimeStamp    stamp2 = stamp0;
+  itk::RealTimeStamp stamp1;
+  itk::RealTimeStamp stamp2 = stamp0;
+
+  itk::RealTimeInterval minusOneSecond(-1, 0);
+  ITK_TRY_EXPECT_EXCEPTION(stamp2 += minusOneSecond);
+
   itk::RealTimeInterval oneSecond(1, 0);
 
   for (unsigned int i = 0; i < 1000000L; ++i)
@@ -106,6 +111,7 @@ itkRealTimeStampTest(int, char *[])
 
   CHECK_FOR_VALUE(timeInSeconds, 0.0);
 
+  ITK_TRY_EXPECT_EXCEPTION(stamp3 += minusOneSecond);
 
   itk::RealTimeInterval timeSpan;
 

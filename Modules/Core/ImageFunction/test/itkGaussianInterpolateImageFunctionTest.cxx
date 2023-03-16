@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -101,7 +101,7 @@ itkGaussianInterpolateImageFunctionTest(int, char *[])
         std::cerr << "Error: computed and expected values are different" << std::endl;
         std::cerr << "Point: " << point << std::endl;
         std::cerr << "Computed: " << computedValue << std::endl;
-        std::cerr << "Expectd: " << expectedValue[j] << std::endl;
+        std::cerr << "Expected: " << expectedValue[j] << std::endl;
         return EXIT_FAILURE;
       }
 

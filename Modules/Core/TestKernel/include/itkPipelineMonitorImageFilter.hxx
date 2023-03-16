@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -286,8 +286,8 @@ PipelineMonitorImageFilter<TImageType>::GenerateData()
 
   ++m_NumberOfUpdates;
 
-  // We are finished with the input data, so release it. Whill this is
-  // ussually done in ReleaseInputs, it doesn't do any harm to release
+  // We are finished with the input data, so release it. While this is
+  // usually done in ReleaseInputs, it doesn't do any harm to release
   // it early
   input->ReleaseData();
 }

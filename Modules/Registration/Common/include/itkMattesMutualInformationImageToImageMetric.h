@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,6 +24,7 @@
 #include "itkBSplineDerivativeKernelFunction.h"
 #include "itkArray2D.h"
 
+#include <memory> // For unique_ptr.
 #include <mutex>
 
 
@@ -259,7 +260,7 @@ public:
 
 protected:
   MattesMutualInformationImageToImageMetric();
-  ~MattesMutualInformationImageToImageMetric() override;
+  ~MattesMutualInformationImageToImageMetric() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
@@ -276,6 +277,10 @@ private:
   /** Typedefs for BSpline kernel and derivative functions. */
   using CubicBSplineFunctionType = BSplineKernelFunction<3, PDFValueType>;
   using CubicBSplineDerivativeFunctionType = BSplineDerivativeKernelFunction<3, PDFValueType>;
+
+  /** Extract common processing for both GetValueAndDerivative and GetValue functions */
+  void
+  CommonGetValueProcessing() const;
 
   /** Precompute fixed image parzen window indices. */
   void
@@ -358,9 +363,9 @@ private:
   // Due to a bug in older version of Visual Studio where std::vector resize
   // uses a value instead of a const reference, this must be a pointer.
   // See
-  //   http://thetweaker.wordpress.com/2010/05/05/stdvector-of-aligned-elements/
-  //   http://connect.microsoft.com/VisualStudio/feedback/details/692988
-  mutable AlignedMMIMetricPerThreadStruct * m_MMIMetricPerThreadVariables;
+  //   https://thetweaker.wordpress.com/2010/05/05/stdvector-of-aligned-elements/
+  //   https://connect.microsoft.com/VisualStudio/feedback/details/692988
+  std::unique_ptr<AlignedMMIMetricPerThreadStruct[]> m_MMIMetricPerThreadVariables;
 #endif
 
   bool         m_UseExplicitPDFDerivatives{ true };

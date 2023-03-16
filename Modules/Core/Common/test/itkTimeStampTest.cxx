@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@
 #include "itkMultiThreaderBase.h"
 
 #include <iostream>
+#include <memory> // For make_unique.
 #include <type_traits>
 
 static_assert(std::is_nothrow_default_constructible<itk::TimeStamp>::value, "Check TimeStamp default-constructibility");
@@ -30,7 +31,7 @@ static_assert(std::is_trivially_destructible<itk::TimeStamp>::value, "Check Time
 // A helper struct for the test, the idea is to have one timestamp per thread.
 // To ease the writing of the test, we use  MultiThreaderBase::SingleMethodExecute
 // with an array of timestamps in the shared data
-using TimeStampTestHelper = struct TimeStampTestHelperStruct
+struct TimeStampTestHelper
 {
   std::vector<itk::TimeStamp> timestamps;
   std::vector<unsigned long>  counters;
@@ -89,7 +90,7 @@ itkTimeStampTest(int, char *[])
 
     // Declare an array to test whether the all modified times have
     // been used
-    std::vector<bool> istimestamped(numberOfWorkUnits);
+    const auto istimestamped = std::make_unique<bool[]>(numberOfWorkUnits);
 
     // Call Modified once  on any object to make it up-to-date
     multithreader->Modified();
@@ -119,7 +120,7 @@ itkTimeStampTest(int, char *[])
           min_mtime = mtime;
         }
 
-        // initialiaze the array to false
+        // initialize the array to false
         istimestamped[k] = false;
       }
 

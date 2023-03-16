@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@
 #ifndef itkDiscreteGaussianImageFilter_h
 #define itkDiscreteGaussianImageFilter_h
 
+#include "itkGaussianOperator.h"
 #include "itkImageToImageFilter.h"
 #include "itkImage.h"
 #include "itkZeroFluxNeumannBoundaryCondition.h"
@@ -113,6 +114,10 @@ public:
   using SigmaArrayType = ArrayType;
   using ScalarRealType = double;
 
+  /** Type of kernel to be used in blurring */
+  using KernelType = GaussianOperator<RealOutputPixelValueType, ImageDimension>;
+  using RadiusType = typename KernelType::RadiusType;
+
   /** The variance for the discrete Gaussian kernel.  Sets the variance
    * independently for each dimension, but
    * see also SetVariance(const double v). The default is 0.0 in each
@@ -130,8 +135,8 @@ public:
 
   /** Set the kernel to be no wider than MaximumKernelWidth pixels,
    *  even if MaximumError demands it. The default is 32 pixels. */
-  itkGetConstMacro(MaximumKernelWidth, int);
-  itkSetMacro(MaximumKernelWidth, int);
+  itkGetConstMacro(MaximumKernelWidth, unsigned int);
+  itkSetMacro(MaximumKernelWidth, unsigned int);
 
   /** Set the number of dimensions to smooth. Defaults to the image
    * dimension. Can be set to less than ImageDimension, smoothing all
@@ -188,18 +193,23 @@ public:
   }
 
   /** Set the standard deviation of the Gaussian used for smoothing.
-   * Sigma is measured in the units of image spacing. You may use the method
-   * SetSigma to set the same value across each axis or use the method
-   * SetSigmaArray if you need different values along each axis. */
+   * Sigma is measured in the units of image spacing. */
   void
-  SetSigmaArray(const ArrayType & sigmas)
+  SetSigma(const ArrayType & sigma)
   {
     ArrayType variance;
     for (unsigned int i = 0; i < ImageDimension; ++i)
     {
-      variance[i] = sigmas[i] * sigmas[i];
+      variance[i] = sigma[i] * sigma[i];
     }
     this->SetVariance(variance);
+  }
+  /** SetSigmaArray is preserved for interface
+   *  backwards compatibility. */
+  void
+  SetSigmaArray(const ArrayType & sigmas)
+  {
+    this->SetSigma(sigmas);
   }
   void
   SetSigma(double sigma)
@@ -251,6 +261,19 @@ public:
     this->SetMaximumError(dv);
   }
 
+  /** Get the radius of the generated directional kernel */
+  unsigned int
+  GetKernelRadius(const unsigned int dimension) const;
+
+  /** Get the radius of the separable kernel in each direction */
+  ArrayType
+  GetKernelRadius() const;
+
+  /** Get the size of the separable kernel in each direction.
+   *  size[i] = radius[i] * 2 + 1 */
+  ArrayType
+  GetKernelSize() const;
+
   /** Set/Get whether or not the filter will use the spacing of the input
    * image in its calculations. Use On to take the image spacing information
    * into account and to specify the Gaussian variance in real world units;
@@ -293,15 +316,6 @@ public:
   itkLegacyMacro(unsigned int GetInternalNumberOfStreamDivisions() const);
   itkLegacyMacro(void SetInternalNumberOfStreamDivisions(unsigned int));
 
-  /** DiscreteGaussianImageFilter needs a larger input requested region
-   * than the output requested region (larger by the size of the
-   * Gaussian kernel).  As such, DiscreteGaussianImageFilter needs to
-   * provide an implementation for GenerateInputRequestedRegion() in
-   * order to inform the pipeline execution model.
-   * \sa ImageToImageFilter::GenerateInputRequestedRegion() */
-  void
-  GenerateInputRequestedRegion() override;
-
 #ifdef ITK_USE_CONCEPT_CHECKING
   // Begin concept checking
 
@@ -326,6 +340,15 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
+  /** DiscreteGaussianImageFilter needs a larger input requested region
+   * than the output requested region (larger by the size of the
+   * Gaussian kernel).  As such, DiscreteGaussianImageFilter needs to
+   * provide an implementation for GenerateInputRequestedRegion() in
+   * order to inform the pipeline execution model.
+   * \sa ImageToImageFilter::GenerateInputRequestedRegion() */
+  void
+  GenerateInputRequestedRegion() override;
+
   /** Standard pipeline method. While this class does not implement a
    * ThreadedGenerateData(), its GenerateData() delegates all
    * calculations to an NeighborhoodOperatorImageFilter.  Since the
@@ -333,6 +356,14 @@ protected:
    * multithreaded by default. */
   void
   GenerateData() override;
+
+  /** Build a directional kernel to match user specifications */
+  void
+  GenerateKernel(const unsigned int dimension, KernelType & oper) const;
+
+  /** Get the variance, optionally adjusted for pixel spacing */
+  ArrayType
+  GetKernelVarianceArray() const;
 
 private:
   /** The variance of the gaussian blurring kernel in each dimensional
@@ -346,7 +377,7 @@ private:
 
   /** Maximum allowed kernel width for any dimension of the discrete Gaussian
       approximation */
-  int m_MaximumKernelWidth;
+  unsigned int m_MaximumKernelWidth;
 
   /** Number of dimensions to process. Default is all dimensions */
   unsigned int m_FilterDimensionality;

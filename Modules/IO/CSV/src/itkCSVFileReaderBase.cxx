@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -58,14 +58,12 @@ CSVFileReaderBase::PrepareForParsing()
 
   if (this->m_UseStringDelimiterCharacter && !(this->m_HasRowHeaders || this->m_HasColumnHeaders))
   {
-    itkWarningMacro(<< " Use string delimiter has been set to on"
-                    << "but row and/or column headers indicators are off!");
+    itkWarningMacro(<< " Use string delimiter has been set to on but row and/or column headers indicators are off!");
   }
 
   if (this->m_UseStringDelimiterCharacter && this->m_FieldDelimiterCharacter == this->m_StringDelimiterCharacter)
   {
-    itkExceptionMacro(<< "The same character has been set for the string"
-                      << "delimiter and the field delimiter character!");
+    itkExceptionMacro(<< "The same character has been set for the string delimiter and the field delimiter character!");
   }
 }
 
@@ -100,9 +98,9 @@ CSVFileReaderBase::GetDataDimension(SizeValueType & rows, SizeValueType & cols)
       {
         if (cellnum % 2 != 0)
         {
-          prev_cols++;
+          ++prev_cols;
         }
-        cellnum++;
+        ++cellnum;
       }
     }
 
@@ -112,7 +110,7 @@ CSVFileReaderBase::GetDataDimension(SizeValueType & rows, SizeValueType & cols)
     {
       while (std::getline(linestream, cell, this->m_FieldDelimiterCharacter))
       {
-        prev_cols++;
+        ++prev_cols;
       }
     }
     // previous columns now holds the number of headers minus the first header,
@@ -151,9 +149,9 @@ CSVFileReaderBase::GetDataDimension(SizeValueType & rows, SizeValueType & cols)
     // Count the entries
     while (std::getline(linestream, cell, this->m_FieldDelimiterCharacter))
     {
-      cols++;
+      ++cols;
     }
-    rows++;
+    ++rows;
 
     // Determine the max #columns and #rows
     current_cols = cols;

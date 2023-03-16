@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -241,11 +241,11 @@ protected:
    * \param timeStepList The set of time changes compiled from all the threaded calls
    * to ThreadedGenerateData.
    * \param valid The set of flags indicating which of "timeStepList" elements are
-   *  valid. Although they are uint8_t, they should be treated like bools.
+   *  valid.
    *
    * The default is to return the minimum value in the list. */
   TimeStepType
-  ResolveTimeStep(const std::vector<TimeStepType> & timeStepList, const std::vector<uint8_t> & valid) const override;
+  ResolveTimeStep(const std::vector<TimeStepType> & timeStepList, const BooleanStdVectorType & valid) const override;
 
   /** This method is called after the solution has been generated to allow
    * subclasses to apply some further processing to the output. */

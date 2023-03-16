@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -120,7 +120,7 @@ itkMetaArrowConverterTest(int argc, char * argv[])
 
   // set up metaArrow
   auto * metaArrow = new MetaArrow(Dimensions);
-  metaArrow->Length((float)length);
+  metaArrow->Length(static_cast<float>(length));
   metaArrow->Position((const double *)mPosition);
   metaArrow->Direction((const double *)mDirection);
   metaArrow->Color((const float *)color);
@@ -141,7 +141,7 @@ itkMetaArrowConverterTest(int argc, char * argv[])
   // check length
   double metaLength = newMetaArrow->Length();
 
-  // if (metaLength != (float)length)
+  // if (metaLength != static_cast<float>(length))
   if (itk::Math::abs(metaLength - length) > precisionLimit)
   {
     std::cout << "Conversion to MetaArrow failed to convert length [FAILED]" << std::endl;

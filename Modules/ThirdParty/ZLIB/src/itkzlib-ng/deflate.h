@@ -12,6 +12,7 @@
 
 #include "zutil.h"
 #include "zendian.h"
+#include "adler32_fold.h"
 #include "crc32_fold.h"
 
 /* define NO_GZIP when compiling if you want to disable gzip header and
@@ -53,16 +54,16 @@
 #define END_BLOCK 256
 /* end of block literal code */
 
-#define INIT_STATE    42    /* zlib header -> BUSY_STATE */
+#define INIT_STATE      42    /* zlib header -> BUSY_STATE */
 #ifdef GZIP
-#  define GZIP_STATE  57    /* gzip header -> BUSY_STATE | EXTRA_STATE */
+#  define GZIP_STATE    57    /* gzip header -> BUSY_STATE | EXTRA_STATE */
+#  define EXTRA_STATE   69    /* gzip extra block -> NAME_STATE */
+#  define NAME_STATE    73    /* gzip file name -> COMMENT_STATE */
+#  define COMMENT_STATE 91    /* gzip comment -> HCRC_STATE */
+#  define HCRC_STATE   103    /* gzip header CRC -> BUSY_STATE */
 #endif
-#define EXTRA_STATE   69    /* gzip extra block -> NAME_STATE */
-#define NAME_STATE    73    /* gzip file name -> COMMENT_STATE */
-#define COMMENT_STATE 91    /* gzip comment -> HCRC_STATE */
-#define HCRC_STATE   103    /* gzip header CRC -> BUSY_STATE */
-#define BUSY_STATE   113    /* deflate -> FINISH_STATE */
-#define FINISH_STATE 666    /* stream complete */
+#define BUSY_STATE     113    /* deflate -> FINISH_STATE */
+#define FINISH_STATE   666    /* stream complete */
 /* Stream status */
 
 #define HASH_BITS    16u           /* log2(HASH_SIZE) */
@@ -211,7 +212,7 @@ struct internal_state {
 
     int nice_match; /* Stop searching when current match exceeds this */
 
-    crc32_fold ALIGNED_(16) crc_fold;
+    struct crc32_fold_s ALIGNED_(16) crc_fold;
 
                 /* used by trees.c: */
     /* Didn't use ct_data typedef below to suppress compiler warning */
@@ -302,13 +303,11 @@ typedef enum {
  * IN assertion: there is enough room in pending_buf.
  */
 static inline void put_short(deflate_state *s, uint16_t w) {
-#if defined(UNALIGNED_OK)
-    *(uint16_t *)(&s->pending_buf[s->pending]) = w;
-    s->pending += 2;
-#else
-    put_byte(s, (w & 0xff));
-    put_byte(s, ((w >> 8) & 0xff));
+#if BYTE_ORDER == BIG_ENDIAN
+    w = ZSWAP16(w);
 #endif
+    memcpy(&s->pending_buf[s->pending], &w, sizeof(w));
+    s->pending += 2;
 }
 
 /* ===========================================================================
@@ -316,8 +315,11 @@ static inline void put_short(deflate_state *s, uint16_t w) {
  * IN assertion: there is enough room in pending_buf.
  */
 static inline void put_short_msb(deflate_state *s, uint16_t w) {
-    put_byte(s, ((w >> 8) & 0xff));
-    put_byte(s, (w & 0xff));
+#if BYTE_ORDER == LITTLE_ENDIAN
+    w = ZSWAP16(w);
+#endif
+    memcpy(&s->pending_buf[s->pending], &w, sizeof(w));
+    s->pending += 2;
 }
 
 /* ===========================================================================
@@ -325,15 +327,11 @@ static inline void put_short_msb(deflate_state *s, uint16_t w) {
  * IN assertion: there is enough room in pending_buf.
  */
 static inline void put_uint32(deflate_state *s, uint32_t dw) {
-#if defined(UNALIGNED_OK)
-    *(uint32_t *)(&s->pending_buf[s->pending]) = dw;
-    s->pending += 4;
-#else
-    put_byte(s, (dw & 0xff));
-    put_byte(s, ((dw >> 8) & 0xff));
-    put_byte(s, ((dw >> 16) & 0xff));
-    put_byte(s, ((dw >> 24) & 0xff));
+#if BYTE_ORDER == BIG_ENDIAN
+    dw = ZSWAP32(dw);
 #endif
+    memcpy(&s->pending_buf[s->pending], &dw, sizeof(dw));
+    s->pending += 4;
 }
 
 /* ===========================================================================
@@ -341,15 +339,11 @@ static inline void put_uint32(deflate_state *s, uint32_t dw) {
  * IN assertion: there is enough room in pending_buf.
  */
 static inline void put_uint32_msb(deflate_state *s, uint32_t dw) {
-#if defined(UNALIGNED_OK)
-    *(uint32_t *)(&s->pending_buf[s->pending]) = ZSWAP32(dw);
-    s->pending += 4;
-#else
-    put_byte(s, ((dw >> 24) & 0xff));
-    put_byte(s, ((dw >> 16) & 0xff));
-    put_byte(s, ((dw >> 8) & 0xff));
-    put_byte(s, (dw & 0xff));
+#if BYTE_ORDER == LITTLE_ENDIAN
+    dw = ZSWAP32(dw);
 #endif
+    memcpy(&s->pending_buf[s->pending], &dw, sizeof(dw));
+    s->pending += 4;
 }
 
 /* ===========================================================================
@@ -357,24 +351,11 @@ static inline void put_uint32_msb(deflate_state *s, uint32_t dw) {
  * IN assertion: there is enough room in pending_buf.
  */
 static inline void put_uint64(deflate_state *s, uint64_t lld) {
-#if defined(UNALIGNED64_OK)
-    *(uint64_t *)(&s->pending_buf[s->pending]) = lld;
-    s->pending += 8;
-#elif defined(UNALIGNED_OK)
-    *(uint32_t *)(&s->pending_buf[s->pending]) = lld & 0xffffffff;
-    s->pending += 4;
-    *(uint32_t *)(&s->pending_buf[s->pending]) = (lld >> 32) & 0xffffffff;
-    s->pending += 4;
-#else
-    put_byte(s, (lld & 0xff));
-    put_byte(s, ((lld >> 8) & 0xff));
-    put_byte(s, ((lld >> 16) & 0xff));
-    put_byte(s, ((lld >> 24) & 0xff));
-    put_byte(s, ((lld >> 32) & 0xff));
-    put_byte(s, ((lld >> 40) & 0xff));
-    put_byte(s, ((lld >> 48) & 0xff));
-    put_byte(s, ((lld >> 56) & 0xff));
+#if BYTE_ORDER == BIG_ENDIAN
+    lld = ZSWAP64(lld);
 #endif
+    memcpy(&s->pending_buf[s->pending], &lld, sizeof(lld));
+    s->pending += 8;
 }
 
 #define MIN_LOOKAHEAD (STD_MAX_MATCH + STD_MIN_MATCH + 1)
@@ -401,8 +382,8 @@ void Z_INTERNAL zng_tr_flush_block(deflate_state *s, char *buf, uint32_t stored_
 void Z_INTERNAL zng_tr_flush_bits(deflate_state *s);
 void Z_INTERNAL zng_tr_align(deflate_state *s);
 void Z_INTERNAL zng_tr_stored_block(deflate_state *s, char *buf, uint32_t stored_len, int last);
-uint16_t Z_INTERNAL bi_reverse(unsigned code, int len);
-void Z_INTERNAL flush_pending(PREFIX3(streamp) strm);
+uint16_t Z_INTERNAL PREFIX(bi_reverse)(unsigned code, int len);
+void Z_INTERNAL PREFIX(flush_pending)(PREFIX3(streamp) strm);
 #define d_code(dist) ((dist) < 256 ? zng_dist_code[dist] : zng_dist_code[256+((dist)>>7)])
 /* Mapping from a distance to a distance code. dist is the distance - 1 and
  * must not have side effects. zng_dist_code[256] and zng_dist_code[257] are never

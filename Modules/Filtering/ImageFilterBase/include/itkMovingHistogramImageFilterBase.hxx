@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -60,7 +60,7 @@ MovingHistogramImageFilterBase<TInputImage, TOutputImage, TKernel>::SetKernel(co
 
   // create a center index to compute the offset
   IndexType centerIndex;
-  for (unsigned axis = 0; axis < ImageDimension; ++axis)
+  for (unsigned int axis = 0; axis < ImageDimension; ++axis)
   {
     centerIndex[axis] = kernel.GetSize()[axis] / 2;
   }
@@ -80,7 +80,7 @@ MovingHistogramImageFilterBase<TInputImage, TOutputImage, TKernel>::SetKernel(co
     {
       kernelImageIt.Set(true);
       kernelOffsets.push_front(kernelImageIt.GetIndex() - centerIndex);
-      count++;
+      ++count;
     }
     else
     {
@@ -112,7 +112,7 @@ MovingHistogramImageFilterBase<TInputImage, TOutputImage, TKernel>::SetKernel(co
   FixedArray<SizeValueType, ImageDimension> axisCount;
   axisCount.Fill(0);
 
-  for (unsigned axis = 0; axis < ImageDimension; ++axis)
+  for (unsigned int axis = 0; axis < ImageDimension; ++axis)
   {
     OffsetType refOffset;
     refOffset.Fill(0);

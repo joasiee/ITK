@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,7 +33,7 @@ namespace itk
 template <typename TInputImage, typename TOutputImage>
 SignedMaurerDistanceMapImageFilter<TInputImage, TOutputImage>::SignedMaurerDistanceMapImageFilter()
   : m_BackgroundValue(NumericTraits<InputPixelType>::ZeroValue())
-  , m_Spacing(0.0)
+  , m_Spacing()
   , m_InputCache(nullptr)
 {
   this->DynamicMultiThreadingOff();
@@ -215,7 +215,7 @@ SignedMaurerDistanceMapImageFilter<TInputImage, TOutputImage>::ThreadedGenerateD
   for (unsigned int d = m_CurrentDimension + InputImageDimension - 1; d > m_CurrentDimension + 1; d--)
   {
     k[count + 1] = k[count] * size[d % InputImageDimension];
-    count++;
+    ++count;
   }
   k.flip();
 
@@ -242,7 +242,7 @@ SignedMaurerDistanceMapImageFilter<TInputImage, TOutputImage>::ThreadedGenerateD
         offsetIndex[d % InputImageDimension] + static_cast<OutputIndexValueType>(startIndex[d % InputImageDimension]);
 
       index %= k[count];
-      count++;
+      ++count;
     }
     this->Voronoi(m_CurrentDimension, idx, outputImage);
     progress->CompletedPixel();
@@ -348,7 +348,7 @@ SignedMaurerDistanceMapImageFilter<TInputImage, TOutputImage>::Voronoi(unsigned 
     {
       if (l < 1)
       {
-        l++;
+        ++l;
         g(l) = di;
         h(l) = iw;
       }
@@ -356,9 +356,9 @@ SignedMaurerDistanceMapImageFilter<TInputImage, TOutputImage>::Voronoi(unsigned 
       {
         while ((l >= 1) && this->Remove(g(l - 1), g(l), di, h(l - 1), h(l), iw))
         {
-          l--;
+          --l;
         }
-        l++;
+        ++l;
         g(l) = di;
         h(l) = iw;
       }
@@ -398,7 +398,7 @@ SignedMaurerDistanceMapImageFilter<TInputImage, TOutputImage>::Voronoi(unsigned 
       {
         break;
       }
-      l++;
+      ++l;
       d1 = d2;
     }
     idx[d] = i + startIndex[d];

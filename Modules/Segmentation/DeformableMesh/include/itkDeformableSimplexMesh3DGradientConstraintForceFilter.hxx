@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,7 +19,6 @@
 #define itkDeformableSimplexMesh3DGradientConstraintForceFilter_hxx
 
 #include "itkNumericTraits.h"
-#include "itkMath.h"
 #include "itkMath.h"
 
 #include <set>
@@ -271,8 +270,8 @@ DeformableSimplexMesh3DGradientConstraintForceFilter<TInputMesh, TOutputMesh>::C
     pos[1] = data->pos[1];
     pos[2] = data->pos[2];
 
-    m_StartVoxel = new ImageVoxel(vpos, pos, (double)m_Image->GetPixel(index), 0.0, 0);
-    current = new ImageVoxel(vpos, pos, (double)m_Image->GetPixel(index), 0.0, 0);
+    m_StartVoxel = new ImageVoxel(vpos, pos, static_cast<double>(m_Image->GetPixel(index)), 0.0, 0);
+    current = new ImageVoxel(vpos, pos, static_cast<double>(m_Image->GetPixel(index)), 0.0, 0);
     m_Positive.push_back(current);
 
     // scan normal side
@@ -303,7 +302,7 @@ DeformableSimplexMesh3DGradientConstraintForceFilter<TInputMesh, TOutputMesh>::C
           index[1] = ic[1];
           index[2] = ic[2];
 
-          current = new ImageVoxel(vpos, pos, (double)m_Image->GetPixel(index), dist, ++i);
+          current = new ImageVoxel(vpos, pos, static_cast<double>(m_Image->GetPixel(index)), dist, ++i);
           m_Positive.push_back(current);
           if (current->GetDistance() > m_Range)
           {
@@ -360,7 +359,7 @@ DeformableSimplexMesh3DGradientConstraintForceFilter<TInputMesh, TOutputMesh>::C
           index[1] = ic[1];
           index[2] = ic[2];
 
-          current = new ImageVoxel(vpos, pos, (double)m_Image->GetPixel(index), dist, --ii);
+          current = new ImageVoxel(vpos, pos, static_cast<double>(m_Image->GetPixel(index)), dist, --ii);
           m_Negative.push_back(current);
           if (current->GetDistance() > m_Range)
           {

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,9 +33,9 @@ namespace itk
 namespace detail
 {
 /* Helper functions returning pointer to matrix data for different types.  */
-template <typename TValueType, unsigned int NRows, unsigned int NCols>
+template <typename TValueType, unsigned int VRows, unsigned int VColumns>
 const TValueType *
-GetPointerToMatrixData(const vnl_matrix_fixed<TValueType, NRows, NCols> & inputMatrix)
+GetPointerToMatrixData(const vnl_matrix_fixed<TValueType, VRows, VColumns> & inputMatrix)
 {
   return inputMatrix.data_block();
 };
@@ -46,9 +46,9 @@ GetPointerToMatrixData(const vnl_matrix<TValueType> & inputMatrix)
   return inputMatrix.data_block();
 };
 
-template <typename TValueType, unsigned int NRows, unsigned int NCols>
+template <typename TValueType, unsigned int VRows, unsigned int VColumns>
 const TValueType *
-GetPointerToMatrixData(const itk::Matrix<TValueType, NRows, NCols> & inputMatrix)
+GetPointerToMatrixData(const itk::Matrix<TValueType, VRows, VColumns> & inputMatrix)
 {
   return inputMatrix.GetVnlMatrix().data_block();
 };
@@ -112,7 +112,7 @@ permuteColumnsWithSortIndices(QMatrix & eigenVectors, const std::vector<int> & i
 }
 } // end namespace detail
 
-/**\class SymmetricEigenAnalysisEnums
+/** \class SymmetricEigenAnalysisEnums
  * \brief This class contains all enum classes used by SymmetricEigenAnalysis class.
  * \ingroup ITKCommon
  */
@@ -543,7 +543,7 @@ private:
   ComputeEigenValuesAndVectorsWithEigenLibraryImpl(const QMatrix & A,
                                                    TVector &       EigenValues,
                                                    TEigenMatrix &  EigenVectors,
-                                                   long) const -> decltype(static_cast<unsigned int>(1))
+                                                   long) const -> decltype(1U)
   {
     using ValueType = decltype(GetMatrixValueType(true));
     using EigenLibMatrixType = Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
@@ -595,7 +595,7 @@ private:
   }
 
 
-  /* Implementation detail using EigenLib that do not peform a copy.
+  /* Implementation detail using EigenLib that do not perform a copy.
    * It needs the existence of a pointer to matrix data. \sa GetPointerToMatrixData
    * If new types want to use this method, an appropriate overload of GetPointerToMatrixData
    * should be included.
@@ -609,8 +609,7 @@ private:
   ComputeEigenValuesAndVectorsWithEigenLibraryImpl(const QMatrix & A,
                                                    TVector &       EigenValues,
                                                    TEigenMatrix &  EigenVectors,
-                                                   bool) const
-    -> decltype(GetPointerToMatrixData(A), static_cast<unsigned int>(1))
+                                                   bool) const -> decltype(GetPointerToMatrixData(A), 1U)
   {
     auto pointerToData = GetPointerToMatrixData(A);
     using PointerType = decltype(pointerToData);
@@ -671,8 +670,7 @@ private:
    * @return an unsigned int with no information value (no error code in EigenLib) */
   template <typename QMatrix>
   auto
-  ComputeEigenValuesWithEigenLibraryImpl(const QMatrix & A, TVector & EigenValues, long) const
-    -> decltype(static_cast<unsigned int>(1))
+  ComputeEigenValuesWithEigenLibraryImpl(const QMatrix & A, TVector & EigenValues, long) const -> decltype(1U)
   {
     using ValueType = decltype(GetMatrixValueType(true));
     using EigenLibMatrixType = Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
@@ -700,7 +698,7 @@ private:
     return 1;
   }
 
-  /* Implementation detail using EigenLib that do not peform a copy.
+  /* Implementation detail using EigenLib that do not perform a copy.
    * It needs the existence of a pointer to matrix data. \sa GetPointerToMatrixData
    * If new types want to use this method, an appropriate overload of GetPointerToMatrixData
    * should be included.
@@ -712,7 +710,7 @@ private:
   template <typename QMatrix>
   auto
   ComputeEigenValuesWithEigenLibraryImpl(const QMatrix & A, TVector & EigenValues, bool) const
-    -> decltype(GetPointerToMatrixData(A), static_cast<unsigned int>(1))
+    -> decltype(GetPointerToMatrixData(A), 1U)
   {
     auto pointerToData = GetPointerToMatrixData(A);
     using PointerType = decltype(pointerToData);
@@ -892,7 +890,7 @@ private:
     return QMatrix::ValueType();
   }
 
-  /* Implementation detail using EigenLib that do not peform a copy.
+  /* Implementation detail using EigenLib that do not perform a copy.
    * It needs the existence of a pointer to matrix data. \sa GetPointerToMatrixData
    * If new types want to use this method, an appropriate overload of GetPointerToMatrixData
    * should be included.
@@ -906,8 +904,7 @@ private:
   ComputeEigenValuesAndVectorsWithEigenLibraryImpl(const QMatrix & A,
                                                    TVector &       EigenValues,
                                                    TEigenMatrix &  EigenVectors,
-                                                   bool) const
-    -> decltype(GetPointerToMatrixData(A), static_cast<unsigned int>(1))
+                                                   bool) const -> decltype(GetPointerToMatrixData(A), 1U)
   {
     auto pointerToData = GetPointerToMatrixData(A);
     using PointerType = decltype(pointerToData);
@@ -964,7 +961,7 @@ private:
   ComputeEigenValuesAndVectorsWithEigenLibraryImpl(const QMatrix & A,
                                                    TVector &       EigenValues,
                                                    TEigenMatrix &  EigenVectors,
-                                                   long) const -> decltype(static_cast<unsigned int>(1))
+                                                   long) const -> decltype(1U)
   {
     using ValueType = decltype(GetMatrixValueType(true));
     using EigenLibMatrixType = Eigen::Matrix<ValueType, VDimension, VDimension, Eigen::RowMajor>;
@@ -1023,8 +1020,7 @@ private:
    * @return an unsigned int with no information value (no error code in EigenLib) */
   template <typename QMatrix>
   auto
-  ComputeEigenValuesWithEigenLibraryImpl(const QMatrix & A, TVector & EigenValues, long) const
-    -> decltype(static_cast<unsigned int>(1))
+  ComputeEigenValuesWithEigenLibraryImpl(const QMatrix & A, TVector & EigenValues, long) const -> decltype(1U)
   {
     using ValueType = decltype(GetMatrixValueType(true));
     using EigenLibMatrixType = Eigen::Matrix<ValueType, VDimension, VDimension, Eigen::RowMajor>;
@@ -1052,7 +1048,7 @@ private:
     return 1;
   }
 
-  /* Implementation detail using EigenLib that do not peform a copy.
+  /* Implementation detail using EigenLib that do not perform a copy.
    * It needs the existence of a pointer to matrix data. \sa GetPointerToMatrixData
    * If new types want to use this method, an appropriate overload of GetPointerToMatrixData
    * should be included.
@@ -1064,7 +1060,7 @@ private:
   template <typename QMatrix>
   auto
   ComputeEigenValuesWithEigenLibraryImpl(const QMatrix & A, TVector & EigenValues, bool) const
-    -> decltype(GetPointerToMatrixData(A), static_cast<unsigned int>(1))
+    -> decltype(GetPointerToMatrixData(A), 1U)
   {
     auto pointerToData = GetPointerToMatrixData(A);
     using PointerType = decltype(pointerToData);

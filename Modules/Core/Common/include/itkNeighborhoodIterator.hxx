@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@ namespace itk
 
 template <typename TImage, typename TBoundaryCondition>
 void
-NeighborhoodIterator<TImage, TBoundaryCondition>::SetPixel(const unsigned n, const PixelType & v)
+NeighborhoodIterator<TImage, TBoundaryCondition>::SetPixel(const unsigned int n, const PixelType & v)
 {
 
   if (this->m_NeedToUseBoundaryCondition == false)
@@ -95,7 +95,7 @@ NeighborhoodIterator<TImage, TBoundaryCondition>::SetPixel(const unsigned n, con
 
 template <typename TImage, typename TBoundaryCondition>
 void
-NeighborhoodIterator<TImage, TBoundaryCondition>::SetPixel(const unsigned n, const PixelType & v, bool & status)
+NeighborhoodIterator<TImage, TBoundaryCondition>::SetPixel(const unsigned int n, const PixelType & v, bool & status)
 {
   unsigned int i;
   OffsetType   temp;
@@ -211,7 +211,7 @@ NeighborhoodIterator<TImage, TBoundaryCondition>::SetNeighborhood(const Neighbor
       for (i = 0; i < Superclass::Dimension; ++i) // Update index
       {
         temp[i]++;
-        if ((unsigned int)(temp[i]) == this->GetSize(i))
+        if (static_cast<unsigned int>(temp[i]) == this->GetSize(i))
         {
           temp[i] = 0;
         }

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -60,6 +60,14 @@ itkScalarImageKmeansImageFilterTest(int argc, char * argv[])
   auto useNonContiguousLabels = static_cast<bool>(std::stoi(argv[3]));
   ITK_TEST_SET_GET_BOOLEAN(kmeansFilter, UseNonContiguousLabels, useNonContiguousLabels);
 
+  typename KMeansFilterType::ImageRegionType            region;
+  typename KMeansFilterType::ImageRegionType::IndexType index = { { 50, 50 } };
+  typename KMeansFilterType::ImageRegionType::SizeType  size = { { 80, 100 } };
+  region.SetIndex(index);
+  region.SetSize(size);
+  kmeansFilter->SetImageRegion(region);
+  ITK_TEST_SET_GET_VALUE(region, kmeansFilter->GetImageRegion());
+
   const unsigned int numberOfInitialClasses = std::stoi(argv[4]);
 
   constexpr unsigned int numberOfArgumentsBeforeMeans = 5;
@@ -76,7 +84,7 @@ itkScalarImageKmeansImageFilterTest(int argc, char * argv[])
   ITK_TRY_EXPECT_EXCEPTION(kmeansFilter->Update());
 
 
-  for (unsigned k = 0; k < numberOfInitialClasses; ++k)
+  for (unsigned int k = 0; k < numberOfInitialClasses; ++k)
   {
     kmeansFilter->AddClassWithInitialMean(std::stod(argv[k + numberOfArgumentsBeforeMeans]));
   }

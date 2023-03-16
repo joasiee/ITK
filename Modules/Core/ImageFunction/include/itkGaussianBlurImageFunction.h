@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,9 +34,6 @@ namespace itk
  * \sa ImageFunction
  * \ingroup ITKImageFunction
  *
- * \sphinx
- * \sphinxexample{Core/ImageFunction/GaussianBlueImageFunction,GaussianBlurImageFunction}
- * \endsphinx
  */
 template <typename TInputImage, typename TOutput = double>
 class ITK_TEMPLATE_EXPORT GaussianBlurImageFunction : public ImageFunction<TInputImage, TOutput>
@@ -92,7 +89,7 @@ public:
   /** Point type alias support */
   using typename Superclass::PointType;
 
-  /** Evalutate the  in the given dimension at specified point */
+  /** Evaluate the function in the given dimension at specified point */
   TOutput
   Evaluate(const PointType & point) const override;
 

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,13 +18,14 @@
 
 // First include the header file to be tested:
 #include "itkIndex.h"
+#include "itkRangeGTestUtilities.h"
 #include <gtest/gtest.h>
 #include <initializer_list>
 #include <limits>
 
 namespace
 {
-template <unsigned VDimension>
+template <unsigned int VDimension>
 void
 Expect_Filled_returns_Index_with_specified_value_for_each_element()
 {
@@ -69,6 +70,10 @@ static_assert(Is_Filled_Index_correctly_filled<0>() && Is_Filled_Index_correctly
                 Is_Filled_Index_correctly_filled<std::numeric_limits<itk::IndexValueType>::min()>() &&
                 Is_Filled_Index_correctly_filled<std::numeric_limits<itk::IndexValueType>::max()>(),
               "itk::Index::Filled(value) should be correctly filled at compile-time");
+
+static_assert(itk::RangeGTestUtilities::CheckConstexprBeginAndEndOfContainer<itk::Index<>>() &&
+                itk::RangeGTestUtilities::CheckConstexprBeginAndEndOfContainer<itk::Index<1>>(),
+              "Check constexpr begin() and end() of Index.");
 
 
 // Tests that itk::Index::Filled(value) returns an itk::Index with the

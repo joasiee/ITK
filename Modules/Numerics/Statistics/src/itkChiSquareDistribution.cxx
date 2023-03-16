@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -73,7 +73,7 @@ ChiSquareDistribution::GetDegreesOfFreedom() const
 }
 
 double
-ChiSquareDistribution ::PDF(double x, SizeValueType degreesOfFreedom)
+ChiSquareDistribution::PDF(double x, SizeValueType degreesOfFreedom)
 {
   auto   dof = static_cast<double>(degreesOfFreedom);
   double dofon2 = 0.5 * dof;
@@ -88,7 +88,7 @@ ChiSquareDistribution ::PDF(double x, SizeValueType degreesOfFreedom)
 }
 
 double
-ChiSquareDistribution ::PDF(double x, const ParametersType & p)
+ChiSquareDistribution::PDF(double x, const ParametersType & p)
 {
   if (p.GetSize() != 1)
   {
@@ -99,7 +99,7 @@ ChiSquareDistribution ::PDF(double x, const ParametersType & p)
 }
 
 double
-ChiSquareDistribution ::CDF(double x, SizeValueType degreesOfFreedom)
+ChiSquareDistribution::CDF(double x, SizeValueType degreesOfFreedom)
 {
   // Based on Abramowitz and Stegun 26.4.19 which relates the
   // cumulative of the chi-square to incomplete (and complete) gamma
@@ -116,7 +116,7 @@ ChiSquareDistribution ::CDF(double x, SizeValueType degreesOfFreedom)
 }
 
 double
-ChiSquareDistribution ::CDF(double x, const ParametersType & p)
+ChiSquareDistribution::CDF(double x, const ParametersType & p)
 {
   if (p.GetSize() != 1)
   {
@@ -131,7 +131,7 @@ ChiSquareDistribution::InverseCDF(double p, SizeValueType degreesOfFreedom)
 {
   if (p <= 0.0)
   {
-    return itk::NumericTraits<double>::ZeroValue();
+    return 0.0;
   }
   else if (p >= 1.0)
   {
@@ -154,18 +154,18 @@ ChiSquareDistribution::InverseCDF(double p, SizeValueType degreesOfFreedom)
   //
   //   0 iterations, error = 10^-1  at 1 degree of freedom
   //   3 iterations, error = 10^-11 at 1 degree of freedom
-  //  10 iterations, erorr = 10^-13 at 1 degree of freedom
-  //  20 iterations, erorr = 10^-13 at 1 degree of freedom
+  //  10 iterations, error = 10^-13 at 1 degree of freedom
+  //  20 iterations, error = 10^-13 at 1 degree of freedom
   //
   //   0 iterations, error = 10^-1  at 11 degrees of freedom
   //   3 iterations, error = 10^-8  at 11 degrees of freedom
-  //  10 iterations, erorr = 10^-13 at 11 degrees of freedom
-  //  20 iterations, erorr = 10^-13 at 11 degrees of freedom
+  //  10 iterations, error = 10^-13 at 11 degrees of freedom
+  //  20 iterations, error = 10^-13 at 11 degrees of freedom
   //
   //   0 iterations, error = 10^-1  at 100 degrees of freedom
   //   3 iterations, error = 10^-9  at 100 degrees of freedom
-  //  10 iterations, erorr = 10^-10 at 100 degrees of freedom
-  //  20 iterations, erorr = 10^-9  at 100 degrees of freedom
+  //  10 iterations, error = 10^-10 at 100 degrees of freedom
+  //  20 iterations, error = 10^-9  at 100 degrees of freedom
 
   // We are trying to find the zero of
   //

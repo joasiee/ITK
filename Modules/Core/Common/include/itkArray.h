@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,7 +26,7 @@
 namespace itk
 {
 /**
- *\class Array
+ * \class Array
  *  \brief Array class with size defined at construction time.
  *
  * This class derives from the vnl_vector<> class.
@@ -107,7 +107,7 @@ public:
     }
   }
 
-  /** Set the all the elements of the array to the specified value */
+  /** Set all the elements of the array to the specified value */
   void
   Fill(TValue const & v)
   {
@@ -115,10 +115,10 @@ public:
   }
 
   /** Copy operator */
-  const Self &
+  Self &
   operator=(const Self & rhs);
 
-  const Self &
+  Self &
   operator=(const VnlVectorType & rhs);
 
   /** Return the number of elements in the Array  */

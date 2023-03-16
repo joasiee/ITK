@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -81,7 +81,7 @@ itkFlatStructuringElementTest2(int argc, char * argv[])
     return EXIT_FAILURE;
   }
 
-  constexpr static unsigned int Dimension = 2;
+  static constexpr unsigned int Dimension = 2;
 
   // Read test image as unsigned char
   using ImageUCType = itk::Image<unsigned char, Dimension>;
@@ -115,7 +115,7 @@ itkFlatStructuringElementTest2(int argc, char * argv[])
   FSEType              flatStructure = FSEType::FromImage(testImgBool);
   ImageUCType::Pointer imgFromStructure = GetImage(flatStructure);
 
-  // Write result from GetImage for comparisson with input image
+  // Write result from GetImage for comparison with input image
 
   using WriterType = itk::ImageFileWriter<ImageUCType>;
   auto writer = WriterType::New();

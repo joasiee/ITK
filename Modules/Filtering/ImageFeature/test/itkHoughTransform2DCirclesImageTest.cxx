@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,8 +38,8 @@ CreateCircle(typename ImageType::Pointer image, const CenterCoordinateType cente
   {
     for (double angle = 0; angle <= 2 * itk::Math::pi; angle += itk::Math::pi / 1000)
     {
-      index[0] = itk::Math::Round<long int>(center[0] + i * std::cos(angle));
-      index[1] = itk::Math::Round<long int>(center[1] + i * std::sin(angle));
+      index[0] = itk::Math::Round<long>(center[0] + i * std::cos(angle));
+      index[1] = itk::Math::Round<long>(center[1] + i * std::sin(angle));
       image->SetPixel(index, 255);
     }
   }
@@ -254,7 +254,7 @@ Test_RadiusImage_and_OutputImage_may_have_different_types()
 bool
 Test_Center_IsInside_SpatialObject_from_GetCircles()
 {
-  using PixelType = unsigned;
+  using PixelType = unsigned int;
   using ImageType = itk::Image<PixelType>;
   const auto                image = ImageType::New();
   const ImageType::SizeType imageSize = { { 16, 32 } };
@@ -264,7 +264,7 @@ Test_Center_IsInside_SpatialObject_from_GetCircles()
   const double radius = 1.0;
   CreateCircle<ImageType>(image, center, radius);
 
-  using FilterType = itk::HoughTransform2DCirclesImageFilter<PixelType, unsigned, double>;
+  using FilterType = itk::HoughTransform2DCirclesImageFilter<PixelType, unsigned int, double>;
   const auto filter = FilterType::New();
   filter->SetInput(image);
   filter->Update();
@@ -435,9 +435,11 @@ itkHoughTransform2DCirclesImageTest(int, char *[])
   while (it != circleList.end())
   {
     if (!itk::Math::FloatAlmostEqual(
-          (double)(it->GetPointer()->GetRadiusInObjectSpace()[0]), radius[i], 10, radiusTolerance) &&
-        !itk::Math::FloatAlmostEqual(
-          (double)(it->GetPointer()->GetRadiusInObjectSpace()[0]), radius[i] * discRadiusRatio, 10, radiusTolerance))
+          static_cast<double>(it->GetPointer()->GetRadiusInObjectSpace()[0]), radius[i], 10, radiusTolerance) &&
+        !itk::Math::FloatAlmostEqual(static_cast<double>(it->GetPointer()->GetRadiusInObjectSpace()[0]),
+                                     radius[i] * discRadiusRatio,
+                                     10,
+                                     radiusTolerance))
     {
       std::cout << "Failure for circle #" << i << std::endl;
       std::cout << "Expected radius: " << radius[i] << ", found " << it->GetPointer()->GetRadiusInObjectSpace()
@@ -505,15 +507,15 @@ itkHoughTransform2DCirclesImageTest(int, char *[])
         // Draw the circle
         for (double angle = 0; angle <= 2 * itk::Math::pi; angle += itk::Math::pi / 1000)
         {
-          index[0] = itk::Math::Round<long int>(it_output.GetIndex()[0] + radius2 * std::cos(angle));
-          index[1] = itk::Math::Round<long int>(it_output.GetIndex()[1] + radius2 * std::sin(angle));
+          index[0] = itk::Math::Round<long>(it_output.GetIndex()[0] + radius2 * std::cos(angle));
+          index[1] = itk::Math::Round<long>(it_output.GetIndex()[1] + radius2 * std::sin(angle));
           m_HoughSpaceImage->SetPixel(index, 255);
 
           // Remove the maximum from the accumulator
           for (double length = 0; length < discRadiusRatio * radius2; length += 1)
           {
-            index[0] = itk::Math::Round<long int>(it_output.GetIndex()[0] + length * std::cos(angle));
-            index[1] = itk::Math::Round<long int>(it_output.GetIndex()[1] + length * std::sin(angle));
+            index[0] = itk::Math::Round<long>(it_output.GetIndex()[0] + length * std::cos(angle));
+            index[1] = itk::Math::Round<long>(it_output.GetIndex()[1] + length * std::sin(angle));
             postProcessImage->SetPixel(index, 0);
           }
         }
@@ -536,15 +538,17 @@ itkHoughTransform2DCirclesImageTest(int, char *[])
   double centerTolerance = 2.0;
   for (i = 0; i < numberOfCircles; ++i)
   {
-    if (!itk::Math::FloatAlmostEqual((double)(centerResult[i][0]), (double)(center[i][0]), 10, centerTolerance) ||
-        !itk::Math::FloatAlmostEqual((double)(centerResult[i][1]), (double)(center[i][1]), 10, centerTolerance) ||
+    if (!itk::Math::FloatAlmostEqual(
+          static_cast<double>(centerResult[i][0]), static_cast<double>(center[i][0]), 10, centerTolerance) ||
+        !itk::Math::FloatAlmostEqual(
+          static_cast<double>(centerResult[i][1]), static_cast<double>(center[i][1]), 10, centerTolerance) ||
         (!itk::Math::FloatAlmostEqual(radiusResult[i], radius[i], 10, radiusTolerance) &&
          !itk::Math::FloatAlmostEqual(radiusResult[i], radius[i] * discRadiusRatio, 10, radiusTolerance)))
     {
       std::cout << "Failure for circle #" << i << std::endl;
       std::cout << "Expected center: [" << center[i][0] << ", " << center[i][1] << "], found [" << centerResult[i][0]
                 << ", " << centerResult[i][1] << "]" << std::endl;
-      std::cout << "Excpected radius: " << radius[i] << ", found " << radiusResult[i] << std::endl;
+      std::cout << "Expected radius: " << radius[i] << ", found " << radiusResult[i] << std::endl;
       success = false;
     }
     else

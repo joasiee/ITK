@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -37,7 +37,7 @@ ManhattanDistanceMetric<TVector>::Evaluate(const MeasurementVectorType & x) cons
                                   measurementVectorSize,
                                   "ManhattanDistanceMetric::Evaluate Origin and input vector have different lengths");
 
-  double temp, distance = NumericTraits<double>::ZeroValue();
+  double temp, distance = 0.0;
 
   for (unsigned int i = 0; i < measurementVectorSize; ++i)
   {
@@ -58,7 +58,7 @@ ManhattanDistanceMetric<TVector>::Evaluate(const MeasurementVectorType & x1, con
     itkExceptionMacro(<< "ManhattanDistanceMetric:: The two measurement vectors have unequal size");
   }
 
-  double temp, distance = NumericTraits<double>::ZeroValue();
+  double temp, distance = 0.0;
   for (unsigned int i = 0; i < measurementVectorSize; ++i)
   {
     temp = itk::Math::abs(x1[i] - x2[i]);

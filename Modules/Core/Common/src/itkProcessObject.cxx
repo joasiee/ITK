@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -80,7 +80,7 @@ ProcessObject::MakeOutput(const DataObjectIdentifierType & name)
 {
   /*
    * This is a default implementation to make sure we have something.
-   * Once all the subclasses of ProcessObject provide an appopriate
+   * Once all the subclasses of ProcessObject provide an appropriate
    * MakeOutput(), then ProcessObject::MakeOutput() can be made pure
    * virtual.
    */
@@ -195,7 +195,7 @@ ProcessObject::AddInput(DataObject * input)
    * Adds an input to the first null position in the input list.
    * Expands the list memory if necessary
    */
-  for (unsigned idx = 0; idx < this->GetNumberOfIndexedInputs(); ++idx)
+  for (unsigned int idx = 0; idx < this->GetNumberOfIndexedInputs(); ++idx)
   {
     if (!this->GetInput(idx))
     {
@@ -1707,7 +1707,7 @@ ProcessObject::UpdateOutputData(DataObject * itkNotUsed(output))
   {
     this->GenerateData();
   }
-  catch (ProcessAborted &)
+  catch (const ProcessAborted &)
   {
     this->InvokeEvent(AbortEvent());
     this->ResetPipeline();

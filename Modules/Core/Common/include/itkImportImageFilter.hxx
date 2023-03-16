@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,23 +52,8 @@ ImportImageFilter<TPixel, VImageDimension>::PrintSelf(std::ostream & os, Indent 
 
   Superclass::PrintSelf(os, indent);
 
-  if (m_ImportImageContainer)
-  {
-    os << indent << "ImportImageContainer pointer: (" << m_ImportImageContainer << ")" << std::endl;
-  }
-  else
-  {
-    os << indent << "ImportImageContainer pointer: (None)" << std::endl;
-  }
+  itkPrintSelfObjectMacro(ImportImageContainer);
   os << indent << "Import buffer size: " << m_Size << std::endl;
-  os << indent << "Import buffer size: " << m_Size << std::endl;
-  if (m_ImportImageContainer)
-  {
-    os << indent
-       << "ImageContainer manages memory: " << (m_ImportImageContainer->GetContainerManageMemory() ? "true" : "false")
-       << std::endl;
-  }
-
   os << indent << "Spacing: [";
   for (i = 0; i < static_cast<int>(VImageDimension) - 1; ++i)
   {

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,14 +44,14 @@ MultipleValuedVnlCostFunctionAdaptor::SetScales(const ScalesType & scales)
       itkGenericExceptionMacro("ERROR: Scales must have value greater than epsilon! Scale[" << i
                                                                                             << "] = " << scales[i]);
     }
-    m_InverseScales[i] = NumericTraits<double>::OneValue() / scales[i];
+    m_InverseScales[i] = 1.0 / scales[i];
   }
   m_ScalesInitialized = true;
 }
 
 /**  Delegate computation of the value to the CostFunction. */
 void
-MultipleValuedVnlCostFunctionAdaptor ::f(const InternalParametersType & inparameters, InternalMeasureType & measures)
+MultipleValuedVnlCostFunctionAdaptor::f(const InternalParametersType & inparameters, InternalMeasureType & measures)
 {
   if (!this->m_CostFunction)
   {
@@ -78,7 +78,7 @@ MultipleValuedVnlCostFunctionAdaptor ::f(const InternalParametersType & inparame
 
   measures = this->m_CostFunction->GetValue(parameters);
 
-  // Notify observers. This is used for overcoming the limitaion of VNL
+  // Notify observers. This is used for overcoming the limitation of VNL
   // optimizers of not providing callbacks per iteration.
   m_CachedValue = measures;
   m_CachedCurrentParameters = parameters;
@@ -87,8 +87,8 @@ MultipleValuedVnlCostFunctionAdaptor ::f(const InternalParametersType & inparame
 
 /**  Delegate computation of the gradient to the costfunction.  */
 void
-MultipleValuedVnlCostFunctionAdaptor ::gradf(const InternalParametersType & inparameters,
-                                             InternalDerivativeType &       gradient)
+MultipleValuedVnlCostFunctionAdaptor::gradf(const InternalParametersType & inparameters,
+                                            InternalDerivativeType &       gradient)
 {
   if (!this->m_CostFunction)
   {
@@ -119,9 +119,9 @@ MultipleValuedVnlCostFunctionAdaptor ::gradf(const InternalParametersType & inpa
 
 /**  Delegate computation of value and gradient to the costfunction.     */
 void
-MultipleValuedVnlCostFunctionAdaptor ::compute(const InternalParametersType & x,
-                                               InternalMeasureType *          ff,
-                                               InternalDerivativeType *       g)
+MultipleValuedVnlCostFunctionAdaptor::compute(const InternalParametersType & x,
+                                              InternalMeasureType *          ff,
+                                              InternalDerivativeType *       g)
 {
   // delegate the computation to the CostFunction
   DerivativeType externalGradient;
@@ -145,7 +145,7 @@ MultipleValuedVnlCostFunctionAdaptor ::compute(const InternalParametersType & x,
 
   this->ConvertExternalToInternalGradient(externalGradient, *g);
 
-  // Notify observers. This is used for overcoming the limitaion of VNL
+  // Notify observers. This is used for overcoming the limitation of VNL
   // optimizers of not providing callbacks per iteration.
   // Note that m_CachedDerivative is already loaded in the GetDerivative()
   // above.

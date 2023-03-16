@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,10 +26,11 @@
 int
 itkMeshFileReaderWriterTest(int argc, char * argv[])
 {
-  if (argc < 3)
+  if (argc < 4)
   {
     std::cerr << "Missing Parameters " << std::endl;
-    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " inputFileName outputFileName" << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv)
+              << " inputFileName outputFileName unsupportedFormatInputFileName" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -49,8 +50,17 @@ itkMeshFileReaderWriterTest(int argc, char * argv[])
   reader->SetFileName(inputFileName);
   ITK_TRY_EXPECT_EXCEPTION(reader->Update());
 
+  inputFileName = "NonExistingFile.vtk";
+  reader->SetFileName(inputFileName);
+  ITK_TRY_EXPECT_EXCEPTION(reader->Update());
+
+  inputFileName = argv[3];
+  reader->SetFileName(inputFileName);
+  ITK_TRY_EXPECT_EXCEPTION(reader->Update());
+
   inputFileName = argv[1];
   reader->SetFileName(inputFileName);
+  ITK_TEST_SET_GET_VALUE(inputFileName, reader->GetFileName());
 
   ITK_TRY_EXPECT_NO_EXCEPTION(reader->Update());
 
@@ -60,12 +70,12 @@ itkMeshFileReaderWriterTest(int argc, char * argv[])
   std::string outputFileName = "";
   ITK_TRY_EXPECT_EXCEPTION(itk::WriteMesh(readMesh.GetPointer(), outputFileName));
 
-  const std::string constOutputFileName = argv[2];
-  ITK_TRY_EXPECT_NO_EXCEPTION(itk::WriteMesh(readMesh.GetPointer(), constOutputFileName));
-  ITK_TRY_EXPECT_NO_EXCEPTION(itk::WriteMesh(readMesh, constOutputFileName));
+  outputFileName = argv[2];
+  ITK_TRY_EXPECT_NO_EXCEPTION(itk::WriteMesh(readMesh.GetPointer(), outputFileName));
+  ITK_TRY_EXPECT_NO_EXCEPTION(itk::WriteMesh(readMesh, outputFileName));
 
-  MeshType::Pointer writeReadMesh = nullptr;
-  ITK_TRY_EXPECT_NO_EXCEPTION(writeReadMesh = itk::ReadMesh<MeshType>(constOutputFileName));
+  MeshType::Pointer writeReadMesh;
+  ITK_TRY_EXPECT_NO_EXCEPTION(writeReadMesh = itk::ReadMesh<MeshType>(outputFileName));
 
   ITK_TEST_EXPECT_EQUAL(TestPointsContainer<MeshType>(readMesh->GetPoints(), writeReadMesh->GetPoints()), EXIT_SUCCESS);
   ITK_TEST_EXPECT_EQUAL(TestCellsContainer<MeshType>(readMesh->GetCells(), writeReadMesh->GetCells()), EXIT_SUCCESS);

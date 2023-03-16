@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@
 namespace itk
 {
 /**
- *\class GradientRecursiveGaussianImageFilter
+ * \class GradientRecursiveGaussianImageFilter
  * \brief Computes the gradient of an image by convolution
  *        with the first derivative of a Gaussian.
  *
@@ -211,7 +211,7 @@ private:
   void
   TransformOutputPixel(ImageRegionIterator<T> & it)
   {
-    OutputPixelType         correctedGradient;
+    OutputPixelType         correctedGradient{};
     const OutputPixelType & gradient = it.Get();
 
     const unsigned int nComponents = NumericTraits<OutputPixelType>::GetLength(gradient) / ImageDimension;
@@ -235,9 +235,9 @@ private:
     it.Set(correctedGradient);
   }
 
-  template <template <typename, unsigned int> class P, class T, unsigned int N>
+  template <template <typename, unsigned int> class P, class T, unsigned int VDimension>
   void
-  TransformOutputPixel(ImageRegionIterator<Image<P<T, N>, N>> & it)
+  TransformOutputPixel(ImageRegionIterator<Image<P<T, VDimension>, VDimension>> & it)
   {
     const OutputPixelType gradient = it.Get();
     // This uses the more efficient set by reference method

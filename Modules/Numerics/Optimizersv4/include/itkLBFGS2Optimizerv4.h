@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,7 +33,7 @@ namespace itk
 class LBFGS2Optimizerv4Enums
 {
 public:
-  /***\class LineSearchMethod
+  /*** \class LineSearchMethod
    * \ingroup ITKOptimizersv4
    * Line search method enum
    */
@@ -84,7 +84,7 @@ extern ITKOptimizersv4_EXPORT std::ostream &
                               operator<<(std::ostream & out, LBFGS2Optimizerv4Enums::LineSearchMethod value);
 
 /**
- *\class LBFGS2Optimizerv4Template
+ * \class LBFGS2Optimizerv4Template
  * \brief Wrap of the libLBFGS[1] algorithm for use in ITKv4 registration framework.
  * LibLBFGS is a translation of LBFGS code by Nocedal [2] and adds the orthantwise
  * limited-memmory Quais-Newton method [3] for optimization with L1-norm on the
@@ -129,7 +129,7 @@ extern ITKOptimizersv4_EXPORT std::ostream &
  *
  * References:
  *
- * [1] [libLBFGS](http://www.chokkan.org/software/liblbfgs/)
+ * [1] [libLBFGS](https://www.chokkan.org/software/liblbfgs/)
  *
  * [2] [NETLIB lbfgs](http://users.iems.northwestern.edu/~nocedal/lbfgs.html)
  *
@@ -492,7 +492,7 @@ protected:
                  int                   k,
                  int                   ls);
 
-  //** Function evalation callback from libLBFGS frowrad to instance */
+  //** Function evaluation callback from libLBFGS forward to instance */
   static PrecisionType
   EvaluateCostCallback(void *                instance,
                        const PrecisionType * x,
@@ -538,7 +538,7 @@ private:
   void
   AdvanceOneStep() override
   {
-    itkWarningMacro("LBFGS2Optimizerv4Template does not implemenetd single step advance");
+    itkWarningMacro("LBFGS2Optimizerv4Template does not implement single step advance");
   };
 };
 

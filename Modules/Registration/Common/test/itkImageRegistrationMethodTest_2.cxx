@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -112,8 +112,8 @@ itkImageRegistrationMethodTest_2(int argc, char * argv[])
 
   unsigned long numberOfIterations = 100;
   double        translationScale = 1e-6;
-  double        maximumStepLenght = 10.0; // no step will be larger than this
-  double        minimumStepLenght = 0.1;  // convergence criterion
+  double        maximumStepLength = 10.0; // no step will be larger than this
+  double        minimumStepLength = 0.1;  // convergence criterion
   double        gradientTolerance = 0.01; // convergence criterion
 
   if (argc > 1)
@@ -128,13 +128,13 @@ itkImageRegistrationMethodTest_2(int argc, char * argv[])
   }
   if (argc > 3)
   {
-    maximumStepLenght = std::stod(argv[3]);
-    std::cout << "maximumStepLenght = " << maximumStepLenght << std::endl;
+    maximumStepLength = std::stod(argv[3]);
+    std::cout << "maximumStepLength = " << maximumStepLength << std::endl;
   }
   if (argc > 4)
   {
-    minimumStepLenght = std::stod(argv[4]);
-    std::cout << "minimumStepLenght = " << minimumStepLenght << std::endl;
+    minimumStepLength = std::stod(argv[4]);
+    std::cout << "minimumStepLength = " << minimumStepLength << std::endl;
   }
   if (argc > 5)
   {
@@ -149,8 +149,8 @@ itkImageRegistrationMethodTest_2(int argc, char * argv[])
 
   optimizer->SetScales(scales);
   optimizer->SetNumberOfIterations(numberOfIterations);
-  optimizer->SetMinimumStepLength(minimumStepLenght);
-  optimizer->SetMaximumStepLength(maximumStepLenght);
+  optimizer->SetMinimumStepLength(minimumStepLength);
+  optimizer->SetMaximumStepLength(maximumStepLength);
   optimizer->SetGradientMagnitudeTolerance(gradientTolerance);
   optimizer->MinimizeOn();
 

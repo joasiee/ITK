@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,7 +20,7 @@
 #include "itkNiftiImageIOTest.h"
 
 
-template <typename PixelType, unsigned TType>
+template <typename PixelType, unsigned int TType>
 int
 SlopeInterceptTest()
 {
@@ -60,9 +60,9 @@ SlopeInterceptTest()
   niftiImage->qform_code = NIFTI_XFORM_ALIGNED_ANAT;
   niftiImage->qfac = 1;
   mat44 matrix;
-  for (unsigned i = 0; i < 4; ++i)
+  for (unsigned int i = 0; i < 4; ++i)
   {
-    for (unsigned j = 0; j < 4; ++j)
+    for (unsigned int j = 0; j < 4; ++j)
     {
       matrix.m[i][j] = (i == j) ? 1.0 : 0.0;
     }
@@ -83,12 +83,18 @@ SlopeInterceptTest()
                          nullptr,
                          &(niftiImage->qfac));
   niftiImage->data = malloc(sizeof(PixelType) * 256);
-  for (unsigned i = 0; i < 256; ++i)
+  for (unsigned int i = 0; i < 256; ++i)
   {
     static_cast<PixelType *>(niftiImage->data)[i] = i;
   }
-  nifti_image_write(niftiImage);
-  nifti_image_free(niftiImage);
+
+  const int nifti_write_status = nifti_image_write_status(niftiImage);
+  nifti_image_free(niftiImage); // Must free before throwing exception.
+  if (nifti_write_status)
+  {
+    itkGenericExceptionMacro(<< "ERROR: nifti library failed to write image" << filename);
+  }
+
   //
   // read the image back in
   using ImageType = typename itk::Image<float, 3>;
@@ -106,7 +112,7 @@ SlopeInterceptTest()
   IteratorType it(image, image->GetLargestPossibleRegion());
   it.GoToBegin();
   double maxerror = 0.0;
-  for (unsigned i = 0; i < 256; i++, ++it)
+  for (unsigned int i = 0; i < 256; i++, ++it)
   {
     if (it.IsAtEnd())
     {
@@ -152,7 +158,7 @@ SlopeInterceptWriteTest()
   using OutputIteratorType = itk::ImageRegionIterator<OutputImageType>;
   OutputIteratorType itout(outputimage, outputimage->GetLargestPossibleRegion());
   itout.GoToBegin();
-  for (unsigned i = 0; i < 256; i++, ++itout)
+  for (unsigned int i = 0; i < 256; i++, ++itout)
   {
     if (itout.IsAtEnd())
     {
@@ -194,7 +200,7 @@ SlopeInterceptWriteTest()
   IteratorType it(image, image->GetLargestPossibleRegion());
   it.GoToBegin();
   double maxerror = 0.0;
-  for (unsigned i = 0; i < 256; i++, ++it)
+  for (unsigned int i = 0; i < 256; i++, ++it)
   {
     if (it.IsAtEnd())
     {

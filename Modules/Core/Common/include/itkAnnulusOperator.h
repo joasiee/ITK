@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -177,7 +177,7 @@ public:
 
   /** If Normalize is off, the interior to annulus, the
    * annulus (region between the two circles), and the region exterior to the
-   * annulus to be defined manually.  Defauls are 0, 1, 0
+   * annulus to be defined manually.  Defaults are 0, 1, 0
    * respectively. */
   void
   SetInteriorValue(TPixel v)
@@ -248,7 +248,7 @@ private:
   PixelType   m_InteriorValue{ NumericTraits<PixelType>::ZeroValue() };
   PixelType   m_AnnulusValue{ NumericTraits<PixelType>::OneValue() };
   PixelType   m_ExteriorValue{ NumericTraits<PixelType>::ZeroValue() };
-  SpacingType m_Spacing{ 1.0 };
+  SpacingType m_Spacing{ MakeFilled<SpacingType>(1.0) };
 };
 } // namespace itk
 

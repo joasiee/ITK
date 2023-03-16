@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,7 +27,7 @@
  *         The Pennsylvania State University 2005
  *
  * This implementation was contributed as a paper to the Insight Journal
- * http://insight-journal.org/midas/handle.php?handle=1926/1381
+ * https://insight-journal.org/midas/handle.php?handle=1926/1381
  *
  */
 
@@ -1801,7 +1801,7 @@ PhilipsPAR::GetImageTypesScanningSequence(std::string parFile)
   {
     this->ReadPAR(parFile, &parParam);
   }
-  catch (ExceptionObject &)
+  catch (const ExceptionObject &)
   {
     return recImageTypesScanSequence;
   }
@@ -2081,7 +2081,7 @@ PhilipsPAR::GetDiffusionGradientOrientationAndBValues(std::string               
     {
       this->ReadPAR(parFile, &tempPar);
     }
-    catch (ExceptionObject &)
+    catch (const ExceptionObject &)
     {
       return false;
     }
@@ -2139,7 +2139,7 @@ PhilipsPAR::GetLabelTypesASL(std::string parFile, PhilipsPAR::PARLabelTypesASLCo
     {
       this->ReadPAR(parFile, &tempPar);
     }
-    catch (ExceptionObject &)
+    catch (const ExceptionObject &)
     {
       return false;
     }

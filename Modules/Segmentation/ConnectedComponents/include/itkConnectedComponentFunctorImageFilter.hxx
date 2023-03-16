@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -188,9 +188,9 @@ ConnectedComponentFunctorImageFilter<TInputImage, TOutputImage, TFunctor, TMaskI
         // create a new entry label
         if (maxLabel == maxPossibleLabel)
         {
-          itkWarningMacro(<< "ConnectedComponentFunctorImageFilter::GenerateData: Number of labels " << (long)maxLabel
-                          << " exceeds number of available labels " << (long)maxPossibleLabel
-                          << " for the output type.");
+          itkWarningMacro(<< "ConnectedComponentFunctorImageFilter::GenerateData: Number of labels "
+                          << static_cast<long>(maxLabel) << " exceeds number of available labels "
+                          << static_cast<long>(maxPossibleLabel) << " for the output type.");
         }
         else
         {

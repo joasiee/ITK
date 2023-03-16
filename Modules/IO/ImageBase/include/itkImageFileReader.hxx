@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,7 +26,7 @@
 #include "itkMetaDataObject.h"
 
 #include "itksys/SystemTools.hxx"
-#include <memory> // For unique_ptr
+#include "itkMakeUniqueForOverwrite.h"
 #include <fstream>
 
 namespace itk
@@ -176,7 +176,7 @@ ImageFileReader<TOutputImage, ConvertPixelTraits>::GenerateOutputInformation()
       // Please note: direction cosines are stored as columns of the
       // direction matrix
       axis = directionIO[i];
-      for (unsigned j = 0; j < TOutputImage::ImageDimension; ++j)
+      for (unsigned int j = 0; j < TOutputImage::ImageDimension; ++j)
       {
         if (j < numberOfDimensionsIO)
         {
@@ -196,7 +196,7 @@ ImageFileReader<TOutputImage, ConvertPixelTraits>::GenerateOutputInformation()
       dimSize[i] = 1;
       spacing[i] = 1.0;
       origin[i] = 0.0;
-      for (unsigned j = 0; j < TOutputImage::ImageDimension; ++j)
+      for (unsigned int j = 0; j < TOutputImage::ImageDimension; ++j)
       {
         if (i == j)
         {
@@ -224,7 +224,7 @@ ImageFileReader<TOutputImage, ConvertPixelTraits>::GenerateOutputInformation()
     if (spacing[i] < 0)
     {
       spacing[i] = -spacing[i];
-      for (unsigned j = 0; j < TOutputImage::ImageDimension; ++j)
+      for (unsigned int j = 0; j < TOutputImage::ImageDimension; ++j)
       {
         direction[j][i] = -direction[j][i];
       }
@@ -314,7 +314,7 @@ ImageFileReader<TOutputImage, ConvertPixelTraits>::EnlargeOutputRequestedRegion(
   // support reading the "first slice" of a larger image
   // see bug 9212
 
-  // convert the IORegion to a ImageRegion (which is dimension templated)
+  // convert the IORegion to an ImageRegion (which is dimension templated)
   // if the ImageIO must read a higher dimension region, this will
   // truncate the last dimensions
   ImageIOAdaptor::Convert(m_ActualIORegion, streamableRegion, largestRegion.GetIndex());
@@ -326,12 +326,12 @@ ImageFileReader<TOutputImage, ConvertPixelTraits>::EnlargeOutputRequestedRegion(
   // pass the region propagation phase of the pipeline.
   if (!streamableRegion.IsInside(imageRequestedRegion) && imageRequestedRegion.GetNumberOfPixels() != 0)
   {
-    // we must use a InvalidRequestedRegionError since
+    // we must use an InvalidRequestedRegionError since
     // DataObject::PropagateRequestedRegion() has an exception
     // specification
     std::ostringstream message;
-    message << "ImageIO returns IO region that does not fully contain the requested region"
-            << "Requested region: " << imageRequestedRegion << "StreamableRegion region: " << streamableRegion;
+    message << "ImageIO returns IO region that does not fully contain the requested region. Requested region: "
+            << imageRequestedRegion << "StreamableRegion region: " << streamableRegion;
     InvalidRequestedRegionError e(__FILE__, __LINE__);
     e.SetLocation(ITK_LOCATION);
     e.SetDescription(message.str().c_str());
@@ -399,7 +399,7 @@ ImageFileReader<TOutputImage, ConvertPixelTraits>::GenerateData()
                   << ConvertPixelTraits::GetNumberOfComponents() << " m_ImageIO->NumComponents "
                   << m_ImageIO->GetNumberOfComponents());
 
-    const std::unique_ptr<char[]> loadBuffer(new char[sizeOfActualIORegion]);
+    const auto loadBuffer = make_unique_for_overwrite<char[]>(sizeOfActualIORegion);
     m_ImageIO->Read(static_cast<void *>(loadBuffer.get()));
 
     // See note below as to why the buffered region is needed and
@@ -417,7 +417,7 @@ ImageFileReader<TOutputImage, ConvertPixelTraits>::GenerateData()
 
     OutputImagePixelType * outputBuffer = output->GetPixelContainer()->GetBufferPointer();
 
-    const std::unique_ptr<char[]> loadBuffer(new char[sizeOfActualIORegion]);
+    const auto loadBuffer = make_unique_for_overwrite<char[]>(sizeOfActualIORegion);
     m_ImageIO->Read(static_cast<void *>(loadBuffer.get()));
 
     // we use std::copy_n here as it should be optimized to memcpy for

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,8 +32,8 @@ itkInteriorExteriorMeshFilterTest(int, char *[])
 
   // Declare the types of the Mesh
   // By default it is a 3D mesh using itk::Point<float,3>
-  // on the vertices, and an itk::VectorContainter
-  // as containter for points
+  // on the vertices, and an itk::VectorContainer
+  // as container for points
   using MeshType = itk::Mesh<PixelType>;
 
   // Declare the type for PointsContainer
@@ -84,6 +84,9 @@ itkInteriorExteriorMeshFilterTest(int, char *[])
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(filter, InteriorExteriorMeshFilter, MeshToMeshFilter);
 
+
+  // Test exceptions
+  ITK_TRY_EXPECT_EXCEPTION(filter->Update());
 
   // Create the Spatial Function
   auto spatialFunction = SpatialFunctionType::New();

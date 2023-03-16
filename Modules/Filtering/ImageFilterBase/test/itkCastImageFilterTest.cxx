@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -90,7 +90,7 @@ GetCastTypeName()
 }
 
 // A reference defining C++ behavior:
-// http://www.cplusplus.com/doc/tutorial/typecasting/
+// https://www.cplusplus.com/doc/tutorial/typecasting/
 // static_cast_is_well_defined function returns true if the result of the static cast is well defined
 // and false if the result is undefined.
 template <typename TInput, typename TOutput>
@@ -343,7 +343,7 @@ bool
 TestVectorImageCast2()
 {
   // This function casts a VectorImage<float, 2>
-  // to a Image<Vector<unsigned char, 2>, 2>
+  // to an Image<Vector<unsigned char, 2>, 2>
   std::cout << "Casting from a VectorImage<float, 2> to Image<Vector<unsigned char, 2>, 2> ... ";
 
   using UnsignedCharVectorImageType = itk::Image<itk::Vector<unsigned char, 2>, 2>;

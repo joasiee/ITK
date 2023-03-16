@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -182,8 +182,7 @@ itkMetaImageIOMetaDataTest(int argc, char * argv[])
   }
 
   const auto maxSupportedStringSize = (MET_MAX_NUMBER_OF_FIELD_VALUES * sizeof(double)) - 1;
-  static_assert(maxSupportedStringSize == std::numeric_limits<std::int16_t>::max(),
-                "Assert that this max value is 32767");
+  static_assert(maxSupportedStringSize == std::numeric_limits<int16_t>::max(), "Assert that this max value is 32767");
 
   {
     // Add string of the maximum supported size.
@@ -247,8 +246,8 @@ itkMetaImageIOMetaDataTest(int argc, char * argv[])
   }
   {
     // Add short
-    std::string key("unsigned_short");
-    unsigned    value(8192);
+    std::string  key("unsigned_short");
+    unsigned int value(8192);
     itk::EncapsulateMetaData<unsigned short>(dict, key, value);
   }
   {
@@ -327,7 +326,7 @@ itkMetaImageIOMetaDataTest(int argc, char * argv[])
     return 1; // error
   }
   // Add short
-  if (!TestMatch<unsigned>(dict, "unsigned_short", 8192))
+  if (!TestMatch<unsigned int>(dict, "unsigned_short", 8192))
   {
     return 1; // error
   }

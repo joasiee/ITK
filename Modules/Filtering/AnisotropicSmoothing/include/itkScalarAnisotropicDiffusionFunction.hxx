@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -82,7 +82,7 @@ ScalarAnisotropicDiffusionFunction<TImage>::CalculateAverageGradientMagnitudeSqu
   }
   while (!iterator_list[0].IsAtEnd())
   {
-    counter++;
+    ++counter;
     for (i = 0; i < ImageDimension; ++i)
     {
       val = iterator_list[i].GetPixel(Center[i] + Stride[i]) - iterator_list[i].GetPixel(Center[i] - Stride[i]);
@@ -108,7 +108,7 @@ ScalarAnisotropicDiffusionFunction<TImage>::CalculateAverageGradientMagnitudeSqu
 
     while (!face_iterator_list[0].IsAtEnd())
     {
-      counter++;
+      ++counter;
       for (i = 0; i < ImageDimension; ++i)
       {
         val =
@@ -122,7 +122,7 @@ ScalarAnisotropicDiffusionFunction<TImage>::CalculateAverageGradientMagnitudeSqu
     ++fit;
   }
 
-  this->SetAverageGradientMagnitudeSquared((double)(accumulator / counter));
+  this->SetAverageGradientMagnitudeSquared(static_cast<double>(accumulator / counter));
 }
 } // end namespace itk
 

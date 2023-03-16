@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -178,7 +178,7 @@ bool
 ObjectMorphologyImageFilter<TInputImage, TOutputImage, TKernel>::IsObjectPixelOnBoundary(
   const InputNeighborhoodIteratorType & iNIter)
 {
-  static const auto s = (unsigned int)std::pow((double)3.0, (double)(ImageDimension));
+  static const auto s = static_cast<unsigned int>(std::pow(3.0, static_cast<double>(ImageDimension)));
 
   PixelType    tf;
   unsigned int i;

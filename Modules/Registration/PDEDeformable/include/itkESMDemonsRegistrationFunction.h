@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,14 +26,14 @@
 
 namespace itk
 {
-/**\class ESMDemonsRegistrationFunctionEnums
+/** \class ESMDemonsRegistrationFunctionEnums
  * \brief Contains all enum classes used by ESMDemonsRegistrationFunction class.
  * \ingroup ITKPDEDeformableRegistration
  */
 class ESMDemonsRegistrationFunctionEnums
 {
 public:
-  /**\class GradientEnum
+  /** \class GradientEnum
    * \ingroup FiniteDifferenceFunctions
    * \ingroup ITKPDEDeformableRegistration
    * Type of available image forces */
@@ -185,7 +185,7 @@ public:
     return global;
   }
 
-  /** Release memory for global data structure. */
+  /** Update the metric and release memory for the per-thread-global data structure. */
   void
   ReleaseGlobalDataPointer(void * gd) const override;
 
@@ -193,8 +193,8 @@ public:
   void
   InitializeIteration() override;
 
-  /** This method is called by a finite difference solver image filter at
-   * each pixel that does not lie on a data set boundary */
+  /** Compute update at a non-boundary neighbourhood. Called by a finite difference solver image filter at
+   * each pixel that does not lie on a data set boundary. */
   PixelType
   ComputeUpdate(const NeighborhoodType & it, void * gd, const FloatOffsetType & offset = FloatOffsetType(0.0)) override;
 

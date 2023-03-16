@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,14 +32,12 @@ CreateRandomImage()
   region.SetSize(imageSize);
   region.SetIndex(imageIndex);
   auto img = ImageType::New();
-  img->SetLargestPossibleRegion(region);
-  img->SetBufferedRegion(region);
-  img->SetRequestedRegion(region);
+  img->SetRegions(region);
   img->Allocate();
   itk::ImageRegionIterator<ImageType> ri(img, region);
   while (!ri.IsAtEnd())
   {
-    ri.Set((unsigned int)vnl_sample_uniform(0, 32767));
+    ri.Set(static_cast<unsigned int>(vnl_sample_uniform(0, 32767)));
     ++ri;
   }
   return img;
@@ -86,11 +84,13 @@ itkOrientImageFilterTest(int argc, char * argv[])
   auto useImageDirection = static_cast<bool>(std::stoi(argv[1]));
   ITK_TEST_SET_GET_BOOLEAN(orienter, UseImageDirection, useImageDirection);
 
-  orienter->SetGivenCoordinateOrientation(itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RIP);
+  orienter->SetGivenCoordinateOrientation(
+    itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RIP);
   orienter->SetInput(randImage);
 
   // Try permuting axes
-  orienter->SetDesiredCoordinateOrientation(itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_IRP);
+  orienter->SetDesiredCoordinateOrientation(
+    itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_IRP);
   orienter->Update();
   ImageType::Pointer IRP = orienter->GetOutput();
   std::cerr << "IRP" << std::endl;
@@ -123,8 +123,10 @@ itkOrientImageFilterTest(int argc, char * argv[])
   // Go to LIP to check flipping an axis
   orienter = itk::OrientImageFilter<ImageType, ImageType>::New();
   orienter->SetInput(randImage);
-  orienter->SetGivenCoordinateOrientation(itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RIP);
-  orienter->SetDesiredCoordinateOrientation(itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_LIP);
+  orienter->SetGivenCoordinateOrientation(
+    itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RIP);
+  orienter->SetDesiredCoordinateOrientation(
+    itk::SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_LIP);
   orienter->Update();
   ImageType::Pointer LIP = orienter->GetOutput();
   std::cerr << "LIP" << std::endl;

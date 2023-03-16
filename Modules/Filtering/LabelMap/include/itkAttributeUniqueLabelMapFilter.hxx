@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -94,7 +94,7 @@ AttributeUniqueLabelMapFilter<TImage, TAttributeAccessor>::GenerateData()
     IndexType         idx = l.line.GetIndex();
     // NOTE: VS 7,8,9 seem to contain a bug where if the next line is
     // accessed with l.labelObject, the results will be erroneous. I
-    // have not been able to find anly reason for this.
+    // have not been able to find any reason for this.
     //
     // EXERCISE EXTREME CAUTION WHEN EDITING THE NEXT 2 LINES
     const typename LabelObjectType::LabelType             lLabel = pq.top().labelObject->GetLabel();

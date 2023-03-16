@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -106,7 +106,7 @@ itkPowellOptimizerTest(int argc, char * argv[])
 
   using OptimizerType = itk::PowellOptimizer;
 
-  // Declaration of a itkOptimizer
+  // Declaration of an itkOptimizer
   auto itkOptimizer = OptimizerType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(itkOptimizer, PowellOptimizer, SingleValuedNonLinearOptimizer);
@@ -194,6 +194,10 @@ itkPowellOptimizerTest(int argc, char * argv[])
   // Exercise various member functions.
   std::cout << "CurrentIteration: " << itkOptimizer->GetCurrentIteration();
   std::cout << std::endl;
+
+  ITK_TEST_EXPECT_EQUAL(itkOptimizer->GetValue(), itkOptimizer->GetCurrentCost());
+
+  std::cout << "Value: " << itkOptimizer->GetValue() << std::endl;
   std::cout << "CurrentCost: " << itkOptimizer->GetCurrentCost() << std::endl;
   std::cout << "CurrentLineIteration: " << itkOptimizer->GetCurrentLineIteration() << std::endl;
 

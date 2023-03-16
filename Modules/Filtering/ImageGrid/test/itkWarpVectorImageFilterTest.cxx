@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,7 +41,7 @@ public:
   }
 
   double
-  Evaluate(const IndexType & index, const SizeType & size, const SizeType & clampSize, const float & padValue)
+  Evaluate(const IndexType & index, const SizeType & size, const SizeType & clampSize, const float padValue)
   {
     double accum = m_Offset;
     for (int j = 0; j < VDimension; ++j)
@@ -51,11 +51,11 @@ public:
         if (static_cast<unsigned int>(index[j]) >= clampSize[j])
         {
           // Interpolators behave this way in half-pixel band at image perimeter
-          accum += m_Coeff[j] * (double)(clampSize[j] - 1);
+          accum += m_Coeff[j] * static_cast<double>(clampSize[j] - 1);
         }
         else
         {
-          accum += m_Coeff[j] * (double)index[j];
+          accum += m_Coeff[j] * static_cast<double>(index[j]);
         }
       }
       else
@@ -160,7 +160,7 @@ itkWarpVectorImageFilterTest(int, char *[])
     VectorType displacement;
     for (j = 0; j < ImageDimension; ++j)
     {
-      displacement[j] = (float)index[j] * ((1.0 / factors[j]) - 1.0);
+      displacement[j] = static_cast<float>(index[j]) * ((1.0 / factors[j]) - 1.0);
     }
     fieldIter.Set(displacement);
   }
@@ -197,13 +197,14 @@ itkWarpVectorImageFilterTest(int, char *[])
   warper->SetOutputSpacing(array.GetDataPointer());
   ITK_TEST_SET_GET_VALUE(array, warper->GetOutputSpacing());
 
-  array.Fill(-10.0);
-  warper->SetOutputOrigin(array.GetDataPointer());
-  ITK_TEST_SET_GET_VALUE(array, warper->GetOutputOrigin());
+  WarperType::PointType ptarray;
+  ptarray.Fill(-10.0);
+  warper->SetOutputOrigin(ptarray.GetDataPointer());
+  ITK_TEST_SET_GET_VALUE(ptarray, warper->GetOutputOrigin());
 
-  array.Fill(0.0);
-  warper->SetOutputOrigin(array.GetDataPointer());
-  ITK_TEST_SET_GET_VALUE(array, warper->GetOutputOrigin());
+  ptarray.Fill(0.0);
+  warper->SetOutputOrigin(ptarray.GetDataPointer());
+  ITK_TEST_SET_GET_VALUE(ptarray, warper->GetOutputOrigin());
 
   typename WarperType::DirectionType outputDirection;
   outputDirection.SetIdentity();
@@ -261,7 +262,7 @@ itkWarpVectorImageFilterTest(int, char *[])
   // adjust the pattern coefficients to match
   for (j = 0; j < ImageDimension; ++j)
   {
-    pattern.m_Coeff[j] /= (double)factors[j];
+    pattern.m_Coeff[j] /= static_cast<double>(factors[j]);
   }
 
   Iterator outIter(warper->GetOutput(), warper->GetOutput()->GetBufferedRegion());

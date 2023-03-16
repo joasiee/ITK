@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,6 +34,7 @@
 #include "itkLightObject.h"
 #include "itkSingleton.h"
 #include "itkVersion.h"
+#include "itksys/SystemTools.hxx"
 #include <cstring>
 #include <algorithm>
 
@@ -47,27 +48,20 @@ using FactoryListType = std::list<itk::ObjectFactoryBase *>;
 // duplicating factories that have already been registered and only add
 // factories that were not already in the list.
 void
-SynchronizeList(FactoryListType * output, FactoryListType * input, bool internal)
+SynchronizeList(FactoryListType & output, FactoryListType & input, bool internal)
 {
-  if (!input)
-  {
-    return;
-  }
-  for (auto & factory : *input)
+  for (auto & factory : input)
   {
     int pos = -1;
-    if (output)
+    int curr = 0;
+    for (auto & i : output)
     {
-      int curr = 0;
-      for (auto & i : *output)
+      if (typeid(*i) == typeid(*factory))
       {
-        if (typeid(*i) == typeid(*factory))
-        {
-          pos = curr;
-          break; // factory already in internal factories.
-        }
-        ++curr;
+        pos = curr;
+        break; // factory already in internal factories.
       }
+      ++curr;
     }
     if (pos == -1)
     {
@@ -100,35 +94,30 @@ namespace itk
  *
  */
 
-class ObjectFactoryBasePrivate : public LightObject
+class ObjectFactoryBase::ObjectFactoryBasePrivate : public LightObject
 {
 public:
-  ~ObjectFactoryBasePrivate()
+  ~ObjectFactoryBasePrivate() override
   {
     itk::ObjectFactoryBase::UnRegisterAllFactories();
-    if (m_InternalFactories)
+    for (auto & internalFactory : m_InternalFactories)
     {
-      for (auto & m_InternalFactorie : *m_InternalFactories)
-      {
-        m_InternalFactorie->UnRegister();
-      }
-      delete m_InternalFactories;
-      m_InternalFactories = nullptr;
+      internalFactory->UnRegister();
     }
   }
 
   ObjectFactoryBasePrivate() = default;
 
-  std::list<itk::ObjectFactoryBase *> * m_RegisteredFactories{ nullptr };
-  std::list<itk::ObjectFactoryBase *> * m_InternalFactories{ nullptr };
-  bool                                  m_Initialized{ false };
-  bool                                  m_StrictVersionChecking{ false };
+  FactoryListType m_RegisteredFactories{};
+  FactoryListType m_InternalFactories{};
+  bool            m_Initialized{ false };
+  bool            m_StrictVersionChecking{ false };
 };
 
-ObjectFactoryBasePrivate *
-ObjectFactoryBase::GetPimplGlobalsPointer()
+auto
+ObjectFactoryBase::GetPimplGlobalsPointer() -> ObjectFactoryBasePrivate *
 {
-  static auto                deleteLambda = []() { m_PimplGlobals->UnRegister(); };
+  const auto                 deleteLambda = []() { m_PimplGlobals->UnRegister(); };
   ObjectFactoryBasePrivate * globalInstance =
     Singleton<ObjectFactoryBasePrivate>("ObjectFactoryBase", SynchronizeObjectFactoryBase, deleteLambda);
   if (globalInstance != m_PimplGlobals)
@@ -138,8 +127,7 @@ ObjectFactoryBase::GetPimplGlobalsPointer()
   return m_PimplGlobals;
 }
 
-
-/** \class StringOverMap
+/** \class OverrideMap
  * \brief Internal implementation class for ObjectFactorBase.
  *
  * Create a sub class to shrink the size of the symbols
@@ -147,15 +135,8 @@ ObjectFactoryBase::GetPimplGlobalsPointer()
  * and a pointer member can be used.  This avoids other
  * classes including <map> and getting long symbol warnings.
  */
-using StringOverMapType = std::multimap<std::string, ObjectFactoryBase::OverrideInformation>;
-
-/** \class OverRideMap
- * \brief Internal implementation class for ObjectFactorBase.
- */
-class OverRideMap : public StringOverMapType
-{
-public:
-};
+class ObjectFactoryBase::OverrideMap : public std::multimap<std::string, OverrideInformation>
+{};
 
 /**
  * Make possible for application developers to demand an exact match
@@ -201,7 +182,7 @@ ObjectFactoryBase::CreateInstance(const char * itkclassname)
 {
   ObjectFactoryBase::Initialize();
 
-  for (auto & registeredFactory : *m_PimplGlobals->m_RegisteredFactories)
+  for (auto & registeredFactory : m_PimplGlobals->m_RegisteredFactories)
   {
     LightObject::Pointer newobject = registeredFactory->CreateObject(itkclassname);
     if (newobject)
@@ -219,7 +200,7 @@ ObjectFactoryBase::CreateAllInstance(const char * itkclassname)
   ObjectFactoryBase::Initialize();
 
   std::list<LightObject::Pointer> created;
-  for (auto & registeredFactory : *m_PimplGlobals->m_RegisteredFactories)
+  for (auto & registeredFactory : m_PimplGlobals->m_RegisteredFactories)
   {
     std::list<LightObject::Pointer> moreObjects = registeredFactory->CreateAllObject(itkclassname);
     created.splice(created.end(), moreObjects);
@@ -234,19 +215,6 @@ void
 ObjectFactoryBase::InitializeFactoryList()
 {
   itkInitGlobalsMacro(PimplGlobals);
-
-  /**
-   * Don't do anything if we are already initialized
-   */
-  if (!m_PimplGlobals->m_RegisteredFactories)
-  {
-    m_PimplGlobals->m_RegisteredFactories = new FactoryListType;
-  }
-
-  if (!m_PimplGlobals->m_InternalFactories)
-  {
-    m_PimplGlobals->m_InternalFactories = new FactoryListType;
-  }
 }
 
 /**
@@ -257,12 +225,12 @@ ObjectFactoryBase::Initialize()
 {
   itkInitGlobalsMacro(PimplGlobals);
 
-  if (!m_PimplGlobals->m_Initialized || !m_PimplGlobals->m_RegisteredFactories)
+  if (!m_PimplGlobals->m_Initialized)
   {
     m_PimplGlobals->m_Initialized = true;
     ObjectFactoryBase::InitializeFactoryList();
     ObjectFactoryBase::RegisterInternal();
-#ifdef ITK_DYNAMIC_LOADING
+#if defined(ITK_DYNAMIC_LOADING) && !defined(ITK_WRAPPING)
     ObjectFactoryBase::LoadDynamicFactories();
 #endif
   }
@@ -278,14 +246,14 @@ ObjectFactoryBase::RegisterInternal()
   itkInitGlobalsMacro(PimplGlobals);
 
   // Guarantee that no internal factories have already been registered.
-  itkAssertInDebugAndIgnoreInReleaseMacro(m_PimplGlobals->m_RegisteredFactories->empty());
-  m_PimplGlobals->m_RegisteredFactories->clear();
+  itkAssertInDebugAndIgnoreInReleaseMacro(m_PimplGlobals->m_RegisteredFactories.empty());
+  m_PimplGlobals->m_RegisteredFactories.clear();
 
   // Register all factories registered by the
   // "RegisterFactoryInternal" method
-  for (auto & internalFactory : *m_PimplGlobals->m_InternalFactories)
+  for (auto & internalFactory : m_PimplGlobals->m_InternalFactories)
   {
-    m_PimplGlobals->m_RegisteredFactories->push_back(internalFactory);
+    m_PimplGlobals->m_RegisteredFactories.push_back(internalFactory);
   }
 }
 
@@ -305,12 +273,9 @@ ObjectFactoryBase::LoadDynamicFactories()
   char       PathSeparator = ':';
 #  endif
 
-  std::string LoadPath;
-  if (getenv("ITK_AUTOLOAD_PATH"))
-  {
-    LoadPath = getenv("ITK_AUTOLOAD_PATH");
-  }
-  else
+  const std::string itk_autoload_env{ "ITK_AUTOLOAD_PATH" };
+  std::string       LoadPath;
+  if (!itksys::SystemTools::GetEnv(itk_autoload_env, LoadPath))
   {
     return;
   }
@@ -318,6 +283,7 @@ ObjectFactoryBase::LoadDynamicFactories()
   {
     return;
   }
+
   std::string::size_type EndSeparatorPosition = 0;
   std::string::size_type StartSeparatorPosition = 0;
 
@@ -347,7 +313,7 @@ ObjectFactoryBase::LoadDynamicFactories()
     }
     else
     {
-      EndSeparatorPosition++; // Skip the separator
+      ++EndSeparatorPosition; // Skip the separator
     }
   }
 #else // ITK_DYNAMIC_LOADING
@@ -513,20 +479,16 @@ ObjectFactoryBase::ReHash()
  * initialize class members
  */
 ObjectFactoryBase::ObjectFactoryBase()
+  : m_OverrideMap{ std::make_unique<OverrideMap>() }
 {
   m_LibraryHandle = nullptr;
   m_LibraryDate = 0;
-  m_OverrideMap = new OverRideMap;
 }
 
 /**
  * Unload the library and free the path string
  */
-ObjectFactoryBase::~ObjectFactoryBase()
-{
-  m_OverrideMap->erase(m_OverrideMap->begin(), m_OverrideMap->end());
-  delete m_OverrideMap;
-}
+ObjectFactoryBase::~ObjectFactoryBase() = default;
 
 /**
  * Add a factory to the registered list.
@@ -543,16 +505,16 @@ ObjectFactoryBase::RegisterFactoryInternal(ObjectFactoryBase * factory)
     itkGenericExceptionMacro("A dynamic factory tried to be loaded internally!");
   }
 
-  // Do not call general ::Initialize() method as that may envoke additional
+  // Do not call general ::Initialize() method as that may invoke additional
   // libraries to be loaded and this method is called during static
   // initialization.
   ObjectFactoryBase::InitializeFactoryList();
-  m_PimplGlobals->m_InternalFactories->push_back(factory);
+  m_PimplGlobals->m_InternalFactories.push_back(factory);
   factory->Register();
   // if the internal factories have already been register add this one too
   if (m_PimplGlobals->m_Initialized)
   {
-    m_PimplGlobals->m_RegisteredFactories->push_back(factory);
+    m_PimplGlobals->m_RegisteredFactories.push_back(factory);
   }
 }
 
@@ -572,7 +534,7 @@ ObjectFactoryBase::RegisterFactory(ObjectFactoryBase * factory, InsertionPositio
   else
   {
     // Factories must only be loaded once
-    for (auto & registeredFactory : *m_PimplGlobals->m_RegisteredFactories)
+    for (auto & registeredFactory : m_PimplGlobals->m_RegisteredFactories)
     {
       if (registeredFactory->m_LibraryPath == factory->m_LibraryPath)
       {
@@ -614,7 +576,7 @@ ObjectFactoryBase::RegisterFactory(ObjectFactoryBase * factory, InsertionPositio
         itkGenericExceptionMacro(
           << "position argument must not be used with InsertionPositionEnum::INSERT_AT_BACK option");
       }
-      m_PimplGlobals->m_RegisteredFactories->push_back(factory);
+      m_PimplGlobals->m_RegisteredFactories.push_back(factory);
       break;
     }
     case InsertionPositionEnum::INSERT_AT_FRONT:
@@ -624,21 +586,21 @@ ObjectFactoryBase::RegisterFactory(ObjectFactoryBase * factory, InsertionPositio
         itkGenericExceptionMacro(
           << "position argument must not be used with InsertionPositionEnum::INSERT_AT_FRONT option");
       }
-      m_PimplGlobals->m_RegisteredFactories->push_front(factory);
+      m_PimplGlobals->m_RegisteredFactories.push_front(factory);
       break;
     }
     case InsertionPositionEnum::INSERT_AT_POSITION:
     {
-      const size_t numberOfFactories = m_PimplGlobals->m_RegisteredFactories->size();
+      const size_t numberOfFactories = m_PimplGlobals->m_RegisteredFactories.size();
       if (position < numberOfFactories)
       {
-        auto fitr = m_PimplGlobals->m_RegisteredFactories->begin();
+        auto fitr = m_PimplGlobals->m_RegisteredFactories.begin();
         while (position--)
         {
           ++fitr;
         }
 
-        m_PimplGlobals->m_RegisteredFactories->insert(fitr, factory);
+        m_PimplGlobals->m_RegisteredFactories.insert(fitr, factory);
         break;
       }
       else
@@ -686,8 +648,8 @@ ObjectFactoryBase::DeleteNonInternalFactory(ObjectFactoryBase * factory)
   itkInitGlobalsMacro(PimplGlobals);
 
   // if factory is not internal then delete
-  if (std::find(m_PimplGlobals->m_InternalFactories->begin(), m_PimplGlobals->m_InternalFactories->end(), factory) ==
-      m_PimplGlobals->m_InternalFactories->end())
+  if (std::find(m_PimplGlobals->m_InternalFactories.begin(), m_PimplGlobals->m_InternalFactories.end(), factory) ==
+      m_PimplGlobals->m_InternalFactories.end())
   {
     factory->UnRegister();
   }
@@ -701,17 +663,13 @@ ObjectFactoryBase::UnRegisterFactory(ObjectFactoryBase * factory)
 {
   itkInitGlobalsMacro(PimplGlobals);
 
-  if (m_PimplGlobals->m_RegisteredFactories)
+  for (auto i = m_PimplGlobals->m_RegisteredFactories.begin(); i != m_PimplGlobals->m_RegisteredFactories.end(); ++i)
   {
-    for (auto i = m_PimplGlobals->m_RegisteredFactories->begin(); i != m_PimplGlobals->m_RegisteredFactories->end();
-         ++i)
+    if (factory == *i)
     {
-      if (factory == *i)
-      {
-        DeleteNonInternalFactory(factory);
-        m_PimplGlobals->m_RegisteredFactories->remove(factory);
-        return;
-      }
+      DeleteNonInternalFactory(factory);
+      m_PimplGlobals->m_RegisteredFactories.remove(factory);
+      return;
     }
   }
 }
@@ -724,34 +682,30 @@ ObjectFactoryBase::UnRegisterAllFactories()
 {
   itkInitGlobalsMacro(PimplGlobals);
 
-  if (m_PimplGlobals->m_RegisteredFactories)
+  // Collect up all the library handles so they can be closed
+  // AFTER the factory has been deleted.
+  std::list<void *> libs;
+  for (auto & registeredFactory : m_PimplGlobals->m_RegisteredFactories)
   {
-    // Collect up all the library handles so they can be closed
-    // AFTER the factory has been deleted.
-    std::list<void *> libs;
-    for (auto & registeredFactory : *m_PimplGlobals->m_RegisteredFactories)
-    {
-      libs.push_back(static_cast<void *>(registeredFactory->m_LibraryHandle));
-    }
-    // Unregister each factory
-    for (auto & registeredFactory : *m_PimplGlobals->m_RegisteredFactories)
-    {
-      DeleteNonInternalFactory(registeredFactory);
-    }
-#ifdef ITK_DYNAMIC_LOADING
-    // And delete the library handles all at once
-    for (auto & lib : libs)
-    {
-      if (lib)
-      {
-        DynamicLoader::CloseLibrary(static_cast<LibHandle>(lib));
-      }
-    }
-#endif
-    delete m_PimplGlobals->m_RegisteredFactories;
-    m_PimplGlobals->m_RegisteredFactories = nullptr;
-    m_PimplGlobals->m_Initialized = false;
+    libs.push_back(static_cast<void *>(registeredFactory->m_LibraryHandle));
   }
+  // Unregister each factory
+  for (auto & registeredFactory : m_PimplGlobals->m_RegisteredFactories)
+  {
+    DeleteNonInternalFactory(registeredFactory);
+  }
+#ifdef ITK_DYNAMIC_LOADING
+  // And delete the library handles all at once
+  for (auto & lib : libs)
+  {
+    if (lib)
+    {
+      DynamicLoader::CloseLibrary(static_cast<LibHandle>(lib));
+    }
+  }
+#endif
+  m_PimplGlobals->m_RegisteredFactories.clear();
+  m_PimplGlobals->m_Initialized = false;
 }
 
 /**
@@ -771,7 +725,7 @@ ObjectFactoryBase::RegisterOverride(const char *               classOverride,
   info.m_EnabledFlag = enableFlag;
   info.m_CreateObject = createFunction;
 
-  m_OverrideMap->insert(OverRideMap::value_type(classOverride, info));
+  m_OverrideMap->insert(OverrideMap::value_type(classOverride, info));
 }
 
 LightObject::Pointer
@@ -782,9 +736,9 @@ ObjectFactoryBase::CreateObject(const char * itkclassname)
 
   for (auto i = start; i != end; ++i)
   {
-    if (i != m_OverrideMap->end() && (*i).second.m_EnabledFlag)
+    if (i != m_OverrideMap->end() && i->second.m_EnabledFlag)
     {
-      return (*i).second.m_CreateObject->CreateObject();
+      return i->second.m_CreateObject->CreateObject();
     }
   }
   return nullptr;
@@ -800,9 +754,9 @@ ObjectFactoryBase::CreateAllObject(const char * itkclassname)
 
   for (auto i = start; i != end; ++i)
   {
-    if (i != m_OverrideMap->end() && (*i).second.m_EnabledFlag)
+    if (i != m_OverrideMap->end() && i->second.m_EnabledFlag)
     {
-      created.push_back((*i).second.m_CreateObject->CreateObject());
+      created.push_back(i->second.m_CreateObject->CreateObject());
     }
   }
   return created;
@@ -819,9 +773,9 @@ ObjectFactoryBase::SetEnableFlag(bool flag, const char * className, const char *
 
   for (auto i = start; i != end; ++i)
   {
-    if ((*i).second.m_OverrideWithName == subclassName)
+    if (i->second.m_OverrideWithName == subclassName)
     {
-      (*i).second.m_EnabledFlag = flag;
+      i->second.m_EnabledFlag = flag;
     }
   }
 }
@@ -837,9 +791,9 @@ ObjectFactoryBase::GetEnableFlag(const char * className, const char * subclassNa
 
   for (auto i = start; i != end; ++i)
   {
-    if ((*i).second.m_OverrideWithName == subclassName)
+    if (i->second.m_OverrideWithName == subclassName)
     {
-      return (*i).second.m_EnabledFlag;
+      return i->second.m_EnabledFlag;
     }
   }
   return false;
@@ -856,7 +810,7 @@ ObjectFactoryBase::Disable(const char * className)
 
   for (auto i = start; i != end; ++i)
   {
-    (*i).second.m_EnabledFlag = false;
+    i->second.m_EnabledFlag = false;
   }
 }
 
@@ -867,7 +821,7 @@ void
 ObjectFactoryBase::SynchronizeObjectFactoryBase(void * objectFactoryBasePrivate)
 {
   // We need to register the previously registered factories with the new pointer.
-  // We keep track of the previoulsy registered factory in `previousObjectFactoryBasePrivate`
+  // We keep track of the previously registered factory in `previousObjectFactoryBasePrivate`
   // but assign the new pointer to `m_PimplGlobals` so factories can be
   // registered directly with the new pointer.
   ObjectFactoryBasePrivate * previousObjectFactoryBasePrivate = m_PimplGlobals;
@@ -896,7 +850,7 @@ ObjectFactoryBase::GetRegisteredFactories()
   //  static SingletonIndex * singletonIndex = SingletonIndex::GetInstance();
   //  Unused(singletonIndex);
   ObjectFactoryBase::Initialize();
-  return *m_PimplGlobals->m_RegisteredFactories;
+  return m_PimplGlobals->m_RegisteredFactories;
 }
 
 /**
@@ -963,5 +917,5 @@ ObjectFactoryBase::GetLibraryPath()
   return m_LibraryPath.c_str();
 }
 
-ObjectFactoryBasePrivate * ObjectFactoryBase::m_PimplGlobals;
+ObjectFactoryBase::ObjectFactoryBasePrivate * ObjectFactoryBase::m_PimplGlobals;
 } // end namespace itk

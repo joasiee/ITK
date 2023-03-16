@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -152,10 +152,8 @@ MultiThreaderBase::GetGlobalDefaultThreaderPrivate()
              itksys::SystemTools::GetEnv("ITK_USE_THREADPOOL", envVar))
     {
       envVar = itksys::SystemTools::UpperCase(envVar);
-      itkGenericOutputMacro("Warning: ITK_USE_THREADPOOL \
-has been deprecated since ITK v5.0. \
-You should now use ITK_GLOBAL_DEFAULT_THREADER\
-\nFor example ITK_GLOBAL_DEFAULT_THREADER=Pool");
+      itkGenericOutputMacro("Warning: ITK_USE_THREADPOOL has been deprecated since ITK v5.0. You should now use "
+                            "ITK_GLOBAL_DEFAULT_THREADER\nFor example ITK_GLOBAL_DEFAULT_THREADER=Pool");
       if (envVar != "NO" && envVar != "OFF" && envVar != "FALSE")
       {
 #ifdef __EMSCRIPTEN__
@@ -218,7 +216,7 @@ MultiThreaderBase::SetGlobalMaximumNumberOfThreads(ThreadIdType val)
 
   // clamp between 1 and ITK_MAX_THREADS
   m_PimplGlobals->m_GlobalMaximumNumberOfThreads =
-    std::min(m_PimplGlobals->m_GlobalMaximumNumberOfThreads, (ThreadIdType)ITK_MAX_THREADS);
+    std::min(m_PimplGlobals->m_GlobalMaximumNumberOfThreads, ThreadIdType{ ITK_MAX_THREADS });
   m_PimplGlobals->m_GlobalMaximumNumberOfThreads =
     std::max(m_PimplGlobals->m_GlobalMaximumNumberOfThreads, NumericTraits<ThreadIdType>::OneValue());
 
@@ -298,7 +296,7 @@ MultiThreaderBase::GetGlobalDefaultNumberOfThreads()
     ThreadIdType threadCount = 0;
     /* The ITK_NUMBER_OF_THREADS_ENV_LIST contains is an
      * environmental variable that holds a ':' separated
-     * list of environmental variables that whould be
+     * list of environmental variables that would be
      * queried in order for setting the m_GlobalMaximumNumberOfThreads.
      *
      * This is intended to be a mechanism suitable to easy
@@ -351,7 +349,7 @@ MultiThreaderBase::GetGlobalDefaultNumberOfThreads()
     }
 
     // limit the number of threads to m_GlobalMaximumNumberOfThreads
-    threadCount = std::min(threadCount, ThreadIdType(ITK_MAX_THREADS));
+    threadCount = std::min(threadCount, ThreadIdType{ ITK_MAX_THREADS });
 
     // verify that the default number of threads is larger than zero
     threadCount = std::max(threadCount, NumericTraits<ThreadIdType>::OneValue());
@@ -455,15 +453,15 @@ MultiThreaderBase::SingleMethodProxy(void * arg)
     (*workUnitInfoStruct->ThreadFunction)(arg);
     workUnitInfoStruct->ThreadExitCode = WorkUnitInfo::ThreadExitCodeEnum::SUCCESS;
   }
-  catch (ProcessAborted &)
+  catch (const ProcessAborted &)
   {
     workUnitInfoStruct->ThreadExitCode = WorkUnitInfo::ThreadExitCodeEnum::ITK_PROCESS_ABORTED_EXCEPTION;
   }
-  catch (ExceptionObject &)
+  catch (const ExceptionObject &)
   {
     workUnitInfoStruct->ThreadExitCode = WorkUnitInfo::ThreadExitCodeEnum::ITK_EXCEPTION;
   }
-  catch (std::exception &)
+  catch (const std::exception &)
   {
     workUnitInfoStruct->ThreadExitCode = WorkUnitInfo::ThreadExitCodeEnum::STD_EXCEPTION;
   }
@@ -516,7 +514,7 @@ MultiThreaderBase::ParallelizeArrayHelper(void * arg)
   auto *       acParams = static_cast<struct ArrayCallback *>(workUnitInfo->UserData);
 
   SizeValueType range = acParams->lastIndexPlus1 - acParams->firstIndex;
-  double        fraction = double(range) / workUnitCount;
+  double        fraction = static_cast<double>(range) / workUnitCount;
   SizeValueType first = acParams->firstIndex + fraction * workUnitID;
   SizeValueType afterLast = acParams->firstIndex + fraction * (workUnitID + 1);
   if (workUnitID == workUnitCount - 1) // last thread
@@ -571,7 +569,7 @@ MultiThreaderBase::ParallelizeImageRegionHelper(void * arg)
 
   const ImageRegionSplitterBase * splitter = ImageSourceCommon::GetGlobalDefaultSplitter();
   ImageIORegion                   region(rnc->dimension);
-  for (unsigned d = 0; d < rnc->dimension; ++d)
+  for (unsigned int d = 0; d < rnc->dimension; ++d)
   {
     region.SetIndex(d, rnc->index[d]);
     region.SetSize(d, rnc->size[d]);

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -356,7 +356,7 @@ main(int argc, char * argv[])
   //  be set.
   //
   //  However, a ``Hello World!'' example should show all the basics, so
-  //  all the registration components are explicity set here.
+  //  all the registration components are explicitly set here.
   //
   //  In the next section of this chapter, you will get a better understanding
   //  from behind the scenes of the registration process when the initial

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,8 +55,6 @@ itkQuadEdgeMeshEulerOperatorSplitFaceTest(int, char *[])
   }
   std::cout << "OK" << std::endl;
 
-  (void)splitFacet->GetNameOfClass();
-
   MeshPointer mesh = MeshType::New();
   CreateSquareTriangularMesh<MeshType>(mesh);
 
@@ -98,7 +96,8 @@ itkQuadEdgeMeshEulerOperatorSplitFaceTest(int, char *[])
   }
   std::cout << "OK" << std::endl;
 
-  auto     joinFacet = JoinFacet::New();
+  auto joinFacet = JoinFacet::New();
+  joinFacet->SetInput(mesh);
   QEType * DeletedEdge = mesh->FindEdge(12, 7);
   QEType * G = DeletedEdge->GetSym()->GetLprev();
   QEType * H = joinFacet->Evaluate(DeletedEdge);

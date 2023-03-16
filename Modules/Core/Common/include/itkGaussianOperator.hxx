@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,9 +52,9 @@ GaussianOperator<TPixel, VDimension, TAllocator>::GenerateCoefficients() -> Coef
     }
     if (coeff.size() > m_MaximumKernelWidth)
     {
-      itkWarningMacro("Kernel size has exceeded the specified maximum width of "
-                      << m_MaximumKernelWidth << " and has been truncated to " << coeff.size()
-                      << " elements.  You can raise the maximum width using the SetMaximumKernelWidth method.");
+      itkDebugMacro(<< "Kernel size has exceeded the specified maximum width of " << m_MaximumKernelWidth
+                    << " and has been truncated to " << coeff.size()
+                    << " elements.  You can raise the maximum width using the SetMaximumKernelWidth method.");
       break;
     }
   }
@@ -165,7 +165,7 @@ GaussianOperator<TPixel, VDimension, TAllocator>::ModifiedBesselI(int n, double 
     qip = accumulator = 0.0;
     qi = 1.0;
 
-    for (j = 2 * (n + (int)std::sqrt(ACCURACY * n)); j > 0; j--)
+    for (j = 2 * (n + static_cast<int>(std::sqrt(ACCURACY * n))); j > 0; j--)
     {
       qim = qip + j * toy * qi;
       qip = qi;

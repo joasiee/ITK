@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -244,13 +244,13 @@ PolygonGroupSpatialObjectXMLFileWriter::WriteFile()
   {
     WriteStartElement("POLYGON", output);
     output << std::endl;
-    auto * curstrand = dynamic_cast<PolygonSpatialObjectType *>((*it).GetPointer());
+    auto * curstrand = dynamic_cast<PolygonSpatialObjectType *>(it->GetPointer());
     PolygonSpatialObjectType::PolygonPointListType & polygonPoints = curstrand->GetPoints();
     auto                                             pointIt = polygonPoints.begin();
     auto                                             pointItEnd = polygonPoints.end();
     while (pointIt != pointItEnd)
     {
-      PolygonSpatialObjectType::PointType curpoint = (*pointIt).GetPositionInObjectSpace();
+      PolygonSpatialObjectType::PointType curpoint = pointIt->GetPositionInObjectSpace();
       WriteStartElement("POINT", output);
       output << curpoint[0] << " " << curpoint[1] << " " << curpoint[2];
       WriteEndElement("POINT", output);

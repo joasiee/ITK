@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,10 +36,7 @@ AmoebaOptimizer::AmoebaOptimizer()
 }
 
 
-AmoebaOptimizer::~AmoebaOptimizer()
-{
-  delete m_VnlOptimizer;
-}
+AmoebaOptimizer::~AmoebaOptimizer() = default;
 
 
 const std::string
@@ -95,7 +92,7 @@ AmoebaOptimizer::GetValue() const
 vnl_amoeba *
 AmoebaOptimizer::GetOptimizer() const
 {
-  return this->m_VnlOptimizer;
+  return this->m_VnlOptimizer.get();
 }
 
 void
@@ -150,8 +147,7 @@ AmoebaOptimizer::StartOptimization()
   CostFunctionAdaptorType * adaptor = GetNonConstCostFunctionAdaptor();
   // get rid of previous instance of the internal optimizer and create a
   // new one
-  delete m_VnlOptimizer;
-  m_VnlOptimizer = new vnl_amoeba(*adaptor);
+  m_VnlOptimizer = std::make_unique<vnl_amoeba>(*adaptor);
   m_VnlOptimizer->set_max_iterations(static_cast<int>(m_MaximumNumberOfIterations));
   m_VnlOptimizer->set_x_tolerance(m_ParametersConvergenceTolerance);
   m_VnlOptimizer->set_f_tolerance(m_FunctionConvergenceTolerance);
@@ -226,7 +222,7 @@ AmoebaOptimizer::StartOptimization()
       currentValue = adaptor->f(parameters);
       // be consistent with the underlying vnl amoeba implementation
       double maxAbs = 0.0;
-      for (unsigned j = 0; j < n; ++j)
+      for (unsigned int j = 0; j < n; ++j)
       {
         if (maxAbs < itk::Math::abs(bestPosition[j] - parameters[j]))
         {
@@ -243,7 +239,7 @@ AmoebaOptimizer::StartOptimization()
         bestValue = currentValue;
         bestPosition = parameters;
       }
-      i++;
+      ++i;
     }
   }
   // get the results, we scale the parameters down if scales are defined

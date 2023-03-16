@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,7 +19,6 @@
 #define itkBresenhamLine_hxx
 
 #include "itkPoint.h"
-#include "itkMath.h"
 #include "itkMath.h"
 
 namespace itk
@@ -59,14 +58,14 @@ BresenhamLine<VDimension>::BuildLine(LType Direction, IdentifierType length) -> 
   // we are going to start at 0
   m_CurrentImageIndex.Fill(0);
   constexpr IndexType StartIndex = { { 0 } };
-  for (unsigned i = 0; i < VDimension; ++i)
+  for (unsigned int i = 0; i < VDimension; ++i)
   {
     LastIndex[i] = (IndexValueType)(length * Direction[i]);
   }
   // Find the dominant direction
   IndexValueType maxDistance = 0;
   unsigned int   maxDistanceDimension = 0;
-  for (unsigned i = 0; i < VDimension; ++i)
+  for (unsigned int i = 0; i < VDimension; ++i)
   {
     auto distance = static_cast<long>(itk::Math::abs(LastIndex[i]));
     if (distance > maxDistance)

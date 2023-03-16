@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -154,7 +154,7 @@ public:
    * TODO Determine behavior when copying from obj pointing to image parameters.
    *  By default should copy image param data into Array portion of new object,
    *  i.e. into data_block. Is that what we want? */
-  const Self &
+  Self &
   operator=(const Self & rhs)
   {
     // Note: there's no need to copy the OptimizerParametersHelper.
@@ -163,7 +163,7 @@ public:
     return *this;
   }
 
-  const Self &
+  Self &
   operator=(const ArrayType & rhs)
   {
     // Call the superclass implementation
@@ -171,7 +171,7 @@ public:
     return *this;
   }
 
-  const Self &
+  Self &
   operator=(const VnlVectorType & rhs)
   {
     // Call the superclass implementation

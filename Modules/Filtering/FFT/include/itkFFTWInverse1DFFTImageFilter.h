@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -92,9 +92,9 @@ private:
   void
   DestroyPlans();
 
-  bool                  m_PlanComputed;
+  bool                  m_PlanComputed{ false };
   PlanArrayType         m_PlanArray;
-  unsigned int          m_LastImageSize;
+  unsigned int          m_LastImageSize{ 0 };
   PlanBufferPointerType m_InputBufferArray;
   PlanBufferPointerType m_OutputBufferArray;
 };
@@ -109,6 +109,7 @@ struct FFTImageFilterTraits<FFTWInverse1DFFTImageFilter>
   using InputPixelType = std::complex<TUnderlying>;
   template <typename TUnderlying>
   using OutputPixelType = TUnderlying;
+  using FilterDimensions = std::integer_sequence<unsigned int, 4, 3, 2, 1>;
 };
 
 } // namespace itk

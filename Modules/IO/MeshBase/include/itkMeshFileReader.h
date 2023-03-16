@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@
 #include "itkMacro.h"
 #include "itkHexahedronCell.h"
 #include "itkLineCell.h"
+#include "itkPolyLineCell.h"
 #include "itkMeshIOBase.h"
 #include "itkMeshSource.h"
 #include "itkPolygonCell.h"
@@ -39,7 +40,7 @@ namespace itk
 {
 
 /**
- *\class MeshFileReader
+ * \class MeshFileReader
  * \brief Mesh source that reads mesh data from a single file.
  *
  * This source object is a general filter to read data from
@@ -108,6 +109,7 @@ public:
 
   using OutputVertexCellType = VertexCell<OutputCellType>;
   using OutputLineCellType = LineCell<OutputCellType>;
+  using OutputPolyLineCellType = PolyLineCell<OutputCellType>;
   using OutputTriangleCellType = TriangleCell<OutputCellType>;
   using OutputPolygonCellType = PolygonCell<OutputCellType>;
   using OutputTetrahedronCellType = TetrahedronCell<OutputCellType>;
@@ -185,6 +187,14 @@ protected:
   std::string m_FileName;                    // The file to be read
 
 private:
+  template <typename T>
+  void
+  ReadPointsUsingMeshIO();
+
+  template <typename T>
+  void
+  ReadCellsUsingMeshIO();
+
   std::string m_ExceptionMessage;
 };
 

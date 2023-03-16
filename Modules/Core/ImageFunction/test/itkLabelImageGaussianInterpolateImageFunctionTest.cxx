@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,7 +27,7 @@ itkLabelImageGaussianInterpolateImageFunctionTest(int, char *[])
 {
   int                    test_status = EXIT_SUCCESS;
   constexpr unsigned int Dimension = 2;
-  using PixelType = unsigned short int; // Label images should be integer value types
+  using PixelType = unsigned short; // Label images should be integer value types
   using ImageType = itk::Image<PixelType, Dimension>;
   using RegionType = ImageType::RegionType;
   using SizeType = RegionType::SizeType;

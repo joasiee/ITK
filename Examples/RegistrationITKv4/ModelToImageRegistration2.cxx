@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,7 +52,7 @@
 //  PointSet. The pixel values associated to the point in the PointSet are the
 //  values of distance from each point to the binary mask.  The first stage is
 //  performed by the \doxygen{SpatialObjectToImageFilter}, while the second
-//  stage is performed witht eh \doxygen{BinaryMaskToNarrowBandPointSetFilter}
+//  stage is performed with the \doxygen{BinaryMaskToNarrowBandPointSetFilter}
 //
 //  \index{itk::Spatial\-Object\-To\-Image\-Filter!header}
 //  \index{itk::Binary\-Mask\-To\-Narrow\-Band\-Point\-Set\-Filter!header}
@@ -164,7 +164,7 @@ main(int argc, char * argv[])
     itk::BinaryMaskToNarrowBandPointSetFilter<MaskImageType,
                                               FixedPointSetType>;
 
-  using PixelType = signed short;
+  using PixelType = short;
 
   using ImageType = itk::Image<PixelType, Dimension>;
 

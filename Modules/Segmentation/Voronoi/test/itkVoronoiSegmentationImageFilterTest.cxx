@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,9 +55,7 @@ itkVoronoiSegmentationImageFilterTest(int argc, char * argv[])
   region.SetIndex(index);
 
   std::cout << "Allocating image" << std::endl;
-  inputImage->SetLargestPossibleRegion(region);
-  inputImage->SetBufferedRegion(region);
-  inputImage->SetRequestedRegion(region);
+  inputImage->SetRegions(region);
   inputImage->Allocate();
 
 
@@ -67,7 +65,7 @@ itkVoronoiSegmentationImageFilterTest(int argc, char * argv[])
   std::cout << "Setting background random pattern image" << std::endl;
   while (!it.IsAtEnd())
   {
-    it.Set((unsigned short)(vnl_sample_uniform(450, 550)));
+    it.Set(static_cast<unsigned short>(vnl_sample_uniform(450, 550)));
     ++it;
   }
 
@@ -81,7 +79,7 @@ itkVoronoiSegmentationImageFilterTest(int argc, char * argv[])
     for (j = 30; j < 94; ++j)
     {
       index[1] = j;
-      inputImage->SetPixel(index, (unsigned short)(vnl_sample_uniform(500, 540)));
+      inputImage->SetPixel(index, static_cast<unsigned short>(vnl_sample_uniform(500, 540)));
     }
   }
 
@@ -91,7 +89,7 @@ itkVoronoiSegmentationImageFilterTest(int argc, char * argv[])
     for (j = 150; j < 214; ++j)
     {
       index[1] = j;
-      inputImage->SetPixel(index, (unsigned short)(vnl_sample_uniform(500, 540)));
+      inputImage->SetPixel(index, static_cast<unsigned short>(vnl_sample_uniform(500, 540)));
     }
   }
 

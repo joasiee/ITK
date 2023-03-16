@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -109,7 +109,7 @@ itkDisplacementFieldTransformCloneTest(int, char *[])
   if (!originalIt.IsAtEnd() || !cloneIt.IsAtEnd())
   {
     std::cerr << "Test failed!" << std::endl;
-    std::cerr << "Displacment field size mismatch" << std::endl;
+    std::cerr << "Displacement field size mismatch" << std::endl;
     return EXIT_FAILURE;
   }
 

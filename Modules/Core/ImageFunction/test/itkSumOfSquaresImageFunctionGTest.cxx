@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@
 
 // First include the header file to be tested:
 #include "itkSumOfSquaresImageFunction.h"
+#include "itkRectangularImageNeighborhoodShape.h"
 
 #include "itkImage.h"
 #include "itkImageBufferRange.h"
@@ -103,7 +104,12 @@ TestBasicObjectProperties()
 
   unsigned int radius = 1;
   imageFunction->SetNeighborhoodRadius(radius);
-  ITK_TEST_SET_GET_VALUE(radius, imageFunction->GetNeighborhoodRadius());
+  EXPECT_EQ(radius, imageFunction->GetNeighborhoodRadius());
+
+  auto                                                                 size = TImage::SizeType::Filled(radius);
+  const itk::RectangularImageNeighborhoodShape<TImage::ImageDimension> shape(size);
+  unsigned int                                                         neighborhoodSize = shape.GetNumberOfOffsets();
+  EXPECT_EQ(neighborhoodSize, imageFunction->GetNeighborhoodSize());
 
   return EXIT_SUCCESS;
 }
@@ -112,8 +118,11 @@ TestBasicObjectProperties()
 
 TEST(SumOfSquaresImageFunction, BasicObjectProperties)
 {
-  TestBasicObjectProperties<itk::Image<double, 2>>();
-  TestBasicObjectProperties<itk::Image<unsigned char, 3>>();
+  int testStatus = TestBasicObjectProperties<itk::Image<double, 2>>();
+  EXPECT_EQ(testStatus, EXIT_SUCCESS);
+
+  testStatus = TestBasicObjectProperties<itk::Image<unsigned char, 3>>();
+  EXPECT_EQ(testStatus, EXIT_SUCCESS);
 }
 
 
@@ -129,7 +138,7 @@ TEST(SumOfSquaresImageFunction, EvaluateAtIndexReturnsZeroWhenAllPixelsAreZero)
 // Tests that EvaluateAtIndex returns the number of neighborhood pixels when all pixels are one.
 TEST(SumOfSquaresImageFunction, EvaluateAtIndexReturnsNumberOfNeighborsWhenAllPixelsAreOne)
 {
-  for (unsigned radius{}; radius <= 2; ++radius)
+  for (unsigned int radius{}; radius <= 2; ++radius)
   {
     Expect_EvaluateAtIndex_returns_number_of_neigbors_when_all_pixels_are_one<itk::Image<double, 2>>(
       itk::Size<2>{ { 2, 3 } }, radius);

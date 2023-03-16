@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -216,7 +216,7 @@ public:
       DCMTKExceptionOrErrorReturn(<< "DecimalString " << std::hex << group << " " << std::hex << element << " expected "
                                   << count << "items, but found " << doubleVals.size() << std::dec);
     }
-    for (unsigned i = 0; i < count; ++i)
+    for (unsigned int i = 0; i < count; ++i)
     {
       target[i] = static_cast<TType>(doubleVals[i]);
     }
@@ -302,7 +302,7 @@ public:
       DCMTKExceptionOrErrorReturn(<< "DecimalString " << std::hex << group << " " << std::hex << element << " expected "
                                   << count << "items, but found " << doubleVals.size() << std::dec);
     }
-    for (unsigned i = 0; i < count; ++i)
+    for (unsigned int i = 0; i < count; ++i)
     {
       target[i] = static_cast<TType>(doubleVals[i]);
     }

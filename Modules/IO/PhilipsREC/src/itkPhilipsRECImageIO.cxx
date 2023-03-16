@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,7 +20,7 @@
  *         The Pennsylvania State University 2005
  *
  * This implementation was contributed as a paper to the Insight Journal
- * http://insight-journal.org/midas/handle.php?handle=1926/1381
+ * https://insight-journal.org/midas/handle.php?handle=1926/1381
  *
  */
 
@@ -274,7 +274,7 @@ PhilipsRECImageIOSetupSliceIndex(PhilipsRECImageIO::SliceIndexType *         ind
                                                                       parParam,
                                                                       sliceImageTypesIndex,
                                                                       sliceScanSequenceIndex);
-          index++;
+          ++index;
         }
       }
     }
@@ -287,7 +287,7 @@ PhilipsRECImageIOSetupSliceIndex(PhilipsRECImageIO::SliceIndexType *         ind
       for (int j = 0; j < actualSlices; ++j)
       {
         (*indexMatrix)[index] = j * parParam.image_blocks + i;
-        index++;
+        ++index;
       }
     }
   }
@@ -480,7 +480,7 @@ PhilipsRECImageIO::Read(void * buffer)
 
   for (IndexValueType slice = 0; slice < numberOfSlices; ++slice)
   {
-    IndexValueType realIndex = this->GetSliceIndex((int)slice);
+    IndexValueType realIndex = this->GetSliceIndex(static_cast<int>(slice));
     if (realIndex < 0)
     {
       std::ostringstream message;
@@ -534,7 +534,7 @@ PhilipsRECImageIO::CanReadFile(const char * FileNameToRead)
       return false;
     }
   }
-  catch (ExceptionObject &)
+  catch (const ExceptionObject &)
   {
     return false;
   }
@@ -557,7 +557,7 @@ PhilipsRECImageIO::ReadImageInformation()
   {
     philipsPAR->ReadPAR(HeaderFileName, &par);
   }
-  catch (itk::ExceptionObject &)
+  catch (const itk::ExceptionObject &)
   {
     throw;
   }
@@ -691,7 +691,7 @@ PhilipsRECImageIO::ReadImageInformation()
 
   // Important dime fields
   EncapsulateMetaData<std::string>(thisDic, ITK_VoxelUnits, std::string("mm"));
-  EncapsulateMetaData<short int>(thisDic, ITK_OnDiskBitPerPixel, par.bit);
+  EncapsulateMetaData<short>(thisDic, ITK_OnDiskBitPerPixel, par.bit);
   EncapsulateMetaData<int>(thisDic, ITK_NumberOfDimensions, numberOfDimensions);
 
   switch (par.bit)
@@ -713,7 +713,7 @@ PhilipsRECImageIO::ReadImageInformation()
   AffineMatrix spacing;
   spacing.SetIdentity();
 
-  SpatialOrientation::ValidCoordinateOrientationFlags coord_orient;
+  SpatialOrientationEnums::ValidCoordinateOrientations coord_orient;
 
   switch (par.sliceorient)
   {
@@ -721,7 +721,7 @@ PhilipsRECImageIO::ReadImageInformation()
       // Transverse - the REC data appears to be stored as right-left,
       // anterior-posterior, and inferior-superior.
       // Verified using a marker on right side of brain.
-      coord_orient = SpatialOrientation::ITK_COORDINATE_ORIENTATION_RAI;
+      coord_orient = SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RAI;
       spacing[0][0] = par.vox[0];
       spacing[1][1] = par.vox[1];
       spacing[2][2] = par.vox[2];
@@ -730,7 +730,7 @@ PhilipsRECImageIO::ReadImageInformation()
       // Sagittal - the REC data appears to be stored as anterior-posterior,
       // superior-inferior, and right-left.
       // Verified using marker on right side of brain.
-      coord_orient = SpatialOrientation::ITK_COORDINATE_ORIENTATION_ASL;
+      coord_orient = SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_ASL;
       spacing[0][0] = par.vox[2];
       spacing[1][1] = par.vox[0];
       spacing[2][2] = par.vox[1];
@@ -741,14 +741,13 @@ PhilipsRECImageIO::ReadImageInformation()
     // Verified using marker on right side of brain.
     // fall thru
     default:
-      coord_orient = SpatialOrientation::ITK_COORDINATE_ORIENTATION_RSA;
+      coord_orient = SpatialOrientationEnums::ValidCoordinateOrientations::ITK_COORDINATE_ORIENTATION_RSA;
       spacing[0][0] = par.vox[0];
       spacing[1][1] = par.vox[2];
       spacing[2][2] = par.vox[1];
   }
 
-  using OrientAdapterType = SpatialOrientationAdapter;
-  SpatialOrientationAdapter::DirectionType dir = OrientAdapterType().ToDirectionCosines(coord_orient);
+  SpatialOrientationAdapter::DirectionType dir = SpatialOrientationAdapter().ToDirectionCosines(coord_orient);
 
   AffineMatrix direction;
   direction.SetIdentity();
@@ -889,9 +888,9 @@ PhilipsRECImageIO::ReadImageInformation()
   auto triggerTimes = TriggerTimesContainerType::New();
   triggerTimes->resize(par.cardiac_phases);
 
-  for (unsigned int ttime_index = 0; ttime_index < (unsigned int)par.cardiac_phases; ++ttime_index)
+  for (unsigned int ttime_index = 0; ttime_index < static_cast<unsigned int>(par.cardiac_phases); ++ttime_index)
   {
-    triggerTimes->SetElement(ttime_index, (double)par.trigger_times[ttime_index]);
+    triggerTimes->SetElement(ttime_index, static_cast<double>(par.trigger_times[ttime_index]));
   }
 
   EncapsulateMetaData<TriggerTimesContainerType::Pointer>(thisDic, PAR_TriggerTimes, triggerTimes);
@@ -899,9 +898,9 @@ PhilipsRECImageIO::ReadImageInformation()
   auto echoTimes = EchoTimesContainerType::New();
   echoTimes->resize(par.echoes);
 
-  for (unsigned int echo_index = 0; echo_index < (unsigned int)par.echoes; ++echo_index)
+  for (unsigned int echo_index = 0; echo_index < static_cast<unsigned int>(par.echoes); ++echo_index)
   {
-    echoTimes->SetElement(echo_index, (double)par.echo_times[echo_index]);
+    echoTimes->SetElement(echo_index, static_cast<double>(par.echo_times[echo_index]));
   }
 
   EncapsulateMetaData<EchoTimesContainerType::Pointer>(thisDic, PAR_EchoTimes, echoTimes);
@@ -917,9 +916,9 @@ PhilipsRECImageIO::ReadImageInformation()
   repTimes->resize(par.mixes); // This has only been verified using a
                                // Look-Locker sequence and may not be valid.
 
-  for (unsigned int rep_index = 0; rep_index < (unsigned int)par.mixes; ++rep_index)
+  for (unsigned int rep_index = 0; rep_index < static_cast<unsigned int>(par.mixes); ++rep_index)
   {
-    repTimes->SetElement(rep_index, (double)par.repetition_time[rep_index]);
+    repTimes->SetElement(rep_index, static_cast<double>(par.repetition_time[rep_index]));
   }
 
   EncapsulateMetaData<RepetitionTimesContainerType::Pointer>(thisDic, PAR_RepetitionTimes, repTimes);
@@ -927,14 +926,14 @@ PhilipsRECImageIO::ReadImageInformation()
   EncapsulateMetaData<FOVType>(thisDic, PAR_FOV, FOVType(par.fov));
   EncapsulateMetaData<float>(thisDic, PAR_WaterFatShiftPixels, par.water_fat_shift);
   AngulationMidSliceType tempAngulation;
-  tempAngulation[0] = (double)par.angAP;
-  tempAngulation[1] = (double)par.angFH;
-  tempAngulation[2] = (double)par.angRL;
+  tempAngulation[0] = static_cast<double>(par.angAP);
+  tempAngulation[1] = static_cast<double>(par.angFH);
+  tempAngulation[2] = static_cast<double>(par.angRL);
   EncapsulateMetaData<AngulationMidSliceType>(thisDic, PAR_AngulationMidSlice, tempAngulation);
   OffCentreMidSliceType tempOffcentre;
-  tempOffcentre[0] = (double)par.offAP;
-  tempOffcentre[1] = (double)par.offFH;
-  tempOffcentre[2] = (double)par.offRL;
+  tempOffcentre[0] = static_cast<double>(par.offAP);
+  tempOffcentre[1] = static_cast<double>(par.offFH);
+  tempOffcentre[2] = static_cast<double>(par.offRL);
   EncapsulateMetaData<OffCentreMidSliceType>(thisDic, PAR_OffCentreMidSlice, tempOffcentre);
   EncapsulateMetaData<int>(thisDic, PAR_FlowCompensation, par.flow_comp);
   EncapsulateMetaData<int>(thisDic, PAR_Presaturation, par.presaturation);

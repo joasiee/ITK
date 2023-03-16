@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -478,7 +478,7 @@ DOMNode::Find(const std::string & path)
 
   std::string rpath;
   {
-    std::size_t pos = path.find_first_of('/');
+    size_t pos = path.find_first_of('/');
     if (pos == std::string::npos)
     {
       s = path;
@@ -573,7 +573,7 @@ DOMNode::Find(const std::string & path)
   // <tag>[:n]
   else
   {
-    std::size_t pos = s.find_first_of(':');
+    size_t pos = s.find_first_of(':');
     if (pos != std::string::npos)
     {
       std::string s2 = s.substr(pos + 1);

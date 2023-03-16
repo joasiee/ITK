@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -79,17 +79,13 @@ TestMattesMetricWithAffineTransform(TInterpolator * const interpolator, const bo
   imgOrigin[1] = -0.002;
 
   auto imgMoving = MovingImageType::New();
-  imgMoving->SetLargestPossibleRegion(region);
-  imgMoving->SetBufferedRegion(region);
-  imgMoving->SetRequestedRegion(region);
+  imgMoving->SetRegions(region);
   imgMoving->Allocate();
   imgMoving->SetSpacing(imgSpacing);
   imgMoving->SetOrigin(imgOrigin);
 
   auto imgFixed = FixedImageType::New();
-  imgFixed->SetLargestPossibleRegion(region);
-  imgFixed->SetBufferedRegion(region);
-  imgFixed->SetRequestedRegion(region);
+  imgFixed->SetRegions(region);
   imgFixed->Allocate();
   imgFixed->SetSpacing(imgSpacing);
   imgFixed->SetOrigin(imgOrigin);
@@ -99,10 +95,10 @@ TestMattesMetricWithAffineTransform(TInterpolator * const interpolator, const bo
   using TargetIteratorType = itk::ImageRegionIterator<FixedImageType>;
 
   itk::Point<double, 2> center;
-  center[0] = (double)region.GetSize()[0] / 2.0;
-  center[1] = (double)region.GetSize()[1] / 2.0;
+  center[0] = static_cast<double>(region.GetSize()[0]) / 2.0;
+  center[1] = static_cast<double>(region.GetSize()[1]) / 2.0;
 
-  const double s = (double)region.GetSize()[0] / 2.0;
+  const double s = static_cast<double>(region.GetSize()[0]) / 2.0;
 
   itk::Point<double, 2> p;
 
@@ -122,7 +118,7 @@ TestMattesMetricWithAffineTransform(TInterpolator * const interpolator, const bo
       d += displacement;
       const double x = d[0];
       const double y = d[1];
-      ri.Set((unsigned char)(200.0 * std::exp(-(x * x + y * y) / (s * s))));
+      ri.Set(static_cast<unsigned char>(200.0 * std::exp(-(x * x + y * y) / (s * s))));
       ++ri;
     }
   }
@@ -136,7 +132,7 @@ TestMattesMetricWithAffineTransform(TInterpolator * const interpolator, const bo
       itk::Vector<double, 2> d = p - center;
       const double           x = d[0];
       const double           y = d[1];
-      ti.Set((unsigned char)(200.0 * std::exp(-(x * x + y * y) / (s * s))));
+      ti.Set(static_cast<unsigned char>(200.0 * std::exp(-(x * x + y * y) / (s * s))));
       ++ti;
     }
   }
@@ -285,7 +281,7 @@ TestMattesMetricWithAffineTransform(TInterpolator * const interpolator, const bo
   metric->Initialize();
 
   //------------------------------------------------------------
-  // Set up a affine transform parameters
+  // Set up affine transform parameters
   //------------------------------------------------------------
   transformer->SetIdentity();
   const unsigned int numberOfParameters = transformer->GetNumberOfParameters();
@@ -354,7 +350,7 @@ TestMattesMetricWithAffineTransform(TInterpolator * const interpolator, const bo
 
   constexpr double delta = 0.00001;
 
-  const double tolerance = (useSampling) ? static_cast<double>(0.075) : static_cast<double>(0.014);
+  const double tolerance = (useSampling) ? 0.075 : 0.014;
   for (unsigned int perturbParamIndex = 0; perturbParamIndex < numberOfParameters; ++perturbParamIndex)
   {
     // copy the parameters and perturb the current one.

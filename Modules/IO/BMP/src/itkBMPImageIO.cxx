@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,6 +17,7 @@
  *=========================================================================*/
 #include "itkBMPImageIO.h"
 #include "itkByteSwapper.h"
+#include "itkMakeUniqueForOverwrite.h"
 #include "itksys/SystemTools.hxx"
 #include <iostream>
 
@@ -76,7 +77,7 @@ BMPImageIO::CanReadFile(const char * filename)
   {
     this->OpenFileForReading(inputStream, fname);
   }
-  catch (ExceptionObject &)
+  catch (const ExceptionObject &)
   {
     return false;
   }
@@ -171,33 +172,32 @@ BMPImageIO::Read(void * buffer)
 {
   auto *        p = static_cast<char *>(buffer);
   unsigned long l = 0;
-  char *        value;
 
   this->OpenFileForReading(m_Ifstream, m_FileName);
 
   // If the file is RLE compressed
   // RLE-compressed files are lower-left
   // About the RLE compression algorithm:
-  // http://msdn.microsoft.com/en-us/library/windows/desktop/dd183383%28v=vs.85%29.aspx
+  // https://msdn.microsoft.com/en-us/library/windows/desktop/dd183383%28v=vs.85%29.aspx
   if (m_BMPCompression == 1 && (this->GetNumberOfComponents() == 3 || this->GetIsReadAsScalarPlusPalette()))
   {
-    value = new char[m_BMPDataSize + 1];
+    const auto value = make_unique_for_overwrite<char[]>(m_BMPDataSize + 1);
     m_Ifstream.seekg(m_BitMapOffset, std::ios::beg);
-    m_Ifstream.read((char *)value, m_BMPDataSize);
+    m_Ifstream.read(value.get(), m_BMPDataSize);
 
     SizeValueType posLine = 0;
     SizeValueType line = m_Dimensions[1] - 1;
     for (unsigned int i = 0; i < m_BMPDataSize; ++i)
     {
       unsigned char byte1 = value[i];
-      i++;
+      ++i;
       unsigned char byte2 = value[i];
       if (byte1 == 0)
       {
         if (byte2 == 0)
         {
           // End of line
-          line--;
+          --line;
           posLine = 0;
           continue;
         }
@@ -209,9 +209,9 @@ BMPImageIO::Read(void * buffer)
         else if (byte2 == 2)
         {
           // Delta
-          i++;
+          ++i;
           unsigned char dx = value[i];
-          i++;
+          ++i;
           unsigned char dy = value[i];
           posLine += dx;
           line -= dy;
@@ -224,29 +224,29 @@ BMPImageIO::Read(void * buffer)
           {
             for (unsigned long j = 0; j < byte2; ++j)
             {
-              i++;
+              ++i;
               RGBPixelType rgb = this->GetColorPaletteEntry(value[i]);
               l = 3 * (line * m_Dimensions[0] + posLine);
               p[l] = rgb.GetBlue();
               p[l + 1] = rgb.GetGreen();
               p[l + 2] = rgb.GetRed();
-              posLine++;
+              ++posLine;
             }
           }
           else
           {
             for (unsigned long j = 0; j < byte2; ++j)
             {
-              i++;
+              ++i;
               l = (line * m_Dimensions[0] + posLine);
               p[l] = value[i];
-              posLine++;
+              ++posLine;
             }
           }
           // If a run's length is odd, the it is padded with 0
           if (byte2 % 2)
           {
-            i++;
+            ++i;
           }
         }
       }
@@ -262,7 +262,7 @@ BMPImageIO::Read(void * buffer)
             p[l] = rgb.GetBlue();
             p[l + 1] = rgb.GetGreen();
             p[l + 2] = rgb.GetRed();
-            posLine++;
+            ++posLine;
           }
         }
         else
@@ -271,7 +271,7 @@ BMPImageIO::Read(void * buffer)
           {
             l = (line * m_Dimensions[0] + posLine);
             p[l] = byte2;
-            posLine++;
+            ++posLine;
           }
         }
       }
@@ -288,13 +288,13 @@ BMPImageIO::Read(void * buffer)
     {
       paddedStreamRead = ((streamRead / 4) + 1) * 4;
     }
-    value = new char[paddedStreamRead + 1];
+    const auto value = make_unique_for_overwrite<char[]>(paddedStreamRead + 1);
 
     for (unsigned int id = 0; id < m_Dimensions[1]; ++id)
     {
       const unsigned int line_id = m_FileLowerLeft ? (m_Dimensions[1] - id - 1) : id;
       m_Ifstream.seekg(m_BitMapOffset + paddedStreamRead * line_id, std::ios::beg);
-      m_Ifstream.read((char *)value, paddedStreamRead);
+      m_Ifstream.read(value.get(), paddedStreamRead);
       for (long i = 0; i < streamRead; ++i)
       {
         if (this->GetNumberOfComponents() == 1)
@@ -331,7 +331,6 @@ BMPImageIO::Read(void * buffer)
       }
     }
   }
-  delete[] value;
   m_Ifstream.close();
 }
 
@@ -521,7 +520,7 @@ BMPImageIO::ReadImageInformation()
     }
   }
 
-  // http://msdn.microsoft.com/en-us/library/windows/desktop/dd183376%28v=vs.85%29.aspx
+  // https://msdn.microsoft.com/en-us/library/windows/desktop/dd183376%28v=vs.85%29.aspx
   if (m_BMPCompression == 1 && !m_FileLowerLeft)
   {
     m_Ifstream.close();
@@ -728,7 +727,7 @@ BMPImageIO::Write(const void * buffer)
   //
   // For more details:
   //
-  //             http://en.wikipedia.org/wiki/BMP_file_format
+  //             https://en.wikipedia.org/wiki/BMP_file_format
 
   // Write the BMP header
   //
@@ -874,7 +873,7 @@ BMPImageIO::Write(const void * buffer)
       for (i = 0; i < m_Dimensions[0]; ++i)
       {
         m_Ofstream.write(ptr, sizeof(char));
-        ptr++;
+        ++ptr;
       }
       for (i = 0; i < paddedBytes; ++i)
       {
@@ -887,9 +886,9 @@ BMPImageIO::Write(const void * buffer)
       {
         ptr += 2;
         m_Ofstream.write(ptr, sizeof(char)); // blue
-        ptr--;
+        --ptr;
         m_Ofstream.write(ptr, sizeof(char)); // green
-        ptr--;
+        --ptr;
         m_Ofstream.write(ptr, sizeof(char)); // red
         ptr += 3;
       }
@@ -904,13 +903,13 @@ BMPImageIO::Write(const void * buffer)
       {
         ptr += 2;
         m_Ofstream.write(ptr, sizeof(char)); // blue
-        ptr--;
+        --ptr;
         m_Ofstream.write(ptr, sizeof(char)); // green
-        ptr--;
+        --ptr;
         m_Ofstream.write(ptr, sizeof(char)); // red
         ptr += 3;
         m_Ofstream.write(ptr, sizeof(char)); // alpha
-        ptr++;
+        ++ptr;
       }
       for (i = 0; i < paddedBytes; ++i)
       {

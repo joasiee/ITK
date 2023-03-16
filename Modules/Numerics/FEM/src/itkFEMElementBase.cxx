@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -183,10 +183,10 @@ void
 Element::GetMassMatrix(MatrixType & Me) const
 {
   /*
-   * If the function is not overriden, we compute consistent mass matrix
+   * If the function is not overridden, we compute consistent mass matrix
    * by integrating the shape functions over the element domain. The element
    * density is assumed one. If this is not the case, the GetMassMatrix in a
-   * derived class must be overriden and the Me matrix corrected accordingly.
+   * derived class must be overridden and the Me matrix corrected accordingly.
    */
   Me = MatrixType(this->GetNumberOfDegreesOfFreedom(), this->GetNumberOfDegreesOfFreedom(), 0.0);
 

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -175,7 +175,7 @@ testMinMaxCurvatureFlow(itk::Size<VImageDimension> & size,         // ND image s
     double lhs = 0.0;
     for (j = 0; j < ImageDimension; ++j)
     {
-      lhs += itk::Math::sqr((double)index[j] - (double)size[j] * 0.5);
+      lhs += itk::Math::sqr(static_cast<double>(index[j]) - static_cast<double>(size[j]) * 0.5);
     }
     if (lhs < sqrRadius)
     {
@@ -260,7 +260,7 @@ testMinMaxCurvatureFlow(itk::Size<VImageDimension> & size,         // ND image s
     double lhs = 0.0;
     for (j = 0; j < ImageDimension; ++j)
     {
-      lhs += itk::Math::sqr((double)index[j] - (double)size[j] * 0.5);
+      lhs += itk::Math::sqr(static_cast<double>(index[j]) - static_cast<double>(size[j]) * 0.5);
     }
     if (lhs < sqrRadius)
     {
@@ -275,7 +275,7 @@ testMinMaxCurvatureFlow(itk::Size<VImageDimension> & size,         // ND image s
     }
   }
 
-  double fractionWrong = (double)numPixelsWrong / (double)region.GetNumberOfPixels();
+  double fractionWrong = static_cast<double>(numPixelsWrong) / static_cast<double>(region.GetNumberOfPixels());
 
   std::cout << "Noise reduced from " << fractionNoise << " to ";
   std::cout << fractionWrong << std::endl;

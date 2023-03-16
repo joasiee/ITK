@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -57,7 +57,7 @@ MaskFeaturePointSelectionFilter<TImage, TMask, TFeatures>::PrintSelf(std::ostrea
       os << "FACE_CONNECTIVITY";
       break;
     default:
-      os << static_cast<unsigned>(m_NonConnectivity);
+      os << static_cast<unsigned int>(m_NonConnectivity);
   }
   os << std::endl
      << indent << "m_BlockRadius: " << m_BlockRadius << std::endl
@@ -73,19 +73,19 @@ MaskFeaturePointSelectionFilter<TImage, TMask, TFeatures>::ComputeConnectivityOf
   {
     m_NonConnectivityOffsets.clear();
     // use Neighbourhood to compute all offsets in radius 1
-    Neighborhood<unsigned, ImageDimension> neighborhood;
+    Neighborhood<unsigned int, ImageDimension> neighborhood;
     neighborhood.SetRadius(NumericTraits<SizeValueType>::OneValue());
     for (SizeValueType i = 0, n = neighborhood.Size(); i < n; ++i)
     {
       OffsetType off = neighborhood.GetOffset(i);
 
       // count 0s offsets in each dimension
-      unsigned numberOfZeros = 0;
-      for (unsigned j = 0; j < ImageDimension; ++j)
+      unsigned int numberOfZeros = 0;
+      for (unsigned int j = 0; j < ImageDimension; ++j)
       {
         if (off[j] == 0)
         {
-          numberOfZeros++;
+          ++numberOfZeros;
         }
       }
 
@@ -232,7 +232,7 @@ MaskFeaturePointSelectionFilter<TImage, TMask, TFeatures>::GenerateData()
     // index should be inside the mask image (GetPixel = 1)
     if (selectionMap->GetPixel(indexOfPointToPick) && region.IsInside(indexOfPointToPick))
     {
-      numberOfPointsInserted++;
+      ++numberOfPointsInserted;
       // compute and add structure tensor into pointData
       if (m_ComputeStructureTensors)
       {
@@ -258,7 +258,7 @@ MaskFeaturePointSelectionFilter<TImage, TMask, TFeatures>::GenerateData()
         {
           OffsetType off = gradientItr.GetOffset(i);
 
-          for (unsigned j = 0; j < ImageDimension; ++j)
+          for (unsigned int j = 0; j < ImageDimension; ++j)
           {
             OffsetType left = off;
             left[j] -= 1;
@@ -285,8 +285,8 @@ MaskFeaturePointSelectionFilter<TImage, TMask, TFeatures>::GenerateData()
         // trace should be non-zero
         if (itk::Math::abs(trace) < TRACE_EPSILON)
         {
-          rit++;
-          numberOfPointsInserted--;
+          ++rit;
+          --numberOfPointsInserted;
           continue;
         }
 
@@ -309,7 +309,7 @@ MaskFeaturePointSelectionFilter<TImage, TMask, TFeatures>::GenerateData()
         selectionMap->SetPixel(idx, ineligeblePointCode);
       }
     }
-    rit++;
+    ++rit;
   }
   // set points
   pointSet->SetPoints(points);

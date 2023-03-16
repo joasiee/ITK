@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -106,7 +106,7 @@ ThreadPool::SetDoNotWaitForThreads(bool doNotWaitForThreads)
 
 ThreadPool::ThreadPool()
 {
-  // m_PimplGlobals->m_Mutex not needed to be acquired here because contruction only occurs via GetInstance which is
+  // m_PimplGlobals->m_Mutex not needed to be acquired here because construction only occurs via GetInstance which is
   // protected by call_once.
 
   m_PimplGlobals->m_ThreadPoolInstance = this;        // threads need this
@@ -140,7 +140,7 @@ int
 ThreadPool::GetNumberOfCurrentlyIdleThreads() const
 {
   std::unique_lock<std::mutex> mutexHolder(m_PimplGlobals->m_Mutex);
-  return int(m_Threads.size()) - int(m_WorkQueue.size()); // lousy approximation
+  return static_cast<int>(m_Threads.size()) - static_cast<int>(m_WorkQueue.size()); // lousy approximation
 }
 
 void

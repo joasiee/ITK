@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -119,7 +119,7 @@ NCCRegistrationFunction<TFixedImage, TMovingImage, TDisplacementField>::ComputeU
       // Get fixed image related information.
       // Note: no need to check the index is within fixed image buffer.
       // This is done by the external filter.
-      const auto                fixedValue = (double)this->m_FixedImage->GetPixel(index);
+      const auto                fixedValue = static_cast<double>(this->m_FixedImage->GetPixel(index));
       const CovariantVectorType fixedGradient = m_FixedImageGradientCalculator->EvaluateAtIndex(index);
       double                    fixedGradientSquaredMagnitude = 0;
       for (unsigned int j = 0; j < ImageDimension; ++j)

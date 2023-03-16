@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@
 #ifndef itkMahalanobisDistanceMembershipFunction_h
 #define itkMahalanobisDistanceMembershipFunction_h
 
+#include "itkNumericTraitsVectorPixel.h"
 #include "itkVariableSizeMatrix.h"
 
 #include "itkMembershipFunctionBase.h"
@@ -133,7 +134,7 @@ private:
   CovarianceMatrixType m_Covariance; // covariance matrix
 
   // inverse covariance matrix. automatically calculated
-  // when covariance matirx is set.
+  // when covariance matrix is set.
   CovarianceMatrixType m_InverseCovariance;
 
   /** Boolean to cache whether the covariance is singular or nearly singular */

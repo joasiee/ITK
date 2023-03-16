@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -123,7 +123,7 @@ main(int argc, char * argv[])
   // Setup the opening and closing methods
   opening->SetKernel(structuringElement);
   closing->SetKernel(structuringElement);
-  // Setup minnimum and maximum of rescale filter
+  // Setup minimum and maximum of rescale filter
   auto rescaleFilter = RescaleFilterType::New();
   rescaleFilter->SetOutputMinimum(0);
   rescaleFilter->SetOutputMaximum(255);

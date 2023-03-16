@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@
 namespace itk
 {
 /**
- *\class ContourExtractor2DImageFilter
+ * \class ContourExtractor2DImageFilter
  * \brief Computes a list of PolyLineParametricPath objects from the contours in
  * a 2D image.
  *
@@ -265,7 +265,7 @@ private:
   struct VertexHash
   {
     using CoordinateType = typename VertexType::CoordRepType;
-    inline std::size_t
+    inline size_t
     operator()(const VertexType & v) const noexcept
     {
       return std::hash<CoordinateType>{}(v[0]) ^ (std::hash<CoordinateType>{}(v[1]) << 1);

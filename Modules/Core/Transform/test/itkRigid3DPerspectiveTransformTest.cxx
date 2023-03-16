@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -50,7 +50,7 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
     covVector.Fill(1.0);
     ITK_TRY_EXPECT_EXCEPTION(transform->TransformCovariantVector(covVector));
 
-    typename TransformType::InputPointType       point{ 1.0 };
+    auto                                         point = itk::MakeFilled<typename TransformType::InputPointType>(1.0);
     typename TransformType::JacobianPositionType jacobianPosition;
     ITK_TRY_EXPECT_EXCEPTION(transform->ComputeJacobianWithRespectToPosition(point, jacobianPosition));
   }
@@ -72,6 +72,12 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
     centerOfRotation.Fill(0);
     transform->SetCenterOfRotation(centerOfRotation);
     ITK_TEST_SET_GET_VALUE(centerOfRotation, transform->GetCenterOfRotation());
+
+    // This transform has no fixed parameters; empty method body; called for coverage purposes
+    typename TransformType::FixedParametersType::ValueType fixedParametersValues = 0;
+    typename TransformType::FixedParametersType            fixedParameters;
+    fixedParameters.Fill(fixedParametersValues);
+    transform->SetFixedParameters(fixedParameters);
   }
 
   /* Create a 3D identity transformation and show its parameters */
@@ -107,6 +113,7 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
     ioffset.Fill(0.0);
 
     translation->SetOffset(ioffset);
+    ITK_TEST_SET_GET_VALUE(ioffset, translation->GetOffset());
 
     TransformType::OffsetType offset = translation->GetOffset();
     std::cout << "pure Translation test:  ";
@@ -184,6 +191,7 @@ itkRigid3DPerspectiveTransformTest(int, char *[])
 
     rotation.Set(axis, angle);
     rigid->SetRotation(rotation);
+    ITK_TEST_SET_GET_VALUE(rotation, rigid->GetRotation());
 
     {
       // Project an itk::Point

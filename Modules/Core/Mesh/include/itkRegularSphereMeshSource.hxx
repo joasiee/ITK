@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -275,25 +275,25 @@ RegularSphereMeshSource<TOutputMesh>::GenerateData()
         tripoints[1] = newIdx[0];
         tripoints[2] = newIdx[2];
         this->AddCell(result, tripoints, cellIdx);
-        cellIdx++;
+        ++cellIdx;
 
         tripoints[0] = newIdx[0];
         tripoints[1] = tp[1];
         tripoints[2] = newIdx[1];
         this->AddCell(result, tripoints, cellIdx);
-        cellIdx++;
+        ++cellIdx;
 
         tripoints[0] = newIdx[1];
         tripoints[1] = tp[2];
         tripoints[2] = newIdx[2];
         this->AddCell(result, tripoints, cellIdx);
-        cellIdx++;
+        ++cellIdx;
 
         tripoints[0] = newIdx[0];
         tripoints[1] = newIdx[1];
         tripoints[2] = newIdx[2];
         this->AddCell(result, tripoints, cellIdx);
-        cellIdx++;
+        ++cellIdx;
       }
 
       // for all cells

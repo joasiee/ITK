@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,6 +24,8 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkTestingMacros.h"
+#include <vector>
+#include <numeric>
 
 int
 itkMINCImageIOTest2(int argc, char * argv[])
@@ -42,6 +44,16 @@ itkMINCImageIOTest2(int argc, char * argv[])
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(mincIO1, MINCImageIO, ImageIOBase);
 
+
+  unsigned int               supportedDimCount = 4; // includes the degenerate 0-dimensional case
+  std::vector<unsigned long> supportedDims(supportedDimCount);
+  std::iota(std::begin(supportedDims), std::end(supportedDims), 0);
+  for (auto const & value : supportedDims)
+  {
+    ITK_TEST_EXPECT_TRUE(mincIO1->SupportsDimension(value));
+  }
+
+  ITK_TEST_EXPECT_TRUE(!mincIO1->SupportsDimension(supportedDims.back() + 1));
 
   itk::MINCImageIO::Pointer mincIO2 = itk::MINCImageIO::New();
 

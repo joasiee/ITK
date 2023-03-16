@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -364,7 +364,7 @@ FEMObject<VDimension>::GenerateMFC()
       l1->SetIndex(m_NMFC);
 
       // increase the number of MFC
-      m_NMFC++;
+      ++m_NMFC;
     }
   }
 }
@@ -391,7 +391,7 @@ FEMObject<VDimension>::GenerateGFN()
                                         // all
                                         // elements
   {
-    // Add the elemens in the nodes list of elements
+    // Add the elements in the nodes list of elements
     // FIXME: should be removed once Mesh is there
     Element::Pointer el = this->GetElement(e);
     unsigned int     Npts = el->GetNumberOfNodes();
@@ -420,7 +420,7 @@ FEMObject<VDimension>::GenerateGFN()
         if (el->GetNode(n)->GetDegreeOfFreedom(dof) == Element::InvalidDegreeOfFreedomID)
         {
           el->GetNode(n)->SetDegreeOfFreedom(dof, m_NGFN);
-          m_NGFN++;
+          ++m_NGFN;
         }
       }
     }

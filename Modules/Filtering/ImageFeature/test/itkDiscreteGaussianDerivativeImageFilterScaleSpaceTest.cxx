@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -37,10 +37,10 @@ NormalizeSineWave(double frequencyPerImage, unsigned int order, double pixelSpac
   double frequency = frequencyPerImage * 2.0 * itk::Math::pi / (imageSize * pixelSpacing);
 
   // The theoretical maximal value should occur at this sigma
-  double sigmaMax = std::sqrt(double(order)) / frequency;
+  double sigmaMax = std::sqrt(static_cast<double>(order)) / frequency;
 
   // The theoreical maximal value of the derivative, obtained at sigmaMax
-  double expectedMax = std::pow(double(order), order * 0.5) * std::exp(-0.5 * order);
+  double expectedMax = std::pow(static_cast<double>(order), order * 0.5) * std::exp(-0.5 * order);
 
   using ImageType = itk::Image<double, ImageDimension>;
   auto image = ImageType::New();

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@
 
 #include "itkImageRandomConstIteratorWithIndex.h"
 #include "itkMath.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 namespace itk
 {
@@ -256,16 +257,10 @@ ImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
   }
 
   // If the image is provided by a source, update the source.
-  if (m_MovingImage->GetSource())
-  {
-    m_MovingImage->GetSource()->Update();
-  }
+  m_MovingImage->UpdateSource();
 
   // If the image is provided by a source, update the source.
-  if (m_FixedImage->GetSource())
-  {
-    m_FixedImage->GetSource()->Update();
-  }
+  m_FixedImage->UpdateSource();
 
   // The use of FixedImageIndexes and the use of FixedImageRegion
   // are mutually exclusive, so they should not both be checked.
@@ -311,10 +306,10 @@ ImageToImageMetric<TFixedImage, TMovingImage>::MultiThreadingInitialize()
 {
   this->SetNumberOfWorkUnits(m_NumberOfWorkUnits);
 
-  m_ThreaderNumberOfMovingImageSamples.reset(new unsigned int[m_NumberOfWorkUnits - 1]);
+  m_ThreaderNumberOfMovingImageSamples = make_unique_for_overwrite<unsigned int[]>(m_NumberOfWorkUnits - 1);
 
   // Allocate the array of transform clones to be used in every thread
-  m_ThreaderTransform.reset(new TransformPointer[m_NumberOfWorkUnits - 1]);
+  m_ThreaderTransform = make_unique_for_overwrite<TransformPointer[]>(m_NumberOfWorkUnits - 1);
   for (ThreadIdType ithread = 0; ithread < m_NumberOfWorkUnits - 1; ++ithread)
   {
     this->m_ThreaderTransform[ithread] = this->m_Transform->Clone();
@@ -428,8 +423,10 @@ ImageToImageMetric<TFixedImage, TMovingImage>::MultiThreadingInitialize()
     }
     else
     {
-      this->m_ThreaderBSplineTransformWeights.reset(new BSplineTransformWeightsType[m_NumberOfWorkUnits - 1]);
-      this->m_ThreaderBSplineTransformIndices.reset(new BSplineTransformIndexArrayType[m_NumberOfWorkUnits - 1]);
+      this->m_ThreaderBSplineTransformWeights =
+        make_unique_for_overwrite<BSplineTransformWeightsType[]>(m_NumberOfWorkUnits - 1);
+      this->m_ThreaderBSplineTransformIndices =
+        make_unique_for_overwrite<BSplineTransformIndexArrayType[]>(m_NumberOfWorkUnits - 1);
     }
 
     for (unsigned int j = 0; j < FixedImageDimension; ++j)
@@ -460,11 +457,11 @@ ImageToImageMetric<TFixedImage, TMovingImage>::SampleFixedImageIndexes(FixedImag
     // Get sampled index
     FixedImageIndexType index = m_FixedImageIndexes[i];
     // Translate index to point
-    m_FixedImage->TransformIndexToPhysicalPoint(index, (*iter).point);
+    m_FixedImage->TransformIndexToPhysicalPoint(index, iter->point);
 
     // Get sampled fixed image value
-    (*iter).value = m_FixedImage->GetPixel(index);
-    (*iter).valueIndex = 0;
+    iter->value = m_FixedImage->GetPixel(index);
+    iter->valueIndex = 0;
 
     ++iter;
   }
@@ -516,9 +513,9 @@ ImageToImageMetric<TFixedImage, TMovingImage>::SampleFixedImageRegion(FixedImage
         SizeValueType count = 0;
         while (iter != end)
         {
-          (*iter).point = samples[count].point;
-          (*iter).value = samples[count].value;
-          (*iter).valueIndex = 0;
+          iter->point = samples[count].point;
+          iter->value = samples[count].value;
+          iter->valueIndex = 0;
           ++count;
           if (count >= samplesFound)
           {
@@ -559,10 +556,10 @@ ImageToImageMetric<TFixedImage, TMovingImage>::SampleFixedImageRegion(FixedImage
       }
 
       // Translate index to point
-      (*iter).point = inputPoint;
+      iter->point = inputPoint;
       // Get sampled fixed image value
-      (*iter).value = randIter.Get();
-      (*iter).valueIndex = 0;
+      iter->value = randIter.Get();
+      iter->valueIndex = 0;
 
       ++samplesFound;
       ++randIter;
@@ -578,10 +575,10 @@ ImageToImageMetric<TFixedImage, TMovingImage>::SampleFixedImageRegion(FixedImage
       // Get sampled index
       FixedImageIndexType index = randIter.GetIndex();
       // Translate index to point
-      m_FixedImage->TransformIndexToPhysicalPoint(index, (*iter).point);
+      m_FixedImage->TransformIndexToPhysicalPoint(index, iter->point);
       // Get sampled fixed image value
-      (*iter).value = randIter.Get();
-      (*iter).valueIndex = 0;
+      iter->value = randIter.Get();
+      iter->valueIndex = 0;
 
       // Jump to random position
       ++randIter;
@@ -648,10 +645,10 @@ ImageToImageMetric<TFixedImage, TMovingImage>::SampleFullFixedImageRegion(FixedI
       }
 
       // Translate index to point
-      (*iter).point = inputPoint;
+      iter->point = inputPoint;
       // Get sampled fixed image value
-      (*iter).value = regionIter.Get();
-      (*iter).valueIndex = 0;
+      iter->value = regionIter.Get();
+      iter->valueIndex = 0;
 
       ++regionIter;
       if (regionIter.IsAtEnd())
@@ -669,10 +666,10 @@ ImageToImageMetric<TFixedImage, TMovingImage>::SampleFullFixedImageRegion(FixedI
       FixedImageIndexType index = regionIter.GetIndex();
 
       // Translate index to point
-      m_FixedImage->TransformIndexToPhysicalPoint(index, (*iter).point);
+      m_FixedImage->TransformIndexToPhysicalPoint(index, iter->point);
       // Get sampled fixed image value
-      (*iter).value = regionIter.Get();
-      (*iter).valueIndex = 0;
+      iter->value = regionIter.Get();
+      iter->valueIndex = 0;
 
       ++regionIter;
       if (regionIter.IsAtEnd())
@@ -1317,7 +1314,8 @@ ImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Inde
   {
     for (ThreadIdType i = 0; i < m_NumberOfWorkUnits - 1; ++i)
     {
-      os << "  Thread[" << i << "]= " << (unsigned int)m_ThreaderNumberOfMovingImageSamples[i] << std::endl;
+      os << "  Thread[" << i << "]= " << static_cast<unsigned int>(m_ThreaderNumberOfMovingImageSamples[i])
+         << std::endl;
     }
   }
 

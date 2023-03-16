@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -56,6 +56,7 @@ itkVectorImageToVideoTest(int argc, char * argv[])
   // Arbitrarily set last axis as temporal dimension to split frames
   itk::IndexValueType frameAxis = Dimension - 1;
   videoFilter->SetFrameAxis(frameAxis);
+  ITK_TEST_SET_GET_VALUE(frameAxis, videoFilter->GetFrameAxis());
 
   ITK_TRY_EXPECT_NO_EXCEPTION(videoFilter->Update());
 

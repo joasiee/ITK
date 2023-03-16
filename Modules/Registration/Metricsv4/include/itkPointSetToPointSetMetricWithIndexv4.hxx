@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -79,16 +79,10 @@ PointSetToPointSetMetricWithIndexv4<TFixedPointSet, TMovingPointSet, TInternalCo
   }
 
   // If the PointSet is provided by a source, update the source.
-  if (this->m_MovingPointSet->GetSource())
-  {
-    this->m_MovingPointSet->GetSource()->Update();
-  }
+  this->m_MovingPointSet->UpdateSource();
 
   // If the point set is provided by a source, update the source.
-  if (this->m_FixedPointSet->GetSource())
-  {
-    this->m_FixedPointSet->GetSource()->Update();
-  }
+  this->m_FixedPointSet->UpdateSource();
 
   // Check for virtual domain if needed.
   // With local-support transforms we need a virtual domain in
@@ -464,7 +458,7 @@ PointSetToPointSetMetricWithIndexv4<TFixedPointSet, TMovingPointSet, TInternalCo
       field[offset + i] += pointDerivative[i];
     }
   }
-  catch (ExceptionObject & exc)
+  catch (const ExceptionObject & exc)
   {
     std::string msg("Caught exception: \n");
     msg += exc.what();
@@ -648,7 +642,7 @@ const typename PointSetToPointSetMetricWithIndexv4<TFixedPointSet, TMovingPointS
   PointIdentifierRanges ranges;
   for (PointIdentifier p = 1; p < nWorkUnits; ++p)
   {
-    PointIdentifier endRange = (p * nPoints) / (double)nWorkUnits;
+    PointIdentifier endRange = (p * nPoints) / static_cast<double>(nWorkUnits);
     ranges.push_back(PointIdentifierPair(startRange, endRange));
     startRange = endRange;
   }

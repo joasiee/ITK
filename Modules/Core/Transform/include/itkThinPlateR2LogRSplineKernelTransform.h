@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,17 +32,17 @@ namespace itk
  *
  * \ingroup ITKTransform
  */
-template <typename TParametersValueType, unsigned int NDimensions = 3>
+template <typename TParametersValueType, unsigned int VDimension = 3>
 // Number of dimensions
 class ITK_TEMPLATE_EXPORT ThinPlateR2LogRSplineKernelTransform
-  : public KernelTransform<TParametersValueType, NDimensions>
+  : public KernelTransform<TParametersValueType, VDimension>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ThinPlateR2LogRSplineKernelTransform);
 
   /** Standard class type aliases. */
   using Self = ThinPlateR2LogRSplineKernelTransform;
-  using Superclass = KernelTransform<TParametersValueType, NDimensions>;
+  using Superclass = KernelTransform<TParametersValueType, VDimension>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 

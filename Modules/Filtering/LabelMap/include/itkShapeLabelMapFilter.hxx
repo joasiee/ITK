@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -168,7 +168,7 @@ ShapeLabelMapFilter<TImage, TLabelImage>::ThreadedProcessLabelObject(LabelObject
       if (idx[0] == borderMin[0])
       {
         // One more pixel on the border
-        nbOfPixelsOnBorder++;
+        ++nbOfPixelsOnBorder;
         isOnBorder0 = true;
       }
       if (!isOnBorder0 || length > 1)
@@ -177,7 +177,7 @@ ShapeLabelMapFilter<TImage, TLabelImage>::ThreadedProcessLabelObject(LabelObject
         if (idx[0] + (OffsetValueType)length - 1 == borderMax[0])
         {
           // One more pixel on the border
-          nbOfPixelsOnBorder++;
+          ++nbOfPixelsOnBorder;
         }
       }
     }
@@ -263,7 +263,7 @@ ShapeLabelMapFilter<TImage, TLabelImage>::ThreadedProcessLabelObject(LabelObject
       output->TransformIndexToPhysicalPoint(idx, physicalPosition);
 
       const typename ImageType::DirectionType & direction = output->GetDirection();
-      VectorType                                scale(output->GetSpacing()[0]);
+      auto                                      scale = MakeFilled<VectorType>(output->GetSpacing()[0]);
       for (unsigned int i = 0; i < ImageDimension; ++i)
       {
         scale[i] *= direction(i, 0);
@@ -541,7 +541,7 @@ ShapeLabelMapFilter<TImage, TLabelImage>::ComputePerimeter(LabelObjectType * lab
   // a data structure to store the number of intercepts on each direction
   using MapInterceptType = typename std::map<OffsetType, SizeValueType, Functor::LexicographicCompare>;
   MapInterceptType intercepts;
-  // int nbOfDirections = (int)std::pow( 2.0, (int)ImageDimension ) - 1;
+  // int nbOfDirections = static_cast<int>(std::pow(2.0, static_cast<int>(ImageDimension))) - 1;
   // intecepts.resize(nbOfDirections + 1);  // code begins at position 1
 
   // now iterate over the vectors of lines
@@ -634,7 +634,7 @@ ShapeLabelMapFilter<TImage, TLabelImage>::ComputePerimeter(LabelObjectType * lab
           {
             // go to next neighbor
             nMin = ni->GetIndex()[0] + ni->GetLength();
-            ni++;
+            ++ni;
 
             if (ni != ns.end())
             {
@@ -648,7 +648,7 @@ ShapeLabelMapFilter<TImage, TLabelImage>::ComputePerimeter(LabelObjectType * lab
           else
           {
             // go to next line
-            li++;
+            ++li;
           }
         }
       }

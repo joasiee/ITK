@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,7 +33,7 @@
 // Datatype[z][y][x][c])
 //
 // The example also optionally takes in two more arguments, as a convenience
-// to the user. These arguements extract the specified component 'c' from the
+// to the user. These arguments extract the specified component 'c' from the
 // membership image and rescale, so the user can fire up a typical image
 // viewer and see the relative pixel memberships to class 'c'.
 //

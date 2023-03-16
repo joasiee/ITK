@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -112,7 +112,7 @@ FillWithCircle(TImage *                   image,
     double distance = 0;
     for (unsigned int j = 0; j < TImage::ImageDimension; ++j)
     {
-      distance += itk::Math::sqr((double)index[j] - center[j]);
+      distance += itk::Math::sqr(static_cast<double>(index[j]) - center[j]);
     }
     if (distance <= r2)
       it.Set(foregnd);
@@ -140,23 +140,22 @@ int
 itkMultiResolutionPDEDeformableRegistrationTest(int argc, char * argv[])
 {
 
-  using PixelType = unsigned char;
-  enum
+  if (argc < 2)
   {
-    ImageDimension = 2
-  };
+    std::cerr << "Missing parametes." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " WarpedImage" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  constexpr unsigned int ImageDimension = 2;
+  using PixelType = unsigned char;
+
   using ImageType = itk::Image<PixelType, ImageDimension>;
   using VectorType = itk::Vector<float, ImageDimension>;
   using FieldType = itk::Image<VectorType, ImageDimension>;
   using IndexType = ImageType::IndexType;
   using SizeType = ImageType::SizeType;
   using RegionType = ImageType::RegionType;
-
-  if (argc < 2)
-  {
-    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " WarpedImage\n";
-    return EXIT_FAILURE;
-  }
 
   //--------------------------------------------------------
   std::cout << "Generate input images and initial field";
@@ -245,9 +244,8 @@ itkMultiResolutionPDEDeformableRegistrationTest(int argc, char * argv[])
   registrator->GetModifiableFixedImagePyramid()->UseShrinkImageFilterOn();
   registrator->GetModifiableMovingImagePyramid()->UseShrinkImageFilterOn();
 
-  unsigned int     numLevel = 3;
-  constexpr size_t arraySize = 10;
-  unsigned int     numIterations[arraySize];
+  constexpr unsigned int numLevel = 3;
+  unsigned int           numIterations[numLevel];
   numIterations[0] = 64;
 
   unsigned int ilevel;
@@ -262,6 +260,21 @@ itkMultiResolutionPDEDeformableRegistrationTest(int argc, char * argv[])
   registrator->SetNumberOfIterations(numIterations);
   RegistrationType::NumberOfIterationsType numIterationsArr;
   numIterationsArr.SetData(numIterations, numLevel);
+  ITK_TEST_SET_GET_VALUE(numIterationsArr, registrator->GetNumberOfIterations());
+
+  // Set the number of iterations to a different value and try the overloaded method with the desired value
+  unsigned int numIterations2[numLevel];
+  numIterations2[0] = 8;
+  for (ilevel = 1; ilevel < numLevel; ++ilevel)
+  {
+    numIterations2[ilevel] = numIterations2[ilevel - 1] / 2;
+  }
+  registrator->SetNumberOfIterations(numIterations2);
+  RegistrationType::NumberOfIterationsType numIterationsArr2;
+  numIterationsArr2.SetData(numIterations2, numLevel);
+  ITK_TEST_SET_GET_VALUE(numIterationsArr2, registrator->GetNumberOfIterations());
+
+  registrator->SetNumberOfIterations(numIterationsArr);
   ITK_TEST_SET_GET_VALUE(numIterationsArr, registrator->GetNumberOfIterations());
 
   using CommandType = itk::SimpleMemberCommand<ShowProgressPDEObject>;

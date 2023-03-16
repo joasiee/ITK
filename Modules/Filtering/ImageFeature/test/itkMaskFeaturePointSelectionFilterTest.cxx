@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,16 +26,20 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkRGBPixel.h"
+#include "itkRegionOfInterestImageFilter.h"
 #include "itkTestingMacros.h"
 
 
 int
 itkMaskFeaturePointSelectionFilterTest(int argc, char * argv[])
 {
-  if (argc < 6)
+  if (argc < 7)
   {
-    std::cerr << itkNameOfTestExecutableMacro(argv)
-              << " inputImageFile outputImageFile nonConnectivity blockRadius computeStructureTensors selectFraction";
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv)
+              << " inputImageFile outputImageFile nonConnectivity blockRadius computeStructureTensors selectFraction "
+                 "[maskImage]"
+              << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -88,15 +92,23 @@ itkMaskFeaturePointSelectionFilterTest(int argc, char * argv[])
   filter->SetSelectFraction(selectFraction);
   ITK_TEST_SET_GET_VALUE(selectFraction, filter->GetSelectFraction());
 
-  try
+  // Use the whole input image as a mask if none is provided
+  using MaskPixelType = unsigned char;
+  using MaskImageType = itk::Image<MaskPixelType, Dimension>;
+  MaskImageType::Pointer maskImage;
+
+  if (argc >= 8)
   {
-    filter->Update();
+    maskImage = itk::ReadImage<InputImageType>(argv[7]);
+    filter->SetMaskImage(maskImage);
+    ITK_TEST_SET_GET_VALUE(maskImage, filter->GetMaskImage());
   }
-  catch (const itk::ExceptionObject & err)
-  {
-    std::cerr << err << std::endl;
-    return EXIT_FAILURE;
-  }
+  filter->SetMaskImage(maskImage);
+  ITK_TEST_SET_GET_VALUE(maskImage, filter->GetMaskImage());
+
+
+  ITK_TRY_EXPECT_NO_EXCEPTION(filter->Update());
+
 
   // Set up the writer
   using WriterType = itk::ImageFileWriter<OutputImageType>;

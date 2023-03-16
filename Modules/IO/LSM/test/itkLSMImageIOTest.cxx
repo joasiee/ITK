@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,7 +29,7 @@ itkLSMImageIOTest(int argc, char * argv[])
   if (argc < 3)
   {
     std::cerr << "Missing Parameters." << std::endl;
-    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " inputFileName(*.lsm) ouputFileName(*.lsm)"
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " inputFileName(*.lsm) outputFileName(*.lsm)"
               << std::endl;
     return EXIT_FAILURE;
   }
@@ -48,6 +48,10 @@ itkLSMImageIOTest(int argc, char * argv[])
   auto lsmImageIO = ImageIOType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(lsmImageIO, LSMImageIO, TIFFImageIO);
+
+
+  // Not used; empty method body; called for coverage purposes
+  lsmImageIO->WriteImageInformation();
 
   reader->SetImageIO(lsmImageIO);
 

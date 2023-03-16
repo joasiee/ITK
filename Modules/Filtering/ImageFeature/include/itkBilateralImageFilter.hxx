@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -123,7 +123,7 @@ template <typename TInputImage, typename TOutputImage>
 void
 BilateralImageFilter<TInputImage, TOutputImage>::BeforeThreadedGenerateData()
 {
-  // Build a small image of the N-dimensional Gaussian used for domain filter
+  // Build a small image of the n-dimensional Gaussian used for domain filter
   //
   // Gaussian image size will be (2*std::ceil(2.5*sigma)+1) x
   // (2*std::ceil(2.5*sigma)+1)

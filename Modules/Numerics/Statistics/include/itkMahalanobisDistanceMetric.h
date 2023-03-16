@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,7 +33,7 @@ namespace itk
 namespace Statistics
 {
 /**
- *\class MahalanobisDistanceMetric
+ * \class MahalanobisDistanceMetric
  * \brief MahalanobisDistanceMetric class computes a Mahalanobis
  *  distance given a mean and covariance.
  *
@@ -126,7 +126,7 @@ private:
   CovarianceMatrixType m_Covariance; // covariance matrix
 
   // inverse covariance matrix which is automatically calculated
-  // when covariance matirx is set.  This speed up the GetProbability()
+  // when covariance matrix is set.  This speeds up the GetProbability()
   CovarianceMatrixType m_InverseCovariance;
 
   double m_Epsilon{ 1e-100 };

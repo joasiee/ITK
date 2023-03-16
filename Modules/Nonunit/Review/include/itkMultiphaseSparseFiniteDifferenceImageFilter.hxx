@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -762,7 +762,7 @@ MultiphaseSparseFiniteDifferenceImageFilter<TInputImage, TFeatureImage, TOutputI
       // Update the accumulator value using the update buffer
       temp = static_cast<double>(sparsePtr->m_UpdateBuffer.front() - levelset->GetPixel(activeIt->m_Value));
       m_RMSSum += temp * temp;
-      m_RMSCounter++;
+      ++m_RMSCounter;
 
       levelset->SetPixel(activeIt->m_Value, sparsePtr->m_UpdateBuffer.front());
       ++activeIt;
@@ -930,7 +930,7 @@ MultiphaseSparseFiniteDifferenceImageFilter<TInputImage, TFeatureImage, TOutputI
 
       // Update the rms change
       m_RMSSum += (value - outputIt.GetCenterPixel()) * (value - outputIt.GetCenterPixel());
-      m_RMSCounter++;
+      ++m_RMSCounter;
 
       ++toIt;
     }

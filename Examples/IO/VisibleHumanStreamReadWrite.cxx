@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,7 +33,7 @@
 // through NLM’s website [3]. The original Visible Male cryosectional
 // images are non-interlaced 24-bit RGB pixels with a resolution of
 // 2048x1216 pixels by 1871 slices with a physical spacing of
-// approximately 0.33 mm in slice and 1.0 mm between slices. Theses
+// approximately 0.33 mm in slice and 1.0 mm between slices. These
 // dimensions results in about 13 gigabytes of data, which is an
 // appropriate size to demonstrate streaming. The following are two
 // examples of streaming which shows all three IO classes capable of
@@ -72,7 +72,7 @@ main(int argc, char * argv[])
   nameGenerator->SetEndIndex(2878);
   nameGenerator->SetIncrementIndex(1);
 
-  // create a ImageIO for the red channel
+  // create an ImageIO for the red channel
   using ImageIOType = itk::RawImageIO<PixelType, 2>;
   auto rimageio = ImageIOType::New();
   rimageio->SetDimensions(0, 2048);
@@ -82,7 +82,7 @@ main(int argc, char * argv[])
   rimageio->SetHeaderSize(rimageio->GetImageSizeInPixels() * 0);
 
 
-  // create a ImageIO for the green channel
+  // create an ImageIO for the green channel
   auto gimageio = ImageIOType::New();
   gimageio->SetDimensions(0, 2048);
   gimageio->SetDimensions(1, 1216);
@@ -91,7 +91,7 @@ main(int argc, char * argv[])
   gimageio->SetHeaderSize(gimageio->GetImageSizeInPixels() * 1);
 
 
-  // create a ImageIO for the blue channel
+  // create an ImageIO for the blue channel
   auto bimageio = ImageIOType::New();
   bimageio->SetDimensions(0, 2048);
   bimageio->SetDimensions(1, 1216);

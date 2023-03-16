@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -314,7 +314,7 @@ VariableLengthVector<TValue>::SetSize(unsigned int sz, TReallocatePolicy realloc
   m_NumElements = sz;
 }
 
-/** Set the all the elements of the array to the specified value */
+/** Set all the elements of the array to the specified value */
 template <typename TValue>
 void
 VariableLengthVector<TValue>::Fill(TValue const & v)

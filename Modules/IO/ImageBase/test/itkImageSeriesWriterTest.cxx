@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -80,12 +80,25 @@ itkImageSeriesWriterTest(int argc, char * argv[])
 
     auto writer = WriterType::New();
 
+    ITK_EXERCISE_BASIC_OBJECT_METHODS(writer, ImageSeriesWriter, ProcessObject);
+
+
     itk::SimpleFilterWatcher watcher2(writer);
 
     writer->SetInput(rescaler->GetOutput());
+
+    itk::SizeValueType startIndex = 1;
+    writer->SetStartIndex(startIndex);
+    ITK_TEST_SET_GET_VALUE(startIndex, writer->GetStartIndex());
+
+    itk::SizeValueType incrementIndex = 1;
+    writer->SetIncrementIndex(incrementIndex);
+    ITK_TEST_SET_GET_VALUE(incrementIndex, writer->GetIncrementIndex());
+
     char format[4096];
-    sprintf(format, "%s/series.%%d.%s", argv[2], argv[3]);
+    snprintf(format, sizeof(format), "%s/series.%%d.%s", argv[2], argv[3]);
     writer->SetSeriesFormat(format);
+    ITK_TEST_SET_GET_VALUE(std::string(format), std::string(writer->GetSeriesFormat()));
 
     ITK_TRY_EXPECT_NO_EXCEPTION(writer->Update());
 
@@ -95,6 +108,9 @@ itkImageSeriesWriterTest(int argc, char * argv[])
     writer->SetMetaDataDictionaryArray(reader->GetMetaDataDictionaryArray());
 
     ITK_TRY_EXPECT_EXCEPTION(writer->Update());
+
+    writer->SetImageIO(io);
+    ITK_TEST_SET_GET_VALUE(io, writer->GetImageIO());
 
 
     std::cout << "Old API PASSED !" << std::endl;
@@ -109,17 +125,27 @@ itkImageSeriesWriterTest(int argc, char * argv[])
 
 
     char format[4096];
-    sprintf(format, "%s/series.%%d.%s", argv[2], argv[3]);
+    snprintf(format, sizeof(format), "%s/series.%%d.%s", argv[2], argv[3]);
 
     std::cout << "Format = " << format << std::endl;
 
     ImageNDType::RegionType region = reader->GetOutput()->GetBufferedRegion();
     ImageNDType::SizeType   size = region.GetSize();
 
-    fit->SetStartIndex(0);
-    fit->SetEndIndex(size[2] - 1); // The number of slices to write
-    fit->SetIncrementIndex(1);
+    itk::SizeValueType startIndex = 0;
+    fit->SetStartIndex(startIndex);
+    ITK_TEST_SET_GET_VALUE(startIndex, fit->GetStartIndex());
+
+    itk::SizeValueType endIndex = size[2] - 1;
+    fit->SetEndIndex(endIndex); // The number of slices to write
+    ITK_TEST_SET_GET_VALUE(endIndex, fit->GetEndIndex());
+
+    itk::SizeValueType incrementIndex = 1;
+    fit->SetIncrementIndex(incrementIndex);
+    ITK_TEST_SET_GET_VALUE(incrementIndex, fit->GetIncrementIndex());
+
     fit->SetSeriesFormat(format);
+    ITK_TEST_SET_GET_VALUE(std::string(format), std::string(fit->GetSeriesFormat()));
 
     writer->SetInput(rescaler->GetOutput());
     writer->SetFileNames(fit->GetFileNames());
@@ -130,9 +156,8 @@ itkImageSeriesWriterTest(int argc, char * argv[])
       std::cerr << "Wrong default use compression value" << std::endl;
       return EXIT_FAILURE;
     }
-    writer->SetUseCompression(true);
-    writer->UseCompressionOn();
-    writer->UseCompressionOff();
+    bool useCompression = false;
+    ITK_TEST_SET_GET_BOOLEAN(writer, UseCompression, useCompression);
 
     ITK_TRY_EXPECT_NO_EXCEPTION(writer->Update());
 

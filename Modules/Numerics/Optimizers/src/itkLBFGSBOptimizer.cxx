@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,7 +52,7 @@ private:
 /**
  * Constructor
  */
-LBFGSBOptimizer ::LBFGSBOptimizer()
+LBFGSBOptimizer::LBFGSBOptimizer()
 
 {
   m_LowerBound = InternalBoundValueType(0);
@@ -63,10 +63,7 @@ LBFGSBOptimizer ::LBFGSBOptimizer()
 /**
  * Destructor
  */
-LBFGSBOptimizer::~LBFGSBOptimizer()
-{
-  delete m_VnlOptimizer;
-}
+LBFGSBOptimizer::~LBFGSBOptimizer() = default;
 
 /**
  * PrintSelf
@@ -266,14 +263,9 @@ LBFGSBOptimizer::SetCostFunction(SingleValuedCostFunction * costFunction)
 
   adaptor->SetCostFunction(costFunction);
 
-  if (m_OptimizerInitialized)
-  {
-    delete m_VnlOptimizer;
-  }
-
   this->SetCostFunctionAdaptor(adaptor);
 
-  m_VnlOptimizer = new InternalOptimizerType(*adaptor, this);
+  m_VnlOptimizer = std::make_unique<InternalOptimizerType>(*adaptor, this);
 
   // set the optimizer parameters
   m_VnlOptimizer->set_lower_bound(m_LowerBound);
@@ -356,14 +348,14 @@ LBFGSBOptimizer::StartOptimization()
  */
 
 /** Create with a reference to the ITK object */
-LBFGSBOptimizerHelper ::LBFGSBOptimizerHelper(vnl_cost_function & f, LBFGSBOptimizer * const itkObj)
+LBFGSBOptimizerHelper::LBFGSBOptimizerHelper(vnl_cost_function & f, LBFGSBOptimizer * const itkObj)
   : vnl_lbfgsb(f)
   , m_ItkObj(itkObj)
 {}
 
 /** Handle new iteration event */
 bool
-LBFGSBOptimizerHelper ::report_iter()
+LBFGSBOptimizerHelper::report_iter()
 {
   Superclass::report_iter();
 

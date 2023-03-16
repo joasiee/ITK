@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -91,8 +91,8 @@ itkMersenneTwisterRandomVariateGeneratorTest(int, char *[])
     sum += v;
     sum2 += v * v;
   }
-  double mean = sum / (double)count;
-  double variance = sum2 / (double)count - mean * mean;
+  double mean = sum / static_cast<double>(count);
+  double variance = sum2 / static_cast<double>(count) - mean * mean;
   if (itk::Math::abs(mean) > 0.01)
   {
     std::cerr << "Mean was " << mean << " expected 0.0 " << std::endl;

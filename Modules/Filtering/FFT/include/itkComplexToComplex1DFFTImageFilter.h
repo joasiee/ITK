@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -68,7 +68,11 @@ public:
   itkFactoryOnlyNewMacro(Self);
 
   /** Transform direction. */
-  using TransformDirectionType = enum { DIRECT = 1, INVERSE };
+  enum TransformDirectionType
+  {
+    DIRECT = 1,
+    INVERSE
+  };
 
   /** Set/Get the direction in which the transform will be applied.
    * By selecting DIRECT, this filter will perform a direct (forward) Fourier
@@ -105,10 +109,10 @@ protected:
 
   /** Direction in which the filter is to be applied
    * this should be in the range [0,ImageDimension-1]. */
-  unsigned int m_Direction;
+  unsigned int m_Direction{ 0 };
 
   /** Direction to apply the transform (forward/inverse). */
-  TransformDirectionType m_TransformDirection;
+  TransformDirectionType m_TransformDirection{ DIRECT };
 
 private:
 };
@@ -119,8 +123,8 @@ private:
 #  include "itkComplexToComplex1DFFTImageFilter.hxx"
 #endif
 
-#ifdef ITK_FFT_FACTORY_REGISTER_MANAGER
-#  include "itkFFTImageFilterFactoryRegisterManager.h"
+#ifdef ITK_FFTIMAGEFILTERINIT_FACTORY_REGISTER_MANAGER
+#  include "itkFFTImageFilterInitFactoryRegisterManager.h"
 #endif
 
 #endif // itkComplexToComplex1DFFTImageFilter_h

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,7 +39,7 @@ itkDisplacementFieldToBSplineImageFilterTest(int, char *[])
   spacing.Fill(0.5);
   size.Fill(100);
 
-  VectorType ones(1);
+  auto ones = itk::MakeFilled<VectorType>(1);
 
   auto field = DisplacementFieldType::New();
   field->SetOrigin(origin);
@@ -61,7 +61,7 @@ itkDisplacementFieldToBSplineImageFilterTest(int, char *[])
   auto pointSet = PointSetType::New();
   pointSet->Initialize();
 
-  VectorType ones_points(1.0);
+  auto ones_points = itk::MakeFilled<VectorType>(1.0);
 
   // Assign some random points within the b-spline domain
   PointSetType::PointType point1;

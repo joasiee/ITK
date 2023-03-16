@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -217,14 +217,14 @@ ImageRegistrationMethod<TFixedImage, TMovingImage>::StartOptimization()
     // do the optimization
     m_Optimizer->StartOptimization();
   }
-  catch (ExceptionObject & err)
+  catch (const ExceptionObject &)
   {
     // An error has occurred in the optimization.
     // Update the parameters
     m_LastTransformParameters = m_Optimizer->GetCurrentPosition();
 
     // Pass exception to caller
-    throw err;
+    throw;
   }
 
   // get the results
@@ -266,12 +266,12 @@ ImageRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     // initialize the interconnects between components
     this->Initialize();
   }
-  catch (ExceptionObject & err)
+  catch (const ExceptionObject &)
   {
     m_LastTransformParameters = empty;
 
     // pass exception to caller
-    throw err;
+    throw;
   }
 
   this->StartOptimization();

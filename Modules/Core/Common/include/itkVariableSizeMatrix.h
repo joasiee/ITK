@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,7 +30,7 @@
 namespace itk
 {
 /**
- *\class VariableSizeMatrix
+ * \class VariableSizeMatrix
  * \brief A templated class holding a M x N size Matrix.
  *
  * This class contains a vnl_matrix in order
@@ -175,7 +175,7 @@ public:
   }
 
   /** Assignment operator. */
-  inline const Self &
+  inline Self &
   operator=(const vnl_matrix<T> & matrix)
   {
     m_Matrix = matrix;
@@ -189,7 +189,7 @@ public:
   ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(Self);
 
   /** Assignment operator. */
-  inline const Self &
+  inline Self &
   operator=(const Self & matrix)
   {
     m_Matrix = matrix.m_Matrix;

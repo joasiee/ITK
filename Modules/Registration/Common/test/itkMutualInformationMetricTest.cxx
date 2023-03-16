@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,15 +55,11 @@ itkMutualInformationMetricTest(int, char *[])
   region.SetIndex(index);
 
   auto imgMoving = MovingImageType::New();
-  imgMoving->SetLargestPossibleRegion(region);
-  imgMoving->SetBufferedRegion(region);
-  imgMoving->SetRequestedRegion(region);
+  imgMoving->SetRegions(region);
   imgMoving->Allocate();
 
   auto imgFixed = FixedImageType::New();
-  imgFixed->SetLargestPossibleRegion(region);
-  imgFixed->SetBufferedRegion(region);
-  imgFixed->SetRequestedRegion(region);
+  imgFixed->SetRegions(region);
   imgFixed->Allocate();
 
   // Fill images with a 2D gaussian
@@ -71,10 +67,10 @@ itkMutualInformationMetricTest(int, char *[])
   using TargetIteratorType = itk::ImageRegionIterator<FixedImageType>;
 
   itk::Point<double, 2> center;
-  center[0] = (double)region.GetSize()[0] / 2.0;
-  center[1] = (double)region.GetSize()[1] / 2.0;
+  center[0] = static_cast<double>(region.GetSize()[0]) / 2.0;
+  center[1] = static_cast<double>(region.GetSize()[1]) / 2.0;
 
-  const double s = (double)region.GetSize()[0] / 2.0;
+  const double s = static_cast<double>(region.GetSize()[0]) / 2.0;
 
   itk::Point<double, 2>  p;
   itk::Vector<double, 2> d;
@@ -95,7 +91,7 @@ itkMutualInformationMetricTest(int, char *[])
     d += displacement;
     const double x = d[0];
     const double y = d[1];
-    ri.Set((unsigned char)(200.0 * std::exp(-(x * x + y * y) / (s * s))));
+    ri.Set(static_cast<unsigned char>(200.0 * std::exp(-(x * x + y * y) / (s * s))));
     ++ri;
   }
 
@@ -108,7 +104,7 @@ itkMutualInformationMetricTest(int, char *[])
     d = p - center;
     const double x = d[0];
     const double y = d[1];
-    ti.Set((unsigned char)(200.0 * std::exp(-(x * x + y * y) / (s * s))));
+    ti.Set(static_cast<unsigned char>(200.0 * std::exp(-(x * x + y * y) / (s * s))));
     ++ti;
   }
 
@@ -121,7 +117,7 @@ itkMutualInformationMetricTest(int, char *[])
   auto transformer = TransformType::New();
 
   //------------------------------------------------------------
-  // Set up a interpolator
+  // Set up an interpolator
   //------------------------------------------------------------
   using InterpolatorType = itk::LinearInterpolateImageFunction<MovingImageType, double>;
 
@@ -158,7 +154,7 @@ itkMutualInformationMetricTest(int, char *[])
   metric->Initialize();
 
   //------------------------------------------------------------
-  // Set up a affine transform parameters
+  // Set up an affine transform parameters
   //------------------------------------------------------------
   unsigned int   numberOfParameters = transformer->GetNumberOfParameters();
   ParametersType parameters(numberOfParameters);
@@ -229,7 +225,7 @@ itkMutualInformationMetricTest(int, char *[])
   metric->SetKernelFunction(theKernel);
   theKernel->Print(std::cout);
 
-  std::cout << "Try causing a exception by making std dev too small";
+  std::cout << "Try causing an exception by making std dev too small";
   std::cout << std::endl;
   metric->SetFixedImageStandardDeviation(0.001);
   try
@@ -247,7 +243,7 @@ itkMutualInformationMetricTest(int, char *[])
   // reset standard deviation
   metric->SetFixedImageStandardDeviation(5.0);
 
-  std::cout << "Try causing a exception by making fixed image nullptr";
+  std::cout << "Try causing an exception by making fixed image nullptr";
   std::cout << std::endl;
   metric->SetFixedImage(nullptr);
   try

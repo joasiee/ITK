@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -54,9 +54,7 @@ DoIt(int argc, char * argv[], const std::string pixelType)
   region.SetSize(size);
   region.SetIndex(index);
 
-  inputimg->SetLargestPossibleRegion(region);
-  inputimg->SetBufferedRegion(region);
-  inputimg->SetRequestedRegion(region);
+  inputimg->SetRegions(region);
   inputimg->Allocate();
 
   int       row, col;

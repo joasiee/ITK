@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,7 @@ namespace itk
 {
 
 /**
- *\class NoiseBaseImageFilter
+ * \class NoiseBaseImageFilter
  *
  * \brief An Abstract Base class for Noise image filters
  *
@@ -78,7 +78,7 @@ protected:
 
   // Clamp and round the input value to the output
   static OutputImagePixelType
-  ClampCast(const double & value);
+  ClampCast(const double value);
 
 private:
   uint32_t m_Seed{ 0 };

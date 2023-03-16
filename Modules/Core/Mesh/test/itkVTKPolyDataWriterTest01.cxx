@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,13 +17,15 @@
  *=========================================================================*/
 
 #include "itkVTKPolyDataWriter.h"
+#include "itkTestingMacros.h"
 
 int
 itkVTKPolyDataWriterTest01(int argc, char * argv[])
 {
   if (argc != 2)
   {
-    std::cerr << "Usage: itkVTKPolyDataWriter outputFileName" << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " outputFileName" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -91,11 +93,17 @@ itkVTKPolyDataWriterTest01(int argc, char * argv[])
   }
 
   auto writer = WriterType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(writer, VTKPolyDataWriter, Object);
+
+
   writer->SetInput(mesh);
-  writer->SetFileName(argv[1]);
+  std::string inputFileName = argv[1];
+  writer->SetFileName(inputFileName);
+  ITK_TEST_SET_GET_VALUE(inputFileName, writer->GetFileName());
+
   writer->Write();
 
-  std::cout << __LINE__ << " PrintSelf\n" << writer;
 
   return EXIT_SUCCESS;
 }

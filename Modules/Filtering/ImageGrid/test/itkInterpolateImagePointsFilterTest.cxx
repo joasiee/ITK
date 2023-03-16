@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -170,7 +170,7 @@ test2DInterpolateImagePointsFilter()
   {
     double value = outIter.Get();
     std::cout.width(10);
-    std::cout.precision(unsigned(itk::Math::abs(std::log10(epsilon))));
+    std::cout.precision(static_cast<unsigned int>(itk::Math::abs(std::log10(epsilon))));
     std::cout << "Checking image value: " << value << std::endl;
     if (!itk::Math::FloatAlmostEqual(value, truth[i], 10, epsilon))
     {
@@ -269,8 +269,8 @@ test3DInterpolateImagePointsFilter()
   // Write home and let mom & dad know how we're doing.
   std::cout << "rmse of image is " << rmse << "\n ";
   double epsilon = 1e-7;
-  std::cout.precision(unsigned(itk::Math::abs(std::log10(epsilon))));
-  if (!itk::Math::FloatAlmostEqual(rmse, (double)0, 10, epsilon))
+  std::cout.precision(static_cast<unsigned int>(itk::Math::abs(std::log10(epsilon))));
+  if (!itk::Math::FloatAlmostEqual(rmse, 0.0, 10, epsilon))
   {
     std::cout << "*** Error: rmse is larger than expected." << std::endl;
     testStatus = EXIT_FAILURE;

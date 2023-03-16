@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -81,7 +81,7 @@ public:
   using InternalDataContainerType = std::vector<MeasurementVectorType>;
 
   /** Resize the container. Using Resize() and then SetMeasurementVector() is
-   * about nine times faster than usign PushBack() continuously. Which means that
+   * about nine times faster than using PushBack() continuously. Which means that
    * whenever the total number of Measurement vectors is known, the users
    * should prefer calling Resize() first and then set the values by calling
    * SetMeasurementVector(). On the other hand, if the number of measurement

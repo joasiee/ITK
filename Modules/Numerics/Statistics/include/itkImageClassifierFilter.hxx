@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -138,8 +138,7 @@ ImageClassifierFilter<TSample, TInputImage, TOutputImage>::GenerateData()
 
   if (membershipFunctionsWeightsArray.Size() != this->m_NumberOfClasses)
   {
-    itkExceptionMacro("Membership functions weight array size does not match the\
-                      number of classes ");
+    itkExceptionMacro("Membership functions weight array size does not match the number of classes ");
   }
 
   const auto * inputImage = static_cast<const InputImageType *>(this->ProcessObject::GetInput(0));

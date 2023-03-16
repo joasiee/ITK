@@ -6,7 +6,7 @@
 #   you may not use this file except in compliance with the License.
 #   You may obtain a copy of the License at
 #
-#          http://www.apache.org/licenses/LICENSE-2.0.txt
+#          https://www.apache.org/licenses/LICENSE-2.0.txt
 #
 #   Unless required by applicable law or agreed to in writing, software
 #   distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,6 +17,7 @@
 # ==========================================================================*/
 
 from typing import Union, Optional, Tuple, TYPE_CHECKING
+import os
 
 try:
     from numpy.typing import ArrayLike
@@ -114,7 +115,6 @@ class itkCType:
         """
         This function is intended to be run only one time
         """
-        import os
         import numpy as np
 
         _F: "itkCType" = itkCType("float", "F", np.float32)
@@ -175,6 +175,14 @@ B: itkCType
     B,
 ) = itkCType.initialize_c_types_once()
 
+# Aliases for SizeValueType, IdentifierType, OffsetType
+ST = UL
+IT = UL
+OT = SL
+if os.name == "nt":
+    ST = ULL
+    IT = ULL
+    OT = SLL
 
 # Type aliases to avoid expensive import, circular references. Use with forward references.
 if TYPE_CHECKING:

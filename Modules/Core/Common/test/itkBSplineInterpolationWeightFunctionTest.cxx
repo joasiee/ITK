@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@
 
 #include "itkBSplineInterpolationWeightFunction.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
+#include "itkTestingMacros.h"
 
 // Test template instantiation for TCoordRep = float and VSplineOrder = 1.
 // Note that this particular template instantiation would take forever to
@@ -57,6 +58,19 @@ itkBSplineInterpolationWeightFunctionTest(int, char *[])
     using WeightsType = FunctionType::WeightsType;
 
     auto function = FunctionType::New();
+
+    ITK_EXERCISE_BASIC_OBJECT_METHODS(function, BSplineInterpolationWeightFunction, FunctionBase);
+
+
+#if !defined(ITK_LEGACY_REMOVE)
+#  if defined(ITK_LEGACY_SILENT)
+    typename FunctionType::SizeType supportSize = FunctionType::SizeType::Filled(SplineOrder + 1);
+    ITK_TEST_EXPECT_EQUAL(supportSize, function->GetSupportSize());
+
+    unsigned int numberOfWeights = WeightsType::Length;
+    ITK_TEST_EXPECT_EQUAL(numberOfWeights, function->GetNumberOfWeights());
+#  endif
+#endif
 
     WeightsType weights1;
     WeightsType weights2;

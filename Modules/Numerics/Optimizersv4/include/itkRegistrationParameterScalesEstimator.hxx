@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -173,8 +173,7 @@ RegistrationParameterScalesEstimator<TMetric>::IsBSplineTransform()
       if (compositeTransform)
       {
         isBSplineTransform = true;
-        for (signed long tind = static_cast<signed long>(compositeTransform->GetNumberOfTransforms()) - 1; tind >= 0;
-             tind--)
+        for (long tind = static_cast<long>(compositeTransform->GetNumberOfTransforms()) - 1; tind >= 0; tind--)
         {
           if (compositeTransform->GetNthTransformToOptimize(tind) &&
               (compositeTransform->GetNthTransformConstPointer(tind)->GetTransformCategory() !=
@@ -195,8 +194,7 @@ RegistrationParameterScalesEstimator<TMetric>::IsBSplineTransform()
       if (compositeTransform)
       {
         isBSplineTransform = true;
-        for (signed long tind = static_cast<signed long>(compositeTransform->GetNumberOfTransforms()) - 1; tind >= 0;
-             tind--)
+        for (long tind = static_cast<long>(compositeTransform->GetNumberOfTransforms()) - 1; tind >= 0; tind--)
         {
           if (compositeTransform->GetNthTransformToOptimize(tind) &&
               (compositeTransform->GetNthTransformConstPointer(tind)->GetTransformCategory() !=
@@ -595,7 +593,7 @@ RegistrationParameterScalesEstimator<TMetric>::SampleVirtualDomainWithCorners()
   {
     for (unsigned int d = 0; d < VirtualDimension; ++d)
     {
-      const auto bit = (unsigned int)((i & (1 << d)) != 0); // 0 or 1
+      const auto bit = static_cast<unsigned int>((i & (1 << d)) != 0); // 0 or 1
       corner[d] = firstCorner[d] + bit * (size[d] - 1);
     }
 

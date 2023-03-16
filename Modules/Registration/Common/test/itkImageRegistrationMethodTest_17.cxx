@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -135,14 +135,10 @@ itkImageRegistrationMethodTest_17(int, char *[])
   region.SetSize(size);
   region.SetIndex(index);
 
-  fixedImage->SetLargestPossibleRegion(region);
-  fixedImage->SetBufferedRegion(region);
-  fixedImage->SetRequestedRegion(region);
+  fixedImage->SetRegions(region);
   fixedImage->Allocate();
 
-  movingImage->SetLargestPossibleRegion(region);
-  movingImage->SetBufferedRegion(region);
-  movingImage->SetRequestedRegion(region);
+  movingImage->SetRegions(region);
   movingImage->Allocate();
 
 
@@ -152,7 +148,7 @@ itkImageRegistrationMethodTest_17(int, char *[])
   itk::Point<double, dimension> center;
   for (j = 0; j < dimension; ++j)
   {
-    center[j] = 0.5 * (double)region.GetSize()[j];
+    center[j] = 0.5 * static_cast<double>(region.GetSize()[j]);
   }
 
   itk::Point<double, dimension>  p;
@@ -187,7 +183,7 @@ itkImageRegistrationMethodTest_17(int, char *[])
   double transCenter[dimension];
   for (j = 0; j < dimension; ++j)
   {
-    transCenter[j] = -0.5 * double(size[j]);
+    transCenter[j] = -0.5 * static_cast<double>(size[j]);
   }
 
   movingImage->SetOrigin(transCenter);

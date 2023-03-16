@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -97,7 +97,7 @@ DCMTKSequence::SetDcmSequenceOfItems(DcmSequenceOfItems * seq)
 }
 
 int
-DCMTKSequence ::card() const
+DCMTKSequence::card() const
 {
   return this->m_DcmSequenceOfItems->card();
 }
@@ -165,7 +165,7 @@ DCMTKSequence::GetElementOB(const unsigned short group,
   obItem->getUint8Array(bytes);
   Uint32      length = obItem->getLength();
   std::string val;
-  for (unsigned i = 0; i < length; ++i)
+  for (unsigned int i = 0; i < length; ++i)
   {
     val += bytes[i];
   }
@@ -769,7 +769,7 @@ DCMTKFileReader::GetElementIS(const unsigned short group,
                                 << std::dec);
   }
   Sint32 _target; // MSVC seems to have type conversion problems with
-                  // using int32_t as a an argument to getSint32
+                  // using int32_t as an argument to getSint32
   if (isItem->getSint32(_target) != EC_Normal)
   {
     DCMTKExceptionOrErrorReturn(<< "Can't get DecimalString Value at tag " << std::hex << group << " " << element
@@ -798,7 +798,7 @@ DCMTKFileReader::GetElementSL(const unsigned short group,
                                 << std::dec);
   }
   Sint32 _target; // MSVC seems to have type conversion problems with
-                  // using int32_t as a an argument to getSint32
+                  // using int32_t as an argument to getSint32
   if (isItem->getSint32(_target) != EC_Normal)
   {
     DCMTKExceptionOrErrorReturn(<< "Can't get DecimalString Value at tag " << std::hex << group << " " << element
@@ -867,7 +867,7 @@ DCMTKFileReader::GetElementOB(const unsigned short group,
   obItem->getUint8Array(bytes);
   Uint32      length = obItem->getLength();
   std::string val;
-  for (unsigned i = 0; i < length; ++i)
+  for (unsigned int i = 0; i < length; ++i)
   {
     val += bytes[i];
   }

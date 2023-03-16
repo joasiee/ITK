@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@
 namespace itk
 {
 /**
- *\class MinMaxCurvatureFlowFunction
+ * \class MinMaxCurvatureFlowFunction
  *
  * This class encapsulate the finite difference equation which drives a
  * min/max curvature flow denoising algorithm.
@@ -112,7 +112,7 @@ private:
   // To control overloaded versions of ComputeThreshold
   struct DispatchBase
   {};
-  template <signed int VDimension>
+  template <int VDimension>
   struct Dispatch : public DispatchBase
   {};
 

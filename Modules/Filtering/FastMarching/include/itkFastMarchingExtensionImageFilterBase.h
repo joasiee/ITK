@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@
 namespace itk
 {
 /**
- *\class FastMarchingExtensionImageFilterBase
+ * \class FastMarchingExtensionImageFilterBase
  * \brief Extend auxiliary variables smoothly using Fast Marching.
  *
  * Fast marching can be used to extend auxiliary variables smoothly
@@ -109,7 +109,7 @@ public:
 
   /** Get one of the extended auxiliary variable image. */
   AuxImageType *
-  GetAuxiliaryImage(const unsigned int & idx);
+  GetAuxiliaryImage(const unsigned int idx);
 
   /** Set the container auxiliary values at the initial alive points. */
   itkSetObjectMacro(AuxiliaryAliveValues, AuxValueContainerType);

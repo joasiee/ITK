@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -579,7 +579,7 @@ public:
     this->SetPixelType(IOPixelEnum::RGBA);
     this->SetComponentType(MapPixelType<TPixel>::CType);
   }
-  template <unsigned VLength>
+  template <unsigned int VLength>
   void
   SetPixelTypeInfo(const Offset<VLength> *)
   {
@@ -587,7 +587,7 @@ public:
     this->SetPixelType(IOPixelEnum::OFFSET);
     this->SetComponentType(IOComponentEnum::LONG);
   }
-  template <typename TPixel, unsigned VLength>
+  template <typename TPixel, unsigned int VLength>
   void
   SetPixelTypeInfo(const Vector<TPixel, VLength> *)
   {
@@ -595,15 +595,15 @@ public:
     this->SetPixelType(IOPixelEnum::VECTOR);
     this->SetComponentType(MapPixelType<TPixel>::CType);
   }
-  template <typename TCoordRep, unsigned NPointDimension>
+  template <typename TCoordRep, unsigned int VPointDimension>
   void
-  SetPixelTypeInfo(const Point<TCoordRep, NPointDimension> *)
+  SetPixelTypeInfo(const Point<TCoordRep, VPointDimension> *)
   {
-    this->SetNumberOfComponents(NPointDimension);
+    this->SetNumberOfComponents(VPointDimension);
     this->SetPixelType(IOPixelEnum::POINT);
     this->SetComponentType(MapPixelType<TCoordRep>::CType);
   }
-  template <typename TPixel, unsigned VLength>
+  template <typename TPixel, unsigned int VLength>
   void
   SetPixelTypeInfo(const CovariantVector<TPixel, VLength> *)
   {
@@ -611,7 +611,7 @@ public:
     this->SetPixelType(IOPixelEnum::COVARIANTVECTOR);
     this->SetComponentType(MapPixelType<TPixel>::CType);
   }
-  template <typename TPixel, unsigned VLength>
+  template <typename TPixel, unsigned int VLength>
   void
   SetPixelTypeInfo(const SymmetricSecondRankTensor<TPixel, VLength> *)
   {
@@ -635,7 +635,7 @@ public:
     this->SetPixelType(IOPixelEnum::COMPLEX);
     this->SetComponentType(MapPixelType<TPixel>::CType);
   }
-  template <typename TPixel, unsigned VLength>
+  template <typename TPixel, unsigned int VLength>
   void
   SetPixelTypeInfo(const FixedArray<TPixel, VLength> *)
   {
@@ -659,7 +659,7 @@ public:
     this->SetPixelType(IOPixelEnum::ARRAY);
     this->SetComponentType(MapPixelType<TValue>::CType);
   }
-  template <typename TPixel, unsigned VLength>
+  template <typename TPixel, unsigned int VLength>
   void
   SetPixelTypeInfo(const Matrix<TPixel, VLength, VLength> *)
   {

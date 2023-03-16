@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@
 
 #include <cmath>
 #include <cfloat>
+#include <memory> // For unique_ptr.
 
 #include "vnl/vnl_vector.h"
 #include "vnl/vnl_matrix.h"
@@ -35,7 +36,7 @@
 namespace itk
 {
 /**
- *\class ImageGaussianModelEstimator
+ * \class ImageGaussianModelEstimator
  * \brief Base class for ImageGaussianModelEstimator object.
  *
  * itkImageGaussianModelEstimator generates the Gaussian model for given
@@ -124,7 +125,7 @@ public:
 
 protected:
   ImageGaussianModelEstimator() = default;
-  ~ImageGaussianModelEstimator() override;
+  ~ImageGaussianModelEstimator() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
@@ -151,9 +152,9 @@ private:
   void
   EstimateGaussianModelParameters();
 
-  MatrixType   m_NumberOfSamples;
-  MatrixType   m_Means;
-  MatrixType * m_Covariance{ nullptr };
+  MatrixType                    m_NumberOfSamples;
+  MatrixType                    m_Means;
+  std::unique_ptr<MatrixType[]> m_Covariance{ nullptr };
 
   TrainingImagePointer m_TrainingImage;
 };

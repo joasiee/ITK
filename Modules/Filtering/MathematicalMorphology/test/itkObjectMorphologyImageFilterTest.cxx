@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -153,7 +153,7 @@ itkObjectMorphologyImageFilterTest(int, char *[])
     dilateFilter->Update();
     end = clock();
 
-    elapsedTime = (end - start) / (double)CLOCKS_PER_SEC;
+    elapsedTime = (end - start) / static_cast<double>(CLOCKS_PER_SEC);
 
     //  Print the content of the result image
     std::cout << "  Success: " << std::endl;
@@ -177,7 +177,7 @@ itkObjectMorphologyImageFilterTest(int, char *[])
     binDilateFilter->Update();
     end = clock();
 
-    elapsedTime = (end - start) / (double)CLOCKS_PER_SEC;
+    elapsedTime = (end - start) / static_cast<double>(CLOCKS_PER_SEC);
 
     //  Print the content of the result image
     std::cout << "  Success: " << std::endl;
@@ -223,7 +223,7 @@ itkObjectMorphologyImageFilterTest(int, char *[])
     ++count;
   }
   end = clock();
-  elapsedTime = (end - start) / (double)CLOCKS_PER_SEC;
+  elapsedTime = (end - start) / static_cast<double>(CLOCKS_PER_SEC);
   std::cout << "  Success: " << std::endl;
   std::cout << "    Time = " << elapsedTime << std::endl;
 
@@ -248,7 +248,7 @@ itkObjectMorphologyImageFilterTest(int, char *[])
     erodeFilter->Update();
     end = clock();
 
-    elapsedTime = (end - start) / (double)CLOCKS_PER_SEC;
+    elapsedTime = (end - start) / static_cast<double>(CLOCKS_PER_SEC);
 
     //  Print the content of the result image
     std::cout << "  Success: " << std::endl;
@@ -273,7 +273,7 @@ itkObjectMorphologyImageFilterTest(int, char *[])
     binErodeFilter->Update();
     end = clock();
 
-    elapsedTime = (end - start) / (double)CLOCKS_PER_SEC;
+    elapsedTime = (end - start) / static_cast<double>(CLOCKS_PER_SEC);
 
     //  Print the content of the result image
     std::cout << "  Success: " << std::endl;
@@ -319,7 +319,7 @@ itkObjectMorphologyImageFilterTest(int, char *[])
     ++count;
   }
   end = clock();
-  elapsedTime = (end - start) / (double)CLOCKS_PER_SEC;
+  elapsedTime = (end - start) / static_cast<double>(CLOCKS_PER_SEC);
   std::cout << "  Success: " << std::endl;
   std::cout << "    Time = " << elapsedTime << std::endl;
 

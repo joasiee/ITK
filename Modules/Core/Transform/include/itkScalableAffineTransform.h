@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,15 +30,15 @@ namespace itk
  * \ingroup ITKTransform
  */
 
-template <typename TParametersValueType = double, unsigned int NDimensions = 3>
-class ITK_TEMPLATE_EXPORT ScalableAffineTransform : public AffineTransform<TParametersValueType, NDimensions>
+template <typename TParametersValueType = double, unsigned int VDimension = 3>
+class ITK_TEMPLATE_EXPORT ScalableAffineTransform : public AffineTransform<TParametersValueType, VDimension>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ScalableAffineTransform);
 
   /** Standard type alias   */
   using Self = ScalableAffineTransform;
-  using Superclass = AffineTransform<TParametersValueType, NDimensions>;
+  using Superclass = AffineTransform<TParametersValueType, VDimension>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -49,10 +49,10 @@ public:
   itkNewMacro(Self);
 
   /** Dimension of the domain space. */
-  static constexpr unsigned int InputSpaceDimension = NDimensions;
-  static constexpr unsigned int OutputSpaceDimension = NDimensions;
-  static constexpr unsigned int SpaceDimension = NDimensions;
-  static constexpr unsigned int ParametersDimension = NDimensions * (NDimensions + 1);
+  static constexpr unsigned int InputSpaceDimension = VDimension;
+  static constexpr unsigned int OutputSpaceDimension = VDimension;
+  static constexpr unsigned int SpaceDimension = VDimension;
+  static constexpr unsigned int ParametersDimension = VDimension * (VDimension + 1);
 
   /** Types taken from the Superclass */
   using typename Superclass::ParametersType;
@@ -83,13 +83,12 @@ public:
   using InverseTransformBaseType = typename Superclass::InverseTransformBaseType;
   using InverseTransformBasePointer = typename InverseTransformBaseType::Pointer;
 
-  /** Set the transformation to an Identity
-   *
-   * This sets the matrix to identity and the Offset to null. */
+  /** Set the transformation to an Identity.
+   * Sets the matrix to identity and the Offset to null. */
   void
   SetIdentity() override;
 
-  /** Set the scale of the transform */
+  /** Set the scale of the transform. */
   virtual void
   SetScale(const InputVectorType & scale);
 
@@ -99,12 +98,12 @@ public:
     this->SetScale(scale);
   }
 
-  /** Set the scale of the transform */
+  /** Set the scale of the transform. */
   virtual void
-  SetScale(const double scale[NDimensions]);
+  SetScale(const double scale[VDimension]);
 
   virtual void
-  SetScaleComponent(const double scale[NDimensions])
+  SetScaleComponent(const double scale[VDimension])
   {
     this->SetScale(scale);
   }
@@ -121,11 +120,11 @@ public:
     return m_Scale;
   }
 
-  /** Get an inverse of this transform. */
+  /** Get an inverse of the transform. */
   bool
   GetInverse(Self * inverse) const;
 
-  /** Return an inverse of this transform. */
+  /** Return an inverse of the transform. */
   InverseTransformBasePointer
   GetInverseTransform() const override;
 
@@ -142,13 +141,12 @@ protected:
   ScalableAffineTransform(unsigned int parametersDimension);
   ScalableAffineTransform();
 
+  /** Compute the transformation matrix. */
   void
   ComputeMatrix() override;
 
-  /** Destroy an ScalableAffineTransform object   */
   ~ScalableAffineTransform() override = default;
 
-  /** Print contents of an ScalableAffineTransform */
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
@@ -162,7 +160,7 @@ protected:
   }
 
 private:
-  double          m_Scale[NDimensions];
+  double          m_Scale[VDimension];
   InputVectorType m_MatrixScale;
 }; // class ScalableAffineTransform
 } // namespace itk

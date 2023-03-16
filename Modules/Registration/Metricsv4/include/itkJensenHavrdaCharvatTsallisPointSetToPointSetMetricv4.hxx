@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,8 +29,8 @@ JensenHavrdaCharvatTsallisPointSetToPointSetMetricv4<TPointSet, TInternalComputa
   JensenHavrdaCharvatTsallisPointSetToPointSetMetricv4()
   : m_PointSetSigma(static_cast<RealType>(1.0))
   , m_KernelSigma(static_cast<RealType>(10.0))
-  , m_CovarianceKNeighborhood(static_cast<unsigned int>(5))
-  , m_EvaluationKNeighborhood(static_cast<unsigned int>(50))
+  , m_CovarianceKNeighborhood(5U)
+  , m_EvaluationKNeighborhood(50U)
   , m_Alpha(static_cast<RealType>(1.0))
   , m_TotalNumberOfPoints(0)
   , m_Prefactor0(0.0)

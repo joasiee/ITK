@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,9 +28,10 @@ void
 VersorTransformOptimizer::StepAlongGradient(double factor, const DerivativeType & transformedGradient)
 {
   const ParametersType & currentPosition = this->GetCurrentPosition();
-  unsigned int           NumberOfParameters = m_CostFunction->GetNumberOfParameters();
+  const unsigned int     NumberOfParameters = m_CostFunction->GetNumberOfParameters();
 
-  // The parameters are assumed to be the right part of the versor
+  // The parameters are assumed to be the right part of the versor and the
+  // components of the translation vector.
   //
   VectorType rightPart;
 

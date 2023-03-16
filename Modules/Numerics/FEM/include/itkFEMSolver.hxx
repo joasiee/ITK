@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -218,7 +218,7 @@ Solver<VDimension>::AssembleK()
       l1->SetIndex(NMFC);
 
       // increase the number of MFC
-      NMFC++;
+      ++NMFC;
     }
   }
 
@@ -723,7 +723,7 @@ Solver<VDimension>::InitializeInterpolationGrid(const InterpolationGridSizeType 
 
   // Set the interpolation grid (image) size, origin and spacing
   // from the given vectors, so that physical point of v1 is (0,0,0) and
-  // phisical point v2 is (size[0],size[1],size[2]).
+  // physical point v2 is (size[0],size[1],size[2]).
   InterpolationGridSizeType image_size;
   image_size.Fill(1);
   for (unsigned int i = 0; i < FEMDimension; ++i)
@@ -856,7 +856,7 @@ Solver<VDimension>::FillInterpolationGrid()
     // Step over all points within the region
     for (iter.GoToBegin(); !iter.IsAtEnd(); ++iter)
     {
-      // Note: Iteratior is guarantied to be within image, since the
+      // Note: Iterator is guaranteed to be within image, since the
       //       elements with BB outside are skipped before.
       m_InterpolationGrid->TransformIndexToPhysicalPoint(iter.GetIndex(), pt);
       for (unsigned int d = 0; d < NumberOfDimensions; ++d)
@@ -907,7 +907,7 @@ template <unsigned int VDimension>
 const Element *
 Solver<VDimension>::GetElementAtPoint(const VectorType & pt) const
 {
-  // Add zeros to the end of physical point if necesarry
+  // Add zeros to the end of physical point if necessary
   Point<Float, FEMDimension> pp;
   for (unsigned int i = 0; i < FEMDimension; ++i)
   {

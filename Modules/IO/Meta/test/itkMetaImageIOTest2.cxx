@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -83,7 +83,7 @@ TestUnknowMetaDataBug(const std::string & fname)
 
     ITK_TEST_EXPECT_EQUAL(originalHash, readHash);
   }
-  catch (std::exception & e)
+  catch (const std::exception & e)
   {
     std::cerr << "Exception: " << e.what() << std::endl;
     return EXIT_FAILURE;

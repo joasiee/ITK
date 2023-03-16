@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -82,7 +82,7 @@ public:
 
 protected:
   EllipsoidInteriorExteriorSpatialFunction();
-  ~EllipsoidInteriorExteriorSpatialFunction() override;
+  ~EllipsoidInteriorExteriorSpatialFunction() override = default;
 
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
@@ -91,11 +91,11 @@ private:
   /** The center of the ellipsoid. */
   InputType m_Center;
 
-  /** The axes lenths of the ellipsoid. */
+  /** The axes lengths of the ellipsoid. */
   InputType m_Axes;
 
   /** The orientation vectors (must be orthogonal) of the ellipsoid axes. */
-  double ** m_Orientations;
+  OrientationType m_Orientations{};
 };
 } // end namespace itk
 

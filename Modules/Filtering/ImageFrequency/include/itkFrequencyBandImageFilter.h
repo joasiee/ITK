@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,7 +23,7 @@
 namespace itk
 {
 /**
- *\class FrequencyBandImageFilter
+ * \class FrequencyBandImageFilter
  * \brief Performs a frequency band filtering on a frequency domain image
  *
  * The default filtering functor filters in the range LowFrequencyThreshold and
@@ -141,11 +141,11 @@ public:
   /**
    * Utility method equivalent to:
    * SetPassBand(true)
-   * SetPassLowFrequencyThreshold(pass_low_threshold)
-   * SetPassHighFrequencyThreshold(pass_high_threshold)
+   * SetPassLowFrequencyThreshold(passLowThreshold)
+   * SetPassHighFrequencyThreshold(passHighThreshold)
    *
-   * @param pass_low_threshold flag to let pass or not low boundary
-   * @param pass_high_threshold flag to let pass or not high boundary
+   * @param passLowThreshold flag to let pass or not low boundary
+   * @param passHighThreshold flag to let pass or not high boundary
    */
   void
   SetPassBand(const bool passLowThreshold, const bool passHighThreshold);
@@ -153,11 +153,11 @@ public:
   /**
    * Utility method equivalent to:
    * SetPassBand(false)
-   * SetPassLowFrequencyThreshold(pass_low_threshold)
-   * SetPassHighFrequencyThreshold(pass_high_threshold)
+   * SetPassLowFrequencyThreshold(passLowThreshold)
+   * SetPassHighFrequencyThreshold(passHighThreshold)
    *
-   * @param pass_low_threshold flag to let pass or not low boundary
-   * @param pass_high_threshold flag to let pass or not high boundary
+   * @param passLowThreshold flag to let pass or not low boundary
+   * @param passHighThreshold flag to let pass or not high boundary
    */
   void
   SetStopBand(const bool passLowThreshold, const bool passHighThreshold);

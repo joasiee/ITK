@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -213,9 +213,11 @@ template <unsigned int VImageDimension>
 void
 ImageBase<VImageDimension>::UpdateOutputInformation()
 {
-  if (this->GetSource())
+  const auto source = this->GetSource();
+
+  if (source)
   {
-    this->GetSource()->UpdateOutputInformation();
+    source->UpdateOutputInformation();
   }
   else
   {
@@ -249,7 +251,7 @@ ImageBase<VImageDimension>::UpdateOutputData()
 {
   // If the requested region does not contain any pixels then there is
   // no reason to Update the output data. This is needed so that
-  // filters don't need to update all inputs. This occours in
+  // filters don't need to update all inputs. This occurs in
   // ImageBase as  oppose to DataObject, but cause this statement
   // requires the specific GetNumberOfPixels methods ( as oppose to a
   // generic Region::IsEmpty method ).

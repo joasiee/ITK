@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -418,8 +418,8 @@ RobustSolver<VDimension>::ComputeLandmarkTensor()
         {
           for (FEMIndexType dofYId = 0; dofYId < numberOfDOFs; ++dofYId)
           {
-            unsigned nx = element->GetDegreeOfFreedom(nodeId * numberOfDOFs + dofXId);
-            unsigned ny = element->GetDegreeOfFreedom(nodeId * numberOfDOFs + dofYId);
+            unsigned int nx = element->GetDegreeOfFreedom(nodeId * numberOfDOFs + dofXId);
+            unsigned int ny = element->GetDegreeOfFreedom(nodeId * numberOfDOFs + dofYId);
             nodeTensor[dofXId][dofYId] = this->m_LinearSystem->GetMatrixValue(nx, ny, m_MeshStiffnessMatrixIndex);
           }
         }
@@ -494,7 +494,7 @@ RobustSolver<VDimension>::UnselectLandmarks(unsigned int nUnselected)
 
   for (it = loadVector.begin(); it <= nth; ++it)
   {
-    auto * landmark = dynamic_cast<LoadNoisyLandmark *>((*it).GetPointer());
+    auto * landmark = dynamic_cast<LoadNoisyLandmark *>(it->GetPointer());
     itkAssertInDebugAndIgnoreInReleaseMacro(landmark != nullptr);
 
     landmark->SetOutlier(true);
@@ -561,7 +561,7 @@ RobustSolver<VDimension>::DeleteLandmarksOutOfMesh()
 
     if (landmark->IsOutOfMesh())
     {
-      numToRemoveLoads++;
+      ++numToRemoveLoads;
     }
     else
     {
@@ -1045,7 +1045,7 @@ RobustSolver<VDimension>::InitializeInterpolationGrid()
     // Step over all points within the region
     for (iter.GoToBegin(); !iter.IsAtEnd(); ++iter)
     {
-      // Note: Iteratior is guarantied to be within image, since the
+      // Note: Iterator is guaranteed to be within image, since the
       // elements with BB outside are skipped before.
       this->m_InterpolationGrid->TransformIndexToPhysicalPoint(iter.GetIndex(), pt);
       for (FEMIndexType d = 0; d < NumberOfDimensions; ++d)

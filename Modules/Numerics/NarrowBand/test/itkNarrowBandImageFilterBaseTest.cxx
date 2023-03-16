@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -77,9 +77,9 @@ protected:
     typename ImageType::IndexType  tl = this->GetInput()->GetRequestedRegion().GetIndex();
     typename Superclass::IndexType in;
 
-    for (in [0] = 32 + tl[0]; in[0] < tl[0] + (long int)(sz[0]); in[0]++)
+    for (in [0] = 32 + tl[0]; in[0] < tl[0] + static_cast<long>(sz[0]); in[0]++)
     {
-      for (in [1] = tl[1] + 32; in[1] < tl[1] + (long int)(sz[1]); in[1]++)
+      for (in [1] = tl[1] + 32; in[1] < tl[1] + static_cast<long>(sz[1]); in[1]++)
       {
         this->InsertNarrowBandNode(in);
       }
@@ -133,9 +133,7 @@ itkNarrowBandImageFilterBaseTest(int argc, char * argv[])
   region.SetIndex(index);
 
   auto inputImage = ImageType::New();
-  inputImage->SetLargestPossibleRegion(region);
-  inputImage->SetBufferedRegion(region);
-  inputImage->SetRequestedRegion(region);
+  inputImage->SetRegions(region);
   inputImage->Allocate();
 
   using Iterator = itk::ImageRegionIteratorWithIndex<ImageType>;
@@ -189,7 +187,7 @@ itkNarrowBandImageFilterBaseTest(int argc, char * argv[])
   }
   catch (const itk::ExceptionObject & err)
   {
-    (&err)->Print(std::cerr);
+    err.Print(std::cerr);
     std::cout << "Test failed." << std::endl;
     return EXIT_FAILURE;
   }

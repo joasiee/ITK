@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@
  * to interface to instance variables in a standard fashion. For example,
  * these macros manage modified time, debugging information, and provide a
  * standard interface to set and get instance variables.  Macros are
- * available for built-in types; for string classe; vector arrays;
+ * available for built-in types; for string classes; vector arrays;
  * object pointers; and debug, warning, and error printout information.
  */
 
@@ -204,7 +204,7 @@ namespace itk
 #  define ITK_ABI_EXPORT __declspec(dllexport)
 #  define ITK_ABI_HIDDEN
 #else
-#  if __GNUC__ >= 4
+#  ifdef __GNUC__
 #    define ITK_ABI_IMPORT __attribute__((visibility("default")))
 #    define ITK_ABI_EXPORT __attribute__((visibility("default")))
 #    define ITK_ABI_HIDDEN __attribute__((visibility("hidden")))
@@ -477,7 +477,8 @@ OutputWindowDisplayDebugText(const char *);
 
 // The itkDebugStatement is to be used to protect code that is only used in the itkDebugMacro
 /** This macro is used to print debug (or other information). They are
- * also used to catch errors, etc. Example usage looks like:
+ * also used to catch errors, etc. Requires that the caller implements
+ * the GetDebug() method (see itk::Object). Example usage looks like:
  * itkDebugMacro(<< "this is debug info" << this->SomeVariable); */
 #if defined(NDEBUG)
 #  define itkDebugMacro(x) ITK_NOOP_STATEMENT
@@ -774,9 +775,9 @@ compilers.
 
 // end of Template Meta Programming helper macros
 
-#ifndef NDEBUG
+#if !defined(NDEBUG) && !defined(ITK_WRAPPING)
 
-#  ifdef _POSIX_SOURCE
+#  ifdef __GLIBC__
 #    define itkAssertInDebugOrThrowInReleaseMacro(msg) __assert_fail(msg, __FILE__, __LINE__, __ASSERT_FUNCTION);
 #  else
 #    define itkAssertInDebugOrThrowInReleaseMacro(msg) itkGenericExceptionMacro(<< msg);
@@ -795,7 +796,7 @@ compilers.
   }                                                              \
   ITK_MACROEND_NOOP_STATEMENT
 
-#ifndef NDEBUG
+#if !defined(NDEBUG) && !defined(ITK_WRAPPING)
 #  define itkAssertInDebugAndIgnoreInReleaseMacro(X) assert(X)
 #else
 #  define itkAssertInDebugAndIgnoreInReleaseMacro(X) ITK_NOOP_STATEMENT

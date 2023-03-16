@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -59,7 +59,9 @@ itkImageFileReaderStreamingTest(int argc, char * argv[])
   using ReaderType = itk::ImageFileReader<ImageType>;
   auto reader = ReaderType::New();
   reader->SetFileName(argv[1]);
-  reader->SetUseStreaming(true);
+
+  bool useStreaming = true;
+  ITK_TEST_SET_GET_BOOLEAN(reader, UseStreaming, useStreaming);
 
   using MonitorFilter = itk::PipelineMonitorImageFilter<ImageType>;
   auto monitor = MonitorFilter::New();

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@
 #ifndef itkCorrelationImageToImageMetricv4HelperThreader_hxx
 #define itkCorrelationImageToImageMetricv4HelperThreader_hxx
 
+#include "itkMakeUniqueForOverwrite.h"
 
 namespace itk
 {
@@ -31,14 +32,6 @@ CorrelationImageToImageMetricv4HelperThreader<TDomainPartitioner, TImageToImageM
 
 
 template <typename TDomainPartitioner, typename TImageToImageMetric, typename TCorrelationMetric>
-CorrelationImageToImageMetricv4HelperThreader<TDomainPartitioner, TImageToImageMetric, TCorrelationMetric>::
-  ~CorrelationImageToImageMetricv4HelperThreader()
-{
-  delete[] m_CorrelationMetricPerThreadVariables;
-}
-
-
-template <typename TDomainPartitioner, typename TImageToImageMetric, typename TCorrelationMetric>
 void
 CorrelationImageToImageMetricv4HelperThreader<TDomainPartitioner, TImageToImageMetric, TCorrelationMetric>::
   BeforeThreadedExecution()
@@ -49,8 +42,8 @@ CorrelationImageToImageMetricv4HelperThreader<TDomainPartitioner, TImageToImageM
   this->m_CorrelationAssociate = dynamic_cast<TCorrelationMetric *>(this->m_Associate);
 
   const ThreadIdType numWorkUnitsUsed = this->GetNumberOfWorkUnitsUsed();
-  delete[] this->m_CorrelationMetricPerThreadVariables;
-  this->m_CorrelationMetricPerThreadVariables = new AlignedCorrelationMetricPerThreadStruct[numWorkUnitsUsed];
+  this->m_CorrelationMetricPerThreadVariables =
+    make_unique_for_overwrite<AlignedCorrelationMetricPerThreadStruct[]>(numWorkUnitsUsed);
 
   //---------------------------------------------------------------
   // Set initial values.
@@ -120,7 +113,7 @@ CorrelationImageToImageMetricv4HelperThreader<TDomainPartitioner, TImageToImageM
     pointIsValid = this->m_CorrelationAssociate->TransformAndEvaluateFixedPoint(
       virtualPoint, mappedFixedPoint, mappedFixedPixelValue);
   }
-  catch (ExceptionObject & exc)
+  catch (const ExceptionObject & exc)
   {
     // NOTE: there must be a cleaner way to do this:
     std::string msg("Caught exception: \n");
@@ -138,7 +131,7 @@ CorrelationImageToImageMetricv4HelperThreader<TDomainPartitioner, TImageToImageM
     pointIsValid = this->m_CorrelationAssociate->TransformAndEvaluateMovingPoint(
       virtualPoint, mappedMovingPoint, mappedMovingPixelValue);
   }
-  catch (ExceptionObject & exc)
+  catch (const ExceptionObject & exc)
   {
     std::string msg("Caught exception: \n");
     msg += exc.what();
@@ -156,7 +149,7 @@ CorrelationImageToImageMetricv4HelperThreader<TDomainPartitioner, TImageToImageM
     this->m_CorrelationMetricPerThreadVariables[threadId].FixSum += mappedFixedPixelValue;
     this->m_CorrelationMetricPerThreadVariables[threadId].MovSum += mappedMovingPixelValue;
   }
-  catch (ExceptionObject & exc)
+  catch (const ExceptionObject & exc)
   {
     std::string msg("Exception in ProcessVirtualPoint:\n");
     msg += exc.what();

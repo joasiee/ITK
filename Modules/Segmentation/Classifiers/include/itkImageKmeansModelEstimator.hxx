@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,6 +17,8 @@
  *=========================================================================*/
 #ifndef itkImageKmeansModelEstimator_hxx
 #define itkImageKmeansModelEstimator_hxx
+
+#include "itkMakeUniqueForOverwrite.h"
 
 
 namespace itk
@@ -385,7 +387,7 @@ ImageKmeansModelEstimator<TInputImage, TMembershipFunction>::WithCodebookUseGLA(
       SplitCodewords(m_CurrentNumberOfCodewords - emptycells, emptycells, pass);
 
       olddistortion = distortion;
-      pass++;
+      ++pass;
     }
   } while (pass <= m_MaxSplitAttempts);
   itkExceptionMacro(<< "Lack of convergence");
@@ -399,7 +401,6 @@ ImageKmeansModelEstimator<TInputImage, TMembershipFunction>::NearestNeighborSear
 
   double bestdistortion, tempdistortion, diff;
   int    bestcodeword;
-  auto * tempVec = (double *)new double[m_VectorDimension];
 
   // unused: double *centroidVecTemp = ( double * ) new double[m_VectorDimension];
 
@@ -449,7 +450,7 @@ ImageKmeansModelEstimator<TInputImage, TMembershipFunction>::NearestNeighborSear
 
       for (unsigned int j = 0; j < m_VectorDimension; ++j)
       {
-        diff = (double)(inputImagePixelVector[j] - m_Codebook[i][j]);
+        diff = static_cast<double>(inputImagePixelVector[j] - m_Codebook[i][j]);
         tempdistortion += diff * diff;
 
         if (tempdistortion > bestdistortion)
@@ -491,7 +492,7 @@ ImageKmeansModelEstimator<TInputImage, TMembershipFunction>::NearestNeighborSear
   {
     if (m_CodewordHistogram[i][0] > 0)
     {
-      m_CodewordDistortion[i][0] /= (double)m_CodewordHistogram[i][0];
+      m_CodewordDistortion[i][0] /= static_cast<double>(m_CodewordHistogram[i][0]);
     }
   }
 
@@ -502,15 +503,13 @@ ImageKmeansModelEstimator<TInputImage, TMembershipFunction>::NearestNeighborSear
     {
       for (unsigned int j = 0; j < m_VectorDimension; ++j)
       {
-        m_Centroid[i][j] /= (double)m_CodewordHistogram[i][0];
+        m_Centroid[i][j] /= static_cast<double>(m_CodewordHistogram[i][0]);
       }
     }
   }
 
   // Normalize the distortions
-  *distortion /= (double)totalNumVecsInInput;
-
-  delete[] tempVec;
+  *distortion /= static_cast<double>(totalNumVecsInInput);
 
   // Check for bizarre errors
   if (*distortion < 0.0)
@@ -523,8 +522,8 @@ template <typename TInputImage, typename TMembershipFunction>
 void
 ImageKmeansModelEstimator<TInputImage, TMembershipFunction>::SplitCodewords(int currentSize, int numDesired, int scale)
 {
-  auto * newCodebookData = (double *)new double[m_VectorDimension];
-  auto * inCodebookData = (double *)new double[m_VectorDimension];
+  const auto newCodebookData = make_unique_for_overwrite<double[]>(m_VectorDimension);
+  const auto inCodebookData = make_unique_for_overwrite<double[]>(m_VectorDimension);
 
   for (int i = 0; i < numDesired; ++i)
   {
@@ -533,16 +532,13 @@ ImageKmeansModelEstimator<TInputImage, TMembershipFunction>::SplitCodewords(int 
       inCodebookData[j] = m_Codebook[i][j];
     }
 
-    Perturb(inCodebookData, scale, newCodebookData);
+    Perturb(inCodebookData.get(), scale, newCodebookData.get());
 
     for (unsigned int j = 0; j < m_VectorDimension; ++j)
     {
       m_Codebook[i + currentSize][j] = newCodebookData[j];
     }
   }
-
-  delete[] inCodebookData;
-  delete[] newCodebookData;
 }
 
 template <typename TInputImage, typename TMembershipFunction>
@@ -556,13 +552,13 @@ ImageKmeansModelEstimator<TInputImage, TMembershipFunction>::Perturb(double * ol
   double       muloffset;
   double       rand_num;
 
-  addoffset = m_OffsetAdd / std::pow(2.0, (double)scale);
-  muloffset = m_OffsetMultiply / std::pow(2.0, (double)scale);
+  addoffset = m_OffsetAdd / std::pow(2.0, static_cast<double>(scale));
+  muloffset = m_OffsetMultiply / std::pow(2.0, static_cast<double>(scale));
 
   for (i = 0; i < m_VectorDimension; ++i)
   {
-    srand((unsigned)time(nullptr));
-    rand_num = (rand()) / ((double)RAND_MAX);
+    srand(static_cast<unsigned int>(time(nullptr)));
+    rand_num = (rand()) / (static_cast<double>(RAND_MAX));
 
     if (oldCodeword[i] == 0.0)
     {
@@ -633,7 +629,7 @@ ImageKmeansModelEstimator<TInputImage, TMembershipFunction>::WithoutCodebookUseL
     Reallocate(oldSize, j);
 
     // Initialize the new codewords
-    SplitCodewords(tmp_ncodewords, (j - tmp_ncodewords), (int)0);
+    SplitCodewords(tmp_ncodewords, (j - tmp_ncodewords), 0);
 
     // If error, do not continue
 

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -191,7 +191,7 @@ LabelMap<TLabelObject>::GetNthLabelObject(const SizeValueType & pos) -> LabelObj
     {
       return it->second;
     }
-    i++;
+    ++i;
   }
   itkExceptionMacro(<< "Can't access to label object at position " << pos << ". The label map has only "
                     << this->GetNumberOfLabelObjects() << " label objects registered.");
@@ -210,7 +210,7 @@ LabelMap<TLabelObject>::GetNthLabelObject(const SizeValueType & pos) const -> co
     {
       return it->second;
     }
-    i++;
+    ++i;
   }
   itkExceptionMacro(<< "Can't access to label object at position " << pos << ". The label map has only "
                     << this->GetNumberOfLabelObjects() << " label objects registered.");
@@ -282,7 +282,7 @@ LabelMap<TLabelObject>::AddPixel(const LabelObjectContainerIterator & it,
   if (it != m_LabelObjectContainer.end())
   {
     // the label already exist - add the pixel to it
-    (*it).second->AddIndex(idx);
+    it->second->AddIndex(idx);
     this->Modified();
   }
   else
@@ -353,7 +353,7 @@ LabelMap<TLabelObject>::SetLine(const IndexType & idx, const LengthType & length
   if (it != m_LabelObjectContainer.end())
   {
     // the label already exist - add the pixel to it
-    (*it).second->AddLine(idx, length);
+    it->second->AddLine(idx, length);
     this->Modified();
   }
   else
@@ -439,7 +439,7 @@ LabelMap<TLabelObject>::PushLabelObject(LabelObjectType * labelObject)
         assert((it->second.IsNotNull()));
         if (label == m_BackgroundValue)
         {
-          label++;
+          ++label;
         }
         if (label != it->first)
         {

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,8 +46,8 @@ DTITubeSpatialObjectPoint<TPointDimension>::DTITubeSpatialObjectPoint(const DTIT
   auto                  it = fields.begin();
   while (it != fields.end())
   {
-    this->AddField((*it).first.c_str(), (*it).second);
-    it++;
+    this->AddField(it->first.c_str(), it->second);
+    ++it;
   }
   for (unsigned int i = 0; i < 6; ++i)
   {
@@ -102,11 +102,11 @@ DTITubeSpatialObjectPoint<TPointDimension>::SetField(const char * name, float va
 
   while (it != m_Fields.end())
   {
-    if (!strcmp((*it).first.c_str(), itksys::SystemTools::LowerCase(name).c_str()))
+    if (!strcmp(it->first.c_str(), itksys::SystemTools::LowerCase(name).c_str()))
     {
-      (*it).second = value;
+      it->second = value;
     }
-    it++;
+    ++it;
   }
 }
 
@@ -154,11 +154,11 @@ DTITubeSpatialObjectPoint<TPointDimension>::GetField(const char * name) const
 
   while (it != m_Fields.end())
   {
-    if (!strcmp((*it).first.c_str(), itksys::SystemTools::LowerCase(name).c_str()))
+    if (!strcmp(it->first.c_str(), itksys::SystemTools::LowerCase(name).c_str()))
     {
-      return (*it).second;
+      return it->second;
     }
-    it++;
+    ++it;
   }
   return -1;
 }
@@ -189,8 +189,8 @@ DTITubeSpatialObjectPoint<TPointDimension>::operator=(const DTITubeSpatialObject
     auto                  it = fields.begin();
     while (it != fields.end())
     {
-      this->AddField((*it).first.c_str(), (*it).second);
-      it++;
+      this->AddField(it->first.c_str(), it->second);
+      ++it;
     }
     for (unsigned int i = 0; i < 6; ++i)
     {

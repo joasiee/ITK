@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,16 +20,10 @@
 
 #include "itkMath.h"
 #include "itkNumericTraits.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 namespace itk
 {
-
-template <typename TInputImage, typename TMembershipFunction, typename TTrainingImage>
-ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::~ImageGaussianModelEstimator()
-{
-  delete[] m_Covariance;
-}
-
 
 template <typename TInputImage, typename TMembershipFunction, typename TTrainingImage>
 void
@@ -40,7 +34,7 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::P
 
   os << indent << "NumberOfSamples: " << m_NumberOfSamples << std::endl;
   os << indent << "Means: " << m_Means << std::endl;
-  os << indent << "Covariance: " << m_Covariance << std::endl;
+  os << indent << "Covariance: " << m_Covariance.get() << std::endl;
 
   itkPrintSelfObjectMacro(TrainingImage);
 }
@@ -60,7 +54,7 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::E
   InputImageConstPointer inputImage = this->GetInputImage();
 
   // Check if the training and input image dimensions are the same
-  if ((int)(TInputImage::ImageDimension) != (int)(TTrainingImage::ImageDimension))
+  if (static_cast<int>(TInputImage::ImageDimension) != static_cast<int>(TTrainingImage::ImageDimension))
   {
     throw ExceptionObject(__FILE__, __LINE__, "Training and input image dimensions are not the same.", ITK_LOCATION);
   }
@@ -139,10 +133,8 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::E
   m_NumberOfSamples.set_size(numberOfModels, 1);
   m_NumberOfSamples.fill(0);
 
-  // Delete previous allocation first
-  delete[] m_Covariance;
   // Number of covariance matrices are equal to the number of classes
-  m_Covariance = (MatrixType *)new MatrixType[numberOfModels];
+  m_Covariance = make_unique_for_overwrite<MatrixType[]>(numberOfModels);
 
   for (unsigned int i = 0; i < numberOfModels; ++i)
   {
@@ -152,7 +144,7 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::E
 
   for (inIt.GoToBegin(); !inIt.IsAtEnd(); ++inIt, ++trainingImageIt)
   {
-    auto classIndex = (unsigned int)trainingImageIt.Get();
+    auto classIndex = static_cast<unsigned int>(trainingImageIt.Get());
 
     // Training data assumed =1 band; also the class indices go
     // from 1, 2, ..., n while the corresponding memory goes from
@@ -242,8 +234,8 @@ ImageGaussianModelEstimator<TInputImage, TMembershipFunction, TTrainingImage>::E
     // Fill the rest of the covairance matrix and make it symmetric
     if (m_NumberOfSamples[classIndex][0] > 0)
     {
-      auto lastInX = (unsigned int)(VectorDimension - 1);
-      auto upperY = (unsigned int)VectorDimension;
+      auto lastInX = static_cast<unsigned int>(VectorDimension - 1);
+      auto upperY = static_cast<unsigned int>(VectorDimension);
       for (unsigned int band_x = 0; band_x < lastInX; ++band_x)
       {
         for (unsigned int band_y = band_x + 1; band_y < upperY; ++band_y)

@@ -20,10 +20,19 @@ itk_python_add_test(NAME PythonComplex COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/compl
 itk_python_add_test(NAME PythonHelperFunctions COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/helpers.py)
 itk_python_add_test(NAME PythonLazyModule COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lazy.py)
 itk_python_add_test(NAME PythonNoLazyModule COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/nolazy.py)
+itk_python_add_test(NAME PythonNoDefaultFactories COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/nodefaultfactories.py)
 itk_python_add_test(NAME PythonDICOMSeries COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/dicomSeries.py
               DATA{${ITK_DATA_ROOT}/Input/DicomSeries/Image0075.dcm}
               DATA{${ITK_DATA_ROOT}/Input/DicomSeries/Image0076.dcm}
               DATA{${ITK_DATA_ROOT}/Input/DicomSeries/Image0077.dcm})
+itk_python_add_test(NAME PyImageFilterTest COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/PyImageFilterTest.py)
+itk_python_add_test(NAME PythonConvertMetaData COMMAND
+  ${CMAKE_CURRENT_SOURCE_DIR}/test_metadata.py
+  DATA{${WrapITK_SOURCE_DIR}/images/r16slice.nii.gz}
+  DATA{${WrapITK_SOURCE_DIR}/images/sourceImage.nii.gz}
+  DATA{${WrapITK_SOURCE_DIR}/images/warp2D.nii.gz}
+  DATA{${WrapITK_SOURCE_DIR}/images/warp3D.nii.gz}
+  )
 
 # some tests will fail if dim=2 and unsigned short are not wrapped
 INTERSECTION(WRAP_2 2 "${ITK_WRAP_IMAGE_DIMS}")
@@ -54,6 +63,10 @@ if(ITK_WRAP_unsigned_char AND WRAP_2)
         ${ITK_TEST_OUTPUT_DIR}/extras-mushroom.vtk
         ${ITK_TEST_OUTPUT_DIR}
         ${ITK_TEST_OUTPUT_DIR}/LinearTransformWritten.h5
+      )
+    itk_python_add_test(NAME PythonXarrayTest
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test_xarray.py
+        DATA{${WrapITK_SOURCE_DIR}/images/cthead1.png}
       )
   endif()
 endif()

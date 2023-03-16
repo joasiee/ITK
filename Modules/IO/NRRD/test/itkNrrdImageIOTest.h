@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -70,8 +70,8 @@ itkNrrdImageIOTestReadWriteTest(std::string fn, unsigned int size, std::string i
 
   ITK_TEST_EXPECT_TRUE(io->SupportsDimension(VImageDimension));
 
-  constexpr unsigned NRRD_DIM_MAX = 16; // taken from NrrdIO.h which is not in the include path
-  unsigned long      dim = NRRD_DIM_MAX + 1;
+  constexpr unsigned int NRRD_DIM_MAX = 16; // taken from NrrdIO.h which is not in the include path
+  unsigned long          dim = NRRD_DIM_MAX + 1;
   ITK_TEST_EXPECT_TRUE(!io->SupportsDimension(dim));
 
   // Binary files have no image information to read

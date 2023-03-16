@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -101,7 +101,7 @@ typename ShapePriorMAPCostFunction<TFeatureImage, TOutputPixel>::MeasureType
 ShapePriorMAPCostFunction<TFeatureImage, TOutputPixel>::ComputeLogShapePriorTerm(
   const ParametersType & parameters) const
 {
-  // assume the shape parameters is from a independent gaussian distributions
+  // assume the shape parameters is from an independent gaussian distributions
   MeasureType measure = 0.0;
 
   for (unsigned int j = 0; j < this->m_ShapeFunction->GetNumberOfShapeParameters(); ++j)

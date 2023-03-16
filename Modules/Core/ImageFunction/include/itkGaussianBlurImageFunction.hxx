@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -247,7 +247,7 @@ GaussianBlurImageFunction<TInputImage, TOutput>::EvaluateAtIndex(const IndexType
   IndexType centerIndex;
   for (unsigned int i = 0; i < Self::ImageDimension; ++i)
   {
-    centerIndex[i] = (IndexValueType)((float)m_InternalImage->GetBufferedRegion().GetSize()[i] / 2.0);
+    centerIndex[i] = (IndexValueType)(static_cast<float>(m_InternalImage->GetBufferedRegion().GetSize()[i]) / 2.0f);
   }
 
   // first direction
@@ -385,8 +385,8 @@ GaussianBlurImageFunction<TInputImage, TOutput>::RecomputeContinuousGaussianKern
 
       (*it) = m_GaussianFunction->Evaluate(pt);
       sum += (*it);
-      i++;
-      it++;
+      ++i;
+      ++it;
     }
 
     // Make the filter DC-Constant
@@ -394,7 +394,7 @@ GaussianBlurImageFunction<TInputImage, TOutput>::RecomputeContinuousGaussianKern
     while (it != gaussianNeighborhood.End())
     {
       (*it) /= sum;
-      it++;
+      ++it;
     }
     m_ContinuousOperatorArray[direction] = gaussianNeighborhood;
   }

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,7 +46,7 @@ namespace itk
  * \brief This filter casts one spatialobject to another, when the class
  * hierarchy supports it (e.g., Tube to PointBased).
  * Particularly useful in Python where casting objects without public
- * contructors (e.g., objects managed by smartpointers) is problematic.
+ * constructors (e.g., objects managed by smartpointers) is problematic.
  * \ingroup ITKSpatialObjects
  */
 

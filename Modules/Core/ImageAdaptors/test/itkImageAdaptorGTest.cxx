@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -128,7 +128,8 @@ Expect_Transform_member_functions_return_the_same_for_an_ImageAdapter_as_for_its
   const auto imageAdaptor = itk::ImageAdaptor<TImage, DummyPixelAccessor<typename TImage::PixelType>>::New();
   imageAdaptor->SetImage(&image);
 
-  for (const auto & point : { itk::Point<double, ImageDimension>(), itk::Point<double, ImageDimension>(1.0) })
+  for (const auto & point :
+       { itk::Point<double, ImageDimension>(), itk::MakeFilled<itk::Point<double, ImageDimension>>(1.0) })
   {
     Expect_TransformPhysicalPoint_member_functions_return_the_same_for_ImageAdapter_as_for_image(
       *imageAdaptor, image, point);

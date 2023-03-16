@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -101,7 +101,7 @@ ContourExtractor2DImageFilter<TInputImage>::CreateSingleContour(InputPixelType  
   // 6 7 8
   // We are interested only in the square of 4,5,7,8 which is the 2x2 square
   // with the center pixel at the top-left. So we only activate the
-  // coresponding offsets, and only query pixels 4, 5, 7, and 8 with the
+  // corresponding offsets, and only query pixels 4, 5, 7, and 8 with the
   // iterator's GetPixel method.
 
   const InputOffsetType none{ { 0, 0 } };
@@ -362,7 +362,7 @@ ContourExtractor2DImageFilter<TInputImage>::GenerateDataForLabels()
     for (InputPixelType label : allLabels)
     {
       const BoundingBoxType & bbox = labelBoundingBoxes[label];
-      // Compute a extendedRegion that includes one-pixel border on all
+      // Compute an extendedRegion that includes one-pixel border on all
       // sides. However, we don't want the 3-by-3 SquareIterator to be centered
       // in the bottom row or right column of this one-pixel-extended region
       // because then its lower-right 2-by-2 sub-square won't be wholly within
@@ -569,7 +569,7 @@ ContourExtractor2DImageFilter<TInputImage>::FillOutputs(
     allContours.splice(allContours.end(), labelsContoursOutput[label]);
   }
   this->SetNumberOfIndexedOutputs(allContours.size());
-  std::size_t NumberOutputsWritten{ 0 };
+  size_t NumberOutputsWritten{ 0 };
 
   for (ContourContainerConstIterator it{ allContours.cbegin() }; it != allContours.cend(); ++it, ++NumberOutputsWritten)
   {
@@ -590,17 +590,17 @@ ContourExtractor2DImageFilter<TInputImage>::FillOutputs(
     // mark output as modified
     if (m_ReverseContourOrientation)
     {
-      ContourConstIterator itC{ (*it).cend() };
+      ContourConstIterator itC{ it->cend() };
       do
       {
-        itC--;
+        --itC;
         path->push_back(*itC);
-      } while (itC != (*it).cbegin());
+      } while (itC != it->cbegin());
     }
     else
     {
-      ContourConstIterator itC{ (*it).cbegin() };
-      while (itC != (*it).cend())
+      ContourConstIterator itC{ it->cbegin() };
+      while (itC != it->cend())
       {
         path->push_back(*itC);
         ++itC;

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -213,8 +213,8 @@ ImageTransformer<TInputImage>::SplitRequestedRegion(unsigned int           i,
   typename TInputImage::SizeType::SizeValueType range = requestedRegionSize[splitAxis];
   if (num != 0 && range != 0)
   {
-    auto         valuesPerThread = Math::Ceil<unsigned int>(range / (double)num);
-    unsigned int maxThreadIdUsed = Math::Ceil<unsigned int>(range / (double)valuesPerThread) - 1;
+    auto         valuesPerThread = Math::Ceil<unsigned int>(range / static_cast<double>(num));
+    unsigned int maxThreadIdUsed = Math::Ceil<unsigned int>(range / static_cast<double>(valuesPerThread)) - 1;
     // Split the region
     if (i < maxThreadIdUsed)
     {
@@ -336,7 +336,7 @@ ImageTransformer<TInputImage>::ThreaderCallback(void * arg)
     }
     else if (str->Filter->GetProgress() == 0.0f) // progress was not set after at least the first chunk finished
     {
-      str->Filter->UpdateProgress(float(threadId + 1) / total); // this will be the only progress update
+      str->Filter->UpdateProgress(static_cast<float>(threadId + 1) / total); // this will be the only progress update
     }
 #endif
   }

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@
 #include "itkCorrelationImageToImageMetricv4.h"
 #include "itkTranslationTransform.h"
 #include "itkMath.h"
+#include "itkTestingMacros.h"
 
 /* Simple test to verify that class builds and runs.
  * Results are not verified. See ImageToImageMetricv4Test
@@ -209,6 +210,8 @@ itkCorrelationImageToImageMetricv4Test(int, char ** const)
   using MetricType = itk::CorrelationImageToImageMetricv4<ImageType, ImageType, ImageType>;
 
   auto metric = MetricType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(metric, CorrelationImageToImageMetricv4, ImageToImageMetricv4);
 
   /* Assign images and transforms.
    * By not setting a virtual domain image or virtual domain settings,

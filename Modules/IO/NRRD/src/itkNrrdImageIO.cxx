@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -224,7 +224,7 @@ NrrdImageIO::CanReadFile(const char * filename)
   {
     this->OpenFileForReading(inputStream, fname);
   }
-  catch (ExceptionObject &)
+  catch (const ExceptionObject &)
   {
     return false;
   }
@@ -608,45 +608,45 @@ NrrdImageIO::ReadImageInformation()
       naxis = nrrd->axis + axi;
       if (AIR_EXISTS(naxis->thickness))
       {
-        sprintf(key, "%s%s[%u]", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_thicknesses), axii);
+        snprintf(key, sizeof(key), "%s%s[%u]", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_thicknesses), axii);
         EncapsulateMetaData<double>(thisDic, std::string(key), naxis->thickness);
       }
       if (naxis->center)
       {
-        sprintf(key, "%s%s[%u]", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_centers), axii);
+        snprintf(key, sizeof(key), "%s%s[%u]", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_centers), axii);
         val = airEnumStr(nrrdCenter, naxis->center);
         EncapsulateMetaData<std::string>(thisDic, std::string(key), std::string(val));
       }
       if (naxis->kind)
       {
-        sprintf(key, "%s%s[%u]", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_kinds), axii);
+        snprintf(key, sizeof(key), "%s%s[%u]", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_kinds), axii);
         val = airEnumStr(nrrdKind, naxis->kind);
         EncapsulateMetaData<std::string>(thisDic, std::string(key), std::string(val));
       }
       if (airStrlen(naxis->label))
       {
-        sprintf(key, "%s%s[%u]", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_labels), axii);
+        snprintf(key, sizeof(key), "%s%s[%u]", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_labels), axii);
         EncapsulateMetaData<std::string>(thisDic, std::string(key), std::string(naxis->label));
       }
     }
     if (airStrlen(nrrd->content))
     {
-      sprintf(key, "%s%s", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_content));
+      snprintf(key, sizeof(key), "%s%s", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_content));
       EncapsulateMetaData<std::string>(thisDic, std::string(key), std::string(nrrd->content));
     }
     if (AIR_EXISTS(nrrd->oldMin))
     {
-      sprintf(key, "%s%s", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_old_min));
+      snprintf(key, sizeof(key), "%s%s", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_old_min));
       EncapsulateMetaData<double>(thisDic, std::string(key), nrrd->oldMin);
     }
     if (AIR_EXISTS(nrrd->oldMax))
     {
-      sprintf(key, "%s%s", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_old_max));
+      snprintf(key, sizeof(key), "%s%s", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_old_max));
       EncapsulateMetaData<double>(thisDic, std::string(key), nrrd->oldMax);
     }
     if (nrrd->space)
     {
-      sprintf(key, "%s%s", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_space));
+      snprintf(key, sizeof(key), "%s%s", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_space));
       val = airEnumStr(nrrdSpace, nrrd->space);
 
       // keep everything consistent: so enter it as LPS in the meta data
@@ -672,7 +672,7 @@ NrrdImageIO::ReadImageInformation()
 
     if (AIR_EXISTS(nrrd->measurementFrame[0][0]))
     {
-      sprintf(key, "%s%s", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_measurement_frame));
+      snprintf(key, sizeof(key), "%s%s", KEY_PREFIX, airEnumStr(nrrdField, nrrdField_measurement_frame));
       std::vector<std::vector<double>> msrFrame(domainAxisNum);
 
       // flip the measurement frame here if we have to
@@ -958,9 +958,9 @@ NrrdImageIO::Write(const void * buffer)
   const char *                             keyField, *field;
   for (keyIt = keys.begin(); keyIt != keys.end(); ++keyIt)
   {
-    if (!strncmp(KEY_PREFIX, (*keyIt).c_str(), strlen(KEY_PREFIX)))
+    if (!strncmp(KEY_PREFIX, keyIt->c_str(), strlen(KEY_PREFIX)))
     {
-      keyField = (*keyIt).c_str() + strlen(KEY_PREFIX);
+      keyField = keyIt->c_str() + strlen(KEY_PREFIX);
       // only of one of these can succeed
       field = airEnumStr(nrrdField, nrrdField_thicknesses);
       if (!strncmp(keyField, field, strlen(field)))
@@ -1067,7 +1067,7 @@ NrrdImageIO::Write(const void * buffer)
       // not a NRRD field packed into meta data; just a regular key/value
       std::string value;
       ExposeMetaData<std::string>(thisDic, *keyIt, value);
-      nrrdKeyValueAdd(nrrd, (*keyIt).c_str(), value.c_str());
+      nrrdKeyValueAdd(nrrd, keyIt->c_str(), value.c_str());
     }
   }
 

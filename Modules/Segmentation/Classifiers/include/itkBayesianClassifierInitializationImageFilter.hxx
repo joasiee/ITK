@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -92,7 +92,7 @@ BayesianClassifierInitializationImageFilter<TInputImage, TProbabilityPrecisionTy
   kmeansFilter->SetInput(this->GetInput());
   kmeansFilter->SetUseNonContiguousLabels(false);
 
-  for (unsigned k = 0; k < m_NumberOfClasses; ++k)
+  for (unsigned int k = 0; k < m_NumberOfClasses; ++k)
   {
     const double userProvidedInitialMean = k;
     // TODO: Choose more reasonable defaults for specifying the initial means
@@ -104,10 +104,10 @@ BayesianClassifierInitializationImageFilter<TInputImage, TProbabilityPrecisionTy
   {
     kmeansFilter->Update();
   }
-  catch (ExceptionObject & err)
+  catch (const ExceptionObject &)
   {
     // Pass exception to caller
-    throw err;
+    throw;
   }
 
   typename KMeansFilterType::ParametersType estimatedMeans = kmeansFilter->GetFinalMeans(); // mean of each class
@@ -148,10 +148,11 @@ BayesianClassifierInitializationImageFilter<TInputImage, TProbabilityPrecisionTy
   // output labelmap
   while (!itrInputImage.IsAtEnd())
   {
-    sumsOfSquares[(unsigned int)itrKMeansImage.Get()] =
-      sumsOfSquares[(unsigned int)itrKMeansImage.Get()] + itrInputImage.Get() * itrInputImage.Get();
-    sums[(unsigned int)itrKMeansImage.Get()] = sums[(unsigned int)itrKMeansImage.Get()] + itrInputImage.Get();
-    ++classCount[(unsigned int)itrKMeansImage.Get()];
+    sumsOfSquares[static_cast<unsigned int>(itrKMeansImage.Get())] =
+      sumsOfSquares[static_cast<unsigned int>(itrKMeansImage.Get())] + itrInputImage.Get() * itrInputImage.Get();
+    sums[static_cast<unsigned int>(itrKMeansImage.Get())] =
+      sums[static_cast<unsigned int>(itrKMeansImage.Get())] + itrInputImage.Get();
+    ++classCount[static_cast<unsigned int>(itrKMeansImage.Get())];
     ++itrInputImage;
     ++itrKMeansImage;
   }

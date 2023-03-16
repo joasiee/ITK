@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -108,7 +108,7 @@ MembershipSample<TSample>::GetMeasurementVector(const InstanceIdentifier & id) c
 
 template <typename TSample>
 inline typename MembershipSample<TSample>::MeasurementType
-MembershipSample<TSample>::GetMeasurement(const InstanceIdentifier & id, const unsigned int & dimension)
+MembershipSample<TSample>::GetMeasurement(const InstanceIdentifier & id, const unsigned int dimension)
 {
   return m_Sample->GetMeasurement(id, dimension);
 }

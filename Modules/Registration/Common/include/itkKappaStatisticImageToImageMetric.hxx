@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -100,7 +100,7 @@ KappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const Tran
     //
     if (Math::AlmostEquals(fixedValue, m_ForegroundValue))
     {
-      fixedForegroundArea++;
+      ++fixedForegroundArea;
     }
 
     // Get the point in the transformed moving image corresponding to
@@ -123,11 +123,11 @@ KappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const Tran
       const RealType movingValue = this->m_Interpolator->Evaluate(transformedPoint);
       if (Math::AlmostEquals(movingValue, m_ForegroundValue))
       {
-        movingForegroundArea++;
+        ++movingForegroundArea;
       }
       if (Math::AlmostEquals(movingValue, m_ForegroundValue) && Math::AlmostEquals(fixedValue, m_ForegroundValue))
       {
-        intersection++;
+        ++intersection;
       }
     }
     ++fi;
@@ -214,7 +214,7 @@ KappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const
     const RealType fixedValue = ti.Value();
     if (Math::AlmostEquals(fixedValue, m_ForegroundValue))
     {
-      fixedArea++;
+      ++fixedArea;
     }
 
     OutputPointType transformedPoint = this->m_Transform->TransformPoint(inputPoint);
@@ -231,12 +231,12 @@ KappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const
 
       if (Math::AlmostEquals(movingValue, m_ForegroundValue))
       {
-        movingArea++;
+        ++movingArea;
       }
 
       if (Math::AlmostEquals(movingValue, m_ForegroundValue) && Math::AlmostEquals(fixedValue, m_ForegroundValue))
       {
-        intersection++;
+        ++intersection;
       }
 
       this->m_Transform->ComputeJacobianWithRespectToParametersCachedTemporaries(inputPoint, jacobian, jacobianCache);
@@ -276,7 +276,7 @@ KappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const
   }
   else
   {
-    double areaSum = double(fixedArea) + double(movingArea);
+    double areaSum = static_cast<double>(fixedArea) + static_cast<double>(movingArea);
     for (unsigned int par = 0; par < ParametersDimension; ++par)
     {
       derivative[par] = -(areaSum * sum1[par] - 2.0 * intersection * sum2[par]) / (areaSum * areaSum);
@@ -325,8 +325,8 @@ KappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ComputeGradient()
       {
         minusIndex[i] = currIndex[i] - 1;
         plusIndex[i] = currIndex[i] + 1;
-        auto minusVal = double(this->m_MovingImage->GetPixel(minusIndex));
-        auto plusVal = double(this->m_MovingImage->GetPixel(plusIndex));
+        auto minusVal = static_cast<double>(this->m_MovingImage->GetPixel(minusIndex));
+        auto plusVal = static_cast<double>(this->m_MovingImage->GetPixel(plusIndex));
         if (Math::NotAlmostEquals(minusVal, m_ForegroundValue) && Math::AlmostEquals(plusVal, m_ForegroundValue))
         {
           tempGradPixel[i] = 1;

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,7 +35,7 @@ namespace itk
  * A simplex mesh can be used for deformable model segmentation of 3D image data.
  * To create a simplex mesh one needs a triangle mesh, which can be converted
  * to using the class itkTriangleMeshToSimplexMeshFilter. The back filtering
- * (from simplex to trinagle mesh)is done through a itkSimplexMeshToTriangleMeshFilter.
+ * (from simplex to triangle mesh)is done through a itkSimplexMeshToTriangleMeshFilter.
  *
  * \author Thomas Boettger. Division Medical and Biological Informatics, German Cancer Research Center, Heidelberg.
  * \ingroup ITKMesh

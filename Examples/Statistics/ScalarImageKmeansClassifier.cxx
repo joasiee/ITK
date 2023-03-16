@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -68,7 +68,7 @@ main(int argc, char * argv[])
   // Software Guide : EndLatex
 
   // Software Guide : BeginCodeSnippet
-  using PixelType = signed short;
+  using PixelType = short;
   constexpr unsigned int Dimension = 2;
 
   using ImageType = itk::Image<PixelType, Dimension>;
@@ -146,7 +146,7 @@ main(int argc, char * argv[])
 
 
   // Software Guide : BeginCodeSnippet
-  for (unsigned k = 0; k < numberOfInitialClasses; ++k)
+  for (unsigned int k = 0; k < numberOfInitialClasses; ++k)
   {
     const double userProvidedInitialMean = std::stod(argv[k + argoffset]);
     kmeansFilter->AddClassWithInitialMean(userProvidedInitialMean);

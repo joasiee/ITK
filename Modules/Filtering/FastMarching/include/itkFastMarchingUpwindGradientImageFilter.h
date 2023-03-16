@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@
 namespace itk
 {
 /**
- *\class FastMarchingUpwindGradientImageFilter
+ * \class FastMarchingUpwindGradientImageFilter
  *
  * \brief Generates the upwind gradient field of fast marching arrival times.
  *
@@ -161,15 +161,21 @@ public:
   SetTargetReachedModeToNoTargets()
   {
     this->SetTargetReachedMode(NoTargets);
+    m_NumberOfTargets = 0;
   }
   void
   SetTargetReachedModeToOneTarget()
   {
+    this->VerifyTargetReachedModeConditions();
+
     this->SetTargetReachedMode(OneTarget);
+    m_NumberOfTargets = 1;
   }
   void
   SetTargetReachedModeToSomeTargets(SizeValueType numberOfTargets)
   {
+    this->VerifyTargetReachedModeConditions(numberOfTargets);
+
     this->SetTargetReachedMode(SomeTargets);
     m_NumberOfTargets = numberOfTargets;
   }
@@ -177,7 +183,10 @@ public:
   void
   SetTargetReachedModeToAllTargets()
   {
+    this->VerifyTargetReachedModeConditions();
+
     this->SetTargetReachedMode(AllTargets);
+    m_NumberOfTargets = m_TargetPoints->Size();
   }
 
   /** Get the number of targets. */
@@ -226,6 +235,48 @@ protected:
                   const LevelSetImageType * output,
                   const LabelImageType *    labelImage,
                   GradientImageType *       gradientImage);
+
+  /** Check that target points are set.
+   *  Returns true if at least a target point exists; returns false otherwise.
+   */
+  bool
+  IsTargetPointsExistenceConditionSatisfied()
+  {
+    if (!m_TargetPoints || m_TargetPoints->Size() == 0)
+    {
+      return false;
+    }
+    else
+    {
+      return true;
+    }
+  }
+
+  /** Check that the conditions to set the target reached mode are satisfied.
+   *  The sufficient target point count is 1 for OneTarget and AllTargets modes; and it is
+   *  given by a particular value for the SomeTargets mode.
+   *  Raises an exception if the conditions are not satisfied.
+   */
+  void
+  VerifyTargetReachedModeConditions(unsigned int targetModeMinPoints = 1)
+  {
+    bool targetPointsExist = this->IsTargetPointsExistenceConditionSatisfied();
+
+    if (!targetPointsExist)
+    {
+      itkExceptionMacro(<< "No target point set. Cannot set the target reached mode.");
+    }
+    else
+    {
+      SizeValueType availableNumberOfTargets = m_TargetPoints->Size();
+      if (targetModeMinPoints > availableNumberOfTargets)
+      {
+        itkExceptionMacro(<< "Not enough target points: Available: " << availableNumberOfTargets
+                          << "; Requested: " << targetModeMinPoints);
+      }
+    }
+  }
+
 
 private:
   NodeContainerPointer m_TargetPoints;

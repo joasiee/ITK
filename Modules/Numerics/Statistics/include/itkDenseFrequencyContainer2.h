@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,7 +28,7 @@ namespace itk
 namespace Statistics
 {
 /**
- *\class DenseFrequencyContainer2
+ * \class DenseFrequencyContainer2
  *  \brief This class is a container for frequencies of bins in an histogram.
  *
  * This class uses the ValarrayImageContainer class to store
@@ -57,10 +57,10 @@ public:
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
-  /** InstanceIdenfitifer type alias */
+  /** InstanceIdentifer type alias */
   using InstanceIdentifier = MeasurementVectorTraits::InstanceIdentifier;
 
-  /** Absoluate Frequency type alias */
+  /** Absolute Frequency type alias */
   using AbsoluteFrequencyType = MeasurementVectorTraits::AbsoluteFrequencyType;
 
   /** Absolute Total frequency type */

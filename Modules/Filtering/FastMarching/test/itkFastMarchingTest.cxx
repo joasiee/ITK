@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -161,7 +161,7 @@ itkFastMarchingTest(int argc, char * argv[])
   ITK_TEST_SET_GET_VALUE(outputRegion, marcher->GetOutputRegion());
 
   auto outputSpacingValue = static_cast<typename FloatFMType::OutputSpacingType::ValueType>(std::stod(argv[6]));
-  typename FloatFMType::OutputSpacingType outputSpacing(outputSpacingValue);
+  auto outputSpacing = itk::MakeFilled<typename FloatFMType::OutputSpacingType>(outputSpacingValue);
   marcher->SetOutputSpacing(outputSpacing);
   ITK_TEST_SET_GET_VALUE(outputSpacing, marcher->GetOutputSpacing());
 
@@ -171,7 +171,7 @@ itkFastMarchingTest(int argc, char * argv[])
   ITK_TEST_SET_GET_VALUE(outputDirection, marcher->GetOutputDirection());
 
   auto outputOriginValue = static_cast<typename FloatFMType::OutputPointType::ValueType>(std::stod(argv[7]));
-  typename FloatFMType::OutputPointType outputOrigin(outputOriginValue);
+  auto outputOrigin = itk::MakeFilled<typename FloatFMType::OutputPointType>(outputOriginValue);
   marcher->SetOutputOrigin(outputOrigin);
   ITK_TEST_SET_GET_VALUE(outputOrigin, marcher->GetOutputOrigin());
 
@@ -223,7 +223,7 @@ itkFastMarchingTest(int argc, char * argv[])
     }
     distance = std::sqrt(distance);
 
-    outputValue = (float)iterator.Get();
+    outputValue = static_cast<float>(iterator.Get());
 
     if (distance < itk::NumericTraits<double>::epsilon())
     {

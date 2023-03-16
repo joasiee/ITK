@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -115,7 +115,7 @@ Utf8StringToWString(const std::string & str)
 // Get a file descriptor from a filename (using utf8 to wstring
 // on windows if requested) without specifying any specific permissions
 inline int
-I18nOpen(const std::string & str, const int & flags)
+I18nOpen(const std::string & str, const int flags)
 {
 #if LOCAL_USE_WIN32_WOPEN
   // mingw has _wopen
@@ -130,7 +130,7 @@ I18nOpen(const std::string & str, const int & flags)
 // Get a file descriptor from a filename (using utf8 to wstring
 // on windows if requested)
 inline int
-I18nOpen(const std::string & str, const int & flags, const int & mode)
+I18nOpen(const std::string & str, const int flags, const int mode)
 {
 #if LOCAL_USE_WIN32_WOPEN
   // mingw has _wopen

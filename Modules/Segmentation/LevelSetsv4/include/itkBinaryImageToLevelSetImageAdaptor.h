@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +34,7 @@
 namespace itk
 {
 /**
- *\class BinaryImageToLevelSetImageAdator
+ * \class BinaryImageToLevelSetImageAdator
  *  \brief Converts one binary image to the appropriate level-set type
  *  provided by the template argument TLevelSet.
  *
@@ -114,7 +114,7 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- *\class BinaryImageToSparseLevelSetImageAdaptorBase
+ * \class BinaryImageToSparseLevelSetImageAdaptorBase
  *  \brief Abstract class for converting binary image to sparse level-set
  *
  *  \ingroup ITKLevelSetsv4

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -204,7 +204,7 @@ BSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetInitialCausalCoef
   {
     // Full loop
     iz = 1.0 / z;
-    z2n = std::pow(z, (double)(m_DataLength[m_IteratorDirection] - 1L));
+    z2n = std::pow(z, static_cast<double>(m_DataLength[m_IteratorDirection] - 1L));
     sum = m_Scratch[0] + z2n * m_Scratch[m_DataLength[m_IteratorDirection] - 1L];
     z2n *= z2n * iz;
     for (unsigned int n = 1; n <= (m_DataLength[m_IteratorDirection] - 2); ++n)
@@ -241,7 +241,7 @@ BSplineDecompositionImageFilter<TInputImage, TOutputImage>::DataToCoefficientsND
 
   ProgressReporter progress(this, 0, count, 10);
 
-  // Initialize coeffient array
+  // Initialize coefficient array
   this->CopyImageToImage(); // Coefficients are initialized to the input data
 
   // Loop through each dimension

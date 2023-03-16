@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -350,7 +350,7 @@ itkTubeSpatialObjectTest(int, char *[])
   std::cout << "DerivativeAt()...";
   try
   {
-    tubeNet1->DerivativeAtInWorldSpace(in, (unsigned short)1, derivative, true);
+    tubeNet1->DerivativeAtInWorldSpace(in, static_cast<unsigned short>(1), derivative, true);
   }
   catch (...)
   {
@@ -454,16 +454,31 @@ itkTubeSpatialObjectTest(int, char *[])
   TubePointType::CovariantVectorType n2 =
     static_cast<const TubePointType *>(tube1->GetPoint(1))->GetNormal2InWorldSpace();
 
-  if ((itk::Math::abs(t[0] - 0.57735) > 0.0001) || (itk::Math::abs(t[1] - 0.57735) > 0.0001) ||
-      (itk::Math::abs(t[2] - 0.57735) > 0.0001) || (itk::Math::abs(n1[0] - 0.707107) > 0.0001) ||
-      (itk::Math::abs(n1[1] + 0.707107) > 0.0001) || (itk::Math::abs(n1[2] - 0.0) > 0.0001) ||
-      (itk::Math::abs(n2[0] - 0.408248) > 0.0001) || (itk::Math::abs(n2[1] - 0.408248) > 0.0001) ||
-      (itk::Math::abs(n2[2] + 0.816497) > 0.0001))
+
+  const Point  t_known(itk::MakePoint(0.57735, 0.57735, 0.57735));
+  const Point  n1_known(itk::MakePoint(0.707107, 0.707107, 0.0));
+  const Point  n2_known(itk::MakePoint(0.408248, 0.408248, 0.816497));
+  const double tol = 0.0001;
+
+  if ((itk::Math::abs(t[0] - t_known[0]) > tol) || (itk::Math::abs(t[1] - t_known[1]) > tol) ||
+      (itk::Math::abs(t[2] - t_known[2]) > tol))
   {
     std::cout << "[FAILED]" << std::endl;
-    std::cout << " t = " << t << std::endl;
-    std::cout << " n1 = " << n1 << std::endl;
-    std::cout << " n2 = " << n2 << std::endl;
+    std::cout << " t = " << t << " != " << t_known << " within " << tol << std::endl;
+    return EXIT_FAILURE;
+  }
+  if ((itk::Math::abs(n1[0] - n1_known[0]) > tol) || (itk::Math::abs(n1[1] + n1_known[1]) > tol) ||
+      (itk::Math::abs(n1[2] - n1_known[2]) > tol))
+  {
+    std::cout << "[FAILED]" << std::endl;
+    std::cout << " n1 = " << n1 << " != " << n1_known << " within " << tol << std::endl;
+    return EXIT_FAILURE;
+  }
+  if ((itk::Math::abs(n2[0] - n2_known[0]) > tol) || (itk::Math::abs(n2[1] - n2_known[1]) > tol) ||
+      (itk::Math::abs(n2[2] + n2_known[2]) > tol))
+  {
+    std::cout << "[FAILED]" << std::endl;
+    std::cout << " n2 = " << n2 << " != " << n2_known << " within " << tol << std::endl;
     return EXIT_FAILURE;
   }
 

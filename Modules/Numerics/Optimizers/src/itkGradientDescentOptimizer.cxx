@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,8 +26,6 @@ namespace itk
 GradientDescentOptimizer::GradientDescentOptimizer()
 
 {
-  itkDebugMacro("Constructor");
-
   m_StopConditionDescription << this->GetNameOfClass() << ": ";
 }
 
@@ -90,7 +88,7 @@ GradientDescentOptimizer::ResumeOptimization()
     {
       m_CostFunction->GetValueAndDerivative(this->GetCurrentPosition(), m_Value, m_Gradient);
     }
-    catch (ExceptionObject & err)
+    catch (const ExceptionObject &)
     {
       // An exception has occurred.
       // Terminate immediately.
@@ -99,7 +97,7 @@ GradientDescentOptimizer::ResumeOptimization()
       StopOptimization();
 
       // Pass exception to caller
-      throw err;
+      throw;
     }
 
     if (m_Stop)
@@ -110,7 +108,7 @@ GradientDescentOptimizer::ResumeOptimization()
 
     AdvanceOneStep();
 
-    m_CurrentIteration++;
+    ++m_CurrentIteration;
 
     if (m_CurrentIteration >= m_NumberOfIterations)
     {

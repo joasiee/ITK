@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -213,7 +213,7 @@ main(int argc, char * argv[])
   //  Software Guide : EndCodeSnippet
 
   //  The level set solver will stop if the convergence criteria has been
-  //  reached or if the maximum number of iterations has elasped.  The
+  //  reached or if the maximum number of iterations has elapsed.  The
   //  convergence criteria is defined in terms of the root mean squared (RMS)
   //  change in the level set function. When RMS change for an iteration is
   //  below a user-specified threshold, the solution is considered to have

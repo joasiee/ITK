@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -98,14 +98,14 @@ GradientDescentOptimizerv4Template<TInternalComputationValueType>::ResumeOptimiz
       // proper size, no new allocation is done.
       this->m_Metric->GetValueAndDerivative(this->m_CurrentMetricValue, this->m_Gradient);
     }
-    catch (ExceptionObject & err)
+    catch (const ExceptionObject &)
     {
       this->m_StopCondition = StopConditionObjectToObjectOptimizerEnum::COSTFUNCTION_ERROR;
       this->m_StopConditionDescription << "Metric error during optimization";
       this->StopOptimization();
 
       // Pass exception to caller
-      throw err;
+      throw;
     }
 
     // Check if optimization has been stopped externally.
@@ -132,7 +132,7 @@ GradientDescentOptimizerv4Template<TInternalComputationValueType>::ResumeOptimiz
           break;
         }
       }
-      catch (std::exception & e)
+      catch (const std::exception & e)
       {
         itkWarningMacro(<< "GetConvergenceValue() failed with exception: " << e.what() << std::endl);
       }
@@ -175,14 +175,14 @@ GradientDescentOptimizerv4Template<TInternalComputationValueType>::AdvanceOneSte
     // Pass gradient to transform and let it do its own updating
     this->m_Metric->UpdateTransformParameters(this->m_Gradient);
   }
-  catch (ExceptionObject & err)
+  catch (const ExceptionObject &)
   {
     this->m_StopCondition = StopConditionObjectToObjectOptimizerEnum::UPDATE_PARAMETERS_ERROR;
     this->m_StopConditionDescription << "UpdateTransformParameters error";
     this->StopOptimization();
 
     // Pass exception to caller
-    throw err;
+    throw;
   }
 
   this->InvokeEvent(IterationEvent());
@@ -216,7 +216,7 @@ GradientDescentOptimizerv4Template<TInternalComputationValueType>::ModifyGradien
   // Loop over the range. It is inclusive.
   for (IndexValueType j = subrange[0]; j <= subrange[1]; ++j)
   {
-    // scales is checked during StartOptmization for values <=
+    // scales is checked during StartOptimization for values <=
     // machine epsilon.
     // Take the modulo of the index to handle gradients from transforms
     // with local support. The gradient array stores the gradient of local

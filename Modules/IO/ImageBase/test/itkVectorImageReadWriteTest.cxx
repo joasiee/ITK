@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -50,7 +50,7 @@ itkVectorImageReadWriteTest(int argc, char * argv[])
   // RecursiveGaussianImageFilter and compare a few filtered pixels.
   //
   // Create ON and OFF vectors
-  PixelType vector0(0.0);
+  PixelType vector0{};
   PixelType vector1;
   vector1[0] = 1.0;
   vector1[1] = 2.0;
@@ -67,9 +67,7 @@ itkVectorImageReadWriteTest(int argc, char * argv[])
   ImageType::RegionType region;
   region.SetSize(size);
   region.SetIndex(index);
-  inputImage->SetLargestPossibleRegion(region);
-  inputImage->SetBufferedRegion(region);
-  inputImage->SetRequestedRegion(region);
+  inputImage->SetRegions(region);
   inputImage->Allocate();
   inputImage->FillBuffer(vector0);
 

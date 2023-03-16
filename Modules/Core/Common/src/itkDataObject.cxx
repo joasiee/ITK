@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -268,6 +268,17 @@ DataObject::GetSourceOutputIndex() const
   return m_Source->MakeIndexFromOutputName(m_SourceOutputName);
 }
 
+void
+DataObject::UpdateSource() const
+{
+  const auto source = this->GetSource();
+
+  if (source)
+  {
+    source->Update();
+  }
+}
+
 //----------------------------------------------------------------------------
 void
 DataObject::PrintSelf(std::ostream & os, Indent indent) const
@@ -311,10 +322,11 @@ DataObject::Update()
 void
 DataObject::UpdateOutputInformation()
 {
+  const auto source = this->GetSource();
 
-  if (this->GetSource())
+  if (source)
   {
-    this->GetSource()->UpdateOutputInformation();
+    source->UpdateOutputInformation();
   }
 }
 

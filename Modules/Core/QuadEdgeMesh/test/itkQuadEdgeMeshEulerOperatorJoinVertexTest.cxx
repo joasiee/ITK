@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,20 +18,25 @@
 
 #include "itkQuadEdgeMeshEulerOperatorJoinVertexFunction.h"
 #include "itkQuadEdgeMeshEulerOperatorsTestHelper.h"
+#include "itkTestingMacros.h"
+#include <sstream>
 
 int
 itkQuadEdgeMeshEulerOperatorJoinVertexTest(int argc, char * argv[])
 {
+  std::stringstream inputArgumentMessage;
+  inputArgumentMessage << "Usage: " << itkNameOfTestExecutableMacro(argv) << " inputType [0..5]:" << std::endl;
+  inputArgumentMessage << " 0-Test with a square mesh with only triangles." << std::endl;
+  inputArgumentMessage << " 1-Test with a square mesh with only quads." << std::endl;
+  inputArgumentMessage << " 2-Test with a tetraedron mesh with triangles." << std::endl;
+  inputArgumentMessage << " 3-Test with a samosa." << std::endl;
+  inputArgumentMessage << " 4-Test with an isolated edge." << std::endl;
+  inputArgumentMessage << " 5-Test with a square mesh with one centered hole" << std::endl;
+
   if (argc < 2)
   {
-    std::cout << "*** ERROR ***" << std::endl;
-    std::cout << "Requires one argument: " << std::endl;
-    std::cout << " 0-Test with a square mesh with only triangles." << std::endl;
-    std::cout << " 1-Test with a square mesh with only quads." << std::endl;
-    std::cout << " 2-Test with a tetraedron mesh with triangles." << std::endl;
-    std::cout << " 3-Test with a samosa." << std::endl;
-    std::cout << " 4-Test with an isolated edge." << std::endl;
-    std::cout << " 5-Test with a square mesh with one centered hole" << std::endl;
+    std::cerr << "Missing parameters." << std::endl;
+    std::cerr << inputArgumentMessage.str();
     return EXIT_FAILURE;
   }
 
@@ -41,14 +46,8 @@ itkQuadEdgeMeshEulerOperatorJoinVertexTest(int argc, char * argv[])
 
   if ((InputType > 5) || (InputType < 0))
   {
-    std::cout << "*** ERROR ***" << std::endl;
-    std::cout << "Requires one argument: " << std::endl;
-    std::cout << " 0-Test with a square mesh with only triangles." << std::endl;
-    std::cout << " 1-Test with a square mesh with only quads." << std::endl;
-    std::cout << " 2-Test with a tetraedron mesh with triangles." << std::endl;
-    std::cout << " 3-Test with a samosa." << std::endl;
-    std::cout << " 4-Test with an isolated edge." << std::endl;
-    std::cout << " 5-Test with a square mesh with one centered hole" << std::endl;
+    std::cerr << "Wrong parameter value." << std::endl;
+    std::cerr << inputArgumentMessage.str();
     return EXIT_FAILURE;
   }
 
@@ -442,7 +441,7 @@ itkQuadEdgeMeshEulerOperatorJoinVertexTest(int argc, char * argv[])
     }
   std::cout << "OK" << std::endl;
   // We now consider a boundary edge (here we consider [0, 5] but still
-  // with a an adjacent face.
+  // with an adjacent face.
   //
   //   20 --------- 21 --------- 22 --------- 23 --------- 24
   //    |        __/ |        __/ |        __/ |        __/ |

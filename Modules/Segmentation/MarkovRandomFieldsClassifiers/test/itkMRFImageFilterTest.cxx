@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -77,8 +77,8 @@ itkMRFImageFilterTest(int, char *[])
   DataVector dblVec;
 
   int i, k;
-  int halfWidth = (int)(vecImgSize[0]) / 2;
-  int halfHeight = (int)(vecImgSize[1]) / 2;
+  int halfWidth = static_cast<int>(vecImgSize[0]) / 2;
+  int halfHeight = static_cast<int>(vecImgSize[1]) / 2;
 
   //--------------------------------------------------------------------------
   // Manually create and store each vector
@@ -417,7 +417,7 @@ itkMRFImageFilterTest(int, char *[])
   while (!nOutImageNeighborhoodIter.IsAtEnd())
   {
     outLabel = nOutImageNeighborhoodIter.GetCenterValue();
-    sum += (int)(*outLabel);
+    sum += static_cast<int>(*outLabel);
     ++nOutImageNeighborhoodIter;
   }
   // Loop through the data set

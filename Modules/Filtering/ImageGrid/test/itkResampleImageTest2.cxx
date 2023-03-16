@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,13 +33,13 @@
 namespace
 {
 
-template <typename TCoordRepType, unsigned int NDimensions>
-class NonlinearAffineTransform : public itk::AffineTransform<TCoordRepType, NDimensions>
+template <typename TCoordRepType, unsigned int VDimension>
+class NonlinearAffineTransform : public itk::AffineTransform<TCoordRepType, VDimension>
 {
 public:
   /** Standard class type aliases.   */
   using Self = NonlinearAffineTransform;
-  using Superclass = itk::AffineTransform<TCoordRepType, NDimensions>;
+  using Superclass = itk::AffineTransform<TCoordRepType, VDimension>;
   using Pointer = itk::SmartPointer<Self>;
   using ConstPointer = itk::SmartPointer<const Self>;
 
@@ -77,14 +77,14 @@ itkResampleImageTest2(int argc, char * argv[])
     return EXIT_FAILURE;
   }
 
-  constexpr unsigned int NDimensions = 2;
+  constexpr unsigned int VDimension = 2;
 
   using PixelType = unsigned char;
-  using ImageType = itk::Image<PixelType, NDimensions>;
+  using ImageType = itk::Image<PixelType, VDimension>;
   using CoordRepType = double;
 
-  using AffineTransformType = itk::AffineTransform<CoordRepType, NDimensions>;
-  using NonlinearAffineTransformType = NonlinearAffineTransform<CoordRepType, NDimensions>;
+  using AffineTransformType = itk::AffineTransform<CoordRepType, VDimension>;
+  using NonlinearAffineTransformType = NonlinearAffineTransform<CoordRepType, VDimension>;
   using InterpolatorType = itk::LinearInterpolateImageFunction<ImageType, CoordRepType>;
   using ExtrapolatorType = itk::NearestNeighborExtrapolateImageFunction<ImageType, CoordRepType>;
 
@@ -160,7 +160,7 @@ itkResampleImageTest2(int argc, char * argv[])
     }
 
     typename ImageType::SpacingType outputSpacing;
-    for (unsigned int i = 0; i < NDimensions; ++i)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
       outputSpacing[i] = outputSpacingValue;
     }
@@ -171,9 +171,10 @@ itkResampleImageTest2(int argc, char * argv[])
     typename ImageType::SizeType outputSize;
 
     using SizeValueType = typename ImageType::SizeType::SizeValueType;
-    for (unsigned int i = 0; i < NDimensions; ++i)
+    for (unsigned int i = 0; i < VDimension; ++i)
     {
-      outputSize[i] = itk::Math::Ceil<SizeValueType>((double)inputSize[i] * inputSpacing[i] / outputSpacing[i]);
+      outputSize[i] =
+        itk::Math::Ceil<SizeValueType>(static_cast<double>(inputSize[i]) * inputSpacing[i] / outputSpacing[i]);
     }
 
     typename ImageType::DirectionType outputDirection = resample->GetInput()->GetDirection();

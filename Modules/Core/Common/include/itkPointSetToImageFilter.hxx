@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -130,7 +130,7 @@ PointSetToImageFilter<TInputPointSet, TOutputImage>::GenerateData()
   for (i = 0; i < InputPointSetDimension; ++i)
   {
     size[i] = static_cast<SizeValueType>(bb->GetBounds()[2 * i + 1] - bb->GetBounds()[2 * i]);
-    origin[i] = 0; // bb->GetBounds()[2*i];
+    origin[i] = bb->GetBounds()[2 * i];
   }
 
   typename OutputImageType::RegionType region;

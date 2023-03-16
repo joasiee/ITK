@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -47,11 +47,13 @@ IsEqualTolerant(const float lm, const float rm, double tol)
 int
 itkGDCMSeriesStreamReadImageWriteTest(int argc, char * argv[])
 {
-  if (argc < 6)
+  if (argc < 10)
   {
     std::cerr << "Missing Parameters." << std::endl;
     std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv) << " DicomDirectory  outputFile "
-              << " spacingX spacingY spacingZ [ force-no-streaming 1|0]" << std::endl;
+              << " spacingX spacingY spacingZ recursive useSeriesDetails loadSequences loadPrivateTags [ "
+                 "force-no-streaming 1|0]"
+              << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -65,11 +67,10 @@ itkGDCMSeriesStreamReadImageWriteTest(int argc, char * argv[])
   expectedSpacing[1] = std::stod(argv[4]);
   expectedSpacing[2] = std::stod(argv[5]);
 
-
   bool forceNoStreaming = true;
-  if (argc > 6)
+  if (argc > 10)
   {
-    if (std::stoi(argv[6]) != 1)
+    if (std::stoi(argv[10]) != 1)
     {
       forceNoStreaming = false;
     }
@@ -85,6 +86,19 @@ itkGDCMSeriesStreamReadImageWriteTest(int argc, char * argv[])
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(filenameGenerator, GDCMSeriesFileNames, ProcessObject);
 
+
+  auto recursive = static_cast<bool>(std::stoi(argv[6]));
+  ITK_TEST_SET_GET_BOOLEAN(filenameGenerator, Recursive, recursive);
+
+  auto useSeriesDetails = static_cast<bool>(std::stoi(argv[7]));
+  filenameGenerator->SetUseSeriesDetails(useSeriesDetails);
+  ITK_TEST_SET_GET_VALUE(useSeriesDetails, filenameGenerator->GetUseSeriesDetails());
+
+  auto loadSequences = static_cast<bool>(std::stoi(argv[8]));
+  ITK_TEST_SET_GET_BOOLEAN(filenameGenerator, LoadSequences, loadSequences);
+
+  auto loadPrivateTags = static_cast<bool>(std::stoi(argv[9]));
+  ITK_TEST_SET_GET_BOOLEAN(filenameGenerator, LoadPrivateTags, loadPrivateTags);
 
   // Test exceptions
   const char * pInputDirectory = nullptr;
@@ -177,7 +191,7 @@ itkGDCMSeriesStreamReadImageWriteTest(int argc, char * argv[])
   ImageType::SpacingType spacing = reader->GetOutput()->GetSpacing();
 
   // we only give 4 bits of tolerance, IEEE float a 24-bit mantissa
-  const double percentTolerance = 1.0 / double((unsigned int)(1) << 18);
+  const double percentTolerance = 1.0 / static_cast<double>(1U << 18);
 
   if (!IsEqualTolerant(spacing[0], expectedSpacing[0], percentTolerance) ||
       !IsEqualTolerant(spacing[1], expectedSpacing[1], percentTolerance) ||

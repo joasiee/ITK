@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,9 +45,7 @@ itkDanielssonDistanceMapImageFilterTest(int, char *[])
   region2D.SetIndex(index2D);
 
   auto inputImage2D = myImageType2D1::New();
-  inputImage2D->SetLargestPossibleRegion(region2D);
-  inputImage2D->SetBufferedRegion(region2D);
-  inputImage2D->SetRequestedRegion(region2D);
+  inputImage2D->SetRegions(region2D);
   inputImage2D->Allocate(true);
 
   // Set pixel (4,4) with the value 1

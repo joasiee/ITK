@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -162,7 +162,7 @@ public:
 //
 
 #define ITK_DEFAULTCONVERTTRAITS_FIXEDARRAY_TYPE(type)                                  \
-  template <typename TComponentType, unsigned VDimension>                               \
+  template <typename TComponentType, unsigned int VDimension>                           \
   class ITK_TEMPLATE_EXPORT DefaultConvertPixelTraits<type<TComponentType, VDimension>> \
   {                                                                                     \
   public:                                                                               \
@@ -292,7 +292,7 @@ public:
 //  Default traits for the pixel types deriving from Matrix<>
 //
 
-template <typename VComponent, unsigned VRows, unsigned VCols>
+template <typename VComponent, unsigned int VRows, unsigned int VCols>
 class ITK_TEMPLATE_EXPORT DefaultConvertPixelTraits<Matrix<VComponent, VRows, VCols>>
 {
 public:

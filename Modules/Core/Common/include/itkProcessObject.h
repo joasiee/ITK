@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,6 +32,7 @@
 #include "itkObjectFactory.h"
 #include "itkNumericTraits.h"
 #include "itkThreadSupport.h"
+#include "itkIntTypes.h"
 #include <vector>
 #include <map>
 #include <set>
@@ -779,11 +780,11 @@ protected:
    * correctly, that all required inputs are set, and needed parameters
    * are set appropriately. If not valid an exceptions will be thrown.
    *
-   * This method is called before UpdateOutputInformation is
+   * This method is called before UpdateOutputInformation() is
    * propagated to the inputs.
    *
    * The ProcessObject's implementation verifies that the
-   * NumberOfRequiredInputs are set and not null.
+   * #m_NumberOfRequiredInputs are set and not null.
    *
    */
   virtual void
@@ -903,7 +904,7 @@ protected:
   static inline constexpr float
   progressFixedToFloat(uint32_t fixed)
   {
-    return double(fixed) / double(std::numeric_limits<uint32_t>::max());
+    return static_cast<double>(fixed) / static_cast<double>(std::numeric_limits<uint32_t>::max());
   };
 
   /**

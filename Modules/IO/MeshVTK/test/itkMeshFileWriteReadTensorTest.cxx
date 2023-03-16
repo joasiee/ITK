@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,8 +30,8 @@ itkMeshFileWriteReadTensorTest(int argc, char * argv[])
               << "<OutputMesh3D.vtk> " << std::endl;
     return EXIT_FAILURE;
   }
-  const char * outputMesh2D = argv[1];
-  const char * outputMesh3D = argv[2];
+  const auto outputMesh2D = std::string(argv[1]);
+  const auto outputMesh3D = std::string(argv[2]);
 
   using TensorElementType = float;
   using Tensor2dType = itk::SymmetricSecondRankTensor<TensorElementType, 2>;
@@ -69,17 +69,19 @@ itkMeshFileWriteReadTensorTest(int argc, char * argv[])
   ITK_TEST_EXPECT_TRUE(vtkPolyDataMeshIO->GetSupportedWriteExtensions() == supportedExtensions);
 
   mesh2dWriter->SetMeshIO(vtkPolyDataMeshIO);
-  mesh2dWriter->SetInput(mesh2d);
+  ITK_TEST_SET_GET_VALUE(vtkPolyDataMeshIO, mesh2dWriter->GetMeshIO());
+
   mesh2dWriter->SetFileName(outputMesh2D);
-  try
-  {
-    mesh2dWriter->Update();
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    std::cerr << "Failed the VTKPolyDataMeshIO 2d test" << excp;
-    return EXIT_FAILURE;
-  }
+  ITK_TEST_SET_GET_VALUE(outputMesh2D, std::string(mesh2dWriter->GetFileName()));
+
+  bool useCompression = false;
+  ITK_TEST_SET_GET_BOOLEAN(mesh2dWriter, UseCompression, useCompression);
+
+  mesh2dWriter->SetInput(mesh2d);
+
+  ITK_TRY_EXPECT_NO_EXCEPTION(mesh2dWriter->Update());
+
+
   std::cout << "End of VTKPolyDataMeshIO 2D test. Completed successfully!" << std::endl << std::endl;
 
 
@@ -100,18 +102,19 @@ itkMeshFileWriteReadTensorTest(int argc, char * argv[])
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(mesh3dWriter, MeshFileWriter, ProcessObject);
 
-  mesh3dWriter->SetMeshIO(itk::VTKPolyDataMeshIO::New());
-  mesh3dWriter->SetInput(mesh3d);
+
+  itk::VTKPolyDataMeshIO::Pointer vtkPolyDataMeshIO2 = itk::VTKPolyDataMeshIO::New();
+  mesh3dWriter->SetMeshIO(vtkPolyDataMeshIO2);
+  ITK_TEST_SET_GET_VALUE(vtkPolyDataMeshIO2, mesh3dWriter->GetMeshIO());
+
   mesh3dWriter->SetFileName(outputMesh3D);
-  try
-  {
-    mesh3dWriter->Update();
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    std::cerr << "Failed the VTKPolyDataMeshIO 3D test" << excp;
-    return EXIT_FAILURE;
-  }
+  ITK_TEST_SET_GET_VALUE(outputMesh3D, std::string(mesh3dWriter->GetFileName()));
+
+  mesh3dWriter->SetInput(mesh3d);
+
+  ITK_TRY_EXPECT_NO_EXCEPTION(mesh3dWriter->Update());
+
+
   std::cout << "End of VTKPolyDataMeshIO 3D test. Completed successfully!" << std::endl << std::endl;
 
   return EXIT_SUCCESS;

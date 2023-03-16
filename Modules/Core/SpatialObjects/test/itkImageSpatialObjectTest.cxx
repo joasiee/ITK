@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,14 +35,14 @@
 int
 itkImageSpatialObjectTest(int, char *[])
 {
-#define NDimensions 3
+#define VDimension 3
 
   using ScalarType = double;
   using Pixel = unsigned short;
-  using ImageType = itk::Image<Pixel, NDimensions>;
-  using ImageSpatialObject = itk::ImageSpatialObject<NDimensions, Pixel>;
+  using ImageType = itk::Image<Pixel, VDimension>;
+  using ImageSpatialObject = itk::ImageSpatialObject<VDimension, Pixel>;
   using Iterator = itk::ImageRegionIterator<ImageType>;
-  using PointType = itk::Point<ScalarType, NDimensions>;
+  using PointType = itk::Point<ScalarType, VDimension>;
 
   auto                  image = ImageType::New();
   ImageType::SizeType   size = { { 10, 10, 10 } };
@@ -54,9 +54,7 @@ itkImageSpatialObjectTest(int, char *[])
   region.SetSize(size);
   region.SetIndex(index);
   image->SetOrigin(origin);
-  image->SetLargestPossibleRegion(region);
-  image->SetBufferedRegion(region);
-  image->SetRequestedRegion(region);
+  image->SetRegions(region);
   image->Allocate();
 
   Iterator it(image, region);
@@ -114,7 +112,7 @@ itkImageSpatialObjectTest(int, char *[])
   {
     imageSO->ValueAtInWorldSpace(q, returnedValue);
   }
-  catch (itk::ExceptionObject &)
+  catch (const itk::ExceptionObject &)
   {
     throw;
   }

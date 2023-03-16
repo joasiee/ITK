@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -169,7 +169,7 @@ PoolMultiThreader::ParallelizeArray(SizeValueType             firstIndex,
     SizeValueType chunkSize = (lastIndexPlus1 - firstIndex) / m_NumberOfWorkUnits;
     if ((lastIndexPlus1 - firstIndex) % m_NumberOfWorkUnits > 0)
     {
-      chunkSize++; // we want slightly bigger chunks to be processed first
+      ++chunkSize; // we want slightly bigger chunks to be processed first
     }
 
     auto lambda = [aFunc](SizeValueType start, SizeValueType end) {
@@ -244,7 +244,7 @@ PoolMultiThreader::ParallelizeImageRegion(unsigned int         dimension,
   else
   {
     ImageIORegion region(dimension);
-    for (unsigned d = 0; d < dimension; ++d)
+    for (unsigned int d = 0; d < dimension; ++d)
     {
       region.SetIndex(d, index[d]);
       region.SetSize(d, size[d]);

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -74,7 +74,7 @@ public:
 };
 
 /** \class InverseEuclideanDistanceMatrixCoefficients
- * \brief Compute a matrix filed with the inverse of the euclidian distance
+ * \brief Compute a matrix filed with the inverse of the euclidean distance
  *        wherever two vertices are connected by an edge.
  * \note  Belongs to the parameterisation package.
  * \note  See paper: ...
@@ -168,7 +168,7 @@ public:
   }
 };
 
-/**\class AuthalicMatrixCoefficients
+/** \class AuthalicMatrixCoefficients
  *
  * \brief Compute a matrix filled with Authalic Coefiicients of the edge,
  *        wherever two vertices are connected with an edge.

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,20 +25,20 @@
 namespace itk
 {
 /** Constructor with default arguments */
-template <typename TParametersValueType, unsigned int NDimensions>
-FixedCenterOfRotationAffineTransform<TParametersValueType, NDimensions>::FixedCenterOfRotationAffineTransform()
+template <typename TParametersValueType, unsigned int VDimension>
+FixedCenterOfRotationAffineTransform<TParametersValueType, VDimension>::FixedCenterOfRotationAffineTransform()
   : Superclass(ParametersDimension)
 {}
 
-template <typename TParametersValueType, unsigned int NDimensions>
-FixedCenterOfRotationAffineTransform<TParametersValueType, NDimensions>::FixedCenterOfRotationAffineTransform(
+template <typename TParametersValueType, unsigned int VDimension>
+FixedCenterOfRotationAffineTransform<TParametersValueType, VDimension>::FixedCenterOfRotationAffineTransform(
   unsigned int outputSpaceDims,
   unsigned int paramsDims)
   : Superclass(outputSpaceDims, paramsDims)
 {}
 
-template <typename TParametersValueType, unsigned int NDimensions>
-FixedCenterOfRotationAffineTransform<TParametersValueType, NDimensions>::FixedCenterOfRotationAffineTransform(
+template <typename TParametersValueType, unsigned int VDimension>
+FixedCenterOfRotationAffineTransform<TParametersValueType, VDimension>::FixedCenterOfRotationAffineTransform(
   const MatrixType &       matrix,
   const OutputVectorType & offset)
   : Superclass(matrix, offset)

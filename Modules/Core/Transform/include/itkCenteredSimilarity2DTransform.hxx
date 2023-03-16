@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -203,7 +203,7 @@ CenteredSimilarity2DTransform<TParametersValueType>::GetInverse(Self * inverse) 
     return false;
   }
   inverse->SetCenter(this->GetCenter()); // inverse have the same center
-  inverse->SetScale(NumericTraits<double>::OneValue() / this->GetScale());
+  inverse->SetScale(1.0 / this->GetScale());
   inverse->SetAngle(-this->GetAngle());
   inverse->SetTranslation(-(this->GetInverseMatrix() * this->GetTranslation()));
   return true;

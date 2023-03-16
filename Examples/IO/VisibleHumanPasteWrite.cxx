@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -90,12 +90,14 @@ main(int argc, char * argv[])
   RGB2DImageType::RegionType largest =
     composeRGB->GetOutput()->GetLargestPossibleRegion();
   itk::ImageIORegion halfIO(2);
-  halfIO.SetIndex(
-    0, largest.GetIndex(0) + (unsigned long)(0.25 * largest.GetSize(0)));
-  halfIO.SetIndex(
-    1, largest.GetIndex(1) + (unsigned long)(0.25 * largest.GetSize(1)));
-  halfIO.SetSize(0, (unsigned long)(0.5 * largest.GetSize(0)));
-  halfIO.SetSize(1, (unsigned long)(0.5 * largest.GetSize(1)));
+  halfIO.SetIndex(0,
+                  largest.GetIndex(0) +
+                    static_cast<unsigned long>(0.25 * largest.GetSize(0)));
+  halfIO.SetIndex(1,
+                  largest.GetIndex(1) +
+                    static_cast<unsigned long>(0.25 * largest.GetSize(1)));
+  halfIO.SetSize(0, static_cast<unsigned long>(0.5 * largest.GetSize(0)));
+  halfIO.SetSize(1, static_cast<unsigned long>(0.5 * largest.GetSize(1)));
 
 
   // After using an adaptor to convert the color image into a vector

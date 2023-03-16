@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@
 
 
 // This tests the supervised image classifier methods. The test,
-// however, only exercises a pathalogical case, where the covariances
+// however, only exercises a pathological case, where the covariances
 // of all the classes are singular.  In this case, the methods degrade
 // to classifying based on euclidean distance to the mean.
 
@@ -367,7 +367,7 @@ itkSupervisedImageClassifierTest(int, char *[])
   while (!labeloutIt.IsAtEnd())
   {
     // Print the classified index
-    auto classIndex = (int)labeloutIt.Get();
+    int classIndex{ labeloutIt.Get() };
     std::cout << " Pixel No " << i << " Value " << classIndex << std::endl;
     ++i;
     ++labeloutIt;
@@ -380,7 +380,7 @@ itkSupervisedImageClassifierTest(int, char *[])
   // Loop through the data set
   while (!labeloutIt.IsAtEnd())
   {
-    auto classIndex = (int)labeloutIt.Get();
+    int classIndex{ labeloutIt.Get() };
     if (classIndex != 2)
     {
       passTest = false;
@@ -388,7 +388,7 @@ itkSupervisedImageClassifierTest(int, char *[])
     }
     ++labeloutIt;
 
-    classIndex = (int)labeloutIt.Get();
+    classIndex = static_cast<int>(labeloutIt.Get());
     if (classIndex != 2)
     {
       passTest = false;
@@ -396,7 +396,7 @@ itkSupervisedImageClassifierTest(int, char *[])
     }
     ++labeloutIt;
 
-    classIndex = (int)labeloutIt.Get();
+    classIndex = static_cast<int>(labeloutIt.Get());
     if (classIndex != 1)
     {
       passTest = false;
@@ -404,7 +404,7 @@ itkSupervisedImageClassifierTest(int, char *[])
     }
     ++labeloutIt;
 
-    classIndex = (int)labeloutIt.Get();
+    classIndex = static_cast<int>(labeloutIt.Get());
     if (classIndex != 1)
     {
       passTest = false;

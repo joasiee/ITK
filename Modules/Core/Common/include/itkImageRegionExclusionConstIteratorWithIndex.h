@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -185,7 +185,7 @@ public:
 
   /** Method to define the Exclusion region. The iterator will skip pixels
    * inside this region.
-   * \warning The exclusion region must be completly contained inside the
+   * \warning The exclusion region must be completely contained inside the
    * normal region used to construct the iterator. A border of at least one
    * pixel should exist between the normal region and the exclusion region.
    */

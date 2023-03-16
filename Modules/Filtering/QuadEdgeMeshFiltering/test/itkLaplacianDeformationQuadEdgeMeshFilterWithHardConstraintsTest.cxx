@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,22 +55,27 @@ itkLaplacianDeformationQuadEdgeMeshFilterWithHardConstraintsTest(int argc, char 
 
 
   filter->SetInput(reader->GetOutput());
-  filter->SetOrder(2);
+
+  unsigned int order = 2;
+  filter->SetOrder(order);
+  ITK_TEST_SET_GET_VALUE(order, filter->GetOrder());
 
   if (std::stoi(argv[3]) == 1)
   {
     filter->SetAreaComputationType(FilterType::AreaEnum::MIXEDAREA);
+    ITK_TEST_SET_GET_VALUE(FilterType::AreaEnum::MIXEDAREA, filter->GetAreaComputationType());
   }
   else
   {
     filter->SetAreaComputationType(FilterType::AreaEnum::NONE);
+    ITK_TEST_SET_GET_VALUE(FilterType::AreaEnum::NONE, filter->GetAreaComputationType());
   }
 
   using CoefficientType = itk::ConformalMatrixCoefficients<MeshType>;
   CoefficientType coeff;
   filter->SetCoefficientsMethod(&coeff);
 
-  MeshType::VectorType nullVector(0.);
+  constexpr MeshType::VectorType nullVector{};
 
   std::map<MeshType::PointIdentifier, MeshType::VectorType> constraints;
   constraints[150] = nullVector;
@@ -81,13 +86,13 @@ itkLaplacianDeformationQuadEdgeMeshFilterWithHardConstraintsTest(int argc, char 
   constraints[183] = nullVector;
   constraints[226] = nullVector;
 
-  MeshType::VectorType d(0.);
+  MeshType::VectorType d{};
   d[2] = -0.1;
 
   constraints[729] = d;
   constraints[938] = d;
 
-  MeshType::VectorType e(0.);
+  MeshType::VectorType e{};
   e[1] = 0.1;
   e[2] = -0.1;
 
@@ -101,15 +106,8 @@ itkLaplacianDeformationQuadEdgeMeshFilterWithHardConstraintsTest(int argc, char 
     ++it;
   }
 
-  try
-  {
-    filter->Update();
-  }
-  catch (const itk::ExceptionObject & except)
-  {
-    std::cerr << "Failure: " << except.what();
-    return EXIT_FAILURE;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(filter->Update());
+
 
   using WriterType = itk::MeshFileWriter<MeshType>;
   auto writer = WriterType::New();

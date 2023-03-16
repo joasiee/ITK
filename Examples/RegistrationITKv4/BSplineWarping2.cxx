@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -239,7 +239,7 @@ main(int argc, char * argv[])
   //  vector at this node. The coefficients can be passed to the B-spline in
   //  the form of an array where the first set of elements are the first
   //  component of the displacements for all the nodes, and the second set of
-  //  elemets is formed by the second component of the displacements for all
+  //  elements is formed by the second component of the displacements for all
   //  the nodes.
   //
   //  In this example we read such displacements from a file, but for

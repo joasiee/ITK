@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -329,7 +329,7 @@ itkMultiGradientOptimizerv4Test(int, char *[])
   using OptimizerType = itk::MultiGradientOptimizerv4;
   using ParametersType = MultiGradientOptimizerv4TestMetric::ParametersType;
 
-  // Declaration of a itkOptimizer
+  // Declaration of an itkOptimizer
   auto itkOptimizer = OptimizerType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(itkOptimizer, MultiGradientOptimizerv4Template, GradientDescentOptimizerv4Template);
@@ -368,8 +368,8 @@ itkMultiGradientOptimizerv4Test(int, char *[])
    */
   // We start not so far from  | 1.5 -1.5 |
   ParametersType testPosition(spaceDimension);
-  testPosition[0] = (double)7.5;
-  testPosition[1] = (double)9.5;
+  testPosition[0] = 7.5;
+  testPosition[1] = 9.5;
   /** Note: both metrics have the same transforms and parameters */
   /** We need the parameters to be the same object across all metric instances*/
   metric->SetParameters(testPosition);

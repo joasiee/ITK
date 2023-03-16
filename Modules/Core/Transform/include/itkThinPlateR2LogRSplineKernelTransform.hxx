@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,10 +20,10 @@
 
 namespace itk
 {
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 void
-ThinPlateR2LogRSplineKernelTransform<TParametersValueType, NDimensions>::ComputeG(const InputVectorType & x,
-                                                                                  GMatrixType &           gmatrix) const
+ThinPlateR2LogRSplineKernelTransform<TParametersValueType, VDimension>::ComputeG(const InputVectorType & x,
+                                                                                 GMatrixType &           gmatrix) const
 {
   const TParametersValueType r = x.GetNorm();
 
@@ -34,9 +34,9 @@ ThinPlateR2LogRSplineKernelTransform<TParametersValueType, NDimensions>::Compute
   gmatrix.fill_diagonal(R2logR);
 }
 
-template <typename TParametersValueType, unsigned int NDimensions>
+template <typename TParametersValueType, unsigned int VDimension>
 void
-ThinPlateR2LogRSplineKernelTransform<TParametersValueType, NDimensions>::ComputeDeformationContribution(
+ThinPlateR2LogRSplineKernelTransform<TParametersValueType, VDimension>::ComputeDeformationContribution(
   const InputPointType & thisPoint,
   OutputPointType &      result) const
 {
@@ -50,7 +50,7 @@ ThinPlateR2LogRSplineKernelTransform<TParametersValueType, NDimensions>::Compute
     const TParametersValueType r = position.GetNorm();
     const TParametersValueType R2logR =
       (r > 1e-8) ? r * r * std::log(r) : NumericTraits<TParametersValueType>::ZeroValue();
-    for (unsigned int odim = 0; odim < NDimensions; ++odim)
+    for (unsigned int odim = 0; odim < VDimension; ++odim)
     {
       result[odim] += R2logR * this->m_DMatrix(odim, lnd);
     }

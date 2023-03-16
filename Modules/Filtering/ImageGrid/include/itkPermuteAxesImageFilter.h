@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,7 +29,7 @@ namespace itk
  * PermuateAxesImageFilter permutes the image axes according to a
  * user specified order. The permutation order is set via method
  * SetOrder( order ) where the input is an array of ImageDimension
- * number of unsigned int. The elements of the array must be a rearrangment
+ * number of unsigned int. The elements of the array must be a rearrangement
  * of the numbers from 0 to ImageDimension - 1.
  *
  * The i-th axis of the output image corresponds with the order[i]-th

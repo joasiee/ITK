@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,6 +23,7 @@
 #include "itkCastImageFilter.h"
 #include "itkStreamingImageFilter.h"
 #include "itkMath.h"
+#include "itkTestingMacros.h"
 
 // class to produce a linear image pattern
 template <int VDimension>
@@ -46,7 +47,7 @@ public:
     double accum = m_Offset;
     for (int j = 0; j < VDimension; ++j)
     {
-      accum += m_Coeff[j] * (double)index[j];
+      accum += m_Coeff[j] * static_cast<double>(index[j]);
     }
     return accum;
   }
@@ -140,7 +141,7 @@ itkVectorExpandImageFilterTest(int, char *[])
   auto interpolator = InterpolatorType::New();
 
   expander->SetInterpolator(interpolator);
-  std::cout << "Interpolator: " << expander->GetInterpolator() << std::endl;
+  ITK_TEST_SET_GET_VALUE(interpolator, expander->GetInterpolator());
 
   expander->SetExpandFactors(5);
 

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,6 +21,8 @@
 #include "itkImageToImageMetric.h"
 #include "itkPoint.h"
 #include "itkIndex.h"
+
+#include <memory> // For unique_ptr.
 
 
 namespace itk
@@ -104,7 +106,7 @@ public:
 
 protected:
   MeanSquaresImageToImageMetric();
-  ~MeanSquaresImageToImageMetric() override;
+  ~MeanSquaresImageToImageMetric() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
@@ -130,7 +132,7 @@ private:
   };
 
   itkAlignedTypedef(64, PerThreadS, AlignedPerThreadType);
-  AlignedPerThreadType * m_PerThread;
+  std::unique_ptr<AlignedPerThreadType[]> m_PerThread;
 };
 } // end namespace itk
 

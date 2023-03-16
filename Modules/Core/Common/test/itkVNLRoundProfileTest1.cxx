@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -74,7 +74,7 @@ itkVNLRoundProfileTest1(int, char *[])
   //
   // Make sure that entries in the .5 locations are included
   //
-  for (signed int k = -10; k <= 10; ++k)
+  for (int k = -10; k <= 10; ++k)
   {
     const double value = k + 0.5;
     input.push_back(value);

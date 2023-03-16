@@ -10,6 +10,7 @@ else()
 endif()
 cmake_policy(VERSION ${NIFTI_CMAKE_POLICY_VERSION})
 
+if(0) # ITK -- start: do not use Git to get the version
 set(NIFTI_HOMEPAGE_URL "https://nifti-imaging.github.io")
 execute_process(COMMAND git "describe" "--tags"
   OUTPUT_VARIABLE GIT_REPO_VERSION_UNCLEANED
@@ -27,6 +28,9 @@ if( NOT GIT_REPO_VERSION )
   #       to set the repo string for non-git repos.
   set(GIT_REPO_VERSION "0.0.0.0") #Manually set the version string for testing purposes
 endif()
+else() # ITK
+set(GIT_REPO_VERSION "0.0.0.0")
+endif() # ITK -- end: do not use Git to get the version
 project(NIFTI
         VERSION ${GIT_REPO_VERSION}
         DESCRIPTION "Niftilib is a set of i/o libraries for reading and writing files in the nifti-1 data format. nifti-1 is a binary file format for storing medical image data, e.g. magnetic resonance image (MRI) and functional MRI (fMRI) brain images."
@@ -43,6 +47,7 @@ include(CMakeDependentOption)
 
 if("${CMAKE_VERSION}" VERSION_GREATER_EQUAL "3.13")
 set(CMAKE_VER_AT_LEAST_3_13 1 CACHE BOOL "Is set for cmake >=3.13")
+mark_as_advanced(CMAKE_VER_AT_LEAST_3_13)
 endif()
 
 # add option to build shared libraries. The default is OFF to maintain the
@@ -157,6 +162,7 @@ elseif(NOT WIN32)
 else()
     set(NIFTI_SYSTEM_MATH_LIB "")
 endif()
+mark_as_advanced(NIFTI_SYSTEM_MATH_LIB)
 #######################################################################
 add_subdirectory(znzlib)
 add_subdirectory(niftilib)

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -64,9 +64,7 @@ SetUpInputImage()
   ImageType::SizeType   size = { { width, height } };
   ImageType::RegionType region;
   region.SetSize(size);
-  inputImage->SetLargestPossibleRegion(region);
-  inputImage->SetBufferedRegion(region);
-  inputImage->SetRequestedRegion(region);
+  inputImage->SetRegions(region);
   inputImage->Allocate();
 
   // add background random field
@@ -74,9 +72,9 @@ SetUpInputImage()
   while (!iter.IsAtEnd())
   {
     PixelType px;
-    px[0] = (unsigned char)(vnl_sample_uniform(bgMean - bgStd, bgMean + bgStd));
-    px[1] = (unsigned char)(vnl_sample_uniform(bgMean - bgStd, bgMean + bgStd));
-    px[2] = (unsigned char)(vnl_sample_uniform(bgMean - bgStd, bgMean + bgStd));
+    px[0] = static_cast<unsigned char>(vnl_sample_uniform(bgMean - bgStd, bgMean + bgStd));
+    px[1] = static_cast<unsigned char>(vnl_sample_uniform(bgMean - bgStd, bgMean + bgStd));
+    px[2] = static_cast<unsigned char>(vnl_sample_uniform(bgMean - bgStd, bgMean + bgStd));
     iter.Set(px);
     ++iter;
   }
@@ -91,9 +89,9 @@ SetUpInputImage()
       idx[1] = y;
 
       PixelType px;
-      px[0] = (unsigned char)(vnl_sample_uniform(fgMean - fgStd, fgMean + fgStd));
-      px[1] = (unsigned char)(vnl_sample_uniform(fgMean - fgStd, fgMean + fgStd));
-      px[2] = (unsigned char)(vnl_sample_uniform(fgMean - fgStd, fgMean + fgStd));
+      px[0] = static_cast<unsigned char>(vnl_sample_uniform(fgMean - fgStd, fgMean + fgStd));
+      px[1] = static_cast<unsigned char>(vnl_sample_uniform(fgMean - fgStd, fgMean + fgStd));
+      px[2] = static_cast<unsigned char>(vnl_sample_uniform(fgMean - fgStd, fgMean + fgStd));
       inputImage->SetPixel(idx, px);
     }
   }
@@ -106,9 +104,9 @@ SetUpInputImage()
       idx[1] = y;
 
       PixelType px;
-      px[0] = (unsigned char)(vnl_sample_uniform(fgMean - fgStd, fgMean + fgStd));
-      px[1] = (unsigned char)(vnl_sample_uniform(fgMean - fgStd, fgMean + fgStd));
-      px[2] = (unsigned char)(vnl_sample_uniform(fgMean - fgStd, fgMean + fgStd));
+      px[0] = static_cast<unsigned char>(vnl_sample_uniform(fgMean - fgStd, fgMean + fgStd));
+      px[1] = static_cast<unsigned char>(vnl_sample_uniform(fgMean - fgStd, fgMean + fgStd));
+      px[2] = static_cast<unsigned char>(vnl_sample_uniform(fgMean - fgStd, fgMean + fgStd));
       inputImage->SetPixel(idx, px);
     }
   }
@@ -180,7 +178,7 @@ CheckResults(SegmentationType::Pointer outputImage)
   std::cout << "Correct Exterior: " << correctExterior << std::endl;
   std::cout << "False Interior: " << falseInterior << std::endl;
   std::cout << "False Exterior: " << falseExterior << std::endl;
-  double percentCorrect = (double)(correctInterior + correctExterior) / (double)(width * height);
+  double percentCorrect = static_cast<double>(correctInterior + correctExterior) / static_cast<double>(width * height);
   std::cout << "Percent Correct = " << percentCorrect * 100 << "%" << std::endl;
 
   return percentCorrect;
@@ -266,9 +264,7 @@ TestWithPrior(ImageType::Pointer inputImage)
   BinaryObjectImage::SizeType   size = { { width, height } };
   BinaryObjectImage::RegionType region;
   region.SetSize(size);
-  prior->SetLargestPossibleRegion(region);
-  prior->SetBufferedRegion(region);
-  prior->SetRequestedRegion(region);
+  prior->SetRegions(region);
   prior->Allocate();
 
   // create prior as 100% segmentation

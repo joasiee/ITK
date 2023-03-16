@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -108,13 +108,13 @@ main(int argc, char * argv[])
   // to classify. With this image type we can also declare the
   // \doxygen{ImageFileReader} needed for reading the input image, create one
   // and set its input filename. In this particular case we choose to use
-  // \code{signed short} as pixel type, which is typical for MicroMRI and CT
+  // \code{short} as pixel type, which is typical for MicroMRI and CT
   // data sets.
   //
   // Software Guide : EndLatex
 
   // Software Guide : BeginCodeSnippet
-  using PixelType = signed short;
+  using PixelType = short;
   constexpr unsigned int Dimension = 2;
 
   using ImageType = itk::Image<PixelType, Dimension>;
@@ -321,7 +321,7 @@ main(int argc, char * argv[])
   // classification of any given pixel. Note that despite the fact that we
   // call this a radius, it is actually the half size of an hypercube. That
   // is, the actual region of influence will not be circular but rather an
-  // N-Dimensional box. For example, a neighborhood radius of 2 in a 3D image
+  // n-dimensional box. For example, a neighborhood radius of 2 in a 3D image
   // will result in a clique of size 5x5x5 pixels, and a radius of 1 will
   // result in a clique of size 3x3x3 pixels.
   //

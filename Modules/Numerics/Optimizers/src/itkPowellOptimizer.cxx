@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,6 @@
  *=========================================================================*/
 
 #include "itkPowellOptimizer.h"
-#include "itkMath.h"
 #include "itkMath.h"
 
 namespace itk
@@ -140,7 +139,7 @@ PowellOptimizer::Shift(double * a, double * b, double * c, double d) const
 // This code was implemented from the description of
 // the Golden section search available in the Wikipedia
 //
-// http://en.wikipedia.org/wiki/Golden_section_search
+// https://en.wikipedia.org/wiki/Golden_section_search
 //
 //
 // The inputs to this function are
@@ -306,7 +305,7 @@ PowellOptimizer::BracketedLineOptimize(double           ax,
 
       q = 2 * (q - t);
 
-      if (q > (double)0) /* q was calculated with the op-*/
+      if (q > 0.0) /* q was calculated with the op-*/
       {
         p = -p; /* posite sign; make q positive  */
       }
@@ -315,7 +314,7 @@ PowellOptimizer::BracketedLineOptimize(double           ax,
         q = -q; /* p        */
       }
 
-      /* Chec if x+p/q falls in [a,b] and  not too close to a and b
+      /* Check if x+p/q falls in [a,b] and  not too close to a and b
            and isn't too large */
       if (itk::Math::abs(p) < itk::Math::abs(new_step * q) && p > q * (a - x + 2 * tolerance1) &&
           p < q * (b - x - 2 * tolerance1))
@@ -359,7 +358,7 @@ PowellOptimizer::BracketedLineOptimize(double           ax,
         a = x;
       }
 
-      /* assing the best approximation to x */
+      /* assign the best approximation to x */
       v = w;
       w = x;
       x = t;

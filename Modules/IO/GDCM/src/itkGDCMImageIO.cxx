@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -37,6 +37,7 @@
 
 #include "itksys/SystemTools.hxx"
 #include "itksys/Base64.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 #include "gdcmImageHelper.h"
 #include "gdcmFileExplicitFilter.h"
@@ -53,6 +54,7 @@
 #include "gdcmAttribute.h"
 #include "gdcmGlobal.h"
 #include "gdcmMediaStorage.h"
+#include "gdcmDirectionCosines.h"
 
 #include <fstream>
 #include <sstream>
@@ -215,7 +217,7 @@ GDCMImageIO::CanReadFile(const char * filename)
   {
     this->OpenFileForReading(file, filename);
   }
-  catch (ExceptionObject &)
+  catch (const ExceptionObject &)
   {
     return false;
   }
@@ -228,7 +230,7 @@ GDCMImageIO::CanReadFile(const char * filename)
   // There isn't a definitive way to check for DICOM files;
   // This was actually cribbed from DICOMParser in VTK
   bool dicomsig(false);
-  for (long int off = 128; off >= 0; off -= 128)
+  for (long off = 128; off >= 0; off -= 128)
   {
     file.seekg(off, std::ios_base::beg);
     if (file.fail() || file.eof())
@@ -366,7 +368,7 @@ GDCMImageIO::Read(void * pointer)
 
   if (m_SingleBit)
   {
-    auto *          copy = new unsigned char[len];
+    const auto      copy = make_unique_for_overwrite<unsigned char[]>(len);
     unsigned char * t = reinterpret_cast<unsigned char *>(pointer);
     size_t          j = 0;
     for (size_t i = 0; i < len / 8; ++i)
@@ -382,8 +384,7 @@ GDCMImageIO::Read(void * pointer)
       copy[j + 7] = (c & 0x80) ? 255 : 0;
       j += 8;
     }
-    memcpy((char *)pointer, copy, len);
-    delete[] copy;
+    memcpy((char *)pointer, copy.get(), len);
   }
   else
   {
@@ -404,10 +405,9 @@ GDCMImageIO::Read(void * pointer)
       r.SetSlope(m_RescaleSlope);
       r.SetPixelFormat(pixeltype);
       gdcm::PixelFormat outputpt = r.ComputeInterceptSlopePixelType();
-      auto *            copy = new char[len];
-      memcpy(copy, (char *)pointer, len);
-      r.Rescale((char *)pointer, copy, len);
-      delete[] copy;
+      const auto        copy = make_unique_for_overwrite<char[]>(len);
+      memcpy(copy.get(), (char *)pointer, len);
+      r.Rescale((char *)pointer, copy.get(), len);
       // WARNING: sizeof(Real World Value) != sizeof(Stored Pixel)
       len = len * outputpt.GetPixelSize() / pixeltype.GetPixelSize();
     }
@@ -681,7 +681,7 @@ GDCMImageIO::InternalReadImageInformation()
   }
 
   const double * origin = image.GetOrigin();
-  for (unsigned i = 0; i < 3; ++i)
+  for (unsigned int i = 0; i < 3; ++i)
   {
     m_Spacing[i] = spacing[i];
     m_Origin[i] = origin[i];
@@ -755,15 +755,14 @@ GDCMImageIO::InternalReadImageInformation()
           int encodedLengthEstimate = 2 * bv->GetLength();
           encodedLengthEstimate = ((encodedLengthEstimate / 4) + 1) * 4;
 
-          auto * bin = new char[encodedLengthEstimate];
-          auto   encodedLengthActual =
+          const auto bin = make_unique_for_overwrite<char[]>(encodedLengthEstimate);
+          auto       encodedLengthActual =
             static_cast<unsigned int>(itksysBase64_Encode((const unsigned char *)bv->GetPointer(),
                                                           static_cast<SizeValueType>(bv->GetLength()),
-                                                          (unsigned char *)bin,
-                                                          static_cast<int>(0)));
-          std::string encodedValue(bin, encodedLengthActual);
+                                                          (unsigned char *)bin.get(),
+                                                          0));
+          std::string encodedValue(bin.get(), encodedLengthActual);
           EncapsulateMetaData<std::string>(dico, tag.PrintAsPipeSeparatedString(), encodedValue);
-          delete[] bin;
         }
       }
     }
@@ -882,16 +881,16 @@ GDCMImageIO::Write(const void * buffer)
       {
         // Custom VR::VRBINARY
         // convert value from Base64
-        auto * bin = new uint8_t[value.size()];
-        auto   decodedLengthActual =
+        const auto bin = make_unique_for_overwrite<uint8_t[]>(value.size());
+        auto       decodedLengthActual =
           static_cast<unsigned int>(itksysBase64_Decode((const unsigned char *)value.c_str(),
                                                         static_cast<SizeValueType>(0),
-                                                        (unsigned char *)bin,
+                                                        (unsigned char *)bin.get(),
                                                         static_cast<SizeValueType>(value.size())));
         if (/*tag.GetGroup() != 0 ||*/ tag.GetElement() != 0) // ?
         {
           gdcm::DataElement de(tag);
-          de.SetByteValue((char *)bin, decodedLengthActual);
+          de.SetByteValue((char *)bin.get(), decodedLengthActual);
           de.SetVR(dictEntry.GetVR());
           if (tag.GetGroup() == 0x2)
           {
@@ -902,7 +901,6 @@ GDCMImageIO::Write(const void * buffer)
             header.Insert(de);
           }
         }
-        delete[] bin;
       }
       else // VRASCII
       {
@@ -1104,6 +1102,11 @@ GDCMImageIO::Write(const void * buffer)
       image.SetDirectionCosines(5, 0);
     }
   }
+  gdcm::DirectionCosines gdcmDirection(image.GetDirectionCosines());
+  if (!gdcmDirection.IsValid())
+  {
+    itkExceptionMacro("Invalid direction cosines, non-orthogonal or unit length.");
+  }
 
   // reset any previous value:
   m_RescaleSlope = 1.0;
@@ -1167,7 +1170,6 @@ GDCMImageIO::Write(const void * buffer)
     case IOComponentEnum::UINT:
       pixeltype = gdcm::PixelFormat::UINT32;
       break;
-    // Disabling FLOAT and DOUBLE for now...
     case IOComponentEnum::FLOAT:
       pixeltype = gdcm::PixelFormat::FLOAT32;
       break;
@@ -1201,10 +1203,10 @@ GDCMImageIO::Write(const void * buffer)
   {
     if (!bitsAllocated.empty() && !bitsStored.empty() && !highBit.empty() && !pixelRep.empty())
     {
-      outpixeltype.SetBitsAllocated(static_cast<unsigned short int>(std::stoi(bitsAllocated.c_str())));
-      outpixeltype.SetBitsStored(static_cast<unsigned short int>(std::stoi(bitsStored.c_str())));
-      outpixeltype.SetHighBit(static_cast<unsigned short int>(std::stoi(highBit.c_str())));
-      outpixeltype.SetPixelRepresentation(static_cast<unsigned short int>(std::stoi(pixelRep.c_str())));
+      outpixeltype.SetBitsAllocated(static_cast<unsigned short>(std::stoi(bitsAllocated.c_str())));
+      outpixeltype.SetBitsStored(static_cast<unsigned short>(std::stoi(bitsStored.c_str())));
+      outpixeltype.SetHighBit(static_cast<unsigned short>(std::stoi(highBit.c_str())));
+      outpixeltype.SetPixelRepresentation(static_cast<unsigned short>(std::stoi(pixelRep.c_str())));
       if (this->GetNumberOfComponents() != 1)
       {
         itkExceptionMacro(<< "Sorry Dave I can't do that");
@@ -1292,11 +1294,10 @@ GDCMImageIO::Write(const void * buffer)
 
     image.SetIntercept(m_RescaleIntercept);
     image.SetSlope(m_RescaleSlope);
-    auto *       copyBuffer = new char[len];
+    const auto   copyBuffer = make_unique_for_overwrite<char[]>(len);
     const auto * inputBuffer = static_cast<const char *>(buffer);
-    ir.InverseRescale(copyBuffer, inputBuffer, numberOfBytes);
-    pixeldata.SetByteValue(copyBuffer, static_cast<uint32_t>(len));
-    delete[] copyBuffer;
+    ir.InverseRescale(copyBuffer.get(), inputBuffer, numberOfBytes);
+    pixeldata.SetByteValue(copyBuffer.get(), static_cast<uint32_t>(len));
   }
   else
   {

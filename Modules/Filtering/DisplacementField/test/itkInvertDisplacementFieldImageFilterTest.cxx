@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -47,7 +47,7 @@ itkInvertDisplacementFieldImageFilterTest(int argc, char * argv[])
   spacing.Fill(0.5);
   size.Fill(100);
 
-  VectorType ones(1);
+  auto ones = itk::MakeFilled<VectorType>(1);
 
   auto field = DisplacementFieldType::New();
   field->SetOrigin(origin);
@@ -57,7 +57,7 @@ itkInvertDisplacementFieldImageFilterTest(int argc, char * argv[])
   field->Allocate();
   field->FillBuffer(ones);
 
-  const VectorType zeroVector(0.0);
+  constexpr VectorType zeroVector{};
 
   // make sure boundary does not move
   float weight1 = 1.0;

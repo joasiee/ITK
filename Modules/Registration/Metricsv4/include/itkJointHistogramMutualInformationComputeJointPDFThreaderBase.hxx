@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@
 
 
 #include "itkImageRegionIterator.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 namespace itk
 {
@@ -31,20 +32,13 @@ JointHistogramMutualInformationComputeJointPDFThreaderBase<TDomainPartitioner, T
 {}
 
 template <typename TDomainPartitioner, typename TJointHistogramMetric>
-JointHistogramMutualInformationComputeJointPDFThreaderBase<TDomainPartitioner, TJointHistogramMetric>::
-  ~JointHistogramMutualInformationComputeJointPDFThreaderBase()
-{
-  delete[] this->m_JointHistogramMIPerThreadVariables;
-}
-
-template <typename TDomainPartitioner, typename TJointHistogramMetric>
 void
 JointHistogramMutualInformationComputeJointPDFThreaderBase<TDomainPartitioner,
                                                            TJointHistogramMetric>::BeforeThreadedExecution()
 {
   const ThreadIdType numWorkUnitsUsed = this->GetNumberOfWorkUnitsUsed();
-  delete[] this->m_JointHistogramMIPerThreadVariables;
-  this->m_JointHistogramMIPerThreadVariables = new AlignedJointHistogramMIPerThreadStruct[numWorkUnitsUsed];
+  this->m_JointHistogramMIPerThreadVariables =
+    make_unique_for_overwrite<AlignedJointHistogramMIPerThreadStruct[]>(numWorkUnitsUsed);
   for (ThreadIdType i = 0; i < numWorkUnitsUsed; ++i)
   {
     if (this->m_JointHistogramMIPerThreadVariables[i].JointHistogram.IsNull())
@@ -82,7 +76,7 @@ JointHistogramMutualInformationComputeJointPDFThreaderBase<TDomainPartitioner, T
         this->m_Associate->TransformAndEvaluateMovingPoint(virtualPoint, mappedMovingPoint, movingImageValue);
     }
   }
-  catch (ExceptionObject & exc)
+  catch (const ExceptionObject & exc)
   {
     // NOTE: there must be a cleaner way to do this:
     std::string msg("Caught exception: \n");
@@ -104,7 +98,7 @@ JointHistogramMutualInformationComputeJointPDFThreaderBase<TDomainPartitioner, T
       typename JointHistogramType::PixelType jointHistogramPixel;
       jointHistogramPixel =
         this->m_JointHistogramMIPerThreadVariables[threadId].JointHistogram->GetPixel(jointPDFIndex);
-      jointHistogramPixel++;
+      ++jointHistogramPixel;
       this->m_JointHistogramMIPerThreadVariables[threadId].JointHistogram->SetPixel(jointPDFIndex, jointHistogramPixel);
       this->m_JointHistogramMIPerThreadVariables[threadId].JointHistogramCount++;
     }

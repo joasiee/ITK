@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -362,7 +362,7 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::EstimatePCAShapeModelPar
 
   // Calculate the principal shape variations
   //
-  // m_EigenVectors capture the principal shape variantions
+  // m_EigenVectors capture the principal shape variations
   // m_EigenValues capture the relative weight of each variation
   // Multiply original image vetors with the eigenVectorsOfInnerProductMatrix
   // to derive the principal shapes.
@@ -396,7 +396,7 @@ ImagePCAShapeModelEstimator<TInputImage, TOutputImage>::EstimatePCAShapeModelPar
   m_EigenValues = (eigenVectors_eigenValues.D).diagonal();
 
   // Flip the eigen values since the eigen vectors output
-  // is ordered in decending order of their corresponding eigen values.
+  // is ordered in descending order of their corresponding eigen values.
   m_EigenValues.flip();
 
   // Normalize the eigen values

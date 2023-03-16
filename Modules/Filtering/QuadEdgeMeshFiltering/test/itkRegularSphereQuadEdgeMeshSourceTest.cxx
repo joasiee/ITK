@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -53,16 +53,8 @@ itkRegularSphereQuadEdgeMeshSourceTest(int argc, char * argv[])
 
   mySphereMeshSource->Modified();
 
-  try
-  {
-    mySphereMeshSource->Update();
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    std::cerr << "Error during Update() " << std::endl;
-    std::cerr << excp << std::endl;
-    return EXIT_FAILURE;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(mySphereMeshSource->Update());
+
 
   std::cout << "mySphereMeshSource: " << mySphereMeshSource;
 
@@ -70,8 +62,6 @@ itkRegularSphereQuadEdgeMeshSourceTest(int argc, char * argv[])
 
   PointType pt;
   pt.Fill(0.);
-
-  std::cout << "Testing itk::RegularSphereMeshSource " << std::endl;
 
   for (unsigned int i = 0; i < myMesh->GetNumberOfPoints(); ++i)
   {
@@ -86,7 +76,6 @@ itkRegularSphereQuadEdgeMeshSourceTest(int argc, char * argv[])
   writer->SetFileName(argv[1]);
   writer->Write();
 
-  std::cout << "Test End " << std::endl;
-
+  std::cout << "Test finished." << std::endl;
   return EXIT_SUCCESS;
 }

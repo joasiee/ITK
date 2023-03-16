@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -93,7 +93,7 @@ namespace itk
  *
  * ImageBase also provides helper routines for the ImageIterators
  * which convert an Index to an offset in memory from the first pixel
- * address as well as covert an offset in memory from the first pixel
+ * address as well as convert an offset in memory from the first pixel
  * address to an Index.
  *
  * \ingroup ImageObjects
@@ -199,7 +199,7 @@ public:
    * (0.5, 0.866)
    *
    * The columns of the Direction matrix are expected to form an
-   * orthogonal right handed coordinate syste.  But this is not
+   * orthogonal right handed coordinate system.  But this is not
    * checked nor enforced in itk::ImageBase.
    *
    * For details, please see:
@@ -325,9 +325,7 @@ public:
     RegionType region;
     region.SetSize(size);
 
-    this->SetLargestPossibleRegion(region);
-    this->SetBufferedRegion(region);
-    this->SetRequestedRegion(region);
+    this->Self::SetRegions(region);
   }
 
   /** Get the offset table.  The offset table gives increments for
@@ -725,7 +723,7 @@ public:
 
   /** UpdateOutputData() is part of the pipeline infrastructure to
    * communicate between ProcessObjects and DataObjects. The method of
-   * the superclass is overriden to check if the requested image
+   * the superclass is overridden to check if the requested image
    * region has zero pixels. This is needed so that filters can set an
    * input's requested region to zero, to indicate that it does not
    * need to be updated or executed.
@@ -810,7 +808,7 @@ protected:
   /** Origin, spacing, and direction in physical coordinates. This variables are
    * protected for efficiency.  They are referenced frequently by
    * inner loop calculations. */
-  SpacingType   m_Spacing{ 1.0 };
+  SpacingType   m_Spacing{ MakeFilled<SpacingType>(1.0) };
   PointType     m_Origin{};
   DirectionType m_Direction{ DirectionType::GetIdentity() };
   DirectionType m_InverseDirection{ DirectionType::GetIdentity() };

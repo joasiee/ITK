@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -104,7 +104,7 @@ itkChangeLabelImageFilterTest(int, char *[])
 
     const InputPixelType  input = it.Get();
     const OutputPixelType output = ot.Get();
-    std::cout << (double)input << " " << (double)output << std::endl;
+    std::cout << static_cast<double>(input) << " " << static_cast<double>(output) << std::endl;
 
     if (output > maxRemainingLabel)
     {
@@ -154,7 +154,7 @@ itkChangeLabelImageFilterTest(int, char *[])
 
     const InputPixelType  input = ita.Get();
     const OutputPixelType output = ota.Get();
-    std::cout << (double)input << " " << (double)output << std::endl;
+    std::cout << static_cast<double>(input) << " " << static_cast<double>(output) << std::endl;
 
     if (input != output)
     {
@@ -175,7 +175,7 @@ itkChangeLabelImageFilterTest(int, char *[])
 
   if (pass)
   {
-    std::cout << "Test passsed. " << std::endl;
+    std::cout << "Test passed. " << std::endl;
     return EXIT_SUCCESS;
   }
   else

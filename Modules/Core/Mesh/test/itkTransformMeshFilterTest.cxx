@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@
 #include "itkMesh.h"
 #include "itkAffineTransform.h"
 #include "itkStdStreamStateSave.h"
+#include "itkTestingMacros.h"
 
 int
 itkTransformMeshFilterTest(int, char *[])
@@ -36,8 +37,8 @@ itkTransformMeshFilterTest(int, char *[])
 
   // Declare the types of the Mesh
   // By default it is a 3D mesh using itk::Point<float,3>
-  // on the vertices, and an itk::VectorContainter
-  // as containter for points
+  // on the vertices, and an itk::VectorContainer
+  // as container for points
   using MeshType = itk::Mesh<PixelType>;
 
   // Declare the type for PointsContainer
@@ -99,6 +100,10 @@ itkTransformMeshFilterTest(int, char *[])
 
   // Create a Filter
   auto filter = FilterType::New();
+
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(filter, TransformMeshFilter, MeshToMeshFilter);
+
+
   auto filterwithbasetrfs = FilterWithBaseTransformType::New();
 
   // Create a Transform
@@ -111,6 +116,7 @@ itkTransformMeshFilterTest(int, char *[])
   // Connect the inputs
   filter->SetInput(inputMesh);
   filter->SetTransform(affineTransform);
+  ITK_TEST_SET_GET_VALUE(affineTransform, filter->GetTransform());
 
   filterwithbasetrfs->SetInput(inputMesh);
   filterwithbasetrfs->SetTransform(affineTransform);
@@ -128,7 +134,7 @@ itkTransformMeshFilterTest(int, char *[])
 
   std::cout << "Output Mesh has " << outputMesh->GetNumberOfPoints() << "   points " << std::endl;
 
-  std::cout << "Output Mesh from WithBaseTransfrom has " << outputMeshFromWithBase->GetNumberOfPoints() << "   points "
+  std::cout << "Output Mesh from WithBaseTransform has " << outputMeshFromWithBase->GetNumberOfPoints() << "   points "
             << std::endl;
 
   // Get the the point container

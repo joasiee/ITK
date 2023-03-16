@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -58,7 +58,7 @@ main(int argc, char * argv[])
   // List all registered factories
   std::list<itk::ObjectFactoryBase *> factories =
     itk::ObjectFactoryBase::GetRegisteredFactories();
-  const std::size_t numFactories = factories.size();
+  const size_t numFactories = factories.size();
 
   std::cout << "----- Registered factories -----" << std::endl;
   std::cout << "Count: " << numFactories << std::endl;

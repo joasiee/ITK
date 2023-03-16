@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,14 +24,14 @@
 
 namespace itk
 {
-/**\class ScalarToRGBColormapImageFilterEnums
+/** \class ScalarToRGBColormapImageFilterEnums
  * \brief Contains all enum classes for ScalarToRGBColormapImageFilter class
  * \ingroup ITKColormap
  */
 class ScalarToRGBColormapImageFilterEnums
 {
 public:
-  /**\class RGBColormapFilter
+  /** \class RGBColormapFilter
    * \ingroup ITKColormap
    * Enum type that provides for an easy interface to existing colormaps. */
   enum class RGBColormapFilter : uint8_t
@@ -76,7 +76,7 @@ static constexpr RGBColormapFilterEnum OverUnder = RGBColormapFilterEnum::OverUn
 extern ITKColormap_EXPORT std::ostream &
                           operator<<(std::ostream & out, const ScalarToRGBColormapImageFilterEnums::RGBColormapFilter value);
 /**
- *\class ScalarToRGBColormapImageFilter
+ * \class ScalarToRGBColormapImageFilter
  * \brief Implements pixel-wise intensity->rgb mapping operation on one image.
  *
  * This class is parameterized over the type of the input image and

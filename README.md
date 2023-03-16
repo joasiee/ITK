@@ -1,4 +1,4 @@
-![ITK - The Insight Toolkit](Documentation/Art/itkBannerSmall.png)
+![ITK - The Insight Toolkit](https://raw.githubusercontent.com/InsightSoftwareConsortium/ITK/801370c025c7d296783481779a41c6d559c992c5/Documentation/Art/itkBannerSmall.png)
 
 ITK: The Insight Toolkit
 ========================
@@ -8,7 +8,7 @@ ITK: The Insight Toolkit
 [![Wheels](https://img.shields.io/pypi/wheel/itk.svg)](https://pypi.org/project/itk)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/InsightSoftwareConsortium/ITK/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/800928.svg)](https://zenodo.org/badge/latestdoi/800928)
-[![Powered by NumFOCUS](https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](http://numfocus.org)
+[![Powered by NumFOCUS](https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](https://numfocus.org)
 
 | | C++ | Python |
 |:------:|:--------:|:--------:|
@@ -25,7 +25,7 @@ Links
 * [Discussion](https://discourse.itk.org/)
 * [Software Guide](https://itk.org/ItkSoftwareGuide.pdf)
 * [Help](https://itk.org/resources/)
-* [Examples](https://itk.org/ITKExamples/)
+* [Examples](https://examples.itk.org/)
 * [Issue tracking](https://github.com/InsightSoftwareConsortium/ITK/issues)
 * [Submit a patch](CONTRIBUTING.md)
 
@@ -46,7 +46,7 @@ MRI scan in order to combine the information contained in both.
 
 The ITK project uses an [open governance model](./GOVERNANCE.md)
 and is fiscally sponsored by [NumFOCUS](https://numfocus.org/). Consider making
-a [tax-deductible donation](https://numfocus.org/donate-to-itk) to help the project
+a [tax-deductible donation](https://opencollective.com/itk) to help the project
 pay for developer time, professional services, travel, workshops, and a variety of other needs.
 
 <div align="center">
@@ -60,13 +60,13 @@ pay for developer time, professional services, travel, workshops, and a variety 
 
 ITK is distributed in binary Python packages. To install:
 
-```
+```sh
 pip install itk
 ```
 
 or
 
-```
+```sh
 conda install -c conda-forge itk
 ```
 
@@ -81,7 +81,7 @@ Copyright
 NumFOCUS is a non-profit entity that promotes the use of open source
 scientific software for educational and research purposes.  NumFOCUS delegates
 project governance to the [Insight Software
-Consortium](http://www.insightsoftwareconsortium.org) Council, an educational
+Consortium](https://www.insightsoftwareconsortium.org) Council, an educational
 consortium dedicated to promoting and maintaining open-source, freely
 available software for medical image analysis. This includes promoting such
 software in teaching, research, and commercial applications, and maintaining
@@ -100,7 +100,7 @@ ITK is a fiscally sponsored project of [NumFOCUS](https://numfocus.org/), a non-
 to supporting the open source scientific computing community. If you want to
 support ITK's mission to develop and maintain open-source, reproducible
 scientific image analysis software for education and research, please consider
-making a [donation](https://numfocus.org/donate-to-itk) to support our efforts.
+making a [donation](https://opencollective.com/itk) to support our efforts.
 
 NumFOCUS is 501(c)(3) non-profit charity in the United States; as such,
 donations to NumFOCUS are tax-deductible as allowed by law. As with any

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,11 +34,10 @@
 #include "itkSingletonMacro.h"
 
 #include <functional>
+#include <memory> // For unique_ptr.
 
 namespace itk
 {
-// Forward reference because of private implementation
-class SubjectImplementation;
 // Forward reference because of circular dependencies
 class ITK_FORWARD_EXPORT Command;
 
@@ -152,6 +151,11 @@ public:
    * and an itk::Command to execute. It returns an unsigned long tag
    * which can be used later to remove the event or retrieve the
    * command.
+   *
+   * \note This member function is overloaded for const and non-const,
+   * just for backward compatibility. Removing the non-const overload
+   * appears to break the use of SWIG %pythonprepend in
+   * ITK/Wrapping/Generators/Python/PyBase/pyBase.i
    */
   unsigned long
   AddObserver(const EventObject & event, Command *);
@@ -271,9 +275,13 @@ private:
   /** Global object debug flag. */
   static bool * m_GlobalWarningDisplay;
 
+  // Forward reference because of private implementation
+  class SubjectImplementation;
+
   /** Implementation class for Subject/Observer Pattern.
    * This is only allocated if used. */
-  SubjectImplementation * m_SubjectImplementation{ nullptr };
+  mutable std::unique_ptr<SubjectImplementation> m_SubjectImplementation;
+
   /**
    * Implementation for holding Object MetaData
    * @see itk::MetaDataDictionary
@@ -281,7 +289,7 @@ private:
    * @see itk::MetaDataObject
    * This is only allocated if used.
    */
-  mutable MetaDataDictionary * m_MetaDataDictionary{ nullptr };
+  mutable std::unique_ptr<MetaDataDictionary> m_MetaDataDictionary{ nullptr };
 
   std::string m_ObjectName;
 };

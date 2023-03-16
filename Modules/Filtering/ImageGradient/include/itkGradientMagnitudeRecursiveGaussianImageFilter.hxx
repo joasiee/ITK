@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -235,11 +235,11 @@ GradientMagnitudeRecursiveGaussianImageFilter<TInputImage, TOutputImage>::Genera
     {
       if (i == dim)
       {
-        j++;
+        ++j;
       }
       m_SmoothingFilters[i]->SetDirection(j);
-      i++;
-      j++;
+      ++i;
+      ++j;
     }
     m_DerivativeFilter->SetDirection(dim);
 

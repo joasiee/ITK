@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,11 +26,11 @@
 int
 itkCollidingFrontsImageFilterTest(int argc, char * argv[])
 {
-  if (argc < 3)
+  if (argc < 4)
   {
     std::cerr << "Missing parameters." << std::endl;
     std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv)
-              << " applyConnectivity stopOnTargets [inputFilename] [outputFilename]" << std::endl;
+              << " negativeEpsilon applyConnectivity stopOnTargets [outputFilename]" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -104,17 +104,15 @@ itkCollidingFrontsImageFilterTest(int argc, char * argv[])
   collidingFronts->SetSeedPoints1(seeds1);
   collidingFronts->SetSeedPoints2(seeds2);
 
-  auto applyConnectivity = static_cast<bool>(std::stoi(argv[1]));
+  auto negativeEpsilon = std::stod(argv[1]);
+  collidingFronts->SetNegativeEpsilon(negativeEpsilon);
+  ITK_TEST_SET_GET_VALUE(negativeEpsilon, collidingFronts->GetNegativeEpsilon());
+
+  auto applyConnectivity = static_cast<bool>(std::stoi(argv[2]));
   ITK_TEST_SET_GET_BOOLEAN(collidingFronts, ApplyConnectivity, applyConnectivity);
 
-  try
-  {
-    collidingFronts->Update();
-  }
-  catch (const itk::ExceptionObject & err)
-  {
-    std::cout << err << std::endl;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(collidingFronts->Update());
+
 
   InternalImageType::Pointer output = collidingFronts->GetOutput();
 
@@ -158,7 +156,7 @@ itkCollidingFrontsImageFilterTest(int argc, char * argv[])
   }
 
   // Optionally writing out the two images
-  if (argc > 3)
+  if (argc > 4)
   {
     using WriterType = itk::ImageFileWriter<ImageType>;
     auto writer = WriterType::New();
@@ -166,7 +164,7 @@ itkCollidingFrontsImageFilterTest(int argc, char * argv[])
     using RescaleFilterType = itk::RescaleIntensityImageFilter<InternalImageType, ImageType>;
     auto rescaler = RescaleFilterType::New();
 
-    writer->SetFileName(argv[3]);
+    writer->SetFileName(argv[4]);
     writer->SetInput(inputImage);
     writer->Update();
 
@@ -185,17 +183,11 @@ itkCollidingFrontsImageFilterTest(int argc, char * argv[])
     return EXIT_FAILURE;
   }
 
-  auto stopOnTargets = static_cast<bool>(std::stoi(argv[2]));
+  auto stopOnTargets = static_cast<bool>(std::stoi(argv[3]));
   ITK_TEST_SET_GET_BOOLEAN(collidingFronts, StopOnTargets, stopOnTargets);
 
-  try
-  {
-    collidingFronts->Update();
-  }
-  catch (const itk::ExceptionObject & err)
-  {
-    std::cout << err << std::endl;
-  }
+  ITK_TRY_EXPECT_NO_EXCEPTION(collidingFronts->Update());
+
 
   std::cout << "Colliding Fronts test passed. " << std::endl;
 

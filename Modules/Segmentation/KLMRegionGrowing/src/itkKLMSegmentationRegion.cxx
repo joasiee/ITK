@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,7 +19,7 @@
 
 namespace itk
 {
-KLMSegmentationRegion ::KLMSegmentationRegion()
+KLMSegmentationRegion::KLMSegmentationRegion()
 {
   m_MeanRegionIntensity = 0;
 }
@@ -144,7 +144,7 @@ KLMSegmentationRegion::InsertRegionBorder(KLMSegmentationBorder * pBorderCandida
     itkExceptionMacro(<< "Null pointer to segmentation region border");
   }
 
-  // The m_RegionBorderVec is a ordered vector of pointers to the borders.
+  // The m_RegionBorderVec is an ordered vector of pointers to the borders.
   // Ordering is based on regions labels.
 
   // The region border vector is empty, there is only one region border
@@ -196,7 +196,7 @@ KLMSegmentationRegion::InsertRegionBorder(RegionBorderVectorIterator RegionBorde
     itkExceptionMacro(<< "Null pointer to segmentation region border");
   }
 
-  // The m_RegionBorderVec is a ordered vector of pointers to the
+  // The m_RegionBorderVec is an ordered vector of pointers to the
   // borders. Insert a valid region border into the region border vector
   // assuming calling function has correctly identified the new
   // element position.
@@ -343,8 +343,8 @@ KLMSegmentationRegion::SpliceRegionBorders(Self * region)
       (*thatRegionBordersIt)->SetRegion2(nullptr);
       (*thatRegionBordersIt)->SetLambda(-1.0);
 
-      thisRegionBordersIt++;
-      thatRegionBordersIt++;
+      ++thisRegionBordersIt;
+      ++thatRegionBordersIt;
     } // end if loop for case when two borders point to same region
 
     // This neighbor region label is less then that neighbor region label
@@ -358,7 +358,7 @@ KLMSegmentationRegion::SpliceRegionBorders(Self * region)
                (*thatRegionBordersIt)->GetRegion2()->GetRegionLabel())))
     {
       m_RegionBorderVector.push_back(*thisRegionBordersIt);
-      thisRegionBordersIt++;
+      ++thisRegionBordersIt;
     } // end else if
 
     // That neighbor region label is less then this neighbor region label
@@ -372,7 +372,7 @@ KLMSegmentationRegion::SpliceRegionBorders(Self * region)
                (*thisRegionBordersIt)->GetRegion2()->GetRegionLabel())))
     {
       m_RegionBorderVector.push_back(*thatRegionBordersIt);
-      thatRegionBordersIt++;
+      ++thatRegionBordersIt;
     } // end else if
     else
     {
@@ -384,14 +384,14 @@ KLMSegmentationRegion::SpliceRegionBorders(Self * region)
   while (thisRegionBordersIt != endOfThisRegionBorders)
   {
     m_RegionBorderVector.push_back(*thisRegionBordersIt);
-    thisRegionBordersIt++;
+    ++thisRegionBordersIt;
   }
 
   // If any borders remain in thatRegionBorders, put them to the back
   while (thatRegionBordersIt != endOfThatRegionBorders)
   {
     m_RegionBorderVector.push_back(*thatRegionBordersIt);
-    thatRegionBordersIt++;
+    ++thatRegionBordersIt;
   }
 } // end SpliceRegionBorders
 
@@ -479,7 +479,7 @@ KLMSegmentationRegion::PrintRegionInfo()
     std::cout << "Border Ptr :" << (*tempVectorIt) << "( " << region1label << " - " << region2label << " )"
               << " Lambda = " << (*tempVectorIt)->GetLambda() << std::endl;
 
-    tempVectorIt++;
+    ++tempVectorIt;
   } // end for
 
   std::cout << "------------------------------" << std::endl;

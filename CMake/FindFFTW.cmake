@@ -1,6 +1,6 @@
 ## FFTW can be compiled and subsequently linked against
 ## various data types.
-## There is a single set of include files, and then muttiple libraries,
+## There is a single set of include files, and then multiple libraries,
 ## One for each type.  I.e. libfftw.a-->double, libfftwf.a-->float
 
 ## The following logic belongs in the individual package
@@ -192,7 +192,7 @@ if(ITK_USE_FFTWD OR ITK_USE_FFTWF)
         get_filename_component(FFTWD_THREADS_LIB ${FFTWD_THREADS_LIB} NAME)
         set(FFTWD_LIBRARIES ${FFTWD_BASE_LIB})
         if(FFTWD_THREADS_LIB)
-          set(FFTWD_LIBRARIES ${FFTWD_THREADS_LIB} ${FFTWD_BASE_LIB} )
+          set(FFTWD_LIBRARIES ${FFTWD_THREADS_LIB} ${FFTWD_BASE_LIB})
         endif()
       else()
         message(FATAL_ERROR "fftw3 not found.")

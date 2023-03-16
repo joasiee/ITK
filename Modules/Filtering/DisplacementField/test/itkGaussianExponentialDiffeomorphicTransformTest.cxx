@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -82,7 +82,7 @@ itkGaussianExponentialDiffeomorphicTransformTest(int, char *[])
   // std::cout << "params *before* SmoothDisplacementFieldGauss: " << std::endl
   //          << params << std::endl;
   params = displacementTransform->GetParameters();
-  // std::cout << "field->GetPixelContainter *after* Smooth: "
+  // std::cout << "field->GetPixelContainer *after* Smooth: "
   //          << field->GetPixelContainer() << std::endl;
   /* We should see 0's on all boundaries from the smoothing routine */
   unsigned int linelength = dimLength * dimensions;
@@ -119,7 +119,7 @@ itkGaussianExponentialDiffeomorphicTransformTest(int, char *[])
   {
     for (int j = -2; j < 3; ++j)
     {
-      unsigned int index = outlier + (unsigned int)(i * (signed int)(dimLength * dimensions) + j);
+      unsigned int index = outlier + static_cast<unsigned int>(i * (int)(dimLength * dimensions) + j);
       std::cout << params(index) << " ";
     }
     std::cout << std::endl;
@@ -183,7 +183,7 @@ itkGaussianExponentialDiffeomorphicTransformTest(int, char *[])
   {
     for (int j = -2; j < 3; ++j)
     {
-      unsigned int index = outlier + (unsigned int)(i * (signed int)(dimLength * dimensions) + j);
+      unsigned int index = outlier + static_cast<unsigned int>(i * (int)(dimLength * dimensions) + j);
       std::cout << params(index) << " ";
       if (itk::Math::AlmostEquals(params(index), paramsFillValue))
       {

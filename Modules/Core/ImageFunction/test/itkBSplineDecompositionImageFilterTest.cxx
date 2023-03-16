@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -65,7 +65,7 @@ ParseSplinePoles(char * splinePolesIn)
 
 
 /** Note:  This is the same test used for the itkBSplineResampleImageFunctionTest
- *        It is duplicated here because it excercises the itkBSplineDecompositionFilter
+ *        It is duplicated here because it exercises the itkBSplineDecompositionFilter
  *        and demonstrates its use.
  */
 
@@ -76,11 +76,8 @@ itkBSplineDecompositionImageFilterTest(int argc, char * argv[])
   {
     std::cerr << "Usage: " << itkNameOfTestExecutableMacro(argv);
     std::cerr << " splineOrder";
-    std::cerr << " splinePoles(e.g. 0.12753,-0.48673,0.76439,\
-                 [0.12753,-0.48673,0.76439],\
-                 \"[0.12753 -0.48673 0.76439]\",\
-                 \"(0.12753 -0.48673 0.76439)\", or\
-                 \"0.12753 -0.48673 0.76439\")";
+    std::cerr << " splinePoles(e.g. 0.12753,-0.48673,0.76439, [0.12753,-0.48673,0.76439], \"[0.12753 -0.48673 "
+                 "0.76439]\", \"(0.12753 -0.48673 0.76439)\", or \"0.12753 -0.48673 0.76439\")";
     std::cerr << std::endl;
     return EXIT_FAILURE;
   }

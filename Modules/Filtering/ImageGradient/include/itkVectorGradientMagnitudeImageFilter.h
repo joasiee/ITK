@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,7 +30,7 @@
 namespace itk
 {
 /**
- *\class VectorGradientMagnitudeImageFilter
+ * \class VectorGradientMagnitudeImageFilter
  *
  * \brief Computes a scalar, gradient magnitude image from a multiple channel
  * (pixels are vectors) input.
@@ -317,8 +317,8 @@ protected:
   TRealType
   NonPCEvaluateAtNeighborhood(const ConstNeighborhoodIteratorType & it) const
   {
-    unsigned  i, j;
-    TRealType dx, sum, accum;
+    unsigned int i, j;
+    TRealType    dx, sum, accum;
 
     accum = NumericTraits<TRealType>::ZeroValue();
     for (i = 0; i < ImageDimension; ++i)

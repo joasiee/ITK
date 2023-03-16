@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -74,17 +74,13 @@ TestMattesMetricWithAffineTransform(TInterpolator * interpolator,
   imgOrigin[1] = 0.0;
 
   auto imgMoving = MovingImageType::New();
-  imgMoving->SetLargestPossibleRegion(region);
-  imgMoving->SetBufferedRegion(region);
-  imgMoving->SetRequestedRegion(region);
+  imgMoving->SetRegions(region);
   imgMoving->Allocate();
   imgMoving->SetSpacing(imgSpacing);
   imgMoving->SetOrigin(imgOrigin);
 
   auto imgFixed = FixedImageType::New();
-  imgFixed->SetLargestPossibleRegion(region);
-  imgFixed->SetBufferedRegion(region);
-  imgFixed->SetRequestedRegion(region);
+  imgFixed->SetRegions(region);
   imgFixed->Allocate();
   imgFixed->SetSpacing(imgSpacing);
   imgFixed->SetOrigin(imgOrigin);
@@ -94,10 +90,10 @@ TestMattesMetricWithAffineTransform(TInterpolator * interpolator,
   using TargetIteratorType = itk::ImageRegionIterator<FixedImageType>;
 
   itk::Point<double, 2> center;
-  center[0] = (double)region.GetSize()[0] / 2.0;
-  center[1] = (double)region.GetSize()[1] / 2.0;
+  center[0] = static_cast<double>(region.GetSize()[0]) / 2.0;
+  center[1] = static_cast<double>(region.GetSize()[1]) / 2.0;
 
-  const double s = (double)region.GetSize()[0] / 2.0;
+  const double s = static_cast<double>(region.GetSize()[0]) / 2.0;
 
   itk::Point<double, 2>  p;
   itk::Vector<double, 2> d;
@@ -118,7 +114,7 @@ TestMattesMetricWithAffineTransform(TInterpolator * interpolator,
     d += displacement;
     const double x = d[0];
     const double y = d[1];
-    ri.Set((unsigned char)(200.0 * std::exp(-(x * x + y * y) / (s * s))));
+    ri.Set(static_cast<unsigned char>(200.0 * std::exp(-(x * x + y * y) / (s * s))));
     ++ri;
   }
 
@@ -130,7 +126,7 @@ TestMattesMetricWithAffineTransform(TInterpolator * interpolator,
     d = p - center;
     const double x = d[0];
     const double y = d[1];
-    ti.Set((unsigned char)(200.0 * std::exp(-(x * x + y * y) / (s * s))));
+    ti.Set(static_cast<unsigned char>(200.0 * std::exp(-(x * x + y * y) / (s * s))));
     ++ti;
   }
 
@@ -220,7 +216,7 @@ TestMattesMetricWithAffineTransform(TInterpolator * interpolator,
   // set the number of histogram bins
   itk::SizeValueType numberOfHistogramBins = 50;
   metric->SetNumberOfHistogramBins(numberOfHistogramBins);
-  ITK_TEST_SET_GET_VALUE(numberOfHistogramBins, metric->GetNumberOfHistogramBins())
+  ITK_TEST_SET_GET_VALUE(numberOfHistogramBins, metric->GetNumberOfHistogramBins());
 
   ITK_TEST_SET_GET_BOOLEAN(metric, UseExplicitPDFDerivatives, useExplicitJointPDFDerivatives);
 
@@ -284,8 +280,8 @@ TestMattesMetricWithAffineTransform(TInterpolator * interpolator,
       metric->SetFixedImageMask(soFixedConstMask);
 
       // metric->SetNumberOfSpatialSamples(
-      //  static_cast<unsigned long int>(NumberFixedImageMaskVoxels*.2) );
-      metric->SetNumberOfSpatialSamples(static_cast<unsigned long int>(NumberFixedImageMaskVoxels * 2));
+      //  static_cast<unsigned long>(NumberFixedImageMaskVoxels*.2) );
+      metric->SetNumberOfSpatialSamples(static_cast<unsigned long>(NumberFixedImageMaskVoxels * 2));
     }
   }
   else
@@ -306,7 +302,7 @@ TestMattesMetricWithAffineTransform(TInterpolator * interpolator,
   metric->DebugOff();
 
   //------------------------------------------------------------
-  // Set up a affine transform parameters
+  // Set up an affine transform parameters
   //------------------------------------------------------------
   unsigned int   numberOfParameters = transformer->GetNumberOfParameters();
   ParametersType parameters(numberOfParameters);
@@ -481,17 +477,13 @@ TestMattesMetricWithBSplineTransform(TInterpolator * interpolator,
   imgOrigin[1] = 0.0;
 
   auto imgMoving = MovingImageType::New();
-  imgMoving->SetLargestPossibleRegion(region);
-  imgMoving->SetBufferedRegion(region);
-  imgMoving->SetRequestedRegion(region);
+  imgMoving->SetRegions(region);
   imgMoving->Allocate();
   imgMoving->SetSpacing(imgSpacing);
   imgMoving->SetOrigin(imgOrigin);
 
   auto imgFixed = FixedImageType::New();
-  imgFixed->SetLargestPossibleRegion(region);
-  imgFixed->SetBufferedRegion(region);
-  imgFixed->SetRequestedRegion(region);
+  imgFixed->SetRegions(region);
   imgFixed->Allocate();
   imgFixed->SetSpacing(imgSpacing);
   imgFixed->SetOrigin(imgOrigin);
@@ -501,10 +493,10 @@ TestMattesMetricWithBSplineTransform(TInterpolator * interpolator,
   using TargetIteratorType = itk::ImageRegionIterator<FixedImageType>;
 
   itk::Point<double, 2> center;
-  center[0] = (double)region.GetSize()[0] / 2.0;
-  center[1] = (double)region.GetSize()[1] / 2.0;
+  center[0] = static_cast<double>(region.GetSize()[0]) / 2.0;
+  center[1] = static_cast<double>(region.GetSize()[1]) / 2.0;
 
-  const double s = (double)region.GetSize()[0] / 2.0;
+  const double s = static_cast<double>(region.GetSize()[0]) / 2.0;
 
   itk::Point<double, 2>  p;
   itk::Vector<double, 2> d;
@@ -525,7 +517,7 @@ TestMattesMetricWithBSplineTransform(TInterpolator * interpolator,
     d += displacement;
     const double x = d[0];
     const double y = d[1];
-    ri.Set((unsigned char)(200.0 * std::exp(-(x * x + y * y) / (s * s))));
+    ri.Set(static_cast<unsigned char>(200.0 * std::exp(-(x * x + y * y) / (s * s))));
     ++ri;
   }
 
@@ -537,7 +529,7 @@ TestMattesMetricWithBSplineTransform(TInterpolator * interpolator,
     d = p - center;
     const double x = d[0];
     const double y = d[1];
-    ti.Set((unsigned char)(200.0 * std::exp(-(x * x + y * y) / (s * s))));
+    ti.Set(static_cast<unsigned char>(200.0 * std::exp(-(x * x + y * y) / (s * s))));
     ++ti;
   }
 

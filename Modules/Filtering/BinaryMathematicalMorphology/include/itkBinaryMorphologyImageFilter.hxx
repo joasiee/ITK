@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -260,7 +260,7 @@ BinaryMorphologyImageFilter<TInputImage, TOutputImage, TKernel>::AnalyzeKernel()
       for (unsigned int dimCount = 0; dimCount < TInputImage::ImageDimension; ++dimCount)
       {
         if (currentShiftedPosition[dimCount] < 0 ||
-            currentShiftedPosition[dimCount] >= (int)this->GetKernel().GetSize(dimCount))
+            currentShiftedPosition[dimCount] >= static_cast<int>(this->GetKernel().GetSize(dimCount)))
         {
           bIsOutside = true;
           break;

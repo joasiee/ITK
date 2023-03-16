@@ -5,8 +5,8 @@
 #-- ## Compliance level 5 star (AKA ITK main modules, or remote modules that could become core modules)
 #--   - [ ] Widespread community dependance
 #--   - [ ] Above 90% code coverage
-#--   - [ ] CI dashboards and testing monitored rigorously
-#--   - [ ] Key API features are exposed in wrapping interface
+#--   - [X] CI dashboards and testing monitored rigorously
+#--   - [X] Key API features are exposed in wrapping interface
 #--   - [ ] All requirements of Levels 4,3,2,1
 #--
 #-- ## Compliance Level 4 star (Very high-quality code, perhaps small community dependance)
@@ -27,12 +27,12 @@
 #--   - [X] Some tests exist and pass on at least some platform
 #--   - [X] All requirements of Levels 2,1
 #--
-#-- ## Compliance Level 2 star (Alpha code feature API development or niche community/exectution environment dependance )
+#-- ## Compliance Level 2 star (Alpha code feature API development or niche community/execution environment dependance )
 #--   - [X] Compiles for at least 1 niche set of execution envirionments, and perhaps others
 #--         (may depend on specific external tools like a java environment, or specific external libraries to work )
 #--   - [X] All requirements of Levels 1
 #--
-#-- ## Compliance Level 1 star (Pre-alpha features under development and code of unkown quality)
+#-- ## Compliance Level 1 star (Pre-alpha features under development and code of unknown quality)
 #--   - [X] Code complies on at least 1 platform
 #--
 #-- ## Compliance Level 0 star ( Code/Feature of known poor-quality or deprecated status )
@@ -48,5 +48,5 @@ itk_fetch_module(TubeTK
   "http://www.tubetk.org"
   MODULE_COMPLIANCE_LEVEL 3
   GIT_REPOSITORY ${git_protocol}://github.com/InsightSoftwareConsortium/ITKTubeTK.git
-  GIT_TAG cee053ac95743ed6d7a879465ac2d4ddd4beb04f
+  GIT_TAG 1.3.3
   )

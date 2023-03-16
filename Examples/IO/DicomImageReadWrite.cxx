@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -63,7 +63,7 @@ main(int argc, char * argv[])
   // Software Guide : EndLatex
 
   // Software Guide : BeginCodeSnippet
-  using InputPixelType = signed short;
+  using InputPixelType = short;
   constexpr unsigned int InputDimension = 2;
 
   using InputImageType = itk::Image<InputPixelType, InputDimension>;
@@ -187,7 +187,7 @@ main(int argc, char * argv[])
   //
   //  We will now rescale the image using the RescaleIntensityImageFilter. For
   //  this purpose we use a better suited pixel type: \code{unsigned char}
-  //  instead of \code{signed short}.  The minimum and maximum values of the
+  //  instead of \code{short}.  The minimum and maximum values of the
   //  output image are explicitly defined in the rescaling filter.
   //
   // Software Guide : EndLatex

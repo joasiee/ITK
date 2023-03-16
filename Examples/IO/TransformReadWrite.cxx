@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -181,8 +181,8 @@ main(int argc, char * argv[])
   // The transform reader is templated and it returns a list
   // of \doxygen{Transform}'s. Even thought the reader instantiate the
   // appropriate transform class when reading the file, it is up to the user
-  // to do the approriate cast. To get the output list of transform we use the
-  // GetTransformList() function.
+  // to do the appropriate cast. To get the output list of transform we use
+  // the GetTransformList() function.
   //
   // Software Guide : EndLatex
 

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -56,7 +56,7 @@ buildPolygonGroup(PolygonGroup3DPointer & PolygonGroup)
       PolygonGroup->Update();
     }
   }
-  catch (itk::ExceptionObject &)
+  catch (const itk::ExceptionObject &)
   {
     std::cerr << "Error creating PolygonGroup" << std::endl;
     return EXIT_FAILURE;
@@ -85,8 +85,8 @@ testPolygonGroupEquivalence(PolygonGroup3DPointer & p1, PolygonGroup3DPointer & 
       delete children2;
       return EXIT_FAILURE;
     }
-    auto * curstrand1 = dynamic_cast<Polygon3DType *>((*it1).GetPointer());
-    auto * curstrand2 = dynamic_cast<Polygon3DType *>((*it2).GetPointer());
+    auto * curstrand1 = dynamic_cast<Polygon3DType *>(it1->GetPointer());
+    auto * curstrand2 = dynamic_cast<Polygon3DType *>(it2->GetPointer());
 
     Polygon3DType::PolygonPointListType & points1 = curstrand1->GetPoints();
     Polygon3DType::PolygonPointListType & points2 = curstrand2->GetPoints();
@@ -106,8 +106,8 @@ testPolygonGroupEquivalence(PolygonGroup3DPointer & p1, PolygonGroup3DPointer & 
         delete children2;
         return EXIT_FAILURE;
       }
-      Polygon3DType::PointType curpoint1 = (*pointIt1).GetPositionInWorldSpace();
-      Polygon3DType::PointType curpoint2 = (*pointIt2).GetPositionInWorldSpace();
+      Polygon3DType::PointType curpoint1 = pointIt1->GetPositionInWorldSpace();
+      Polygon3DType::PointType curpoint2 = pointIt2->GetPositionInWorldSpace();
       if (curpoint1 != curpoint2)
       {
         // Just a silly test to make sure that the positions returned are valid
@@ -174,7 +174,7 @@ itkPolygonGroupSpatialObjectXMLFileTest(int argc, char * argv[])
     pw->SetObject(&(*PolygonGroup));
     pw->WriteFile();
   }
-  catch (itk::ExceptionObject &)
+  catch (const itk::ExceptionObject &)
   {
     std::cerr << "Error Creating file" << std::endl;
     return EXIT_FAILURE;
@@ -200,7 +200,7 @@ itkPolygonGroupSpatialObjectXMLFileTest(int argc, char * argv[])
       return EXIT_FAILURE;
     }
   }
-  catch (itk::ExceptionObject &)
+  catch (const itk::ExceptionObject &)
   {
     std::cerr << "Error Reading file" << std::endl;
     return EXIT_FAILURE;

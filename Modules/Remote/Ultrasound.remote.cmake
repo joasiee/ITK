@@ -27,12 +27,12 @@
 #--   - [X] Some tests exist and pass on at least some platform
 #--   - [X] All requirements of Levels 2,1
 #--
-#-- ## Compliance Level 2 star (Alpha code feature API development or niche community/exectution environment dependance )
+#-- ## Compliance Level 2 star (Alpha code feature API development or niche community/execution environment dependance )
 #--   - [X] Compiles for at least 1 niche set of execution envirionments, and perhaps others
 #--         (may depend on specific external tools like a java environment, or specific external libraries to work )
 #--   - [X] All requirements of Levels 1
 #--
-#-- ## Compliance Level 1 star (Pre-alpha features under development and code of unkown quality)
+#-- ## Compliance Level 1 star (Pre-alpha features under development and code of unknown quality)
 #--   - [X] Code complies on at least 1 platform
 #--
 #-- ## Compliance Level 0 star ( Code/Feature of known poor-quality or deprecated status )
@@ -47,7 +47,7 @@ itk_fetch_module(Ultrasound
 
 McCormick, M.
 An Open Source, Fast Ultrasound B-Mode Implementation for Commodity Hardware.
-Insight Journal. 2010 January-June. URL: http://hdl.handle.net/10380/3159
+Insight Journal. 2010 January-June. URL: https://hdl.handle.net/10380/3159
 
 McCormick, M, Rubert, N and Varghese, T.
 Bayesian Regularization Applied to Ultrasound Strain Imaging.
@@ -58,9 +58,9 @@ Aylward, S. R., McCormick, M. M., Kang H. J., Razzaque, S., R. Kwitt, R., and M.
 Ultrasound spectroscopy.
 2016 IEEE International Symposium on Biomedical Imaging: From Nano to Macro, ISBI 2016 - Proceedings.
 Prague, Czech Republic. 1013-1016. 2016.
-http://dx.doi.org/10.1109/ISBI.2016.7493437
+https://dx.doi.org/10.1109/ISBI.2016.7493437
 https://pdfs.semanticscholar.org/6bcd/1e7adbc24e15c928a7ad5af77bbd5da29c30.pdf"
   MODULE_COMPLIANCE_LEVEL 3
   GIT_REPOSITORY ${git_protocol}://github.com/KitwareMedical/ITKUltrasound.git
-  GIT_TAG c8cfa70f5dbda9dc4305f6438287c5f3cc7efe61
+  GIT_TAG 6f126b84d9a6511c695c197330800c5612fced93
   )

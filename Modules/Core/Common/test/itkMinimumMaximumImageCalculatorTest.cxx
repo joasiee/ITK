@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,9 +40,7 @@ itkMinimumMaximumImageCalculatorTest(int, char *[])
   auto                  image = ImageType::New();
   ImageType::RegionType region;
   region.SetSize(size);
-  image->SetLargestPossibleRegion(region);
-  image->SetRequestedRegion(region);
-  image->SetBufferedRegion(region);
+  image->SetRegions(region);
   image->Allocate();
 
   // Set origin and spacing of physical coordinates
@@ -69,7 +67,7 @@ itkMinimumMaximumImageCalculatorTest(int, char *[])
   }
 
   // The minimum intensity index position will contain a single value:
-  // since all pixels have equal value, it will be ther first pixel
+  // since all pixels have equal value, it will be the first pixel
   itk::Index<3> minIntensityValueIndex;
   minIntensityValueIndex[0] = 0;
   minIntensityValueIndex[1] = 0;

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,11 +51,11 @@ OrthogonallyCorrected2DParametricPath::Evaluate(const InputType & inputValue) co
 
   // Find the linearly interpolated offset error value for this exact time.
   softOrthogonalCorrectionTableIndex = normalizedInput * numOrthogonalCorrections;
-  Correction1 = m_OrthogonalCorrectionTable->ElementAt(int(softOrthogonalCorrectionTableIndex));
-  Correction2 =
-    m_OrthogonalCorrectionTable->ElementAt(int(softOrthogonalCorrectionTableIndex + 1) % numOrthogonalCorrections);
-  Correction = Correction1 + (Correction2 - Correction1) *
-                               (softOrthogonalCorrectionTableIndex - int(softOrthogonalCorrectionTableIndex));
+  Correction1 = m_OrthogonalCorrectionTable->ElementAt(static_cast<int>(softOrthogonalCorrectionTableIndex));
+  Correction2 = m_OrthogonalCorrectionTable->ElementAt(static_cast<int>(softOrthogonalCorrectionTableIndex + 1) %
+                                                       numOrthogonalCorrections);
+  Correction = Correction1 + (Correction2 - Correction1) * (softOrthogonalCorrectionTableIndex -
+                                                            static_cast<int>(softOrthogonalCorrectionTableIndex));
 
   // Find the direction of the offset
   originalDerivative = m_OriginalPath->EvaluateDerivative(input);

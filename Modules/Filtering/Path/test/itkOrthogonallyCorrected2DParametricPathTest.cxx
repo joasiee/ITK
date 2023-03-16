@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -78,7 +78,8 @@ itkOrthogonallyCorrected2DParametricPathTest(int, char *[])
 
   std::cout << "Evaluating to an index at 0, 0.5, and 1.0: " << path->EvaluateToIndex(0) << ", "
             << path->EvaluateToIndex(0.5) << ", " << path->EvaluateToIndex(0.0) << std::endl;
-  if (int(0.5 + 1000 * (path->Evaluate(0.0))[0]) != 1016 || int(0.5 + 1000 * (path->Evaluate(0.0))[1]) != 2179)
+  if (static_cast<int>(0.5 + 1000 * (path->Evaluate(0.0))[0]) != 1016 ||
+      static_cast<int>(0.5 + 1000 * (path->Evaluate(0.0))[1]) != 2179)
   {
     std::cout << "OrthogonallyCorrected2DParametricPathTest:  EvaluateToIndex() Failed" << std::endl;
     passed = false;

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,20 +22,7 @@ namespace itk
 /**
  * Constructor
  */
-ExhaustiveOptimizer::ExhaustiveOptimizer()
-{
-  itkDebugMacro("Constructor");
-
-  m_StepLength = 1.0;
-  m_CurrentIteration = 0;
-  m_CurrentValue = 0;
-  m_CurrentParameter = 0;
-  m_CurrentIndex.Fill(0);
-  m_Stop = false;
-  m_NumberOfSteps.Fill(0);
-
-  m_StopConditionDescription.str("");
-}
+ExhaustiveOptimizer::ExhaustiveOptimizer() = default;
 
 /**
  * Start walking
@@ -141,7 +128,7 @@ ExhaustiveOptimizer::ResumeWalking()
 
     this->InvokeEvent(IterationEvent());
     this->AdvanceOneStep();
-    m_CurrentIteration++;
+    ++m_CurrentIteration;
   }
 }
 
@@ -182,7 +169,7 @@ ExhaustiveOptimizer::IncrementIndex(ParametersType & newPosition)
     if (m_CurrentIndex[idx] > (2 * m_NumberOfSteps[idx]))
     {
       m_CurrentIndex[idx] = 0;
-      idx++;
+      ++idx;
     }
     else
     {

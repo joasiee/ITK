@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,7 +40,7 @@ extern "C"
 {
   METHODDEF(void) itk_jpeg_error_exit(j_common_ptr cinfo)
   {
-    /* cinfo->err really points to a itk_jpeg_error_mgr struct, so coerce pointer
+    /* cinfo->err really points to an itk_jpeg_error_mgr struct, so coerce pointer
      */
     itk_jpeg_error_mgr * myerr = (itk_jpeg_error_mgr *)cinfo->err;
 

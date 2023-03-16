@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -146,7 +146,7 @@ ShrinkImageFilter<TInputImage, TOutputImage>::DynamicThreadedGenerateData(
   {
     offsetIndex[i] = inputIndex[i] - outputIndex[i] * m_ShrinkFactors[i];
     // It is plausible that due to small amounts of loss of numerical
-    // precision that the offset it negaive, this would cause sampling
+    // precision that the offset it negative, this would cause sampling
     // out of out region, this is insurance against that possibility
     offsetIndex[i] = std::max(zeroOffset, offsetIndex[i]);
   }
@@ -226,7 +226,7 @@ ShrinkImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRegion()
   {
     offsetIndex[i] = inputIndex[i] - outputIndex[i] * m_ShrinkFactors[i];
     // It is plausible that due to small amounts of loss of numerical
-    // precision that the offset it negaive, this would cause sampling
+    // precision that the offset it negative, this would cause sampling
     // out of out region, this is insurance against that possibility
     offsetIndex[i] = std::max(zeroOffset, offsetIndex[i]);
   }
@@ -277,10 +277,11 @@ ShrinkImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
 
   for (i = 0; i < TOutputImage::ImageDimension; ++i)
   {
-    outputSpacing[i] = inputSpacing[i] * (double)m_ShrinkFactors[i];
+    outputSpacing[i] = inputSpacing[i] * static_cast<double>(m_ShrinkFactors[i]);
 
     // Round down so that all output pixels fit input input region
-    outputSize[i] = static_cast<SizeValueType>(std::floor((double)inputSize[i] / (double)m_ShrinkFactors[i]));
+    outputSize[i] = static_cast<SizeValueType>(
+      std::floor(static_cast<double>(inputSize[i]) / static_cast<double>(m_ShrinkFactors[i])));
 
     if (outputSize[i] < 1)
     {
@@ -289,8 +290,8 @@ ShrinkImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
 
     // Because of the later origin shift this starting index is not
     // critical
-    outputStartIndex[i] =
-      static_cast<IndexValueType>(std::ceil((double)inputStartIndex[i] / (double)m_ShrinkFactors[i]));
+    outputStartIndex[i] = static_cast<IndexValueType>(
+      std::ceil(static_cast<double>(inputStartIndex[i]) / static_cast<double>(m_ShrinkFactors[i])));
   }
 
   outputPtr->SetSpacing(outputSpacing);

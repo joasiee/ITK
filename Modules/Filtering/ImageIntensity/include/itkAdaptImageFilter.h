@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,7 @@ namespace itk
 namespace Functor
 {
 /**
- *\class AccessorFunctor
+ * \class AccessorFunctor
  * \brief Convert an accessor to a functor so that it can be used in a
  * UnaryFunctorImageFilter.
  *
@@ -98,7 +98,7 @@ private:
 } // namespace Functor
 
 /**
- *\class AdaptImageFilter
+ * \class AdaptImageFilter
  * \brief Convert an image to another pixel type using the specified data accessor.
  *
  * AdaptImageFilter converts an image to another pixel type using a

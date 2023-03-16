@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,7 +40,7 @@ Decrement(ScalarType & value, std::enable_if_t<std::numeric_limits<ScalarType>::
   }
 }
 
-template <typename ScalarType, unsigned TVecLength, unsigned TDimension>
+template <typename ScalarType, unsigned int TVecLength, unsigned int TDimension>
 int
 TestImageOfVectors(const std::string & fname)
 {
@@ -75,7 +75,7 @@ TestImageOfVectors(const std::string & fname)
   std::cout << "======================== Initialized Direction" << std::endl;
   std::cout << myDirection << std::endl;
 
-  for (unsigned i = 0; i < TDimension; ++i)
+  for (unsigned int i = 0; i < TDimension; ++i)
   {
     size[i] = dimsize;
     index[i] = 0;
@@ -92,11 +92,11 @@ TestImageOfVectors(const std::string & fname)
 
   size_t dims[7];
   size_t _index[7];
-  for (unsigned i = 0; i < TDimension; ++i)
+  for (unsigned int i = 0; i < TDimension; ++i)
   {
     dims[i] = size[i];
   }
-  for (unsigned i = TDimension; i < 7; ++i)
+  for (unsigned int i = TDimension; i < 7; ++i)
   {
     dims[i] = 1;
   }

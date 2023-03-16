@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@
 
 #include "itkNeighborhood.h"
 #include "itkMath.h"
+#include "itkMakeUniqueForOverwrite.h"
 
 namespace itk
 {
@@ -144,8 +145,8 @@ ScalarImageToRunLengthFeaturesFilter<TImage, THistogramFrequencyContainer>::Full
   // Now get the mean and deviaton of each feature across the offsets.
   this->m_FeatureMeans->clear();
   this->m_FeatureStandardDeviations->clear();
-  auto * tempFeatureMeans = new double[numFeatures];
-  auto * tempFeatureDevs = new double[numFeatures];
+  const auto tempFeatureMeans = make_unique_for_overwrite<double[]>(numFeatures);
+  const auto tempFeatureDevs = std::make_unique<double[]>(numFeatures);
 
   /*Compute incremental mean and SD, a la Knuth, "The  Art of Computer
     Programming, Volume 2: Seminumerical Algorithms",  section 4.2.2.
@@ -161,7 +162,6 @@ ScalarImageToRunLengthFeaturesFilter<TImage, THistogramFrequencyContainer>::Full
   for (featureNum = 0; featureNum < numFeatures; ++featureNum)
   {
     tempFeatureMeans[featureNum] = features[0][featureNum];
-    tempFeatureDevs[featureNum] = 0;
   }
   // Run through the recurrence (k = 2 ... N)
   for (offsetNum = 1; offsetNum < numOffsets; ++offsetNum)
@@ -196,8 +196,6 @@ ScalarImageToRunLengthFeaturesFilter<TImage, THistogramFrequencyContainer>::Full
     itkDynamicCastInDebugMode<FeatureValueVectorDataObjectType *>(this->ProcessObject::GetOutput(1));
   standardDeviationOutputObject->Set(this->m_FeatureStandardDeviations);
 
-  delete[] tempFeatureMeans;
-  delete[] tempFeatureDevs;
   for (size_t i = 0; i < numOffsets; ++i)
   {
     delete[] features[i];

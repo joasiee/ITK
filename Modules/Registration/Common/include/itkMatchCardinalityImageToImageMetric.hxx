@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,13 +29,7 @@ namespace itk
 template <typename TFixedImage, typename TMovingImage>
 MatchCardinalityImageToImageMetric<TFixedImage, TMovingImage>::MatchCardinalityImageToImageMetric()
 {
-  itkDebugMacro("Constructor");
-
   this->SetComputeGradient(false); // don't use the default gradients
-  m_MeasureMatches = true;         // default to measure percentage of pixel
-                                   // matches
-
-  m_Threader = MultiThreaderBase::New();
 }
 
 /*
@@ -169,7 +163,7 @@ MatchCardinalityImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetValue(
       const RealType fixedValue = ti.Get();
       RealType       diff;
 
-      threadNumberOfPixelsCounted++;
+      ++threadNumberOfPixelsCounted;
 
       if (m_MeasureMatches)
       {
@@ -222,8 +216,8 @@ MatchCardinalityImageToImageMetric<TFixedImage, TMovingImage>::SplitFixedRegion(
 
   // determine the actual number of pieces that will be generated
   typename FixedImageRegionType::SizeType::SizeValueType range = fixedRegionSize[splitAxis];
-  auto                                                   valuesPerThread = Math::Ceil<int>(range / (double)num);
-  ThreadIdType maxThreadIdUsed = Math::Ceil<int>(range / (double)valuesPerThread) - 1;
+  auto         valuesPerThread = Math::Ceil<int>(range / static_cast<double>(num));
+  ThreadIdType maxThreadIdUsed = Math::Ceil<int>(range / static_cast<double>(valuesPerThread)) - 1;
 
   // Split the region
   if (i < maxThreadIdUsed)

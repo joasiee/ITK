@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@
 
 #include "itkMultiphaseFiniteDifferenceImageFilter.h"
 #include "itkScalarChanAndVeseLevelSetFunction.h"
+#include "itkTestingMacros.h"
 
 namespace itk
 {
@@ -102,8 +103,36 @@ itkMultiphaseFiniteDifferenceImageFilterTest(int, char *[])
 
   auto filter = FilterType::New();
 
-  std::cout << "GetNameOfClass() = " << filter->GetNameOfClass() << std::endl;
-  filter->Print(std::cout);
+  ITK_EXERCISE_BASIC_OBJECT_METHODS(
+    filter, MultiphaseFiniteDifferenceImageFilterTestHelper, MultiphaseFiniteDifferenceImageFilter);
 
+
+  unsigned int numberOfIterations = itk::NumericTraits<unsigned int>::max();
+  filter->SetNumberOfIterations(numberOfIterations);
+  ITK_TEST_SET_GET_VALUE(numberOfIterations, filter->GetNumberOfIterations());
+
+  bool useImageSpacing = true;
+  ITK_TEST_SET_GET_BOOLEAN(filter, UseImageSpacing, useImageSpacing);
+
+  double maximumRMSError = itk::Math::eps;
+  filter->SetMaximumRMSError(maximumRMSError);
+  ITK_TEST_SET_GET_VALUE(maximumRMSError, filter->GetMaximumRMSError());
+
+  double rmsChange = itk::NumericTraits<double>::max();
+  filter->SetRMSChange(rmsChange);
+  ITK_TEST_SET_GET_VALUE(rmsChange, filter->GetRMSChange());
+
+  bool initializedState = false;
+  ITK_TEST_SET_GET_BOOLEAN(filter, InitializedState, initializedState);
+
+  bool manualReinitialization = false;
+  ITK_TEST_SET_GET_BOOLEAN(filter, ManualReinitialization, manualReinitialization);
+
+  unsigned int elapsedIterations = 0;
+  filter->SetElapsedIterations(elapsedIterations);
+  ITK_TEST_SET_GET_VALUE(elapsedIterations, filter->GetElapsedIterations());
+
+
+  std::cout << "Test finished." << std::endl;
   return EXIT_SUCCESS;
 }

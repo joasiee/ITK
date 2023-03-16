@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -99,7 +99,7 @@ itkInverseDisplacementFieldImageFilterTest(int argc, char * argv[])
 
   // Since the tested transform is upsampling by a factor of two, the
   // size of the inverse field should be twice the size of the input
-  // field. All other geomtry parameters are the same.
+  // field. All other geometry parameters are the same.
   filter->SetOutputSpacing(spacing);
   ITK_TEST_SET_GET_VALUE(spacing, filter->GetOutputSpacing());
 

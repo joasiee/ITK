@@ -221,7 +221,7 @@ WRAP_TYPE("itk::Image" "I" "itkImage.h")
   UNIQUE(WRAP_ITK_SCALAR_IMAGE_PIXEL_TYPES "${WRAP_ITK_SCALAR};D;UC;SI;UI;UL;ULL;B;${ITKM_IT}")
   UNIQUE(wrap_image_types "${WRAP_ITK_ALL_TYPES};RGBUC;RGBAUC;VD;${WRAP_ITK_SCALAR_IMAGE_PIXEL_TYPES}")
 
-  set(defined_vector_list )
+  set(defined_vector_list)
   foreach(d ${ITK_WRAP_IMAGE_DIMS})
 
     foreach(type ${wrap_image_types})
@@ -296,7 +296,7 @@ set(itk_Wrap_Image ${WRAPPER_TEMPLATES})
 WRAP_TYPE("itk::VectorImage" "VI" "itkVectorImage.h")
   # Make a list of all of the selected image pixel types and also uchar
   # (for 8-bit image output)
-  UNIQUE(wrap_image_types "${WRAP_ITK_COMPLEX_REAL};${WRAP_ITK_SCALAR};UC")
+  UNIQUE(wrap_image_types "${WRAP_ITK_COMPLEX_REAL};${WRAP_ITK_SCALAR};UC;D")
 
   foreach(d ${ITK_WRAP_IMAGE_DIMS})
     foreach(type ${wrap_image_types})
@@ -318,7 +318,8 @@ END_WRAP_TYPE()
 set(itk_Wrap_VariableLengthVector ${WRAPPER_TEMPLATES})
 
 WRAP_TYPE("itk::Point" "P" "itkPoint.h")
-  foreach(d ${ITK_WRAP_IMAGE_DIMS_INCREMENTED})
+  UNIQUE(dims "${ITK_WRAP_IMAGE_DIMS_INCREMENTED};6")
+  foreach(d ${dims})
     ADD_TEMPLATE("${ITKM_F}${d}"  "${ITKT_F},${d}")
     ADD_TEMPLATE("${ITKM_D}${d}"  "${ITKT_D},${d}")
   endforeach()

@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -170,7 +170,7 @@ main(int argc, char * argv[])
   //  virtual domain is needed to evaluate the metric. The number of spatial
   //  samples to be used depends on the content of the image, and the user can
   //  define the sampling percentage and the way that sampling operation is
-  //  managed by the registration framework as follows. Sampling startegy can
+  //  managed by the registration framework as follows. Sampling strategy can
   //  can be defined as \code{REGULAR} or \code{RANDOM}, while the default
   //  value is \code{NONE}.
   //

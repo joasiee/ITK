@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@ namespace itk
 /**
  * Constructor
  */
-LBFGSOptimizer ::LBFGSOptimizer()
+LBFGSOptimizer::LBFGSOptimizer()
 {
   m_OptimizerInitialized = false;
   m_VnlOptimizer = nullptr;
@@ -38,10 +38,7 @@ LBFGSOptimizer ::LBFGSOptimizer()
 /**
  * Destructor
  */
-LBFGSOptimizer::~LBFGSOptimizer()
-{
-  delete m_VnlOptimizer;
-}
+LBFGSOptimizer::~LBFGSOptimizer() = default;
 
 /**
  * PrintSelf
@@ -185,14 +182,9 @@ LBFGSOptimizer::SetCostFunction(SingleValuedCostFunction * costFunction)
 
   adaptor->SetCostFunction(costFunction);
 
-  if (m_OptimizerInitialized)
-  {
-    delete m_VnlOptimizer;
-  }
-
   this->SetCostFunctionAdaptor(adaptor);
 
-  m_VnlOptimizer = new vnl_lbfgs(*adaptor);
+  m_VnlOptimizer = std::make_unique<vnl_lbfgs>(*adaptor);
 
   // set the optimizer parameters
   m_VnlOptimizer->set_trace(m_Trace);
@@ -265,7 +257,7 @@ LBFGSOptimizer::StartOptimization()
 vnl_lbfgs *
 LBFGSOptimizer::GetOptimizer()
 {
-  return m_VnlOptimizer;
+  return m_VnlOptimizer.get();
 }
 
 const std::string

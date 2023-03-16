@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -190,7 +190,7 @@ ImageToRectilinearFEMObjectFilter<TInputImage>::Generate2DRectilinearMesh()
       n = Element::Node::New();
       n->SetCoordinates(pt);
       n->SetGlobalNumber(gn);
-      gn++;
+      ++gn;
       femObject->AddNextNode(n);
     }
   }
@@ -203,16 +203,16 @@ ImageToRectilinearFEMObjectFilter<TInputImage>::Generate2DRectilinearMesh()
     for (unsigned int i = 0; i < m_NumberOfElements[0]; ++i)
     {
       e = dynamic_cast<Element2DC0LinearQuadrilateral *>(m_Element->CreateAnother().GetPointer());
-      e->SetNode(0, femObject->GetNode((unsigned int)(i + (m_NumberOfElements[0] + 1) * j)));
-      e->SetNode(1, femObject->GetNode((unsigned int)(i + 1 + (m_NumberOfElements[0] + 1) * j)));
-      e->SetNode(2, femObject->GetNode((unsigned int)(i + 1 + (m_NumberOfElements[0] + 1) * (j + 1))));
-      e->SetNode(3, femObject->GetNode((unsigned int)(i + (m_NumberOfElements[0] + 1) * (j + 1))));
+      e->SetNode(0, femObject->GetNode(static_cast<unsigned int>(i + (m_NumberOfElements[0] + 1) * j)));
+      e->SetNode(1, femObject->GetNode(static_cast<unsigned int>(i + 1 + (m_NumberOfElements[0] + 1) * j)));
+      e->SetNode(2, femObject->GetNode(static_cast<unsigned int>(i + 1 + (m_NumberOfElements[0] + 1) * (j + 1))));
+      e->SetNode(3, femObject->GetNode(static_cast<unsigned int>(i + (m_NumberOfElements[0] + 1) * (j + 1))));
       e->SetGlobalNumber(gn);
       if (this->m_Material)
       {
         e->SetMaterial(dynamic_cast<itk::fem::MaterialLinearElasticity *>(femObject->GetMaterial(0).GetPointer()));
       }
-      gn++;
+      ++gn;
       femObject->AddNextElement(e);
     }
   }
@@ -265,7 +265,7 @@ ImageToRectilinearFEMObjectFilter<TInputImage>::Generate3DRectilinearMesh()
         n = Element::Node::New();
         n->SetCoordinates(pt);
         n->SetGlobalNumber(gn);
-        gn++;
+        ++gn;
         femObject->AddNextNode(n);
       }
     }
@@ -281,37 +281,36 @@ ImageToRectilinearFEMObjectFilter<TInputImage>::Generate3DRectilinearMesh()
       for (unsigned int i = 0; i < m_NumberOfElements[0]; ++i)
       {
         e = dynamic_cast<Element3DC0LinearHexahedron *>(m_Element->CreateAnother().GetPointer());
-        e->SetNode(
-          0,
-          femObject->GetNode((unsigned int)(i + (m_NumberOfElements[0] + 1) * (j + (m_NumberOfElements[1] + 1) * k))));
+        e->SetNode(0,
+                   femObject->GetNode(static_cast<unsigned int>(i + (m_NumberOfElements[0] + 1) *
+                                                                      (j + (m_NumberOfElements[1] + 1) * k))));
         e->SetNode(1,
-                   femObject->GetNode(
-                     (unsigned int)(i + 1 + (m_NumberOfElements[0] + 1) * (j + (m_NumberOfElements[1] + 1) * k))));
+                   femObject->GetNode(static_cast<unsigned int>(
+                     i + 1 + (m_NumberOfElements[0] + 1) * (j + (m_NumberOfElements[1] + 1) * k))));
         e->SetNode(2,
-                   femObject->GetNode(
-                     (unsigned int)(i + 1 + (m_NumberOfElements[0] + 1) * (j + 1 + (m_NumberOfElements[1] + 1) * k))));
+                   femObject->GetNode(static_cast<unsigned int>(
+                     i + 1 + (m_NumberOfElements[0] + 1) * (j + 1 + (m_NumberOfElements[1] + 1) * k))));
         e->SetNode(3,
-                   femObject->GetNode(
-                     (unsigned int)(i + (m_NumberOfElements[0] + 1) * (j + 1 + (m_NumberOfElements[1] + 1) * k))));
+                   femObject->GetNode(static_cast<unsigned int>(i + (m_NumberOfElements[0] + 1) *
+                                                                      (j + 1 + (m_NumberOfElements[1] + 1) * k))));
         e->SetNode(4,
-                   femObject->GetNode(
-                     (unsigned int)(i + (m_NumberOfElements[0] + 1) * (j + (m_NumberOfElements[1] + 1) * (k + 1)))));
+                   femObject->GetNode(static_cast<unsigned int>(i + (m_NumberOfElements[0] + 1) *
+                                                                      (j + (m_NumberOfElements[1] + 1) * (k + 1)))));
         e->SetNode(5,
                    femObject->GetNode((
                      unsigned int)(i + 1 + (m_NumberOfElements[0] + 1) * (j + (m_NumberOfElements[1] + 1) * (k + 1)))));
-        e->SetNode(
-          6,
-          femObject->GetNode(
-            (unsigned int)(i + 1 + (m_NumberOfElements[0] + 1) * (j + 1 + (m_NumberOfElements[1] + 1) * (k + 1)))));
+        e->SetNode(6,
+                   femObject->GetNode(static_cast<unsigned int>(
+                     i + 1 + (m_NumberOfElements[0] + 1) * (j + 1 + (m_NumberOfElements[1] + 1) * (k + 1)))));
         e->SetNode(7,
-                   femObject->GetNode((unsigned int)(i + (m_NumberOfElements[0] + 1) *
-                                                           (j + 1 + (m_NumberOfElements[1] + 1) * (k + 1)))));
+                   femObject->GetNode(static_cast<unsigned int>(
+                     i + (m_NumberOfElements[0] + 1) * (j + 1 + (m_NumberOfElements[1] + 1) * (k + 1)))));
         e->SetGlobalNumber(gn);
         if (this->m_Material)
         {
           e->SetMaterial(dynamic_cast<itk::fem::MaterialLinearElasticity *>(femObject->GetMaterial(0).GetPointer()));
         }
-        gn++;
+        ++gn;
         femObject->AddNextElement(e);
       }
     }

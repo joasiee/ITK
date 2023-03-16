@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -138,7 +138,7 @@ itkSmoothingRecursiveGaussianImageFilterTest(int argc, char * argv[])
   bool normalizeAcrossScale = std::stoi(argv[3]);
   ITK_TEST_SET_GET_BOOLEAN(filter, NormalizeAcrossScale, normalizeAcrossScale);
 
-  // Set the value ofthe standard deviation of the Gaussian used for smoothing
+  // Set the value of the standard deviation of the Gaussian used for smoothing
   SmoothingRecursiveGaussianImageFilterType::SigmaArrayType::ValueType sigmaValue = std::stod(argv[4]);
   SmoothingRecursiveGaussianImageFilterType::SigmaArrayType            sigma;
   sigma.Fill(sigmaValue);

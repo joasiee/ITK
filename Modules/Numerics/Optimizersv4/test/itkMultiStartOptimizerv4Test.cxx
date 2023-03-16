@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -208,7 +208,7 @@ itkMultiStartOptimizerv4Test(int, char *[])
 
   using OptimizerType = itk::MultiStartOptimizerv4;
 
-  // Declaration of a itkOptimizer
+  // Declaration of an itkOptimizer
   auto itkOptimizer = OptimizerType::New();
 
   ITK_EXERCISE_BASIC_OBJECT_METHODS(itkOptimizer, MultiStartOptimizerv4Template, ObjectToObjectOptimizerBaseTemplate);
@@ -236,8 +236,8 @@ itkMultiStartOptimizerv4Test(int, char *[])
     for (int j = -3; j < 3; ++j)
     {
       ParametersType testPosition(spaceDimension);
-      testPosition[0] = (double)i;
-      testPosition[1] = (double)j;
+      testPosition[0] = static_cast<double>(i);
+      testPosition[1] = static_cast<double>(j);
       parametersList.push_back(testPosition);
     }
   }
@@ -263,8 +263,8 @@ itkMultiStartOptimizerv4Test(int, char *[])
     for (int j = -3; j < -2; ++j)
     {
       ParametersType testPosition(spaceDimension);
-      testPosition[0] = (double)i;
-      testPosition[1] = (double)j;
+      testPosition[0] = static_cast<double>(i);
+      testPosition[1] = static_cast<double>(j);
       parametersList.push_back(testPosition);
     }
   }
@@ -286,8 +286,8 @@ itkMultiStartOptimizerv4Test(int, char *[])
     for (int j = -103; j < 99; j += 100)
     {
       ParametersType testPosition(spaceDimension);
-      testPosition[0] = (double)i;
-      testPosition[1] = (double)j;
+      testPosition[0] = static_cast<double>(i);
+      testPosition[1] = static_cast<double>(j);
       parametersList.push_back(testPosition);
     }
   }

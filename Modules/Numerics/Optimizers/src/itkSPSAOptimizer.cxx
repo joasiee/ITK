@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,11 +24,9 @@ namespace itk
 /**
  * ************************* Constructor ************************
  */
-SPSAOptimizer ::SPSAOptimizer()
+SPSAOptimizer::SPSAOptimizer()
 
 {
-  itkDebugMacro("Constructor");
-
   m_CurrentIteration = 0;
   m_Maximize = false;
   m_StopCondition = StopConditionSPSAOptimizerEnum::Unknown;
@@ -165,7 +163,7 @@ SPSAOptimizer::ResumeOptimization()
       break;
     }
 
-    m_CurrentIteration++;
+    ++m_CurrentIteration;
 
     if (m_CurrentIteration >= m_MaximumNumberOfIterations)
     {
@@ -230,14 +228,14 @@ SPSAOptimizer::AdvanceOneStep()
   {
     this->ComputeGradient(currentPosition, m_Gradient);
   }
-  catch (ExceptionObject & err)
+  catch (const ExceptionObject &)
   {
     // An exception has occurred.
     // Terminate immediately.
     m_StopCondition = StopConditionSPSAOptimizerEnum::MetricError;
     StopOptimization();
     // Pass exception to caller
-    throw err;
+    throw;
   }
 
   /** Compute the gain a_k */
@@ -288,7 +286,7 @@ SPSAOptimizer::Compute_c(SizeValueType k) const
  * ********************** GenerateDelta *************************
  *
  * This function generates a perturbation vector delta.
- * Currently the elements are drawn from a bernouilli
+ * Currently the elements are drawn from a bernoulli
  * distribution. (+- 1)
  */
 
